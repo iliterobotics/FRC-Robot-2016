@@ -13,14 +13,12 @@ public class Lift {
 
 	public void checkLimit() {
 		if(crateLiftLimitTop.get()) {	
-			interstate = MotorState.STOP;
+			state = MotorState.STOP;
+			toteCount++;
 		}
 
 		if(crateLiftLimitBottom.get()){
-			if(interstate == MotorState.UP) {
-				toteCount++;
-			}
-			else {
+			if(state == MotorState.DOWN) {
 				toteCount--;
 			}
 		} 
