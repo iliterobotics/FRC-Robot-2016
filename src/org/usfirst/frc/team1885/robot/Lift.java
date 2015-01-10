@@ -1,3 +1,7 @@
+package org.usfirst.frc.team1885.robot;
+
+import edu.wpi.first.wpilibj.DigitalInput;
+
 public class Lift {
 	private MotorState state;
 	private int toteCount;
