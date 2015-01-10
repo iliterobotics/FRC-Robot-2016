@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.robot;
+package org.usfirst.frc.team1885.robot.output;
 
 import edu.wpi.first.wpilibj.Talon;
 

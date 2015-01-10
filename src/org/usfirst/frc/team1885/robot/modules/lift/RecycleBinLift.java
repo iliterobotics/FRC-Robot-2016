@@ -1,4 +1,6 @@
-package org.usfirst.frc.team1885.robot;
+package org.usfirst.frc.team1885.robot.modules.lift;
+
+import org.usfirst.frc.team1885.robot.common.type.MotorState;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 
