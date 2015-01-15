@@ -33,7 +33,6 @@ public class DrivetrainControl
 	 * @param leftDriveSpeed the leftDriveSpeed to set
 	 */
 	public void setLeftDriveSpeed(double leftDriveSpeed) {
-		if( driveMode == DriveMode.TANK )
 			this.leftDriveSpeed = leftDriveSpeed;
 	}
 	/**
@@ -63,5 +62,13 @@ public class DrivetrainControl
 			driveMode = DriveMode.STRAIGHT;
 		else
 			driveMode = DriveMode.TANK;
+	}
+	/**
+	 * @param driveSpeed sets both drive speeds to a single speed controlled by the 
+	 * right joystick
+	 */
+	public void straightDrive(double driveSpeed){
+		this.rightDriveSpeed = driveSpeed;
+		this.leftDriveSpeed = driveSpeed;
 	}
 }
