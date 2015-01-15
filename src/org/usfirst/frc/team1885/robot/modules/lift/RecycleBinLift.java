@@ -6,13 +6,11 @@ import edu.wpi.first.wpilibj.DigitalInput;
 
 public class RecycleBinLift {
 	private MotorState state;
-	private DigitalInput upperLimit;
-	private DigitalInput lowerLimit;
-	private int rBinCount;
+	private boolean binInHand;
 
 	public RecycleBinLift( MotorState state ) {
 		this.state = state;
-		rBinCount = 0;
+		binInHand = false;
 	}
 
 	public MotorState getMotorState() {
@@ -20,15 +18,16 @@ public class RecycleBinLift {
 	}
 
 	public void checkLimit(){
+		/*upper limit for the bin lift kept in robot*/
 		if( upperLimit.get() ){	
 			if( state == MotorState.UP )
-				rBinCount++;
+				binInHand = true;
 			state = MotorState.STOP;
 		}
-
+		/*lower limit for the bin lift kept in robot*/
 		if( lowerLimit.get() ){
 			if( state == MotorState.DOWN )
-				rBinCount--;
+				binInHand = false;
 		} 
 	}
 

@@ -1,19 +1,27 @@
 package org.usfirst.frc.team1885.robot.modules.drivetrain;
 
+import org.usfirst.frc.team1885.robot.common.type.DriveMode;
+
 
 public class DrivetrainControl 
 {
+	/**
+	 * drive mode where you can only move straight using the right joystick
+	 */
 	private double leftDriveSpeed;
 	private double rightDriveSpeed;
+	private DriveMode driveMode;
 	public DrivetrainControl()
 	{
 		leftDriveSpeed = 0;
 		rightDriveSpeed = 0; 
+		driveMode = DriveMode.TANK;
 	}
 	public void update(double leftJoystick, double rightJoystick)
 	{
 		//calculate
-		leftDriveSpeed = leftJoystick;
+		if( driveMode == DriveMode.TANK )
+			leftDriveSpeed = leftJoystick;
 		rightDriveSpeed = rightJoystick;
 	}
 	/**
@@ -40,6 +48,20 @@ public class DrivetrainControl
 	public void setRightDriveSpeed(double rightDriveSpeed) {
 		this.rightDriveSpeed = rightDriveSpeed;
 	}
-	
-	
+	/**
+	 * @return the driveMode
+	 */
+	public DriveMode getDriveMode(){
+		return driveMode;
+	}
+	/**
+	 * changes driveMode from TANK drive to STRAIGHT drive
+	 * 		STRAIGHT only uses the right joystick to drive straight
+	 */
+	public void toggleDriveMode(){
+		if( driveMode == DriveMode.TANK )
+			driveMode = DriveMode.STRAIGHT;
+		else
+			driveMode = DriveMode.TANK;
+	}
 }
