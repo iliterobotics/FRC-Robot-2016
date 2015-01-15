@@ -20,8 +20,7 @@ public class DrivetrainControl
 	public void update(double leftJoystick, double rightJoystick)
 	{
 		//calculate
-		if( driveMode == DriveMode.TANK )
-			leftDriveSpeed = leftJoystick;
+		leftDriveSpeed = leftJoystick;
 		rightDriveSpeed = rightJoystick;
 	}
 	/**
@@ -34,7 +33,8 @@ public class DrivetrainControl
 	 * @param leftDriveSpeed the leftDriveSpeed to set
 	 */
 	public void setLeftDriveSpeed(double leftDriveSpeed) {
-		this.leftDriveSpeed = leftDriveSpeed;
+		if( driveMode == DriveMode.TANK )
+			this.leftDriveSpeed = leftDriveSpeed;
 	}
 	/**
 	 * @return the rightDriveSpeed
