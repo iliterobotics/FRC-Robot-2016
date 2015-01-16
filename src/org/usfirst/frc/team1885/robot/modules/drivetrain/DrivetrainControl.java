@@ -50,24 +50,26 @@ public class DrivetrainControl
 	/**
 	 * @return the driveMode
 	 */
-	public DriveMode getDriveMode(){
+	public DriveMode getDriveMode() {
 		return driveMode;
 	}
 	/**
 	 * changes driveMode from TANK drive to STRAIGHT drive
 	 * 		STRAIGHT only uses the right joystick to drive straight
 	 */
-	public void toggleDriveMode(){
-		if( driveMode == DriveMode.TANK )
+	public void toggleDriveMode() {
+		if( driveMode == DriveMode.TANK ) {
 			driveMode = DriveMode.STRAIGHT;
-		else
+		}
+		else {
 			driveMode = DriveMode.TANK;
+		}
 	}
 	/**
 	 * @param driveSpeed sets both drive speeds to a single speed controlled by the 
 	 * right joystick
 	 */
-	public void straightDrive(double driveSpeed){
+	public void straightDrive(double driveSpeed) {
 		this.rightDriveSpeed = driveSpeed;
 		this.leftDriveSpeed = driveSpeed;
 	}
