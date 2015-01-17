@@ -10,19 +10,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RobotServer implements Runnable {
+	private static RobotServer instance = null;
 	ServerSocket server;
 	RobotClientConnection robo;
 	String line;
 	List<RobotServerListener> robotModules = new ArrayList<RobotServerListener>();
-
+	
+	protected RobotServer() {}
+	
+	public static RobotServer getInstance() {
+		if ( instance == null )
+			instance = new RobotServer();
+		return instance;
+	}
+	
 	private boolean isRunning;
 	public boolean startServer() {
-		if(!this.isRunning) {
-			Thread serverThread = (new Thread(this));
+		if ( !this.isRunning ) {
+			Thread serverThread = ( new Thread(this) );
 			serverThread.start();
 			try {
 				serverThread.wait();
-			} catch (InterruptedException e) {
+			} catch ( InterruptedException e ) {
 				this.isRunning = false;
 				e.printStackTrace();
 			}
@@ -32,7 +41,7 @@ public class RobotServer implements Runnable {
 	}
 	
 	public boolean stopServer() {
-		if(this.isRunning) {
+		if ( this.isRunning ) {
 			this.isRunning = false;
 		}
 		
@@ -43,14 +52,14 @@ public class RobotServer implements Runnable {
 	public void run() {
 		this.isRunning = true;
 		this.notify();
-		while (this.isRunning) {
+		while ( this.isRunning ) {
 			try {
 				// server.accept returns a client connection
-				robo = new RobotClientConnection(server.accept());
-				Thread t = new Thread(robo);
+				robo = new RobotClientConnection( server.accept() );
+				Thread t = new Thread( robo );
 				t.start();
 			} catch (IOException e) {
-				System.out.println("Accept failed: 4444");
+				System.out.println( "Accept failed: 4444" );
 				System.exit(-1);
 			}
 		}
@@ -59,11 +68,11 @@ public class RobotServer implements Runnable {
 		
 	}
 	
-	public void setup(int port) {
+	public void setup( int port ) {
 		try {
 			server = new ServerSocket(port);
 		} catch (IOException e) {
-			System.out.println("Could not listen on port 4444");
+			System.out.println( "Could not listen on port 4444");
 			System.exit(-1);
 		}
 	}
@@ -73,11 +82,11 @@ public class RobotServer implements Runnable {
 		private BufferedReader in;
 		private PrintWriter out;
 		
+		public RobotClientConnection(){}
 		public void run() {
 			try {
-				in = new BufferedReader(new InputStreamReader(
-						client.getInputStream()));
-				out = new PrintWriter(client.getOutputStream(), true);
+				in = new BufferedReader(new InputStreamReader(client.getInputStream()));
+				out = new PrintWriter( client.getOutputStream(), true );
 			} catch (IOException e) {
 				System.out.println("in or out failed");
 				System.exit(-1);
@@ -120,8 +129,8 @@ public class RobotServer implements Runnable {
 		robotModules.add(listener);
 	}
 	
-	public void notifyListeners( RobotServerEvent event ){
-		for( RobotServerListener listener : robotModules ){
+	public void notifyListeners( RobotServerEvent event ) {
+		for( RobotServerListener listener : robotModules ) {
 			listener.receivedServerEvent(event);
 		}
 	}
