@@ -6,11 +6,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RobotServer implements Runnable {
 	ServerSocket server;
 	RobotClientConnection robo;
 	String line;
+	List<RobotServerListener> robotModules = new ArrayList<RobotServerListener>();
 
 	private boolean isRunning;
 	public boolean startServer() {
@@ -84,6 +87,8 @@ public class RobotServer implements Runnable {
 				try {
 					line = in.readLine();
 					System.out.println("read: " + line);
+					RobotServerEvent roboEvent = new RobotServerEvent(line);
+					notifyListeners(roboEvent);
 				} catch (IOException e) {
 					System.out.println("Read failed");
 					System.exit(-1);
@@ -108,6 +113,16 @@ public class RobotServer implements Runnable {
 	private class RobotClientDecryption {
 		public void printLine() {
 			System.out.println(line);
+		}
+	}
+	
+	public void addListener(RobotServerListener listener){
+		robotModules.add(listener);
+	}
+	
+	public void notifyListeners( RobotServerEvent event ){
+		for( RobotServerListener listener : robotModules ){
+			listener.receivedServerEvent(event);
 		}
 	}
 }
