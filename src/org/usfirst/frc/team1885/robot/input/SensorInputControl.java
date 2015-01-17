@@ -90,16 +90,6 @@ public class SensorInputControl
     	}
     	return true;
     }
-    public double getLeftDrive()
-    {
-    	double axis = joysticks.get(Sensor.JOYSTICK_LEFT).getAxis(Joystick.AxisType.kY);
-    	return deadzone(axis);
-    }
-    public double getRightDrive()
-    {
-    	double axis = joysticks.get(Sensor.JOYSTICK_RIGHT).getAxis(Joystick.AxisType.kY);
-    	return deadzone(axis);
-    }
     public int getEncoderTicks(Sensor sensor_type)
     {
     	return encoders.get(sensor_type).get();
