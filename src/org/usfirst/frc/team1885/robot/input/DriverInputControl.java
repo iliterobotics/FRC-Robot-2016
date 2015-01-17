@@ -49,18 +49,7 @@ public class DriverInputControl
     }
     public Joystick getJoystick(RobotJoystickType joystickType)
     {
-    	if(joystickType.name().contains("LEFT_DRIVE"))
-    	{
-    		return joystickMap.get(RobotJoystickType.LEFT_DRIVE);
-    	}
-    	else if(joystickType.name().contains("RIGHT_DRIVE"))
-    	{
-    		return joystickMap.get(RobotJoystickType.RIGHT_DRIVE);
-    	}
-    	else
-    	{
-    		return joystickMap.get(RobotJoystickType.CONTROLLER);
-    	}
+    	return joystickMap.get(joystickType);
     }
     public boolean getControllerButton(int buttonLocation)
     {
