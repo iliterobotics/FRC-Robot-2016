@@ -38,7 +38,7 @@ public class RobotControl
 		}
 		return instance;
 	}
-	public RobotControl()
+	protected RobotControl()
 	{		
 		outputSolenoids = new HashMap<RobotPneumaticType, Solenoid>();
 		outputTalons = new HashMap<RobotMotorType,Talon>();
