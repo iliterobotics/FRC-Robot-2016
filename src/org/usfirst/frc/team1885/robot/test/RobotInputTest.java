@@ -16,6 +16,8 @@ public class RobotInputTest extends SampleRobot implements RobotServerListener
 {
     private int leftPort;
     private int rightPort;
+    private final double diameter;
+    private final double maxSpeed;
     private DriverInputControl joystickControl;
     private DrivetrainControl driveTrainControl;
     private RobotControl robotControl;
@@ -25,13 +27,15 @@ public class RobotInputTest extends SampleRobot implements RobotServerListener
     	
         leftPort = 0;
         rightPort = 1;
-    	this.joystickControl = new DriverInputControl();
+        diameter = 4.0;
+        maxSpeed = 15.0; 
+    	this.joystickControl = DriverInputControl.getInstance();
     	this.joystickControl.addJoystick(RobotJoystickType.LEFT_DRIVE, leftPort);
     	this.joystickControl.addJoystick(RobotJoystickType.RIGHT_DRIVE, rightPort);
-    	this.driveTrainControl = new DrivetrainControl();
-    	this.robotControl = new RobotControl();
+    	this.driveTrainControl = new DrivetrainControl(diameter, maxSpeed);
+    	this.robotControl = RobotControl.getInstance();
     	
-    	this.robotServer = robotServer.getInstance();
+    	this.robotServer = RobotServer.getInstance();
     	this.robotServer.setup(4444);
     	this.robotServer.addListener( this );
     	if(this.robotServer.startServer()) {

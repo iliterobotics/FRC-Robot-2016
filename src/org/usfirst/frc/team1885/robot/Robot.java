@@ -37,9 +37,9 @@ public class Robot extends SampleRobot
         rightPort = 1;
         diameter = 4.0;
         maxSpeed = 15.0; 
-    	this.joystickControl = new DriverInputControl();
+    	this.joystickControl = DriverInputControl.getInstance();
     	this.driveTrainControl = new DrivetrainControl(diameter, maxSpeed);
-    	this.robotControl = new RobotControl();
+    	this.robotControl = RobotControl.getInstance();
     }    
     /**
      * Runs the motors with tank steering.

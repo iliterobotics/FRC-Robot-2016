@@ -6,7 +6,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 public class RobotOutputTest 
 {
-	RobotControl robotControl = new RobotControl();
+	RobotControl robotControl = RobotControl.getInstance();
 	public RobotOutputTest()
 	{
 		robotControl.addTalonOutput(RobotMotorType.LEFT_DRIVE, 0);
