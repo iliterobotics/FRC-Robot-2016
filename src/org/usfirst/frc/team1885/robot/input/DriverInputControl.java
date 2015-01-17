@@ -10,18 +10,27 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class DriverInputControl
 {
+	private static DriverInputControl instance = null;
 	
 	private Map<RobotJoystickType, Joystick> joystickMap;
 	private Map<RobotButtonType, Integer> buttonMap;
 
 	
 	public static final double DEADZONE = 0.1;
-	public DriverInputControl()
+	protected DriverInputControl()
 	{
 		
         joystickMap = new HashMap<RobotJoystickType, Joystick>();
         buttonMap = new HashMap<RobotButtonType, Integer>();
 
+	}
+	public static DriverInputControl getInstance()
+	{
+		if(instance == null)
+		{
+			instance = new DriverInputControl();
+		}
+		return instance;
 	}
 	
 	public void addJoystick(RobotJoystickType type, int port)
