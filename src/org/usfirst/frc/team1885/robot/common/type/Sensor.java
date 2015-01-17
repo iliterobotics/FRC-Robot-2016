@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.robot.input;
+package org.usfirst.frc.team1885.robot.common.type;
 
 public enum Sensor {
 	JOYSTICK_LEFT, JOYSTICK_RIGHT, DRIVE_TRAIN_LEFT_ENCODER, DRIVE_TRAIN_RIGHT_ENCODER, RECYCLE_BIN_LEFT_ENCODER,

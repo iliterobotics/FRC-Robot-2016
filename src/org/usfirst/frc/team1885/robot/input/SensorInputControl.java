@@ -3,25 +3,35 @@ package org.usfirst.frc.team1885.robot.input;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.usfirst.frc.team1885.robot.common.type.Sensor;
+
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class SensorInputControl
 {	
-	private static 
+	private static SensorInputControl instance = null;
 	
 	private HashMap<Sensor, Joystick> joysticks;
 	private HashMap<Sensor, Encoder> encoders;
 	private HashMap<Sensor, DigitalInput> limit_switches;
 	
 	public static final double DEADZONE = 0.1;
-	public SensorInputControl()
+	protected SensorInputControl()
 	{
 		joysticks = new HashMap<Sensor, Joystick>();
 		encoders = new HashMap<Sensor, Encoder>();
 		limit_switches = new HashMap<Sensor, DigitalInput>();
-	}  
+	}
+	public static SensorInputControl getInstance()
+	{
+		if(instance == null)
+		{
+			instance = new SensorInputControl();
+		}
+		return instance;
+	}
 	public Joystick getJoystick(Sensor sensor_type)
 	{
 		return joysticks.get(sensor_type);
