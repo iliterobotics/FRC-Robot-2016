@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.Talon;
 
 public class RobotControl 
 {
-	
+	private static RobotControl instance = null;
 	private List<Talon> leftDrive;
 	private List<Talon> rightDrive;
 	private Map<RobotMotorType, Talon> outputTalons;
@@ -30,29 +30,18 @@ public class RobotControl
 	private Solenoid leftShifterPneumatic;
 	private Solenoid rightShifterPneumatic;
 	*/
-	public RobotControl()
+	public static synchronized RobotControl getInstance()
 	{
-		
+		if(instance == null)
+		{
+			instance = new RobotControl();
+		}
+		return instance;
+	}
+	public RobotControl()
+	{		
 		outputSolenoids = new HashMap<RobotPneumaticType, Solenoid>();
 		outputTalons = new HashMap<RobotMotorType,Talon>();
-		//leftDrive1 = new Talon(0);		
-		addTalonOutput(RobotMotorType.LEFT_DRIVE, 0);
-		//leftDrive2 = new Talon(1);
-		addTalonOutput(RobotMotorType.LEFT_DRIVE, 1);
-		//rightDrive1 = new Talon(2);
-		addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
-		//rightDrive2 = new Talon(3);
-		addTalonOutput(RobotMotorType.RIGHT_DRIVE, 3);
-		//grabberPneumatic = new Solenoid(7);		
-		addPneumaticOutput(RobotPneumaticType.GRABBER_PNEUMATIC, 7);
-		//leftShifterPneumatic = new Solenoid(8);
-		addPneumaticOutput(RobotPneumaticType.LEFT_SHIFTER_PNEUMATIC, 8);
-		//rightShifterPneumatic = new Solenoid(9);
-		addPneumaticOutput(RobotPneumaticType.RIGHT_SHIFTER_PNEUMATIC, 9);
-		//toteMotor = new Talon(4);
-		addTalonOutput(RobotMotorType.TOTE_LIFT, 4);
-		//recycleBinMotor = new Talon(6);
-		addTalonOutput(RobotMotorType.RECYCLE_LIFT, 4);
 	}
 	
 	public void addTalonOutput(RobotMotorType type, int port) {
