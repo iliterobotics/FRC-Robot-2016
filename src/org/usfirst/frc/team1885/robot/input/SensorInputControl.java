@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1885.robot.input;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.usfirst.frc.team1885.robot.common.type.Sensor;
