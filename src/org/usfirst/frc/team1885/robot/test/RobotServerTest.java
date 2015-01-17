@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.SampleRobot;
 public class RobotServerTest extends SampleRobot implements RobotServerListener {
     private RobotServer robotServer;
     public RobotServerTest() {	
-    	this.robotServer = robotServer.getInstance();
+    	this.robotServer = RobotServer.getInstance();
     	this.robotServer.setup(4444);
     	this.robotServer.addListener( this );
     	if ( this.robotServer.startServer() ) {
