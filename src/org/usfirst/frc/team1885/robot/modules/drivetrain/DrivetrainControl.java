@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.robot.modules.drivetrain;
 
+import java.util.HashMap;
+
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
 
 
@@ -11,17 +13,35 @@ public class DrivetrainControl
 	private double leftDriveSpeed;
 	private double rightDriveSpeed;
 	private DriveMode driveMode;
-	public DrivetrainControl()
-	{
-		leftDriveSpeed = 0;
-		rightDriveSpeed = 0; 
+
+	private final double maxSpeed;
+	private final double diameter;
+	private final double circumference;
+	private  HashMap<Integer, Double> speeds;
+	
+	public DrivetrainControl(final double d, final double m) {
+		maxSpeed = m;
+		speeds = new HashMap<Integer, Double>();;
+		diameter = d;
+		circumference = 2 * Math.PI * (diameter/2);
+
 		driveMode = DriveMode.TANK;
 	}
-	public void update(double leftJoystick, double rightJoystick)
-	{
-		//calculate
-		leftDriveSpeed = leftJoystick;
-		rightDriveSpeed = rightJoystick;
+	public void addSpeed(Integer gear, Double speed) {
+		speeds.put(gear, speed);
+	}
+	public Integer getTotes() {
+		return 1; //CHANGE TO WHAT SENSOR INPUTS SAYS
+	}
+	public double getSpeed(double speed) {
+		return speed * circumference; 
+	}
+	public double getDistance (double ticks) {
+		return ticks * circumference;
+	}
+	public void update(double leftJoystick, double rightJoystick) {
+		leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
+		rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
 	}
 	/**
 	 * @return the leftDriveSpeed
@@ -33,7 +53,7 @@ public class DrivetrainControl
 	 * @param leftDriveSpeed the leftDriveSpeed to set
 	 */
 	public void setLeftDriveSpeed(double leftDriveSpeed) {
-			this.leftDriveSpeed = leftDriveSpeed;
+		this.leftDriveSpeed = leftDriveSpeed;
 	}
 	/**
 	 * @return the rightDriveSpeed
