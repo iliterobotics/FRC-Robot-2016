@@ -1,3 +1,3 @@
 Comms README Test
 
-Teddy sucks @ git
+Teddy needs to git good
