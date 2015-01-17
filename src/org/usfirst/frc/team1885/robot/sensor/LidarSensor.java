@@ -14,7 +14,7 @@ public class LidarSensor implements PIDSource{
 	private final int LIDAR_ADDR = 0x62;
 	private final int LIDAR_CONFIG_REGISTER = 0x00;
 	private final int LIDAR_DISTANCE_REGISTER = 0x8f;
-	
+		
 	public LidarSensor(Port port) {
 		i2c = new I2C(port, LIDAR_ADDR);
 		
@@ -58,14 +58,7 @@ public class LidarSensor implements PIDSource{
 	// Timer task to keep distance updated
 	private class LIDARUpdater extends TimerTask {
 		public void run() {
-			while(true) {
-				update();
-				try {
-					Thread.sleep(10);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+			update();
 		}
 	}
 }
