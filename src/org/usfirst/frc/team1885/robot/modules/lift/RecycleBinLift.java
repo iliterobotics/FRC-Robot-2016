@@ -1,34 +1,36 @@
 package org.usfirst.frc.team1885.robot.modules.lift;
 
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
-
-import edu.wpi.first.wpilibj.DigitalInput;
+import org.usfirst.frc.team1885.robot.common.type.Sensor;
+import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 
 public class RecycleBinLift {
+	//RECYCLE_BIN_LEFT_ENCODER, RECYCLE_BIN_RIGHT_ENCODER
 	private MotorState state;
-	private boolean binInHand;
+	private boolean hasBin;
 
 	public RecycleBinLift( MotorState state ) {
 		this.state = state;
-		binInHand = false;
+		hasBin = false;
 	}
-
 	public MotorState getMotorState() {
 		return state;
 	}
-
-	public void checkLimit(){
-		/*upper limit for the bin lift kept in robot*/
-		if( upperLimit.get() ){	
-			if( state == MotorState.UP )
-				binInHand = true;
-			state = MotorState.STOP;
-		}
-		/*lower limit for the bin lift kept in robot*/
-		if( lowerLimit.get() ){
-			if( state == MotorState.DOWN )
-				binInHand = false;
-		} 
+	public boolean hasBin(){
+		return hasBin;
 	}
-
+	public void updateLift(){
+		if( state == MotorState.UP ){
+			if( SensorInputControl.getInstance().getLimitSwitch( Sensor.RECYCLE_BIN_UPPER_LIMIT ).get() ){
+				hasBin = true;
+				state = MotorState.STOP;
+			}
+		}
+		if( state == MotorState.DOWN ){
+			if( SensorInputControl.getInstance().getLimitSwitch( Sensor.RECYCLE_BIN_LOWER_LIMIT ).get() ){
+				hasBin = false;
+				state = MotorState.STOP;
+			}
+		}	
+	}
 }
