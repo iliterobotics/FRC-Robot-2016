@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.robot;
+package org.usfirst.frc.team1885.robot.test;
 
 
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
@@ -10,7 +10,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControl;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
-public class Robot extends SampleRobot 
+public class RobotInputTest extends SampleRobot 
 {
     private int leftPort;
     private int rightPort;
@@ -19,7 +19,7 @@ public class Robot extends SampleRobot
     private RobotControl robotControl;
     private RobotServer robotServer;
     
-    public Robot() 
+    public RobotInputTest() 
     {
         leftPort = 0;
         rightPort = 1;
