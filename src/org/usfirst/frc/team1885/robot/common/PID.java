@@ -23,7 +23,7 @@ public class PID {
 
 	public double getPID (double projectedSpeed, double currentSpeed) {
 		previousError = error;
-		error = currentSpeed - projectedSpeed;
+		error = projectedSpeed - currentSpeed;
 		
 		return (p * getP()) + (i * getI(1.0)) + (d * getD());
 	}

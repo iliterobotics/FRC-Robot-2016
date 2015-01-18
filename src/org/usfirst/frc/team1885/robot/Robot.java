@@ -39,6 +39,7 @@ public class Robot extends SampleRobot
         maxSpeed = 15.0; 
     	this.joystickControl = DriverInputControl.getInstance();
     	this.driveTrainControl = new DrivetrainControl(diameter, maxSpeed);
+    	this.driveTrainControl.addSpeed(1, 15.0);
     	this.robotControl = RobotControl.getInstance();
     }    
     /**

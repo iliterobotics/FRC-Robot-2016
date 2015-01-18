@@ -2,7 +2,10 @@ package org.usfirst.frc.team1885.robot.modules.drivetrain;
 
 import java.util.HashMap;
 
+import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
+import org.usfirst.frc.team1885.robot.common.type.Sensor;
+import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 
 
 public class DrivetrainControl 
@@ -13,7 +16,7 @@ public class DrivetrainControl
 	private double leftDriveSpeed;
 	private double rightDriveSpeed;
 	private DriveMode driveMode;
-
+	private PID speedControlLoop;
 	private final double maxSpeed;
 	private final double diameter;
 	private final double circumference;
@@ -25,6 +28,8 @@ public class DrivetrainControl
 		diameter = d;
 		circumference = 2 * Math.PI * (diameter/2);
 
+		SensorInputControl.getInstance().getEncoder(Sensor.DRIVE_TRAIN_LEFT_ENCODER).setDistancePerPulse(circumference/360);
+		
 		driveMode = DriveMode.TANK;
 	}
 	public void addSpeed(Integer gear, Double speed) {
@@ -36,12 +41,16 @@ public class DrivetrainControl
 	public double getSpeed(double speed) {
 		return speed * circumference; 
 	}
-	public double getDistance (double ticks) {
-		return ticks * circumference;
+	public double getDistance () {
+		return SensorInputControl.getInstance().getEncoderTicks(Sensor.DRIVE_TRAIN_LEFT_ENCODER) * circumference;
 	}
 	public void update(double leftJoystick, double rightJoystick) {
+		
+		
+		
 		leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
 		rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
+		
 	}
 	/**
 	 * @return the leftDriveSpeed
@@ -59,13 +68,13 @@ public class DrivetrainControl
 	 * @return the rightDriveSpeed
 	 */
 	public double getRightDriveSpeed() {
-		return rightDriveSpeed;
+		return rightDriveSpeed * (speeds.get(getTotes()) / maxSpeed);
 	}
 	/**
 	 * @param rightDriveSpeed the rightDriveSpeed to set
 	 */
 	public void setRightDriveSpeed(double rightDriveSpeed) {
-		this.rightDriveSpeed = rightDriveSpeed;
+		this.rightDriveSpeed = rightDriveSpeed * (speeds.get(getTotes()) / maxSpeed);;
 	}
 	/**
 	 * @return the driveMode
@@ -90,7 +99,7 @@ public class DrivetrainControl
 	 * right joystick
 	 */
 	public void straightDrive(double driveSpeed) {
-		this.rightDriveSpeed = driveSpeed;
-		this.leftDriveSpeed = driveSpeed;
+		this.rightDriveSpeed = driveSpeed * (speeds.get(getTotes()) / maxSpeed);;
+		this.leftDriveSpeed = driveSpeed * (speeds.get(getTotes()) / maxSpeed);;
 	}
 }
