@@ -7,6 +7,7 @@ import java.util.Map;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 
@@ -16,7 +17,7 @@ public class RobotControl
 	private List<Talon> leftDrive;
 	private List<Talon> rightDrive;
 	private Map<RobotMotorType, Talon> outputTalons;
-	private Map<RobotPneumaticType, Solenoid> outputSolenoids;
+	private Map<RobotPneumaticType, DoubleSolenoid> outputSolenoids;
 	/*
 	private Talon leftDrive1;
 	private Talon leftDrive2;
@@ -40,7 +41,7 @@ public class RobotControl
 	}
 	protected RobotControl()
 	{		
-		outputSolenoids = new HashMap<RobotPneumaticType, Solenoid>();
+		outputSolenoids = new HashMap<RobotPneumaticType, DoubleSolenoid>();
 		outputTalons = new HashMap<RobotMotorType,Talon>();
 	}
 	
@@ -56,9 +57,9 @@ public class RobotControl
 		}
 	}
 	
-	public void addPneumaticOutput(RobotPneumaticType type, int port)
+	public void addPneumaticOutput(RobotPneumaticType type, int port1, int port2)
 	{		
-		outputSolenoids.put(type,new Solenoid(port));		
+		outputSolenoids.put(type,new DoubleSolenoid(port1, port2));		
 	}
 	public void updateDriveSpeed(double leftspeed, double rightspeed)
 	{
@@ -71,16 +72,16 @@ public class RobotControl
 			rightMotor.set(rightspeed);
 		}		
 	}
-	public void updateGrabberPneumatics( boolean start )
+	public void updateGrabberPneumatics( DoubleSolenoid.Value start )
 	{
 		outputSolenoids.get(RobotPneumaticType.GRABBER_PNEUMATIC).set(start);
 	}
-	public void updateLeftShifter( boolean start )
+	public void updateLeftShifter( DoubleSolenoid.Value start )
 	{	
 		outputSolenoids.get(RobotPneumaticType.LEFT_SHIFTER_PNEUMATIC).set(start);	
 	}
 	
-	public void updateRightShifter( boolean start )
+	public void updateRightShifter( DoubleSolenoid.Value start )
 	{
 		outputSolenoids.get(RobotPneumaticType.RIGHT_SHIFTER_PNEUMATIC).set(start);	
 	}
