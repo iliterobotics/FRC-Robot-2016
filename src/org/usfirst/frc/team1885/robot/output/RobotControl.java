@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot.output;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,7 +9,6 @@ import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 
 public class RobotControl 
@@ -43,6 +43,8 @@ public class RobotControl
 	{		
 		outputSolenoids = new HashMap<RobotPneumaticType, DoubleSolenoid>();
 		outputTalons = new HashMap<RobotMotorType,Talon>();
+		rightDrive = new ArrayList<Talon>();
+		leftDrive = new ArrayList<Talon>();
 	}
 	
 	public void addTalonOutput(RobotMotorType type, int port) {
