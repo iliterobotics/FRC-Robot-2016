@@ -3,9 +3,14 @@ package org.usfirst.frc.team1885.robot.input;
 import java.util.HashMap;
 
 import org.usfirst.frc.team1885.robot.common.type.Sensor;
+import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
+
+import com.kauailabs.nav6.frc.IMUAdvanced;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class SensorInputControl
@@ -15,6 +20,9 @@ public class SensorInputControl
 	private HashMap<Sensor, Joystick> joysticks;
 	private HashMap<Sensor, Encoder> encoders;
 	private HashMap<Sensor, DigitalInput> limit_switches;
+	private HashMap<Sensor, LidarSensor> lidar_sensor;
+	private IMUAdvanced imu;
+	SerialPort serial_port;
 	
 	public static final double DEADZONE = 0.1;
 	protected SensorInputControl()
@@ -22,6 +30,13 @@ public class SensorInputControl
 		joysticks = new HashMap<Sensor, Joystick>();
 		encoders = new HashMap<Sensor, Encoder>();
 		limit_switches = new HashMap<Sensor, DigitalInput>();
+		lidar_sensor = new HashMap<Sensor, LidarSensor>();
+		
+	}
+	public void setUpNAVX(byte rate, edu.wpi.first.wpilibj.SerialPort.Port port)
+	{
+		serial_port = new SerialPort(57600, port);
+		imu = new IMUAdvanced(serial_port, rate);
 	}
 	public static SensorInputControl getInstance()
 	{
@@ -30,6 +45,10 @@ public class SensorInputControl
 			instance = new SensorInputControl();
 		}
 		return instance;
+	}
+	public IMUAdvanced getNAVX()
+	{
+		return imu;
 	}
 	public Joystick getJoystick(Sensor sensor_type)
 	{
@@ -88,6 +107,15 @@ public class SensorInputControl
     		return false;
     	}
     	return true;
+    }
+    public boolean addLidarSensor(Port port)
+    {
+    	lidar_sensor.put(Sensor.LIDAR , new LidarSensor(port));
+    	return true;
+    }
+    public LidarSensor getLidarSensor(Sensor sensor_type)
+    {
+    	return lidar_sensor.get(sensor_type);
     }
     public int getEncoderTicks(Sensor sensor_type)
     {
