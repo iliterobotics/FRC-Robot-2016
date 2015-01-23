@@ -5,13 +5,16 @@ import org.usfirst.frc.team1885.robot.common.type.Sensor;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 
 public class RecycleBinLift {
-	//RECYCLE_BIN_LEFT_ENCODER, RECYCLE_BIN_RIGHT_ENCODER
+	
 	private MotorState state;
 	private boolean hasBin;
 
 	public RecycleBinLift( MotorState state ) {
 		this.state = state;
 		hasBin = false;
+	}
+	public void setState( MotorState state ){
+		this.state = state;
 	}
 	public MotorState getMotorState() {
 		return state;
