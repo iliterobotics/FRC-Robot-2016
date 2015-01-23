@@ -13,7 +13,7 @@ public class RecycleBinLift {
 		this.state = state;
 		hasBin = false;
 	}
-	public void setState( MotorState state ){
+	public void setMotorState( MotorState state ){
 		this.state = state;
 	}
 	public MotorState getMotorState() {
