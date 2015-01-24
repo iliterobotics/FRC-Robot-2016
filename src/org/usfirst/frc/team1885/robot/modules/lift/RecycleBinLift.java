@@ -11,16 +11,14 @@ public class RecycleBinLift {
     private double liftSpeed;
     private MotorState state;
     private boolean hasBin;
-    
+
     protected RecycleBinLift() {
         this.state = MotorState.STOP;
         hasBin = false;
         liftSpeed = 0;
     }
-    public static RecycleBinLift getInstance()
-    {
-        if(instance == null)
-        {
+    public static RecycleBinLift getInstance() {
+        if (instance == null) {
             instance = new RecycleBinLift();
         }
         return instance;
@@ -34,7 +32,7 @@ public class RecycleBinLift {
     public boolean hasBin() {
         return hasBin;
     }
-    public double getSpeed(){
+    public double getSpeed() {
         return liftSpeed;
     }
     public void updateLift() {
@@ -55,13 +53,13 @@ public class RecycleBinLift {
             }
         }
     }
-    public void updateLift( double speed ){
+    public void updateLift(double speed) {
         liftSpeed = speed;
-        if( speed > 0 ){
+        if (speed > 0) {
             state = MotorState.UP;
-        }else if( speed < 0 ){
+        } else if (speed < 0) {
             state = MotorState.DOWN;
-        }else{
+        } else {
             state = MotorState.STOP;
         }
         if (state == MotorState.UP) {
@@ -79,7 +77,7 @@ public class RecycleBinLift {
             }
         }
     }
-    public void stop(){
+    public void stop() {
         state = MotorState.STOP;
         liftSpeed = 0;
     }

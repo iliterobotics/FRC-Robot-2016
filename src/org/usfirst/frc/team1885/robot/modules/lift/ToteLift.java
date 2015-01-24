@@ -15,10 +15,8 @@ public class ToteLift {
         this.state = MotorState.STOP;
         liftSpeed = 0;
     }
-    public static ToteLift getInstance()
-    {
-        if(instance == null)
-        {
+    public static ToteLift getInstance() {
+        if (instance == null) {
             instance = new ToteLift();
         }
         return instance;
@@ -29,7 +27,7 @@ public class ToteLift {
     public MotorState getMotorState() {
         return state;
     }
-    public double getSpeed(){
+    public double getSpeed() {
         return liftSpeed;
     }
     public void updateLift() {
@@ -40,17 +38,17 @@ public class ToteLift {
                 stop();
             }
         }
-        if(state == MotorState.DOWN){
+        if (state == MotorState.DOWN) {
             liftSpeed = -DEFAULT_LIFT_SPEED;
         }
     }
     public void updateLift(double speed) {
         liftSpeed = speed;
-        if( speed > 0 ){
+        if (speed > 0) {
             state = MotorState.UP;
-        }else if( speed < 0 ){
+        } else if (speed < 0) {
             state = MotorState.DOWN;
-        }else{
+        } else {
             state = MotorState.STOP;
         }
         if (state == MotorState.UP) {
@@ -60,7 +58,7 @@ public class ToteLift {
             }
         }
     }
-    public void cycle(){
+    public void cycle() {
         if (state == MotorState.UP) {
             liftSpeed = DEFAULT_LIFT_SPEED;
             if (SensorInputControl.getInstance()
@@ -69,7 +67,7 @@ public class ToteLift {
             }
         }
     }
-    public void stop(){
+    public void stop() {
         state = MotorState.STOP;
         liftSpeed = 0;
     }
