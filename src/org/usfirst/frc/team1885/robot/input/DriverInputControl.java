@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.input;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
 
@@ -12,17 +13,13 @@ public class DriverInputControl
 {
 	private static DriverInputControl instance = null;
 	
-	private Map<RobotJoystickType, Joystick> joystickMap;
-	private Map<RobotButtonType, Integer> buttonMap;
-
+	private HashMap<RobotJoystickType, Joystick> joystickMap;
 	
 	public static final double DEADZONE = 0.1;
+	
 	protected DriverInputControl()
 	{
-		
         joystickMap = new HashMap<RobotJoystickType, Joystick>();
-        buttonMap = new HashMap<RobotButtonType, Integer>();
-
 	}
 	public static DriverInputControl getInstance()
 	{
@@ -32,7 +29,6 @@ public class DriverInputControl
 		}
 		return instance;
 	}
-	
 	public void addJoystick(RobotJoystickType type, int port)
 	{
 		joystickMap.put(type, new Joystick(port));
@@ -60,9 +56,8 @@ public class DriverInputControl
     {
     	return joystickMap.get(joystickType);
     }
-    public boolean getControllerButton(int buttonLocation)
+    public boolean getControllerButton(RobotButtonType buttonType)
     {
-    	return joystickMap.get(RobotJoystickType.CONTROLLER).getRawButton(buttonLocation);
+    	return joystickMap.get(RobotJoystickType.CONTROLLER).getRawButton((Integer) JoystickButtonMap.getInstance().getControllerButtonMap().get(buttonType));
     }
-
 }
