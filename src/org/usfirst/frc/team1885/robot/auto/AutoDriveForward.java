@@ -10,8 +10,8 @@ public class AutoDriveForward implements AutoCommand{
 	private PID distanceControlLoop;
 	private double distance;
 	private double error;
-	private double leftDriveDistance;
-	private double rightDriveDistance;
+	private double leftDriveOutput;
+	private double rightDriveOutput; 
 	private double leftDistanceTraveled;
 	private double rightDistanceTraveled;
 	public AutoDriveForward(double d, double e) {
@@ -28,13 +28,14 @@ public class AutoDriveForward implements AutoCommand{
 			this.reset();
 			return true;
 		} else {
-			leftDriveDistance = distanceControlLoop.getPID(distance, SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).getDistance());
-			rightDriveDistance = distanceControlLoop.getPID(distance, SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).getDistance());
-			RobotControl.getInstance().updateDriveSpeed(leftDriveDistance, rightDriveDistance);
+			leftDriveOutput = distanceControlLoop.getPID(distance, SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).getDistance());
+			rightDriveOutput = distanceControlLoop.getPID(distance, SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).getDistance());
+			RobotControl.getInstance().updateDriveSpeed(leftDriveOutput, rightDriveOutput);
 			return false;
 		}
 	}
 	public void reset() {
+		distanceControlLoop.reset();
 		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
 		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
 		RobotControl.getInstance().updateDriveSpeed(0, 0);
