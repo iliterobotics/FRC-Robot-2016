@@ -4,14 +4,21 @@ import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.output.RobotControl;
+
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class RobotConfiguration {
 
-    public RobotConfiguration(){
-        DriverInputControl.getInstance();
+    public static void configureRobot(){
+        DriverInputControl.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, 0 );
+        DriverInputControl.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, 1 );
+        DriverInputControl.getInstance().addJoystick( RobotJoystickType.CONTROLLER, 2 );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_UP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 0 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_DOWN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_UP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );
@@ -30,5 +37,13 @@ public class RobotConfiguration {
         SensorInputControl.getInstance().addSensor( SensorType.TOTE_LOWER_LIMIT_SWITCH, 11 );
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_UPPER_LIMIT, 12 );
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_LOWER_LIMIT, 13 );
+        SensorInputControl.getInstance().setUpNAVX( (byte)(50), SerialPort.Port.kMXP );
+        SensorInputControl.getInstance().addLidarSensor( I2C.Port.kMXP );
+        RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 1 );
+        RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 3 );
+        RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 2 );
+        RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 4 );
+        RobotControl.getInstance().addTalonOutput( RobotMotorType.TOTE_LIFT, 5 );
+        RobotControl.getInstance().addTalonOutput( RobotMotorType.RECYCLE_LIFT, 7 );
     }
 }

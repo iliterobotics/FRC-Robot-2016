@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1885.robot;
 
 
+import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
@@ -32,6 +33,7 @@ public class Robot extends SampleRobot
     private DrivetrainControl driveTrainControl;
     private RobotControl robotControl;
     public Robot() {
+        RobotConfiguration.configureRobot();
         leftPort = 0;
         rightPort = 1;
         diameter = 4.0;
