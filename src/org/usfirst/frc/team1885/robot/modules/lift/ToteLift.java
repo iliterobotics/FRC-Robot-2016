@@ -1,30 +1,45 @@
 package org.usfirst.frc.team1885.robot.modules.lift;
 
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
+import org.usfirst.frc.team1885.robot.common.type.Sensor;
+import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 
 public class ToteLift {
+
 	private MotorState state;
+	private final int MAX_TOTE_COUNT = 6;
 	private int toteCount;
 
 	public ToteLift(MotorState state) {
 		this.state = state;
 		toteCount = 0;
 	}
-
+	public void setMotorState(MotorState state) {
+		this.state = state;
+	}
 	public MotorState getMotorState() {
 		return state;
 	}
-
-//	public void checkLimit() {
-//		if(crateLiftLimitTop.get()) {	
-//			state = MotorState.STOP;
-//			toteCount++;
-//		}
-//
-//		if(crateLiftLimitBottom.get()){
-//			if(state == MotorState.DOWN) {
-//				toteCount--;
-//			}
-//		} 
-//	}
+	public int getToteCount() {
+		return toteCount;
+	}
+	public void updateManualLift() {
+		if (state == MotorState.UP) {
+			if (toteCount == MAX_TOTE_COUNT) {
+				state = MotorState.STOP;
+			}
+			if (SensorInputControl.getInstance()
+					.getLimitSwitch(Sensor.TOTE_LEFT_LIMIT_SWITCH).get()) {
+				toteCount++;
+			}
+		}
+		if (state == MotorState.DOWN) {
+			if (SensorInputControl.getInstance()
+					.getLimitSwitch(Sensor.TOTE_RIGHT_LIMIT_SWITCH).get()) {
+				if (toteCount > 0) {
+					toteCount--;
+				}
+			}
+		}
+	}
 }
