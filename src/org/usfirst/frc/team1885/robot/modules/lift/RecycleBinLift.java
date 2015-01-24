@@ -7,10 +7,10 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 public class RecycleBinLift {
 
     public static final double DEFAULT_LIFT_SPEED = .5;
+    private static RecycleBinLift instance;
     private double liftSpeed;
     private MotorState state;
     private boolean hasBin;
-    private static RecycleBinLift instance;
     
     protected RecycleBinLift() {
         this.state = MotorState.STOP;
@@ -57,7 +57,7 @@ public class RecycleBinLift {
             }
         }
     }
-    public void updateLIft( double speed ){
+    public void updateLift( double speed ){
         liftSpeed = speed;
         if( speed > 0 ){
             state = MotorState.UP;
