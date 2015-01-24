@@ -43,8 +43,7 @@ public class RecycleBinLift {
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.RECYCLE_BIN_UPPER_LIMIT).get()) {
                 hasBin = true;
-                state = MotorState.STOP;
-                liftSpeed = 0;
+                stop();
             }
         }
         if (state == MotorState.DOWN) {
@@ -52,8 +51,7 @@ public class RecycleBinLift {
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.RECYCLE_BIN_LOWER_LIMIT).get()) {
                 hasBin = false;
-                state = MotorState.STOP;
-                liftSpeed = 0;
+                stop();
             }
         }
     }
@@ -70,17 +68,19 @@ public class RecycleBinLift {
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.RECYCLE_BIN_UPPER_LIMIT).get()) {
                 hasBin = true;
-                state = MotorState.STOP;
-                liftSpeed = 0;
+                stop();
             }
         }
         if (state == MotorState.DOWN) {
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.RECYCLE_BIN_LOWER_LIMIT).get()) {
                 hasBin = false;
-                state = MotorState.STOP;
-                liftSpeed = 0;
+                stop();
             }
         }
+    }
+    public void stop(){
+        state = MotorState.STOP;
+        liftSpeed = 0;
     }
 }

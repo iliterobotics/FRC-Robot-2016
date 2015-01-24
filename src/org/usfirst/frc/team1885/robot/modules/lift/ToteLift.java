@@ -37,7 +37,7 @@ public class ToteLift {
             liftSpeed = DEFAULT_LIFT_SPEED;
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {
-                state = MotorState.STOP;
+                stop();
             }
         }
         if(state == MotorState.DOWN){
@@ -56,7 +56,7 @@ public class ToteLift {
         if (state == MotorState.UP) {
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {
-                state = MotorState.STOP;
+                stop();
             }
         }
     }
@@ -65,8 +65,12 @@ public class ToteLift {
             liftSpeed = DEFAULT_LIFT_SPEED;
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.TOTE_LOWER_LIMIT_SWITCH).get()) {
-                state = MotorState.STOP;
+                stop();
             }
         }
+    }
+    public void stop(){
+        state = MotorState.STOP;
+        liftSpeed = 0;
     }
 }
