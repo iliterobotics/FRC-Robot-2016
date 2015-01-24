@@ -1,7 +1,7 @@
 package org.usfirst.frc.team1885.robot.modules.lift;
 
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
-import org.usfirst.frc.team1885.robot.common.type.Sensor;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 
 public class RecycleBinLift {
@@ -24,13 +24,13 @@ public class RecycleBinLift {
 	}
 	public void updateLift(){
 		if( state == MotorState.UP ){
-			if( SensorInputControl.getInstance().getLimitSwitch( Sensor.RECYCLE_BIN_UPPER_LIMIT ).get() ){
+			if( SensorInputControl.getInstance().getLimitSwitch( SensorType.RECYCLE_BIN_UPPER_LIMIT ).get() ){
 				hasBin = true;
 				state = MotorState.STOP;
 			}
 		}
 		if( state == MotorState.DOWN ){
-			if( SensorInputControl.getInstance().getLimitSwitch( Sensor.RECYCLE_BIN_LOWER_LIMIT ).get() ){
+			if( SensorInputControl.getInstance().getLimitSwitch( SensorType.RECYCLE_BIN_LOWER_LIMIT ).get() ){
 				hasBin = false;
 				state = MotorState.STOP;
 			}

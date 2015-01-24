@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
-import org.usfirst.frc.team1885.robot.common.type.Sensor;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 
 
@@ -28,7 +28,7 @@ public class DrivetrainControl
 		diameter = d;
 		circumference = 2 * Math.PI * (diameter/2);
 
-		SensorInputControl.getInstance().getEncoder(Sensor.DRIVE_TRAIN_LEFT_ENCODER).setDistancePerPulse(circumference/360);
+		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).setDistancePerPulse(circumference/360);
 		
 		driveMode = DriveMode.TANK;
 	}
@@ -42,7 +42,7 @@ public class DrivetrainControl
 		return speed * circumference; 
 	}
 	public double getDistance () {
-		return SensorInputControl.getInstance().getEncoderTicks(Sensor.DRIVE_TRAIN_LEFT_ENCODER) * circumference;
+		return SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) * circumference;
 	}
 	public void update(double leftJoystick, double rightJoystick) {
 		
