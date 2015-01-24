@@ -43,8 +43,8 @@ public class Robot extends SampleRobot
     public void operatorControl() {
         while (isOperatorControl() && isEnabled()) {        	
 //        	System.out.println( joystickControl.getLeftDrive() + " " + joystickControl.getRightDrive());
-//        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
         	driveTrainControl.update();
+        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
         	robotControl.updateDriveSpeed(driveTrainControl.getLeftDriveSpeed(), driveTrainControl.getRightDriveSpeed());
             Timer.delay(.005);		// wait for a motor update time
         }
