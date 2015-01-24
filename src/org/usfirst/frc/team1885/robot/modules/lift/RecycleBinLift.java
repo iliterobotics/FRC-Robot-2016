@@ -9,13 +9,16 @@ public class RecycleBinLift {
     public static final double DEFAULT_LIFT_SPEED = .5;
     private static RecycleBinLift instance;
     private double liftSpeed;
-    private MotorState state;
     private boolean hasBin;
+    private MotorState state;
 
     protected RecycleBinLift() {
         this.state = MotorState.STOP;
         hasBin = false;
         liftSpeed = 0;
+        
+        // TODO fix me
+        SensorInputControl.getInstance().getEncoder(SensorType.RECYCLE_BIN_ENCODER).setDistancePerPulse(1/360);
     }
     public static RecycleBinLift getInstance() {
         if (instance == null) {
