@@ -2,10 +2,6 @@ package org.usfirst.frc.team1885.robot.common.type;
 
 import java.util.HashMap;
 
-import org.usfirst.frc.team1885.robot.input.DriverInputControl;
-
-import edu.wpi.first.wpilibj.Joystick;
-
 public class JoystickButtonMap {
     private HashMap<RobotButtonType, JoystickButtonMatch> buttonMap;
 
@@ -27,7 +23,7 @@ public class JoystickButtonMap {
         buttonMap.put(buttonType, joystickButton);
     }
 
-    public HashMap getButtonMap() {
+    public HashMap<RobotButtonType, JoystickButtonMatch> getButtonMap() {
         return buttonMap;
     }
 }

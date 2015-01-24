@@ -9,9 +9,8 @@ import com.kauailabs.nav6.frc.IMUAdvanced;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class SensorInputControl {
     private static SensorInputControl instance = null;

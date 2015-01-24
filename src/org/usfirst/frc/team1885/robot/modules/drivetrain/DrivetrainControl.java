@@ -4,7 +4,10 @@ import java.util.HashMap;
 
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
+import org.usfirst.frc.team1885.robot.common.type.GearState;
+import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 
 
@@ -16,11 +19,13 @@ public class DrivetrainControl
 	private double leftDriveSpeed;
 	private double rightDriveSpeed;
 	private DriveMode driveMode;
+	private GearState gearState;
 	private PID speedControlLoop;
 	private final double maxSpeed;
 	private final double diameter;
 	private final double circumference;
 	private  HashMap<Integer, Double> speeds;
+	private DriverInputControl driverInput;
 	
 	public DrivetrainControl(final double d, final double m) {
 		maxSpeed = m;
@@ -31,6 +36,8 @@ public class DrivetrainControl
 		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).setDistancePerPulse(circumference/360);
 		
 		driveMode = DriveMode.TANK;
+		setGearState(GearState.HIGH_GEAR);
+		driverInput = DriverInputControl.getInstance();
 	}
 	public void addSpeed(Integer gear, Double speed) {
 		speeds.put(gear, speed);
@@ -44,9 +51,22 @@ public class DrivetrainControl
 	public double getDistance () {
 		return SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) * circumference;
 	}
+	
+	public void update()
+	{
+		if (driverInput.getButton(RobotButtonType.GEAR_SHIFT)){
+			setGearState(GearState.LOW_GEAR);
+		}
+		else{
+			setGearState(GearState.HIGH_GEAR);
+		}
+		
+		//FIXME: add slow straight drive state + button
+		
+		update( driverInput.getLeftDrive(), driverInput.getRightDrive() );
+	}
+	
 	public void update(double leftJoystick, double rightJoystick) {
-		
-		
 		
 		leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
 		rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
@@ -101,5 +121,11 @@ public class DrivetrainControl
 	public void straightDrive(double driveSpeed) {
 		this.rightDriveSpeed = driveSpeed * (speeds.get(getTotes()) / maxSpeed);;
 		this.leftDriveSpeed = driveSpeed * (speeds.get(getTotes()) / maxSpeed);;
+	}
+	public GearState getGearState() {
+		return gearState;
+	}
+	public void setGearState(GearState gearState) {
+		this.gearState = gearState;
 	}
 }

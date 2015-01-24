@@ -2,7 +2,6 @@ package org.usfirst.frc.team1885.robot;
 
 
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
-import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
@@ -25,20 +24,15 @@ import edu.wpi.first.wpilibj.Timer;
  */
 public class Robot extends SampleRobot 
 {
-    private int leftPort;
-    private int rightPort;
     private final double diameter;
     private final double maxSpeed;
-    private DriverInputControl joystickControl;
     private DrivetrainControl driveTrainControl;
     private RobotControl robotControl;
     public Robot() {
         RobotConfiguration.configureRobot();
-        leftPort = 0;
-        rightPort = 1;
         diameter = 4.0;
         maxSpeed = 15.0; 
-    	this.joystickControl = DriverInputControl.getInstance();
+
     	this.driveTrainControl = new DrivetrainControl(diameter, maxSpeed);
     	this.driveTrainControl.addSpeed(1, 15.0);
     	this.robotControl = RobotControl.getInstance();
@@ -50,7 +44,7 @@ public class Robot extends SampleRobot
         while (isOperatorControl() && isEnabled()) {        	
 //        	System.out.println( joystickControl.getLeftDrive() + " " + joystickControl.getRightDrive());
 //        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
-        	driveTrainControl.update(joystickControl.getLeftDrive(), joystickControl.getRightDrive());
+        	driveTrainControl.update();
         	robotControl.updateDriveSpeed(driveTrainControl.getLeftDriveSpeed(), driveTrainControl.getRightDriveSpeed());
             Timer.delay(.005);		// wait for a motor update time
         }

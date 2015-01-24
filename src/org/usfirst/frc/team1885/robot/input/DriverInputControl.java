@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1885.robot.input;
 
 import java.util.HashMap;
-import java.util.Map;
 
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
