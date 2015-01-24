@@ -8,6 +8,7 @@ import java.util.Map;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Talon;
 
@@ -17,6 +18,7 @@ public class RobotControl {
     private List<Talon> rightDrive;
     private Map<RobotMotorType, Talon> outputTalons;
     private Map<RobotPneumaticType, DoubleSolenoid> outputSolenoids;
+    private Compressor compressor;
 
     /*
      * private Talon leftDrive1; private Talon leftDrive2; private Talon
@@ -33,6 +35,8 @@ public class RobotControl {
         return instance;
     }
     protected RobotControl() {
+        compressor = new Compressor();
+        compressor.start();
         outputSolenoids = new HashMap<RobotPneumaticType, DoubleSolenoid>();
         outputTalons = new HashMap<RobotMotorType, Talon>();
         rightDrive = new ArrayList<Talon>();
