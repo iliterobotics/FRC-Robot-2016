@@ -1,15 +1,24 @@
 package org.usfirst.frc.team1885.robot.modules.lift;
 
+import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
+import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 public class ToteLift {
 
+	private final int toteHeight = 42; /*psuedoheight*/
     public static final double DEFAULT_LIFT_SPEED = .5;
     private static ToteLift instance;
     private double liftSpeed;
     private MotorState state;
+    private PID distanceControlLoop;
+    private double distanceTraveled;
+    private double liftOutput;
+    private boolean isIncrementing;
 
     protected ToteLift() {
         this.state = MotorState.STOP;
@@ -31,6 +40,16 @@ public class ToteLift {
         return liftSpeed;
     }
     public void updateLift() {
+    	
+    	if(DriverInputControl.getInstance().getButton(RobotButtonType.TOTE_LIFT_INCREMENT)) {
+    		state = MotorState.UP;
+    		incrementLift(42, 4.20);
+    	} else if(DriverInputControl.getInstance().getButton(RobotButtonType.TOTE_LIFT_UP)) {
+    		state = MotorState.UP;
+    	} else if(DriverInputControl.getInstance().getButton(RobotButtonType.TOTE_LIFT_DOWN)) {
+    		state = MotorState.DOWN;
+    	}
+    	
         if (state == MotorState.UP) {
             liftSpeed = DEFAULT_LIFT_SPEED;
             if (SensorInputControl.getInstance()
@@ -58,6 +77,21 @@ public class ToteLift {
             }
         }
     }
+    public boolean incrementLift(double distance, double error) {
+    	distanceTraveled = SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER).getDistance();
+		if (Math.abs(distanceTraveled  - distance) <= error) {
+			this.reset();
+			return true;
+		} else {
+			liftOutput = distanceControlLoop.getPID(distance, SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER).getDistance());
+			updateLift(liftOutput);
+			return false;
+		}
+    }
+    public void reset() {
+		distanceControlLoop.reset();
+		SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER).reset();
+	}
     public void cycle() {
         if (state == MotorState.UP) {
             liftSpeed = DEFAULT_LIFT_SPEED;

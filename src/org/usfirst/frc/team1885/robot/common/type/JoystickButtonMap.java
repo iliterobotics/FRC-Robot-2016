@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.Joystick;
 public class JoystickButtonMap {
 	private HashMap<RobotButtonType, JoystickButtonMatch> buttonMap;
 	
-	
 	private static JoystickButtonMap instance;
 	
 	protected JoystickButtonMap()
