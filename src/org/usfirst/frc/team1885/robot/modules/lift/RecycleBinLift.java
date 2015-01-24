@@ -38,4 +38,21 @@ public class RecycleBinLift {
             }
         }
     }
+    public void updateLIft( MotorState state ){
+        setMotorState( state );
+        if (state == MotorState.UP) {
+            if (SensorInputControl.getInstance()
+                    .getLimitSwitch(SensorType.RECYCLE_BIN_UPPER_LIMIT).get()) {
+                hasBin = true;
+                state = MotorState.STOP;
+            }
+        }
+        if (state == MotorState.DOWN) {
+            if (SensorInputControl.getInstance()
+                    .getLimitSwitch(SensorType.RECYCLE_BIN_LOWER_LIMIT).get()) {
+                hasBin = false;
+                state = MotorState.STOP;
+            }
+        }
+    }
 }
