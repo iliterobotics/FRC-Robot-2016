@@ -10,11 +10,20 @@ public class RecycleBinLift {
     private double liftSpeed;
     private MotorState state;
     private boolean hasBin;
-
-    public RecycleBinLift() {
+    private static RecycleBinLift instance;
+    
+    protected RecycleBinLift() {
         this.state = MotorState.STOP;
         hasBin = false;
         liftSpeed = 0;
+    }
+    public static RecycleBinLift getInstance()
+    {
+        if(instance == null)
+        {
+            instance = new RecycleBinLift();
+        }
+        return instance;
     }
     public void setMotorState(MotorState state) {
         this.state = state;
