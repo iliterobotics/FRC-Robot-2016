@@ -41,9 +41,9 @@ public class ToteLift {
     }
     public void updateLift() {
     	
-    	if(DriverInputControl.getInstance().getButton(RobotButtonType.TOTE_LIFT_INCREMENT)) {
+    	if(DriverInputControl.getInstance().getButton(RobotButtonType.TOTE_LIFT_INCREMENT) && !isIncrementing || isIncrementing) {
     		state = MotorState.UP;
-    		incrementLift(42, 4.20);
+    		this.isIncrementing = !incrementLift(42, 4.20);
     	} else if(DriverInputControl.getInstance().getButton(RobotButtonType.TOTE_LIFT_UP)) {
     		state = MotorState.UP;
     	} else if(DriverInputControl.getInstance().getButton(RobotButtonType.TOTE_LIFT_DOWN)) {
@@ -78,13 +78,16 @@ public class ToteLift {
         }
     }
     public boolean incrementLift(double distance, double error) {
+    	
     	distanceTraveled = SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER).getDistance();
 		if (Math.abs(distanceTraveled  - distance) <= error) {
 			this.reset();
+			
 			return true;
 		} else {
 			liftOutput = distanceControlLoop.getPID(distance, SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER).getDistance());
 			updateLift(liftOutput);
+			
 			return false;
 		}
     }
