@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
+import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
 
@@ -56,8 +57,9 @@ public class DriverInputControl
     {
     	return joystickMap.get(joystickType);
     }
-    public boolean getControllerButton(RobotButtonType buttonType)
+    public boolean getButton(RobotButtonType buttonType)
     {
-    	return joystickMap.get(RobotJoystickType.CONTROLLER).getRawButton((Integer) JoystickButtonMap.getInstance().getControllerButtonMap().get(buttonType));
+    	JoystickButtonMatch buttonMatch = (JoystickButtonMatch) JoystickButtonMap.getInstance().getButtonMap().get(buttonType);
+    	return getJoystick(buttonMatch.getJoystickType()).getRawButton(buttonMatch.getPort());
     }
 }

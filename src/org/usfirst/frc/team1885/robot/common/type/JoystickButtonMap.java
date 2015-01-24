@@ -7,12 +7,14 @@ import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class JoystickButtonMap {
-	private HashMap<RobotButtonType, Integer> controllerButtonMap;
+	private HashMap<RobotButtonType, JoystickButtonMatch> buttonMap;
+	
+	
 	private static JoystickButtonMap instance;
 	
 	protected JoystickButtonMap()
 	{
-		controllerButtonMap = new HashMap<RobotButtonType, Integer>();
+		buttonMap = new HashMap<RobotButtonType, JoystickButtonMatch>();
 	}
 	
 	public static JoystickButtonMap getInstance()
@@ -24,11 +26,11 @@ public class JoystickButtonMap {
 		return instance;
 	}
 	
-	public void addControllerButton(RobotButtonType buttonType, Integer rawButton) {
-		controllerButtonMap.put(buttonType, rawButton);
+	public void addControllerButton(RobotButtonType buttonType, JoystickButtonMatch joystickButton) {
+		buttonMap.put(buttonType, joystickButton);
 	}
 	
-	public HashMap getControllerButtonMap() {
-		return controllerButtonMap;
+	public HashMap getButtonMap() {
+		return buttonMap;
 	}
 }
