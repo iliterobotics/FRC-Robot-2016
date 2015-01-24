@@ -31,8 +31,7 @@ public class Robot extends SampleRobot
     private DriverInputControl joystickControl;
     private DrivetrainControl driveTrainControl;
     private RobotControl robotControl;
-    public Robot() 
-    {
+    public Robot() {
         leftPort = 0;
         rightPort = 1;
         diameter = 4.0;
@@ -46,8 +45,7 @@ public class Robot extends SampleRobot
      * Runs the motors with tank steering.
      */
     public void operatorControl() {
-        while (isOperatorControl() && isEnabled()) 
-        {        	
+        while (isOperatorControl() && isEnabled()) {        	
 //        	System.out.println( joystickControl.getLeftDrive() + " " + joystickControl.getRightDrive());
 //        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
         	driveTrainControl.update(joystickControl.getLeftDrive(), joystickControl.getRightDrive());
