@@ -6,12 +6,15 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 
 public class RecycleBinLift {
 
+    public static final double DEFAULT_LIFT_SPEED = .5;
+    private double liftSpeed;
     private MotorState state;
     private boolean hasBin;
 
-    public RecycleBinLift(MotorState state) {
-        this.state = state;
+    public RecycleBinLift() {
+        this.state = MotorState.STOP;
         hasBin = false;
+        liftSpeed = 0;
     }
     public void setMotorState(MotorState state) {
         this.state = state;
@@ -22,29 +25,44 @@ public class RecycleBinLift {
     public boolean hasBin() {
         return hasBin;
     }
+    public double getSpeed(){
+        return liftSpeed;
+    }
     public void updateLift() {
         if (state == MotorState.UP) {
+            liftSpeed = DEFAULT_LIFT_SPEED;
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.RECYCLE_BIN_UPPER_LIMIT).get()) {
                 hasBin = true;
                 state = MotorState.STOP;
+                liftSpeed = 0;
             }
         }
         if (state == MotorState.DOWN) {
+            liftSpeed = -DEFAULT_LIFT_SPEED;
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.RECYCLE_BIN_LOWER_LIMIT).get()) {
                 hasBin = false;
                 state = MotorState.STOP;
+                liftSpeed = 0;
             }
         }
     }
-    public void updateLIft( MotorState state ){
-        setMotorState( state );
+    public void updateLIft( double speed ){
+        liftSpeed = speed;
+        if( speed > 0 ){
+            state = MotorState.UP;
+        }else if( speed < 0 ){
+            state = MotorState.DOWN;
+        }else{
+            state = MotorState.STOP;
+        }
         if (state == MotorState.UP) {
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.RECYCLE_BIN_UPPER_LIMIT).get()) {
                 hasBin = true;
                 state = MotorState.STOP;
+                liftSpeed = 0;
             }
         }
         if (state == MotorState.DOWN) {
@@ -52,6 +70,7 @@ public class RecycleBinLift {
                     .getLimitSwitch(SensorType.RECYCLE_BIN_LOWER_LIMIT).get()) {
                 hasBin = false;
                 state = MotorState.STOP;
+                liftSpeed = 0;
             }
         }
     }
