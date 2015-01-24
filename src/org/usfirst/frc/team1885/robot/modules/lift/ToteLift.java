@@ -7,6 +7,7 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 public class ToteLift {
 
 	private MotorState state;
+	//temp val for the maximum number of totes we can carry
 	private final int MAX_TOTE_COUNT = 6;
 	private int toteCount;
 
