@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1885.robot.comms;
 
 public class RobotServerEvent {
-	private String message;
-	public RobotServerEvent( String m ){
+	private Message message;
+	public RobotServerEvent( Message m ){
 		message = m;
 	}
 	/**
@@ -14,7 +14,7 @@ public class RobotServerEvent {
 	/**
 	 * @param message the message to set
 	 */
-	public void setMessage( String message ) {
-		this.message = message;
+	public void setMessage( Message m ) {
+		this.message = m;
 	}
 }
