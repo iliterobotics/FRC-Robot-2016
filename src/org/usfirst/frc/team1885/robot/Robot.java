@@ -1,6 +1,10 @@
 package org.usfirst.frc.team1885.robot;
 
 
+import java.util.LinkedList;
+
+import org.usfirst.frc.team1885.robot.auto.AutoCommand;
+import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
@@ -28,6 +32,7 @@ public class Robot extends SampleRobot
     private final double maxSpeed;
     private DrivetrainControl driveTrainControl;
     private RobotControl robotControl;
+    
     public Robot() {
         RobotConfiguration.configureRobot();
         diameter = 4.0;
@@ -48,6 +53,13 @@ public class Robot extends SampleRobot
         	robotControl.updateDriveSpeed(driveTrainControl.getLeftDriveSpeed(), driveTrainControl.getRightDriveSpeed());
             Timer.delay(.005);		// wait for a motor update time
         }
+    }
+    
+    public void autonomous() {
+    	LinkedList<AutoCommand> commands;
+    	commands = new LinkedList<AutoCommand>();
+    	
+    	commands.add(new AutoDriveForward(5.0,.1));
     }
 
 }
