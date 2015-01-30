@@ -4,5 +4,6 @@ public enum RobotMotorType {
 	LEFT_DRIVE,
 	RIGHT_DRIVE,
 	TOTE_LIFT,
-	RECYCLE_LIFT
+	RECYCLE_LIFT,
+	CLAW_WRIST
 }

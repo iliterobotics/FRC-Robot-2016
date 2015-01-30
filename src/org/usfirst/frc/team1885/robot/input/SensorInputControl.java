@@ -16,7 +16,7 @@ public class SensorInputControl {
     private static SensorInputControl instance = null;
 
     private HashMap<SensorType, Encoder> encoders;
-    private HashMap<SensorType, DigitalInput> limit_switches;
+    private HashMap<SensorType, DigitalInput> digital_inputs;
     private HashMap<SensorType, LidarSensor> lidar_sensor;
     private IMUAdvanced imu;
     SerialPort serial_port;
@@ -25,7 +25,7 @@ public class SensorInputControl {
 
     protected SensorInputControl() {
         encoders = new HashMap<SensorType, Encoder>();
-        limit_switches = new HashMap<SensorType, DigitalInput>();
+        digital_inputs = new HashMap<SensorType, DigitalInput>();
         lidar_sensor = new HashMap<SensorType, LidarSensor>();
 
     }
@@ -46,7 +46,7 @@ public class SensorInputControl {
         return encoders.get(sensor_type);
     }
     public DigitalInput getLimitSwitch(SensorType sensor_type) {
-        return limit_switches.get(sensor_type);
+        return digital_inputs.get(sensor_type);
     }
     public static double deadzone(double axis) {
         if (Math.abs(axis) < DEADZONE) {
@@ -56,7 +56,7 @@ public class SensorInputControl {
     }
     public boolean addSensor(SensorType sensor_type, int port) {
         if (sensor_type.name().contains("LIMIT")) {
-            limit_switches.put(sensor_type, new DigitalInput(port));
+            digital_inputs.put(sensor_type, new DigitalInput(port));
         } else {
             return false;
         }
@@ -84,6 +84,6 @@ public class SensorInputControl {
         return encoders.get(sensor_type).getRate();
     }
     public boolean isLimitSwitch(SensorType sensor_type) {
-        return limit_switches.get(sensor_type).get();
+        return digital_inputs.get(sensor_type).get();
     }
 }
