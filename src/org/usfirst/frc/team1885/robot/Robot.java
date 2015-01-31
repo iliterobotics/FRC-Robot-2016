@@ -5,6 +5,8 @@ import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
+import org.usfirst.frc.team1885.robot.auto.AutoTurn;
+import org.usfirst.frc.team1885.robot.auto.AutoWait;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
@@ -59,7 +61,17 @@ public class Robot extends SampleRobot
     	LinkedList<AutoCommand> commands;
     	commands = new LinkedList<AutoCommand>();
     	
-    	commands.add(new AutoDriveForward(5.0,.1));
+    	commands.add(new AutoDriveForward(2.0,.1));
+    	commands.add(new AutoWait(1.0));
+    	commands.add(neqw AutoTurn(90.0, .1));
+    	
+    	
+    	while(!commands.isEmpty()) {
+    		if(commands.peek().execute()) {
+    			commands.poll();
+    		}
+    		Timer.delay(.005);
+    	}
     }
 
 }
