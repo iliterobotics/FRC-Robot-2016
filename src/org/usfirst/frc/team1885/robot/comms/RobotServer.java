@@ -96,7 +96,8 @@ public class RobotServer implements Runnable {
 				try {
 					line = in.readLine();
 					System.out.println("read: " + line);
-					RobotServerEvent roboEvent = new RobotServerEvent(line);
+					Message m = new Message();
+					RobotServerEvent roboEvent = new RobotServerEvent(m);
 					notifyListeners(roboEvent);
 				} catch (IOException e) {
 					System.out.println("Read failed");

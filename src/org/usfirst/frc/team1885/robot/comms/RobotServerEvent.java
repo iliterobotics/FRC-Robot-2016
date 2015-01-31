@@ -8,7 +8,7 @@ public class RobotServerEvent {
 	/**
 	 * @return the message
 	 */
-	public String getMessage() {
+	public Message getMessage() {
 		return message;
 	}
 	/**
