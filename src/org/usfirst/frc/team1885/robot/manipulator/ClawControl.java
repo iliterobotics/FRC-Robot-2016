@@ -26,7 +26,7 @@ public class ClawControl
 	    }
 	}
 	public boolean incrementClaw(){
-	    if(SensorInputControl.getInstance().isActive(SensorType.LINE_SENSOR)){
+	    if(!SensorInputControl.getInstance().isActive(SensorType.LINE_SENSOR)){
 	        return true;
 	    }
 	    return false;
