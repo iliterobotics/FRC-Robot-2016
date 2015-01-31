@@ -6,6 +6,7 @@ import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
+import edu.wpi.first.wpilibj.Joystick;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -53,5 +54,11 @@ public class DriverInputControl {
                 .getInstance().getButtonMap().get(buttonType);
         return getJoystick(buttonMatch.getJoystickType()).getRawButton(
                 buttonMatch.getPort());
+    }
+    public double getControllerJoystick(Joystick.AxisType axisType){
+        JoystickButtonMatch buttonMatch = (JoystickButtonMatch) JoystickButtonMap
+                .getInstance().getButtonMap().get(axisType);
+        return getJoystick(buttonMatch.getJoystickType()).getAxis(
+                buttonMatch.getAxisType());
     }
 }
