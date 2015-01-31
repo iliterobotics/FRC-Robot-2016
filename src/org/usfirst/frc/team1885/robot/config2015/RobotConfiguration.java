@@ -11,6 +11,7 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class RobotConfiguration {
@@ -19,8 +20,7 @@ public class RobotConfiguration {
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, 0 );
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, 1 );
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.CONTROLLER, 2 );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_UP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 0 ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_DOWN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kY ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_UP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_DOWN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 3 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_PICKUP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 4 ) );
