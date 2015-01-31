@@ -5,12 +5,14 @@ import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
-import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.auto.AutoWait;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
+import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
+import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.SampleRobot;
@@ -36,6 +38,8 @@ public class Robot extends SampleRobot
     private final double maxSpeed;
     private DrivetrainControl driveTrainControl;
     private RobotControl robotControl;
+    private RecycleBinLift recycleBinLift;
+    private ToteLift toteLift;
     
     public Robot() {
         RobotConfiguration.configureRobot();
@@ -45,6 +49,8 @@ public class Robot extends SampleRobot
     	this.driveTrainControl = new DrivetrainControl(diameter, maxSpeed);
     	this.driveTrainControl.addSpeed(1, 15.0);
     	this.robotControl = RobotControl.getInstance();
+    	this.recycleBinLift = RecycleBinLift.getInstance();
+    	this.toteLift = ToteLift.getInstance();
     }    
     /**
      * Runs the motors with tank steering.
@@ -59,6 +65,8 @@ public class Robot extends SampleRobot
         	driveTrainControl.update();
 //        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
         	robotControl.updateDriveSpeed(driveTrainControl.getLeftDriveSpeed(), driveTrainControl.getRightDriveSpeed());
+        	recycleBinLift.updateLift();
+        	toteLift.updateLift();
             Timer.delay(.005);		// wait for a motor update time
         }
     }
