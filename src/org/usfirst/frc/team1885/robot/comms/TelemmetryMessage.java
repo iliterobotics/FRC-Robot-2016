@@ -1,41 +1,74 @@
 package org.usfirst.frc.team1885.robot.comms;
 
+import java.util.Arrays;
+
 public class TelemmetryMessage extends Message{
-	Double[] digitalInputs = new Double[20];
-	Double[] analogInputs = new Double[10];
-	Double[] relays = new Double[4];
-	Double[] digitalOutputs = new Double[10];
 	
-	public Double getDigitalInputs(int index) {
-		return digitalInputs[index];
+	private static final long serialVersionUID = 4021050113420280510L;
+	double[] digitalInputs = new double[20];
+	double[] analogInputs = new double[10];
+	double[] relays = new double[4];
+	double[] digitalOutputs = new double[10];
+	
+	public double getDigitalInputs(int index) {
+		if(index >= 0 && index < digitalInputs.length)
+			return digitalInputs[index];
+		else
+			return -1;
 	}
 	
-	public void setDigitalInputs(int index, Double data) {
-		this.digitalInputs[index] = data;
+	public void setDigitalInputs(int index, double data) {
+		if(index >= 0 && index < digitalInputs.length)
+			this.digitalInputs[index] = data;
 	}
 	
-	public Double getAnalogInputs(int index) {
-		return analogInputs[index];
+	public double getAnalogInputs(int index) {
+		if(index >= 0 && index < analogInputs.length)
+			return analogInputs[index];
+		else
+			return -1;
 	}
 	
-	public void setAnalogInputs(int index, Double data) {
-		this.analogInputs[index] = data;
+	public void setAnalogInputs(int index, double data) {
+		if(index >= 0 && index < analogInputs.length)
+			this.analogInputs[index] = data;
 	}
 	
-	public Double getRelays(int index) {
-		return relays[index];
+	public double getRelays(int index) {
+		if(index >= 0 && index < relays.length)
+			return relays[index];
+		else
+			return -1;
 	}
 	
-	public void setRelays(int index, Double data) {
-		this.relays[index] = data;
+	public void setRelays(int index, double data) {
+		if(index >= 0 && index < relays.length)
+			this.relays[index] = data;
 	}
 	
-	public Double getDigitalOutputs(int index) {
-		return digitalOutputs[index];
+	public double getDigitalOutputs(int index) {
+		if(index >= 0 && index < digitalOutputs.length)
+			return digitalOutputs[index];
+		else
+			return -1;
 	}
 	
-	public void setDigitalOutputs(int index, Double data) {
-		this.digitalOutputs[index] = data;
+	public void setDigitalOutputs(int index, double data) {
+		if(index >= 0 && index < digitalOutputs.length)
+			this.digitalOutputs[index] = data;
+	}
+	
+	public long getSerialID() {
+		return serialVersionUID;
+	}
+
+	@Override
+	public String toString() {
+		return "TelemmetryMessage [digitalInputs="
+				+ Arrays.toString(digitalInputs) + ", analogInputs="
+				+ Arrays.toString(analogInputs) + ", relays="
+				+ Arrays.toString(relays) + ", digitalOutputs="
+				+ Arrays.toString(digitalOutputs) + "]";
 	}
 	
 }

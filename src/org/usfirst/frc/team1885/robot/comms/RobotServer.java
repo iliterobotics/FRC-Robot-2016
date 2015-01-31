@@ -3,6 +3,8 @@ package org.usfirst.frc.team1885.robot.comms;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -15,36 +17,41 @@ public class RobotServer implements Runnable {
 	RobotClientConnection robo;
 	String line;
 	List<RobotServerListener> robotModules = new ArrayList<RobotServerListener>();
-	
-	protected RobotServer() {}
-	
+	ObjectInputStream inStream;
+	ObjectOutputStream outStream;
+
+	List<Message> messages = new ArrayList<Message>();
+	protected RobotServer() {
+	}
+
 	public static RobotServer getInstance() {
-		if ( instance == null )
+		if (instance == null)
 			instance = new RobotServer();
 		return instance;
 	}
-	
+
 	private boolean isRunning;
+
 	public boolean startServer() {
-		if ( !this.isRunning ) {
-			Thread serverThread = ( new Thread(this) );
+		if (!this.isRunning) {
+			Thread serverThread = (new Thread(this));
 			serverThread.start();
 			try {
 				serverThread.wait();
-			} catch ( InterruptedException e ) {
+			} catch (InterruptedException e) {
 				this.isRunning = false;
 				e.printStackTrace();
 			}
 		}
-		
+
 		return this.isRunning;
 	}
-	
+
 	public boolean stopServer() {
-		if ( this.isRunning ) {
+		if (this.isRunning) {
 			this.isRunning = false;
 		}
-		
+
 		return this.isRunning;
 	}
 
@@ -52,27 +59,27 @@ public class RobotServer implements Runnable {
 	public void run() {
 		this.isRunning = true;
 		this.notify();
-		while ( this.isRunning ) {
+		while (this.isRunning) {
 			try {
-				// server.accept returns a client connection
-				robo = new RobotClientConnection( server.accept() );
-				Thread t = new Thread( robo );
+				//server.accept returns a client connection
+				robo = new RobotClientConnection(server.accept());
+				Thread t = new Thread(robo);
 				t.start();
 			} catch (IOException e) {
-				System.out.println( "Accept failed: 4444" );
+				System.out.println("Accept failed: 4444");
 				System.exit(-1);
 			}
 		}
-		
+
 		robo.disconnect();
-		
+
 	}
-	
-	public void setup( int port ) {
+
+	public void setup(int port) {
 		try {
 			server = new ServerSocket(port);
 		} catch (IOException e) {
-			System.out.println( "Could not listen on port 4444");
+			System.out.println("Could not listen on port " + port);
 			System.exit(-1);
 		}
 	}
@@ -81,12 +88,15 @@ public class RobotServer implements Runnable {
 		private Socket client;
 		private BufferedReader in;
 		private PrintWriter out;
-		
-		public RobotClientConnection(){}
+
+		public RobotClientConnection() {
+		}
+
 		public void run() {
 			try {
-				in = new BufferedReader(new InputStreamReader(client.getInputStream()));
-				out = new PrintWriter( client.getOutputStream(), true );
+				in = new BufferedReader(new InputStreamReader(
+						client.getInputStream()));
+				out = new PrintWriter(client.getOutputStream(), true);
 			} catch (IOException e) {
 				System.out.println("in or out failed");
 				System.exit(-1);
@@ -96,16 +106,15 @@ public class RobotServer implements Runnable {
 				try {
 					line = in.readLine();
 					System.out.println("read: " + line);
-					Message m = new Message();
-					RobotServerEvent roboEvent = new RobotServerEvent(m);
-					notifyListeners(roboEvent);
+//					RobotServerEvent roboEvent = new RobotServerEvent(msg); // Is this the same message as the Send Method message?
+//					notifyListeners(roboEvent);
 				} catch (IOException e) {
 					System.out.println("Read failed");
 					System.exit(-1);
 				}
 			}
 		}
-		
+
 		public void disconnect() {
 			try {
 				this.client.close();
@@ -125,14 +134,39 @@ public class RobotServer implements Runnable {
 			System.out.println(line);
 		}
 	}
-	
-	public void addListener(RobotServerListener listener){
+
+	public void addListener(RobotServerListener listener) {
 		robotModules.add(listener);
 	}
-	
-	public void notifyListeners( RobotServerEvent event ) {
-		for( RobotServerListener listener : robotModules ) {
+
+	public void notifyListeners(RobotServerEvent event) {
+		for (RobotServerListener listener : robotModules) {
 			listener.receivedServerEvent(event);
+		}
+	}
+
+	public void receive() {
+		try {
+			inStream = new ObjectInputStream(robo.client.getInputStream());
+			TelemmetryMessage teleMessage = (TelemmetryMessage) (inStream
+					.readObject());
+			System.out.println("Telemmetry Message Built.");
+			messages.add(teleMessage);
+			System.out.println("Telemmetry Message Stored.");
+		} catch (Exception e) {
+			System.out.println("Error : " + e);
+		}
+	}
+
+	public void send(Message message) {
+		try {
+			outStream = new ObjectOutputStream(robo.client.getOutputStream());
+
+			System.out.println("Telemmetry Message Built");
+			outStream.writeObject(message);
+			System.out.println("Telemmetry Message Sent");
+		} catch (Exception e) {
+			System.out.println("Error : " + e);
 		}
 	}
 }
