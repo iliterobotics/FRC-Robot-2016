@@ -7,7 +7,9 @@ import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
 import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.auto.AutoWait;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
+import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
@@ -48,10 +50,14 @@ public class Robot extends SampleRobot
      * Runs the motors with tank steering.
      */
     public void operatorControl() {
+    	
+    	SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
+    	SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
+    	
         while (isOperatorControl() && isEnabled()) {        	
-//        	System.out.println( joystickControl.getLeftDrive() + " " + joystickControl.getRightDrive());
+        	System.out.println( "Robot::operatorControl - " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + ", " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER));
         	driveTrainControl.update();
-        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
+//        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
         	robotControl.updateDriveSpeed(driveTrainControl.getLeftDriveSpeed(), driveTrainControl.getRightDriveSpeed());
             Timer.delay(.005);		// wait for a motor update time
         }
@@ -61,14 +67,23 @@ public class Robot extends SampleRobot
     	LinkedList<AutoCommand> commands;
     	commands = new LinkedList<AutoCommand>();
     	
-    	commands.add(new AutoDriveForward(2.0,.1));
-    	commands.add(new AutoWait(1.0));
-    	commands.add(neqw AutoTurn(90.0, .1));
+    	commands.add(new AutoDriveForward(3.0*12,6.0));
+    	commands.add(new AutoWait(5000.0));
+    	commands.add(new AutoDriveForward(3.0*12,6.0));
+    	commands.add(new AutoWait(5000.0));
+    	commands.add(new AutoDriveForward(3.0*12,6.0));
+    	commands.add(new AutoWait(5000.0));
+//    	commands.add(new AutoTurn(90.0, .1));
     	
+    	System.out.println("Starting Auto with " + commands.size() + " states");
     	
-    	while(!commands.isEmpty()) {
-    		if(commands.peek().execute()) {
+    	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
+    		boolean commandState = commands.peek().execute();
+    		if(commandState) {
+    			System.out.println("Finished command " + commands.size());
     			commands.poll();
+    		} else {
+    			System.out.println("Executing command " + commands.size());
     		}
     		Timer.delay(.005);
     	}

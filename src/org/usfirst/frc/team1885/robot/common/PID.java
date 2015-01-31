@@ -1,18 +1,18 @@
 package org.usfirst.frc.team1885.robot.common;
 
 public class PID {
-	private double p, i, d;
+	private final double p;
+	private final double i; 
+	private final double d;
 	private double error, previousError;
 	private double integral;
 	
-	public PID() {
-		error = 0.0;
-		integral = 0.0;
-	}
-	public void setConstraints (double inputP, double inputI, double inputD) {
+	public PID(double inputP, double inputI, double inputD) {
 		p = inputP;
 		i = inputI;
 		d = inputD;
+		error = 0.0;
+		integral = 0.0;
 	}
 
 	public void reset() {

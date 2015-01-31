@@ -29,12 +29,12 @@ public class DrivetrainControl
 	
 	public DrivetrainControl(final double d, final double m) {
 		maxSpeed = m;
-		speeds = new HashMap<Integer, Double>();;
+		speeds = new HashMap<Integer, Double>();
 		diameter = d;
-		circumference = 2 * Math.PI * (diameter/2);
+		circumference = Math.PI * (diameter);
 
-		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).setDistancePerPulse(circumference/360);
-		
+		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).setDistancePerPulse(circumference/256);
+		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).setDistancePerPulse(circumference/256);
 		driveMode = DriveMode.TANK;
 		setGearState(GearState.HIGH_GEAR);
 		driverInput = DriverInputControl.getInstance();

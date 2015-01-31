@@ -15,7 +15,7 @@ public class AutoTurn implements AutoCommand{
 	
 	
 	public AutoTurn(double inputAngle, double inputError) {
-		angleControlLoop = new PID();
+		angleControlLoop = new PID(0.08, 0.0001, 0);
 		angle = inputAngle;
 		error = inputError;
 		SensorInputControl.getInstance().getNAVX().zeroYaw();

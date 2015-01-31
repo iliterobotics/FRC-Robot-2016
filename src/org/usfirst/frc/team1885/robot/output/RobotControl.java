@@ -41,6 +41,7 @@ public class RobotControl {
         compressor.start();
         outputSolenoids = new HashMap<RobotPneumaticType, DoubleSolenoid>();
         outputTalons = new HashMap<RobotMotorType, Talon>();
+        relays = new HashMap<RobotMotorType, Relay>();
         rightDrive = new ArrayList<Talon>();
         leftDrive = new ArrayList<Talon>();
     }

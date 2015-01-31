@@ -14,7 +14,7 @@ public class AutoRecyleLift implements AutoCommand{
 	private double heightTraveled;
 	
 	public AutoRecyleLift(double h, double e) {
-		heightControlLoop = new PID();
+		heightControlLoop = new PID(0.08, 0.0001, 0);
 		height = h;
 		error = e;
 		SensorInputControl.getInstance().getEncoder(SensorType.RECYCLE_BIN_ENCODER).reset();

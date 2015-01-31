@@ -7,7 +7,8 @@ import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 public class AutoDriveForward implements AutoCommand{
 	
-	private PID distanceControlLoop;
+	private PID rightDistanceControlLoop;
+	private PID leftDistanceControlLoop;
 	private double distance;
 	private double error;
 	private double leftDriveOutput;
@@ -15,27 +16,44 @@ public class AutoDriveForward implements AutoCommand{
 	private double leftDistanceTraveled;
 	private double rightDistanceTraveled;
 	public AutoDriveForward(double d, double e) {
-		distanceControlLoop = new PID();
+		rightDistanceControlLoop = new PID(0.01, 0.00001, 0);
+		leftDistanceControlLoop = new PID(0.01, 0.00001, 0);
 		distance = d;
 		error = e;
-		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
-		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
+		reset();
 	}
 	public boolean execute() {
-		leftDistanceTraveled = SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).getDistance();
-		rightDistanceTraveled = SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).getDistance();
+		System.out.println("AutoDriveFwd::[left dist, right dist] " + leftDistanceTraveled + ", " + rightDistanceTraveled);
+		
 		if (Math.abs(leftDistanceTraveled  - distance) <= error && Math.abs(rightDistanceTraveled  - distance) <= error ) {
 			this.reset();
 			return true;
-		} else {
-			leftDriveOutput = distanceControlLoop.getPID(distance, SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).getDistance());
-			rightDriveOutput = distanceControlLoop.getPID(distance, SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).getDistance());
-			RobotControl.getInstance().updateDriveSpeed(leftDriveOutput, rightDriveOutput);
-			return false;
 		}
+		
+		if(Math.abs(leftDistanceTraveled  - distance) > error) {
+			leftDistanceTraveled = SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).getDistance();
+			leftDriveOutput = leftDistanceControlLoop.getPID(distance, leftDistanceTraveled);
+		} else {
+			leftDistanceControlLoop.reset();
+			leftDriveOutput = 0;
+		}
+		
+		if(Math.abs(rightDistanceTraveled  - distance) > error) {
+			rightDistanceTraveled = -SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).getDistance();
+			rightDriveOutput = rightDistanceControlLoop.getPID(distance, rightDistanceTraveled);
+		} else {
+			rightDistanceControlLoop.reset();
+			rightDriveOutput = 0;
+		}
+		
+		System.out.println("AutoDriveFwd::[left speed, right speed] " + leftDriveOutput + ", " + rightDriveOutput);
+		
+		RobotControl.getInstance().updateDriveSpeed(-leftDriveOutput, -rightDriveOutput);
+		return false;
 	}
 	public void reset() {
-		distanceControlLoop.reset();
+		rightDistanceControlLoop.reset();
+		leftDistanceControlLoop.reset();
 		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
 		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
 		RobotControl.getInstance().updateDriveSpeed(0, 0);
