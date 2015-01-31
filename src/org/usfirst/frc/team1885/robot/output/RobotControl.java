@@ -11,6 +11,7 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Relay.Value;
 import edu.wpi.first.wpilibj.Talon;
 
 public class RobotControl {
@@ -59,6 +60,10 @@ public class RobotControl {
     
     public void addRelay(RobotMotorType type, int channel){
         relays.put(type, new Relay( channel ));
+    }
+    
+    public void updateRelay(RobotMotorType type, Value state) {
+    	relays.get(type).set(state);
     }
 
     public void addPneumaticOutput(RobotPneumaticType type, int port1, int port2) {

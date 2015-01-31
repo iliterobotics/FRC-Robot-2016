@@ -55,7 +55,7 @@ public class SensorInputControl {
         return axis;
     }
     public boolean addSensor(SensorType sensor_type, int port) {
-        if (sensor_type.name().contains("LIMIT")) {
+        if (sensor_type.name().contains("LIMIT") || sensor_type.name().contains("LINE")) {
             digital_inputs.put(sensor_type, new DigitalInput(port));
         } else {
             return false;
@@ -83,7 +83,7 @@ public class SensorInputControl {
     public double getRate(SensorType sensor_type) {
         return encoders.get(sensor_type).getRate();
     }
-    public boolean isLimitSwitch(SensorType sensor_type) {
+    public boolean isActive(SensorType sensor_type) {
         return digital_inputs.get(sensor_type).get();
     }
 }

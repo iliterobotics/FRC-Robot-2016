@@ -29,8 +29,8 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_RELEASE, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 7 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_INCREMENT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 8 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.GEAR_SHIFT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 9 ) );
-        SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_RIGHT_ENCODER, 0, 1 );
-        SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_LEFT_ENCODER, 2, 3 );
+        SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_LEFT_ENCODER, 0, 1 );
+        SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_RIGHT_ENCODER, 2, 3 );
         SensorInputControl.getInstance().addSensor( SensorType.TOTE_ENCODER, 4, 5 );
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_ENCODER, 6, 7 );
         SensorInputControl.getInstance().addSensor( SensorType.TOTE_UPPER_LIMIT_SWITCH, 8 );
