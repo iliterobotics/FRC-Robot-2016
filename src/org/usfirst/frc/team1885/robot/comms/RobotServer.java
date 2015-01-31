@@ -36,12 +36,14 @@ public class RobotServer implements Runnable {
 		if (!this.isRunning) {
 			Thread serverThread = (new Thread(this));
 			serverThread.start();
-			try {
-				serverThread.wait();
-			} catch (InterruptedException e) {
-				this.isRunning = false;
-				e.printStackTrace();
-			}
+//			synchronized(serverThread) {
+//				try {
+//					serverThread.wait();
+//				} catch (InterruptedException e) {
+//					this.isRunning = false;
+//					e.printStackTrace();
+//				}
+//			}
 		}
 
 		return this.isRunning;
@@ -58,7 +60,7 @@ public class RobotServer implements Runnable {
 	@Override
 	public void run() {
 		this.isRunning = true;
-		this.notify();
+//		this.notify();
 		while (this.isRunning) {
 			try {
 				//server.accept returns a client connection
@@ -67,7 +69,6 @@ public class RobotServer implements Runnable {
 				t.start();
 			} catch (IOException e) {
 				System.out.println("Accept failed: 4444");
-				System.exit(-1);
 			}
 		}
 
@@ -80,7 +81,6 @@ public class RobotServer implements Runnable {
 			server = new ServerSocket(port);
 		} catch (IOException e) {
 			System.out.println("Could not listen on port " + port);
-			System.exit(-1);
 		}
 	}
 
@@ -96,10 +96,10 @@ public class RobotServer implements Runnable {
 			try {
 				in = new BufferedReader(new InputStreamReader(
 						client.getInputStream()));
-				out = new PrintWriter(client.getOutputStream(), true);
+				outStream = new ObjectOutputStream(robo.client.getOutputStream());
+//				out = new PrintWriter(client.getOutputStream(), true);
 			} catch (IOException e) {
 				System.out.println("in or out failed");
-				System.exit(-1);
 			}
 
 			while (client.isConnected()) {
@@ -110,7 +110,6 @@ public class RobotServer implements Runnable {
 //					notifyListeners(roboEvent);
 				} catch (IOException e) {
 					System.out.println("Read failed");
-					System.exit(-1);
 				}
 			}
 		}
@@ -148,7 +147,7 @@ public class RobotServer implements Runnable {
 	public void receive() {
 		try {
 			inStream = new ObjectInputStream(robo.client.getInputStream());
-			TelemmetryMessage teleMessage = (TelemmetryMessage) (inStream
+			TelemetryMessage teleMessage = (TelemetryMessage) (inStream
 					.readObject());
 			System.out.println("Telemmetry Message Built.");
 			messages.add(teleMessage);
@@ -160,10 +159,11 @@ public class RobotServer implements Runnable {
 
 	public void send(Message message) {
 		try {
-			outStream = new ObjectOutputStream(robo.client.getOutputStream());
 
 			System.out.println("Telemmetry Message Built");
 			outStream.writeObject(message);
+			outStream.flush();
+			outStream.reset();
 			System.out.println("Telemmetry Message Sent");
 		} catch (Exception e) {
 			System.out.println("Error : " + e);

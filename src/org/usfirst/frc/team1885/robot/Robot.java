@@ -7,9 +7,10 @@ import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
 import org.usfirst.frc.team1885.robot.auto.AutoWait;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.comms.RobotServer;
+import org.usfirst.frc.team1885.robot.comms.TelemetryMessage;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
-import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
@@ -51,6 +52,10 @@ public class Robot extends SampleRobot
     	this.robotControl = RobotControl.getInstance();
     	this.recycleBinLift = RecycleBinLift.getInstance();
     	this.toteLift = ToteLift.getInstance();
+    	
+    	RobotServer.getInstance().setup(4444);
+    	RobotServer.getInstance().startServer();
+    	
     }    
     /**
      * Runs the motors with tank steering.
@@ -60,7 +65,14 @@ public class Robot extends SampleRobot
     	SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
     	SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
     	
-        while (isOperatorControl() && isEnabled()) {        	
+        while (isOperatorControl() && isEnabled()) {
+        	
+        	try {
+        		RobotServer.getInstance().send(new TelemetryMessage());
+        	} catch(Exception e) {
+        		e.printStackTrace();
+        	}
+        	
         	System.out.println( "Robot::operatorControl - " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + ", " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER));
         	driveTrainControl.update();
 //        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
