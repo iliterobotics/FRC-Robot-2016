@@ -1,8 +1,7 @@
 package org.usfirst.frc.team1885.robot.common.type;
 
 public enum RobotButtonType {
-	TOTE_LIFT_UP,
-	TOTE_LIFT_DOWN,
+	TOTE_LIFT,
 	RECYCLE_BIN_LIFT_UP,
 	RECYCLE_BIN_LIFT_DOWN,
 	TOTE_LIFT_PICKUP,
