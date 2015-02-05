@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Relay.Value;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 
 public class RobotControl {
@@ -20,6 +21,7 @@ public class RobotControl {
     private List<Talon> rightDrive;
     private Map<RobotMotorType, Talon> outputTalons;
     private Map<RobotPneumaticType, DoubleSolenoid> outputSolenoids;
+    private Map<RobotPneumaticType, Solenoid> solenoid;
     private Map<RobotMotorType, Relay> relays;
     private Compressor compressor;
 
@@ -41,6 +43,7 @@ public class RobotControl {
         compressor = new Compressor();
         compressor.start();
         outputSolenoids = new HashMap<RobotPneumaticType, DoubleSolenoid>();
+        solenoid = new HashMap<RobotPneumaticType, Solenoid>();
         outputTalons = new HashMap<RobotMotorType, Talon>();
         relays = new HashMap<RobotMotorType, Relay>();
         rightDrive = new ArrayList<Talon>();
@@ -65,7 +68,9 @@ public class RobotControl {
     public void updateRelay(RobotMotorType type, Value state) {
     	relays.get(type).set(state);
     }
-
+    public void addPneumaticOutput(RobotPneumaticType type, int port) {
+    	solenoid.put(type, new Solenoid(port));
+    }
     public void addPneumaticOutput(RobotPneumaticType type, int port1, int port2) {
         outputSolenoids.put(type, new DoubleSolenoid(port1, port2));
     }
@@ -79,6 +84,9 @@ public class RobotControl {
     }
     public void updateGrabberPneumatics(DoubleSolenoid.Value start) {
         outputSolenoids.get(RobotPneumaticType.GRABBER_PNEUMATIC).set(start);
+    }
+    public void updateToteStop(boolean start) {
+    	solenoid.get(RobotPneumaticType.TOTE_LIFT_STOP).set(start);
     }
     public void updateLeftShifter(DoubleSolenoid.Value start) {
         outputSolenoids.get(RobotPneumaticType.LEFT_SHIFTER_PNEUMATIC).set(
