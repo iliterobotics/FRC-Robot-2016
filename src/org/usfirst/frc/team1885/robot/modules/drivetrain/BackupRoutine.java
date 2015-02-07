@@ -23,17 +23,17 @@ public class BackupRoutine {
         }
         return instance;
     }
-    public void update(double leftJoystick, double rightJoystick) {
+    public void update() {
         if(distanceFromTarget < ERROR) {
             distanceFromTarget = SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance();
             leftDriveOutput = distanceControlLoop.getPID(ERROR, distanceFromTarget);
             rightDriveOutput = leftDriveOutput;
         } else {
-            leftDriveOutput = leftJoystick;
-            rightDriveOutput = rightJoystick;
+            leftDriveOutput = DrivetrainControl.getInstance().getLeftDriveSpeed();
+            rightDriveOutput = DrivetrainControl.getInstance().getRightDriveSpeed();
             reset();
         }
-        RobotControl.getInstance().updateDriveSpeed(-leftDriveOutput, -rightDriveOutput);
+        DrivetrainControl.getInstance().update(leftDriveOutput, rightDriveOutput);
     }
     public void reset() {
         distanceControlLoop.reset();
