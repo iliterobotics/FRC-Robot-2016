@@ -7,13 +7,14 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 
 public class ClawControl 
 {
-	private ClawControl instance;
+	private static ClawControl instance;
 	private boolean isIncrementing;
+	private boolean pinchState;
 	
 	protected ClawControl(){
 	    isIncrementing = false;
 	}
-	public ClawControl getInstance(){
+	public static ClawControl getInstance(){
 	    if(instance == null){
 	        instance = new ClawControl();
 	    }
@@ -31,7 +32,10 @@ public class ClawControl
 	    }
 	    return false;
 	}
-	public boolean clawState(){
+	public boolean clawWristState(){
 	    return isIncrementing;
+	}
+	public boolean clawState(){
+	    return pinchState;
 	}
 }
