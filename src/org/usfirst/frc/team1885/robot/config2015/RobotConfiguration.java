@@ -5,6 +5,7 @@ import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
+import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
@@ -29,7 +30,7 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_RELEASE, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 7 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_INCREMENT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 8 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.GEAR_SHIFT, new JoystickButtonMatch( RobotJoystickType.RIGHT_DRIVE, 1 ) );//trigger
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.HARD_STOP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 10 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.HARD_STOP, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 1 ) );
         SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_LEFT_ENCODER, 0, 1 );
         SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_RIGHT_ENCODER, 2, 3 );
         SensorInputControl.getInstance().addSensor( SensorType.TOTE_ENCODER, 4, 5 );
@@ -49,6 +50,8 @@ public class RobotConfiguration {
         RobotControl.getInstance().addTalonOutput( RobotMotorType.TOTE_LIFT, 5 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.RECYCLE_LIFT, 7 );
         RobotControl.getInstance().addRelay( RobotMotorType.CLAW_WRIST, 0 );
+        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC, 1, 2);
+        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.TOTE_LIFT_STOP, 5);
         
     }
 }

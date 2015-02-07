@@ -16,8 +16,7 @@ public class RobotOutputTest
 		robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
 		robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 3);		
 		robotControl.addPneumaticOutput(RobotPneumaticType.GRABBER_PNEUMATIC, 0, 1);
-		robotControl.addPneumaticOutput(RobotPneumaticType.LEFT_SHIFTER_PNEUMATIC, 2, 3);
-		robotControl.addPneumaticOutput(RobotPneumaticType.RIGHT_SHIFTER_PNEUMATIC, 4,5);
+		robotControl.addPneumaticOutput(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC, 2, 3);
 		robotControl.addTalonOutput(RobotMotorType.TOTE_LIFT, 4);
 		robotControl.addTalonOutput(RobotMotorType.RECYCLE_LIFT, 4);
 	}
@@ -26,7 +25,6 @@ public class RobotOutputTest
 		robotControl.updateDriveSpeed(.25, .25);
 		robotControl.updateGrabberPneumatics(DoubleSolenoid.Value.kForward);
 		robotControl.updateLeftShifter(DoubleSolenoid.Value.kForward);
-		robotControl.updateRightShifter(DoubleSolenoid.Value.kForward);
 		robotControl.updateRecycleMotor(.25);
 		robotControl.updateToteMotor(.25);
 	}

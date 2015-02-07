@@ -13,21 +13,34 @@ public class AutoTurn implements AutoCommand{
 	private double leftDriveOutput;
 	private double rightDriveOutput;
 	
+	private final static long steadyStatePeriod = 100;
+	private long steadyStateTime;
+	
 	
 	public AutoTurn(double inputAngle, double inputError) {
-		angleControlLoop = new PID(0.08, 0.0001, 0);
+		angleControlLoop = new PID(0.012, 0.00005, 0);
 		angle = inputAngle;
 		error = inputError;
 		SensorInputControl.getInstance().getNAVX().zeroYaw();
+		steadyStateTime = 0;
 	}
 	public boolean execute() {
 		rightAngleTraveled = SensorInputControl.getInstance().getNAVX().getYaw();
 		if (Math.abs(rightAngleTraveled  - angle) <= error ) {
-			this.reset();
-			return true;
+			
+			this.steadyStateTime = System.currentTimeMillis();
+			
+			if(this.steadyStateTime > System.currentTimeMillis() + AutoTurn.steadyStatePeriod) {
+				this.reset();
+				return true;
+			} else {
+				return false;
+			}
 		} else {
-			rightDriveOutput = angleControlLoop.getPID(angle, SensorInputControl.getInstance().getNAVX().getYaw());
+			steadyStateTime = 0;
+			rightDriveOutput = angleControlLoop.getPID(angle, rightAngleTraveled);
 			leftDriveOutput = rightDriveOutput * -1;
+			System.out.println("Autonomous::AutoTurn - [right, left, yaw]: " + rightDriveOutput + ", " + leftDriveOutput + ", " + rightAngleTraveled);
 			RobotControl.getInstance().updateDriveSpeed(leftDriveOutput, rightDriveOutput);
 			return false;
 		}

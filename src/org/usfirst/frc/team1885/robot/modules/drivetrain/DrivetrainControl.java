@@ -147,7 +147,6 @@ public class DrivetrainControl
 	
 	public void updateOutputs() {
 		RobotControl.getInstance().updateLeftShifter(getGearValue());
-		RobotControl.getInstance().updateRightShifter(getGearValue());
 		RobotControl.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
 	}
 }

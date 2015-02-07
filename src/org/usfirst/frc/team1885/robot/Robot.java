@@ -5,7 +5,8 @@ import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
-import org.usfirst.frc.team1885.robot.auto.AutoWait;
+import org.usfirst.frc.team1885.robot.auto.AutoToteLift;
+import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
 import org.usfirst.frc.team1885.robot.comms.TelemetryMessage;
@@ -62,6 +63,7 @@ public class Robot extends SampleRobot
     	
     	SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
     	SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
+    	SensorInputControl.getInstance().getNAVX().zeroYaw();
     	
         while (isOperatorControl() && isEnabled()) {
         	
@@ -71,16 +73,18 @@ public class Robot extends SampleRobot
         		e.printStackTrace();
         	}
         	
-        	System.out.println( "Robot::operatorControl - " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + ", " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER));
+        	System.out.println( "Robot::operatorControl - " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + ", " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER) + ", " + SensorInputControl.getInstance().getNAVX().getYaw());
         	DrivetrainControl.getInstance().update();
 //        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
-        	DrivetrainControl.getInstance().updateOutputs();
         	DrivetrainControl.getInstance().update();
-        	//robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
-        	recycleBinLift.updateOutputs();
-        	recycleBinLift.updateLift();
-        	toteLift.updateOutputs();
         	toteLift.updateLift();
+        	
+        	//robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
+//        	recycleBinLift.updateOutputs();
+//        	recycleBinLift.updateLift();
+        	
+        	toteLift.updateOutputs();
+        	DrivetrainControl.getInstance().updateOutputs();
             Timer.delay(.005);		// wait for a motor update time
         }
     }
@@ -89,15 +93,19 @@ public class Robot extends SampleRobot
     	LinkedList<AutoCommand> commands;
     	commands = new LinkedList<AutoCommand>();
     	
-    	commands.add(new AutoDriveForward(3.0*12,6.0));
-    	commands.add(new AutoWait(5000.0));
-    	commands.add(new AutoDriveForward(3.0*12,6.0));
-    	commands.add(new AutoWait(5000.0));
-    	commands.add(new AutoDriveForward(3.0*12,6.0));
-    	commands.add(new AutoWait(5000.0));
-//    	commands.add(new AutoTurn(90.0, .1));
+    	commands.add(new AutoDriveForward(3.0*12,3.0));
+////    	commands.add(new AutoWait(5000.0));
+//    	commands.add(new AutoToteLift(100, 5));
+//    	commands.add(new AutoDriveForward(3.0*12,6.0));
+////    	commands.add(new AutoWait(5000.0));
+//    	commands.add(new AutoToteLift(100, 5));
+//    	commands.add(new AutoDriveForward(3.0*12,6.0));
+////    	commands.add(new AutoWait(5000.0));
+//    	commands.add(new AutoToteLift(100, 5));
+    	commands.add(new AutoTurn(45, 5));
     	
     	System.out.println("Starting Auto with " + commands.size() + " states");
+    	
     	
     	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
     		boolean commandState = commands.peek().execute();
@@ -107,8 +115,13 @@ public class Robot extends SampleRobot
     		} else {
     			System.out.println("Executing command " + commands.size());
     		}
+    	
+    		System.out.println( "Robot::autoControl - " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + ", " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER) + ", " + SensorInputControl.getInstance().getNAVX().getYaw());
+    		
     		Timer.delay(.005);
     	}
+    	
+    	System.out.println("Finished Auto with " + commands.size() + " states remaining");
     }
 
 }

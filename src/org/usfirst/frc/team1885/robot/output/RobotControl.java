@@ -125,12 +125,7 @@ public class RobotControl {
 	}
 
 	public void updateLeftShifter(DoubleSolenoid.Value start) {
-		outputSolenoids.get(RobotPneumaticType.LEFT_SHIFTER_PNEUMATIC).set(
-				start);
-	}
-
-	public void updateRightShifter(DoubleSolenoid.Value start) {
-		outputSolenoids.get(RobotPneumaticType.RIGHT_SHIFTER_PNEUMATIC).set(
+		outputSolenoids.get(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC).set(
 				start);
 	}
 

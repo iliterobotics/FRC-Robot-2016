@@ -49,6 +49,7 @@ public class SensorInputControl {
 	}
 
 	public void setUpNAVX(byte rate, edu.wpi.first.wpilibj.SerialPort.Port port) {
+		
 		serial_port = new SerialPort(57600, port);
 		imu = new IMUAdvanced(serial_port, rate);
 	}
