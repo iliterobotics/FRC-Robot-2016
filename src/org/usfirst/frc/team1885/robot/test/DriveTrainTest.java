@@ -26,15 +26,15 @@ public class DriveTrainTest {
 		driveFward = new AutoDriveForward(-inches, error);
 		driveOn();
 		turnIt();
-		turner = new AutoTurn(-45, 1);
+		turner = new AutoTurn(-45, 5);
 		turnIt();
-		turner = new AutoTurn(90, 1);
+		turner = new AutoTurn(90, 5);
 		turnIt();
-		turner = new AutoTurn(-90, 1);
+		turner = new AutoTurn(-90, 5);
 		turnIt();
-		turner = new AutoTurn(180, 1);
+		turner = new AutoTurn(180, 5);
 		turnIt();
-		turner = new AutoTurn(-180, 1);
+		turner = new AutoTurn(-180, 5);
 		gear.setGearState(GearState.HIGH_GEAR);
 		stopIt();
 		gear.setGearState(GearState.LOW_GEAR);
@@ -45,7 +45,7 @@ public class DriveTrainTest {
 	{
 		while(!waitForIt.execute())
 		{
-			waitForIt.execute()
+			waitForIt.execute();
 		}
 	}
 	public void driveOn()
