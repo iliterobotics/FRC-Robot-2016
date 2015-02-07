@@ -5,10 +5,14 @@ import java.util.HashMap;
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
+import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.output.RobotControl;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 
 public class DrivetrainControl 
@@ -130,7 +134,20 @@ public class DrivetrainControl
 	public GearState getGearState() {
 		return gearState;
 	}
+	public Value getGearValue() {
+    	if(this.gearState == GearState.HIGH_GEAR) {
+    		return Value.kForward;
+    	} else {
+    		return Value.kReverse;
+    	}
+    }
 	public void setGearState(GearState gearState) {
 		this.gearState = gearState;
+	}
+	
+	public void updateOutputs() {
+		RobotControl.getInstance().updateLeftShifter(getGearValue());
+		RobotControl.getInstance().updateRightShifter(getGearValue());
+		RobotControl.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
 	}
 }

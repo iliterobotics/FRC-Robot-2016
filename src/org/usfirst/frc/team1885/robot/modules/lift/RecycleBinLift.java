@@ -3,6 +3,9 @@ package org.usfirst.frc.team1885.robot.modules.lift;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.output.RobotControl;
+
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class RecycleBinLift {
 
@@ -80,8 +83,24 @@ public class RecycleBinLift {
             }
         }
     }
+    
+    public Value getBinState() {
+    	if(this.state == MotorState.UP) {
+    		return Value.kForward;
+    	} else if(this.state == MotorState.DOWN) {
+    		return Value.kReverse;
+    	} else {
+    		return Value.kOff;
+    	}
+    }
+
     public void stop() {
         state = MotorState.STOP;
         liftSpeed = 0;
+    }
+    
+    public void updateOutputs() {
+    	RobotControl.getInstance().updateGrabberPneumatics(getBinState());
+    	RobotControl.getInstance().updateRecycleMotor(liftSpeed);
     }
 }
