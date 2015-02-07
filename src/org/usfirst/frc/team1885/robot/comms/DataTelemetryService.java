@@ -48,7 +48,7 @@ public class DataTelemetryService {
 			else
 				tm.setSolenoids(i, 1);
 		}
-		for (int i = 0; i < doubleSolenoids.size(); i++) {
+		for (int i = 0; i < doubleSolenoids.size(); i+=2) {
 			if (((DoubleSolenoid) doubleSolenoids.get(i)).get().equals(0))
 				tm.setSolenoids(i + solenoids.size(), 0);
 			else if (((DoubleSolenoid) doubleSolenoids.get(i)).get().equals(1))
@@ -73,5 +73,23 @@ public class DataTelemetryService {
 					((Encoder) (encoder.get(i))).get());
 		}
 	}
-
+	
+	/*
+	public void setAnalogInputs(){
+		ArrayList[] AnalogBase = sic.getDigitalInputs();
+		ArrayList TempAnalog1 = AnalogBase[0];
+		ArrayList TempAnalog2 = AnalogBase[1];
+		for (int i = 0; i < TempAnalog1.size(); i++) {
+			if (((TempAnalog1) TempAnalog1.get(i)).get())
+				tm.setAnalogInputs(i, 1);
+			else
+				tm.setAnalogInputs(i, 0);
+		}
+		for (int i = 0; i < TempAnalog2.size(); i++) {
+			tm.setAnalogInputs(i + TempAnalog1.size();
+					((TempAnalog2) (TempAnalog2.get(i))).get());
+		}
+	}
+	*/
+	
 }

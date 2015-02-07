@@ -2,8 +2,6 @@ package org.usfirst.frc.team1885.robot.comms;
 
 import java.util.Arrays;
 
-import org.usfirst.frc.team1885.robot.output.RobotControl;
-
 public class TelemetryMessage extends Message {
 
 	private static final long serialVersionUID = 4021050113420280510L;
@@ -11,7 +9,7 @@ public class TelemetryMessage extends Message {
 	private double[] analogInputs = new double[10];
 	private double[] relays = new double[4];
 	private double[] digitalOutputs = new double[10];
-	private double[] solenoids = new double[10]; // Find specific amount later
+	private double[] solenoids = new double[8];
 
 	public double getSolenoids(int index) {
 		if (index >= 0 && index < solenoids.length)
@@ -79,15 +77,12 @@ public class TelemetryMessage extends Message {
 
 	@Override
 	public String toString() {
-		return "TelemmetryMessage [digitalInputs="
+		return "TelemetryMessage [digitalInputs="
 				+ Arrays.toString(digitalInputs) + ", analogInputs="
 				+ Arrays.toString(analogInputs) + ", relays="
 				+ Arrays.toString(relays) + ", digitalOutputs="
-				+ Arrays.toString(digitalOutputs) + "]";
+				+ Arrays.toString(digitalOutputs) + ", solenoids="
+				+ Arrays.toString(solenoids) + "]";
 	}
 
 }
-
-/*
- * 20 DigitalInputs 10 AnalogInputs 4 Relays 10 DigitalOutputs
- */
