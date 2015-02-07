@@ -74,8 +74,12 @@ public class Robot extends SampleRobot
         	System.out.println( "Robot::operatorControl - " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + ", " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER));
         	DrivetrainControl.getInstance().update();
 //        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
-        	robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
+        	DrivetrainControl.getInstance().updateOutputs();
+        	DrivetrainControl.getInstance().update();
+        	//robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
+        	recycleBinLift.updateOutputs();
         	recycleBinLift.updateLift();
+        	toteLift.updateOutputs();
         	toteLift.updateLift();
             Timer.delay(.005);		// wait for a motor update time
         }

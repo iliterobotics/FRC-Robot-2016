@@ -8,6 +8,7 @@ import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Joystick;
 
 public class ToteLift {
@@ -22,9 +23,11 @@ public class ToteLift {
     private double liftOutput;
     private final double DEAD_ZONE = .1;
     private boolean isIncrementing;
+    private boolean isBraked;
 
     protected ToteLift() {
         this.state = MotorState.STOP;
+        isBraked = false;
         liftSpeed = 0;
     }
     public static ToteLift getInstance() {
@@ -66,9 +69,9 @@ public class ToteLift {
             state = MotorState.STOP;
         }
         if(state == MotorState.STOP) {
-        	RobotControl.getInstance().updateToteStop(true);
+        	isBraked = true;
         } else {
-        	RobotControl.getInstance().updateToteStop(false);
+        	isBraked = false;
         }
         if (state == MotorState.UP) {
             liftSpeed = DEFAULT_LIFT_SPEED;
@@ -132,5 +135,10 @@ public class ToteLift {
     public void stop() {
         state = MotorState.STOP;
         liftSpeed = 0;
+    }
+    
+    public void updateOutputs() {
+    	RobotControl.getInstance().updateToteMotor(liftSpeed);
+    	RobotControl.getInstance().updateToteStop(isBraked);
     }
 }
