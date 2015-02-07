@@ -32,4 +32,5 @@ public class DataTelemetryService {
                 tm.setDigitalOutputs(i, temp.get(i).get());
         }
 	}
+	
 }
