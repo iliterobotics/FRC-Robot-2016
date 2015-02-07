@@ -69,6 +69,20 @@ public class RobotControl {
 		}
 		return temp;
 	}
+	
+	public ArrayList[] getSolenoids(){
+		ArrayList[] temp = new ArrayList[2];
+		ArrayList<Solenoid> tempRegular = new ArrayList<Solenoid>();
+		ArrayList<DoubleSolenoid> tempDouble = new ArrayList<DoubleSolenoid>();
+		
+		for(RobotPneumaticType rpt : outputSolenoids.keySet())
+			tempDouble.add(outputSolenoids.get(rpt));
+		for(RobotPneumaticType rpt : solenoid.keySet())
+			tempRegular.add(solenoid.get(rpt));
+		temp[0] = tempRegular;
+		temp[1] = tempDouble;
+		return temp;
+	}
 
 	public void addRelay(RobotMotorType type, int channel) {
 		relays.put(type, new Relay(channel));

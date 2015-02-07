@@ -11,7 +11,19 @@ public class TelemetryMessage extends Message{
 	private double[] analogInputs = new double[10];
 	private double[] relays = new double[4];
 	private double[] digitalOutputs = new double[10];
-	private double[] solnoids = new double[10]; //Find specific amount later
+	private double[] solenoids = new double[10]; //Find specific amount later
+	
+	public double getSolenoids(int index) {
+		if(index >= 0 && index < solenoids.length)
+			return solenoids[index];
+		else
+			return -1;
+	}
+
+	public void setSolenoids(int index, double data) {
+		if(index >= 0 && index < solenoids.length)
+			this.solenoids[index] = data;
+	}
 	
 	public double getDigitalInputs(int index) {
 		if(index >= 0 && index < digitalInputs.length)
