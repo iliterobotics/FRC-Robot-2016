@@ -12,6 +12,7 @@ import org.usfirst.frc.team1885.robot.comms.RobotServer;
 import org.usfirst.frc.team1885.robot.comms.TelemetryMessage;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
@@ -65,26 +66,30 @@ public class Robot extends SampleRobot
     	SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
     	SensorInputControl.getInstance().getNAVX().zeroYaw();
     	
+    	boolean magnetState = false;
+    	
         while (isOperatorControl() && isEnabled()) {
         	
-        	try {
-        		RobotServer.getInstance().send(new TelemetryMessage());
-        	} catch(Exception e) {
-        		e.printStackTrace();
-        	}
+//        	try {
+//        		RobotServer.getInstance().send(new TelemetryMessage());
+//        	} catch(Exception e) {
+//        		e.printStackTrace();
+//        	}
         	
-        	System.out.println( "Robot::operatorControl - " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + ", " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER) + ", " + SensorInputControl.getInstance().getNAVX().getYaw());
         	DrivetrainControl.getInstance().update();
 //        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
-        	DrivetrainControl.getInstance().update();
-        	toteLift.updateLift();
+
+        	ClawControl.getInstance().updateClaw();
+        	ClawControl.getInstance().updateOutputs();
+        	
+//        	toteLift.updateLift();
         	
         	//robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
 //        	recycleBinLift.updateOutputs();
 //        	recycleBinLift.updateLift();
         	
-        	toteLift.updateOutputs();
-        	DrivetrainControl.getInstance().updateOutputs();
+//        	toteLift.updateOutputs();
+//        	DrivetrainControl.getInstance().updateOutputs();
             Timer.delay(.005);		// wait for a motor update time
         }
     }
@@ -103,9 +108,7 @@ public class Robot extends SampleRobot
 ////    	commands.add(new AutoWait(5000.0));
 //    	commands.add(new AutoToteLift(100, 5));
     	commands.add(new AutoTurn(45, 5));
-    	
-    	System.out.println("Starting Auto with " + commands.size() + " states");
-    	
+    	    	
     	
     	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
     		boolean commandState = commands.peek().execute();
@@ -115,13 +118,9 @@ public class Robot extends SampleRobot
     		} else {
     			System.out.println("Executing command " + commands.size());
     		}
-    	
-    		System.out.println( "Robot::autoControl - " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + ", " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER) + ", " + SensorInputControl.getInstance().getNAVX().getYaw());
-    		
+    	    		
     		Timer.delay(.005);
-    	}
-    	
-    	System.out.println("Finished Auto with " + commands.size() + " states remaining");
+    	}    	
     }
 
 }

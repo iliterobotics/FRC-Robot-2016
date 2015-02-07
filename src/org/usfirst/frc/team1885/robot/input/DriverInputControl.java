@@ -82,7 +82,7 @@ public class DriverInputControl {
     public double getPressureButton(RobotButtonType buttonType){
         JoystickButtonMatch buttonMatch = (JoystickButtonMatch) JoystickButtonMap
                 .getInstance().getButtonMap().get(buttonType);
-        return getJoystick(buttonMatch.getJoystickType()).getAxis(
-                buttonMatch.getAxisType());
+        return getJoystick(buttonMatch.getJoystickType()).getRawAxis(
+                buttonMatch.getAxisType().value);
     }
 }

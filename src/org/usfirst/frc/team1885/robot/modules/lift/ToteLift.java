@@ -47,10 +47,7 @@ public class ToteLift {
         return liftSpeed;
     }
     public void updateLift() {
-    	
-    	System.out.println(DriverInputControl.getInstance().getPressureButton(
-                RobotButtonType.TOTE_LIFT));
-    	
+    	    	
         if (DriverInputControl.getInstance().getButton(
                 RobotButtonType.TOTE_LIFT_INCREMENT)
                 && !isIncrementing || isIncrementing) {

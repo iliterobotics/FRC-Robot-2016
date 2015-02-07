@@ -116,8 +116,16 @@ public class RobotControl {
 		}
 	}
 
-	public void updateGrabberPneumatics(DoubleSolenoid.Value start) {
-		outputSolenoids.get(RobotPneumaticType.GRABBER_PNEUMATIC).set(start);
+	public void updateGrabberPneumatics(boolean start) {
+		solenoid.get(RobotPneumaticType.GRABBER_PNEUMATIC).set(start);
+	}
+	
+	public void updateWristExtensionPneumatics(DoubleSolenoid.Value start) {
+		outputSolenoids.get(RobotPneumaticType.WRIST_EXTENSION).set(start);
+	}
+	
+	public void updateWristRotationPneumatics(DoubleSolenoid.Value start) {
+		outputSolenoids.get(RobotPneumaticType.WRIST_ROTATION).set(start);
 	}
 
 	public void updateToteStop(boolean start) {
