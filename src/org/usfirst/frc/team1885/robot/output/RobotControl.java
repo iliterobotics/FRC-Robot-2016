@@ -61,23 +61,23 @@ public class RobotControl {
 			outputTalons.put(type, new Talon(port));
 		}
 	}
-	
-	public List<Talon> getTalons(){
+
+	public List<Talon> getTalons() {
 		List<Talon> temp = new ArrayList<Talon>();
-		for(RobotMotorType rmt : outputTalons.keySet()){
+		for (RobotMotorType rmt : outputTalons.keySet()) {
 			temp.add(outputTalons.get(rmt));
 		}
 		return temp;
 	}
-	
-	public ArrayList[] getSolenoids(){
+
+	public ArrayList[] getSolenoids() {
 		ArrayList[] temp = new ArrayList[2];
 		ArrayList<Solenoid> tempRegular = new ArrayList<Solenoid>();
 		ArrayList<DoubleSolenoid> tempDouble = new ArrayList<DoubleSolenoid>();
-		
-		for(RobotPneumaticType rpt : outputSolenoids.keySet())
+
+		for (RobotPneumaticType rpt : outputSolenoids.keySet())
 			tempDouble.add(outputSolenoids.get(rpt));
-		for(RobotPneumaticType rpt : solenoid.keySet())
+		for (RobotPneumaticType rpt : solenoid.keySet())
 			tempRegular.add(solenoid.get(rpt));
 		temp[0] = tempRegular;
 		temp[1] = tempDouble;
