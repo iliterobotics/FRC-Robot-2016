@@ -39,6 +39,7 @@ public class RobotConfiguration {
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_UPPER_LIMIT, 10 );
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_LOWER_LIMIT, 11 );
         SensorInputControl.getInstance().addSensor( SensorType.LINE_SENSOR, 12 );
+        SensorInputControl.getInstance().addSensor( SensorType.MAGNET_SENSOR, 13 );
         SensorInputControl.getInstance().setUpNAVX( (byte)(50), SerialPort.Port.kMXP );
         SensorInputControl.getInstance().addLidarSensor( I2C.Port.kMXP );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 0 );
