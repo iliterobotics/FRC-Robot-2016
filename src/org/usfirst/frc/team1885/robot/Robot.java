@@ -37,7 +37,6 @@ public class Robot extends SampleRobot
 {
     private final double diameter;
     private final double maxSpeed;
-    private DrivetrainControl driveTrainControl;
     private RobotControl robotControl;
     private RecycleBinLift recycleBinLift;
     private ToteLift toteLift;
@@ -47,8 +46,7 @@ public class Robot extends SampleRobot
         diameter = 4.0;
         maxSpeed = 15.0; 
 
-    	this.driveTrainControl = new DrivetrainControl(diameter, maxSpeed);
-    	this.driveTrainControl.addSpeed(1, 15.0);
+    	DrivetrainControl.getInstance().addSpeed(1, 15.0);
     	this.robotControl = RobotControl.getInstance();
     	this.recycleBinLift = RecycleBinLift.getInstance();
     	this.toteLift = ToteLift.getInstance();
@@ -74,9 +72,9 @@ public class Robot extends SampleRobot
         	}
         	
         	System.out.println( "Robot::operatorControl - " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + ", " + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER));
-        	driveTrainControl.update();
+        	DrivetrainControl.getInstance().update();
 //        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
-        	robotControl.updateDriveSpeed(driveTrainControl.getLeftDriveSpeed(), driveTrainControl.getRightDriveSpeed());
+        	robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
         	recycleBinLift.updateLift();
         	toteLift.updateLift();
             Timer.delay(.005);		// wait for a motor update time

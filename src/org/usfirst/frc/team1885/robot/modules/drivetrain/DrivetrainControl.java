@@ -26,8 +26,9 @@ public class DrivetrainControl
 	private final double circumference;
 	private  HashMap<Integer, Double> speeds;
 	private DriverInputControl driverInput;
+	private static DrivetrainControl instance;
 	
-	public DrivetrainControl(final double d, final double m) {
+	protected DrivetrainControl(final double d, final double m) {
 		maxSpeed = m;
 		speeds = new HashMap<Integer, Double>();
 		diameter = d;
@@ -38,6 +39,12 @@ public class DrivetrainControl
 		driveMode = DriveMode.TANK;
 		setGearState(GearState.HIGH_GEAR);
 		driverInput = DriverInputControl.getInstance();
+	}
+	public static DrivetrainControl getInstance(){
+	    if(instance == null){
+	        instance = new DrivetrainControl(4.0, 15.0);
+	    }
+	    return instance;
 	}
 	public void addSpeed(Integer gear, Double speed) {
 		speeds.put(gear, speed);
@@ -67,10 +74,8 @@ public class DrivetrainControl
 	}
 	
 	public void update(double leftJoystick, double rightJoystick) {
-		
 		leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
 		rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
-		
 	}
 	/**
 	 * @return the leftDriveSpeed
