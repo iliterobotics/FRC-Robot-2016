@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.Relay;
+import edu.wpi.first.wpilibj.Talon;
 
 
 public class DataTelemetryService {
@@ -25,7 +26,10 @@ public class DataTelemetryService {
 		}
 	}
 	
-	public void setTalons(){
-		ArrayList<>
+	public void setTalons() {
+        ArrayList<Talon> temp = (ArrayList<Talon>) rc.getTalons();
+        for(int i = 0; i < temp.size(); i++){
+                tm.setDigitalOutputs(i, temp.get(i).get());
+        }
 	}
 }
