@@ -2,13 +2,15 @@ package org.usfirst.frc.team1885.robot.comms;
 
 import java.util.Arrays;
 
+import org.usfirst.frc.team1885.robot.output.RobotControl;
+
 public class TelemetryMessage extends Message{
 	
 	private static final long serialVersionUID = 4021050113420280510L;
-	double[] digitalInputs = new double[20];
-	double[] analogInputs = new double[10];
-	double[] relays = new double[4];
-	double[] digitalOutputs = new double[10];
+	private double[] digitalInputs = new double[20];
+	private double[] analogInputs = new double[10];
+	private double[] relays = new double[4];
+	private double[] digitalOutputs = new double[10];
 	
 	public double getDigitalInputs(int index) {
 		if(index >= 0 && index < digitalInputs.length)
