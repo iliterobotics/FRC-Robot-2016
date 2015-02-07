@@ -12,7 +12,7 @@ public class DataTelemetryService {
 	private TelemetryMessage tm = new TelemetryMessage();
 	
 	public void setRelays() {
-		ArrayList<Relay> temp = rc.getRelay();
+		ArrayList<Relay> temp = (ArrayList<Relay>) rc.getRelay();
 		for(int i = 0; i < 4; i++){
 			if(temp.get(i).get().equals(0))
 				tm.setRelays(i, 0.0);
@@ -25,5 +25,7 @@ public class DataTelemetryService {
 		}
 	}
 	
-	
+	public void setTalons(){
+		ArrayList<>
+	}
 }

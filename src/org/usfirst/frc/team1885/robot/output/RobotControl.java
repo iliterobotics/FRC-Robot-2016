@@ -61,13 +61,21 @@ public class RobotControl {
 			outputTalons.put(type, new Talon(port));
 		}
 	}
+	
+	public List<Talon> getTalons(){
+		List<Talon> temp = new ArrayList<Talon>();
+		for(RobotMotorType rmt : outputTalons.keySet()){
+			temp.add(outputTalons.get(rmt));
+		}
+		return temp;
+	}
 
 	public void addRelay(RobotMotorType type, int channel) {
 		relays.put(type, new Relay(channel));
 	}
 
-	public ArrayList<Relay> getRelay() {
-		ArrayList<Relay> temp = new ArrayList<Relay>();
+	public List<Relay> getRelay() {
+		List<Relay> temp = new ArrayList<Relay>();
 		for (RobotMotorType rmt : relays.keySet())
 			temp.add(relays.get(rmt));
 		return temp;

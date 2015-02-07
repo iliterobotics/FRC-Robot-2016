@@ -11,6 +11,7 @@ public class TelemetryMessage extends Message{
 	private double[] analogInputs = new double[10];
 	private double[] relays = new double[4];
 	private double[] digitalOutputs = new double[10];
+	private double[] solnoids = new double[10]; //Find specific amount later
 	
 	public double getDigitalInputs(int index) {
 		if(index >= 0 && index < digitalInputs.length)
