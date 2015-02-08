@@ -59,10 +59,17 @@ public class ToteLift {
                 && DriverInputControl.getInstance().getControllerJoystick(
                         Joystick.AxisType.kY) < -DEAD_ZONE) {
             state = MotorState.DOWN;
-        }else{
+        } else if(DriverInputControl.getInstance().getButton(
+        		RobotButtonType.HARD_STOP)) {
+        	state = MotorState.STOP;
+    	} else{
             state = MotorState.STOP;
         }
-
+        if(state == MotorState.STOP) {
+        	RobotControl.getInstance().updateToteStop(true);
+        } else {
+        	RobotControl.getInstance().updateToteStop(false);
+        }
         if (state == MotorState.UP) {
             liftSpeed = DEFAULT_LIFT_SPEED;
             if (SensorInputControl.getInstance()
