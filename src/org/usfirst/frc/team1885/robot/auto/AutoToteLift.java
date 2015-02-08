@@ -34,7 +34,7 @@ public class AutoToteLift implements AutoCommand{
 
 	public void reset() {
 		heightControlLoop.reset();
-		SensorInputControl.getInstance().getEncoder(SensorType.RECYCLE_BIN_ENCODER).reset();
+		SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER).reset();
 		ToteLift.getInstance().updateLift(0);
 		RobotControl.getInstance().updateToteMotor(0);		
 		

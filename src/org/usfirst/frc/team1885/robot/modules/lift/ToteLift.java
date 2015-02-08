@@ -20,15 +20,16 @@ public class ToteLift {
     private MotorState state;
     private PID distanceControlLoop;
     private double distanceTraveled;
-    private double liftOutput;
     private final double DEAD_ZONE = .1;
     private boolean isIncrementing;
     private boolean isBraked;
 
     protected ToteLift() {
         this.state = MotorState.STOP;
+        distanceControlLoop = new PID(0.01, 0.00001, 0);
         isBraked = false;
         liftSpeed = 0;
+        isIncrementing = false;
     }
     public static ToteLift getInstance() {
         if (instance == null) {
@@ -46,21 +47,20 @@ public class ToteLift {
         return liftSpeed;
     }
     public void updateLift() {
-
+    	    	
         if (DriverInputControl.getInstance().getButton(
                 RobotButtonType.TOTE_LIFT_INCREMENT)
                 && !isIncrementing || isIncrementing) {
             state = MotorState.UP;
             this.isIncrementing = !incrementLift(42, 4.20);
-        } else if (DriverInputControl.getInstance().getButton(
-                RobotButtonType.TOTE_LIFT)
-                && DriverInputControl.getInstance().getControllerJoystick(
-                        Joystick.AxisType.kY) > DEAD_ZONE) {
+
+        } else if (DriverInputControl.getInstance().getPressureButton(
+                        RobotButtonType.TOTE_LIFT) > DEAD_ZONE) {
+
             state = MotorState.UP;
-        } else if (DriverInputControl.getInstance().getButton(
-                RobotButtonType.TOTE_LIFT)
-                && DriverInputControl.getInstance().getControllerJoystick(
-                        Joystick.AxisType.kY) < -DEAD_ZONE) {
+        } else if (DriverInputControl.getInstance().getPressureButton(
+        		RobotButtonType.TOTE_LIFT) < -DEAD_ZONE) {
+
             state = MotorState.DOWN;
         } else if(DriverInputControl.getInstance().getButton(
         		RobotButtonType.HARD_STOP)) {
@@ -68,20 +68,23 @@ public class ToteLift {
     	} else{
             state = MotorState.STOP;
         }
+        
         if(state == MotorState.STOP) {
         	isBraked = true;
         } else {
         	isBraked = false;
         }
+        
         if (state == MotorState.UP) {
             liftSpeed = DEFAULT_LIFT_SPEED;
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {
                 stop();
             }
-        }
-        if (state == MotorState.DOWN) {
+        } else if (state == MotorState.DOWN) {
             liftSpeed = -DEFAULT_LIFT_SPEED;
+        } else {
+        	stop();
         }
     }
     public void updateLift(double speed) {
@@ -106,14 +109,14 @@ public class ToteLift {
                 .getEncoder(SensorType.TOTE_ENCODER).getDistance();
         if (Math.abs(distanceTraveled - distance) <= error) {
             this.reset();
-
+            this.stop();
             return true;
         } else {
-            liftOutput = distanceControlLoop.getPID(
+            liftSpeed = distanceControlLoop.getPID(
                     distance,
                     SensorInputControl.getInstance()
                             .getEncoder(SensorType.TOTE_ENCODER).getDistance());
-            updateLift(liftOutput);
+            updateLift(liftSpeed);
 
             return false;
         }
@@ -139,6 +142,17 @@ public class ToteLift {
     
     public void updateOutputs() {
     	RobotControl.getInstance().updateToteMotor(liftSpeed);
-    	RobotControl.getInstance().updateToteStop(isBraked);
+    	RobotControl.getInstance().updateToteStop(!isBraked);
     }
+	@Override
+	public String toString() {
+		return "ToteLift [toteHeight=" + toteHeight + ", liftSpeed="
+				+ liftSpeed + ", state=" + state + ", distanceControlLoop="
+				+ distanceControlLoop + ", distanceTraveled="
+				+ distanceTraveled 
+				+ ", DEAD_ZONE=" + DEAD_ZONE + ", isIncrementing="
+				+ isIncrementing + ", isBraked=" + isBraked + "]";
+	}
+    
+    
 }

@@ -100,7 +100,6 @@ public class RecycleBinLift {
     }
     
     public void updateOutputs() {
-    	RobotControl.getInstance().updateGrabberPneumatics(getBinState());
     	RobotControl.getInstance().updateRecycleMotor(liftSpeed);
     }
 }

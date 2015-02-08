@@ -49,6 +49,7 @@ public class SensorInputControl {
 	}
 
 	public void setUpNAVX(byte rate, edu.wpi.first.wpilibj.SerialPort.Port port) {
+		
 		serial_port = new SerialPort(57600, port);
 		imu = new IMUAdvanced(serial_port, rate);
 	}
@@ -81,7 +82,8 @@ public class SensorInputControl {
 
 	public boolean addSensor(SensorType sensor_type, int port) {
 		if (sensor_type.name().contains("LIMIT")
-				|| sensor_type.name().contains("LINE")) {
+				|| sensor_type.name().contains("LINE")
+				|| sensor_type.name().contains("MAGNET")) {
 			digital_inputs.put(sensor_type, new DigitalInput(port));
 		} else {
 			return false;

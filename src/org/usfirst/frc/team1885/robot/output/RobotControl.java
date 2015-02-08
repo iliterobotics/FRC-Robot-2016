@@ -116,8 +116,16 @@ public class RobotControl {
 		}
 	}
 
-	public void updateGrabberPneumatics(DoubleSolenoid.Value start) {
-		outputSolenoids.get(RobotPneumaticType.GRABBER_PNEUMATIC).set(start);
+	public void updateGrabberPneumatics(boolean start) {
+		solenoid.get(RobotPneumaticType.GRABBER_PNEUMATIC).set(start);
+	}
+	
+	public void updateWristExtensionPneumatics(DoubleSolenoid.Value start) {
+		outputSolenoids.get(RobotPneumaticType.WRIST_EXTENSION).set(start);
+	}
+	
+	public void updateWristRotationPneumatics(DoubleSolenoid.Value start) {
+		outputSolenoids.get(RobotPneumaticType.WRIST_ROTATION).set(start);
 	}
 
 	public void updateToteStop(boolean start) {
@@ -125,12 +133,7 @@ public class RobotControl {
 	}
 
 	public void updateLeftShifter(DoubleSolenoid.Value start) {
-		outputSolenoids.get(RobotPneumaticType.LEFT_SHIFTER_PNEUMATIC).set(
-				start);
-	}
-
-	public void updateRightShifter(DoubleSolenoid.Value start) {
-		outputSolenoids.get(RobotPneumaticType.RIGHT_SHIFTER_PNEUMATIC).set(
+		outputSolenoids.get(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC).set(
 				start);
 	}
 
