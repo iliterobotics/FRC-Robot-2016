@@ -1,10 +1,7 @@
 package org.usfirst.frc.team1885.robot.manipulator;
 
-import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControl;
-import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -37,7 +34,7 @@ public class ClawControl
 	            extensionState = false;
 	        }
 	        
-	        if (DriverInputControl.getInstance().getButton(RobotButtonType.TOTE_LIFT_INCREMENT)) {
+	        if (DriverInputControl.getInstance().getButton(RobotButtonType.CLAW)) {
 	            pinchState = true;
 	    	} else{
 	            pinchState = false;
