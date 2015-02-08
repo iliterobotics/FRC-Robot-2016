@@ -157,25 +157,6 @@ public class RobotServer implements Runnable {
 					notifyListeners(e);
 				}
 			}
-
-			// if (((Message) (inStream.readObject())).getType() ==
-			// ServerMessageType.TELEMETRY_MSG) {
-			// TelemetryMessage teleMessage = (TelemetryMessage) (inStream
-			// .readObject());
-			// System.out.println("Telemetry Message Built.");
-			// messages.add(teleMessage);
-			// System.out.println("Telemetry Message Stored.");
-			// } else if (((Message) (inStream.readObject())).getType() ==
-			// ServerMessageType.VISION_MSG) {
-			// VisionMessage visMessage = (VisionMessage) (inStream
-			// .readObject());
-			// System.out.println("Vision Message Built.");
-			// messages.add(visMessage);
-			// System.out.println("Vision Message Stored.");
-			// CameraDataService.getInstance().setDistance(
-			// visMessage.getDistance());
-			// System.out.println("Vision Data updated by CameraDataService.");
-			// }
 		} catch (Exception e) {
 			System.out.println("Error : " + e);
 		}
