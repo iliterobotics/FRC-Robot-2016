@@ -153,9 +153,7 @@ public class RobotServer implements Runnable {
 			if (dataObject instanceof Message) {
 				RobotServerEvent e = new RobotServerEvent(
 						(Message) (dataObject));
-				for (RobotServerListener r : robotModules) {
-					notifyListeners(e);
-				}
+				notifyListeners(e);
 			}
 		} catch (Exception e) {
 			System.out.println("Error : " + e);
