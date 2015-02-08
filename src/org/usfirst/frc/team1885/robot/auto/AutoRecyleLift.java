@@ -27,7 +27,6 @@ public class AutoRecyleLift implements AutoCommand{
 		} else {
 			heightOutput = heightControlLoop.getPID(height, SensorInputControl.getInstance().getEncoder(SensorType.RECYCLE_BIN_ENCODER).getDistance());
 			RecycleBinLift.getInstance().updateLift(heightOutput);
-			RobotControl.getInstance().updateRecycleMotor(RecycleBinLift.getInstance().getSpeed());
 			return false;
 		}
 	}
@@ -38,6 +37,15 @@ public class AutoRecyleLift implements AutoCommand{
 		RecycleBinLift.getInstance().updateLift(0);
 		RobotControl.getInstance().updateRecycleMotor(0);		
 		
+	}
+	
+	public boolean updateOutputs() {
+		RobotControl.getInstance().updateRecycleMotor(RecycleBinLift.getInstance().getSpeed());
+		return true;
+	}
+	
+	public void init() {
+		reset();
 	}
 
 }

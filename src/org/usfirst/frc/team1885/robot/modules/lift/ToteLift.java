@@ -96,6 +96,13 @@ public class ToteLift {
         } else {
             state = MotorState.STOP;
         }
+        
+        if(state == MotorState.STOP) {
+        	isBraked = true;
+        } else {
+        	isBraked = false;
+        }
+        
         if (state == MotorState.UP) {
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {

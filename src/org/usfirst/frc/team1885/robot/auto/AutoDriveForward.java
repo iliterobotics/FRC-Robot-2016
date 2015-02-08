@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.auto;
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 public class AutoDriveForward implements AutoCommand{
@@ -48,7 +49,8 @@ public class AutoDriveForward implements AutoCommand{
 		
 		System.out.println("AutoDriveFwd::[left speed, right speed] " + leftDriveOutput + ", " + rightDriveOutput);
 		
-		RobotControl.getInstance().updateDriveSpeed(-leftDriveOutput, -rightDriveOutput);
+		DrivetrainControl.getInstance().update(-leftDriveOutput, -rightDriveOutput);
+		
 		return false;
 	}
 	public void reset() {
@@ -58,4 +60,15 @@ public class AutoDriveForward implements AutoCommand{
 		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
 		RobotControl.getInstance().updateDriveSpeed(0, 0);
 	}
+	
+	public boolean updateOutputs() {
+		RobotControl.getInstance().updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
+		return true;
+	}
+	
+	public void init() {
+		reset();
+		
+	}
+	
 }

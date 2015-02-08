@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.auto;
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 public class AutoDriveForwardLidar implements AutoCommand{
@@ -36,11 +37,20 @@ public class AutoDriveForwardLidar implements AutoCommand{
 		
 		System.out.println("AutoDriveFwd::[left speed, right speed] " + driveOutput);
 		
-		RobotControl.getInstance().updateDriveSpeed(-driveOutput, -driveOutput);
+		DrivetrainControl.getInstance().update(-driveOutput, -driveOutput);
 		return false;
 	}
 	public void reset() {
 		distanceControlLoop.reset();
 		RobotControl.getInstance().updateDriveSpeed(0, 0);
+	}
+	
+	public boolean updateOutputs() {
+		RobotControl.getInstance().updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
+		return true;
+	}
+	
+	public void init() {
+		reset();
 	}
 }
