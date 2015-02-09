@@ -78,8 +78,12 @@ public class DrivetrainControl
 	}
 	
 	public void update(double leftJoystick, double rightJoystick) {
-		leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
-		rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
+		if(Math.abs(leftDriveSpeed - rightDriveSpeed) < DriverInputControl.DEADZONE) {
+			leftDriveSpeed = rightDriveSpeed = (leftDriveSpeed + rightDriveSpeed) / 2;
+		} else {
+			leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
+			rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
+		}
 		
 		leftDriveSpeed = DriverInputControl.expScale(leftDriveSpeed);
 		rightDriveSpeed = DriverInputControl.expScale(rightDriveSpeed);
