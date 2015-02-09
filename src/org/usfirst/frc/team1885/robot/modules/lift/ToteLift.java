@@ -61,6 +61,19 @@ public class ToteLift {
             this.isIncrementing = !incrementLift(1200, 25);
 
         } 
+        
+        if (DriverInputControl.getInstance().getButton(
+                RobotButtonType.TOTE_LIFT_DECREMENT)
+                && !isIncrementing || isIncrementing) {
+        	
+        	if(!isIncrementing) {
+        		this.reset();
+        	}
+        	
+            state = MotorState.UP;
+            this.isIncrementing = !incrementLift(-1200, 25);
+
+        } 
 
         if (DriverInputControl.getInstance().getPressureButton(
                         RobotButtonType.TOTE_LIFT) > DEAD_ZONE) {

@@ -66,96 +66,95 @@ public class DrivetrainControl {
                 SensorType.DRIVE_TRAIN_LEFT_ENCODER)
                 * circumference;
     }
-
-    public void update() {
-        if (driverInput.getButton(RobotButtonType.GEAR_SHIFT)) {
-            setGearState(GearState.LOW_GEAR);
-        } else {
-            setGearState(GearState.HIGH_GEAR);
-        }
-
-        // FIXME: add slow straight drive state + button
-
-        update(driverInput.getLeftDrive(), driverInput.getRightDrive());
+	public void update()
+	{
+		if (driverInput.getButton(RobotButtonType.GEAR_SHIFT)){
+			setGearState(GearState.LOW_GEAR);
+		}
+		else{
+			setGearState(GearState.HIGH_GEAR);
+		}
+		
+		//FIXME: add slow straight drive state + button
+		
+		update( driverInput.getLeftDrive(), driverInput.getRightDrive() );
+	}
+	
+	public void update(double leftJoystick, double rightJoystick) {
+		if(Math.abs(leftDriveSpeed - rightDriveSpeed) < DriverInputControl.DEADZONE) {
+			leftDriveSpeed = rightDriveSpeed = (leftDriveSpeed + rightDriveSpeed) / 2;
+		} else {
+			leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
+			rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
+		}
+		
+		leftDriveSpeed = DriverInputControl.expScale(leftDriveSpeed);
+		rightDriveSpeed = DriverInputControl.expScale(rightDriveSpeed);
+	}
+	/**
+	 * @return the leftDriveSpeed
+	 */
+	public double getLeftDriveSpeed() {
+		return leftDriveSpeed;
+	}
+	/**
+	 * @param leftDriveSpeed the leftDriveSpeed to set
+	 */
+	public void setLeftDriveSpeed(double leftDriveSpeed) {
+		this.leftDriveSpeed = leftDriveSpeed;
+	}
+	/**
+	 * @return the rightDriveSpeed
+	 */
+	public double getRightDriveSpeed() {
+		return rightDriveSpeed * (speeds.get(getTotes()) / maxSpeed);
+	}
+	/**
+	 * @param rightDriveSpeed the rightDriveSpeed to set
+	 */
+	public void setRightDriveSpeed(double rightDriveSpeed) {
+		this.rightDriveSpeed = rightDriveSpeed * (speeds.get(getTotes()) / maxSpeed);;
+	}
+	/**
+	 * @return the driveMode
+	 */
+	public DriveMode getDriveMode() {
+		return driveMode;
+	}
+	/**
+	 * changes driveMode from TANK drive to STRAIGHT drive
+	 * 		STRAIGHT only uses the right joystick to drive straight
+	 */
+	public void toggleDriveMode() {
+		if( driveMode == DriveMode.TANK ) {
+			driveMode = DriveMode.STRAIGHT;
+		}
+		else {
+			driveMode = DriveMode.TANK;
+		}
+	}
+	/**
+	 * @param driveSpeed sets both drive speeds to a single speed controlled by the 
+	 * right joystick
+	 */
+	public void straightDrive(double driveSpeed) {
+		this.rightDriveSpeed = driveSpeed * (speeds.get(getTotes()) / maxSpeed);;
+		this.leftDriveSpeed = driveSpeed * (speeds.get(getTotes()) / maxSpeed);;
+	}
+	public GearState getGearState() {
+		return gearState;
+	}
+	public boolean getGearValue() {
+    	if(this.gearState == GearState.HIGH_GEAR) {
+    		return true;
+    	} else {
+    		return false;
+    	}
     }
-
-    public void update(double leftJoystick, double rightJoystick) {
-        leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
-        rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
-
-        leftDriveSpeed = DriverInputControl.expScale(leftDriveSpeed);
-        rightDriveSpeed = DriverInputControl.expScale(rightDriveSpeed);
-    }
-    /**
-     * @return the leftDriveSpeed
-     */
-    public double getLeftDriveSpeed() {
-        return leftDriveSpeed;
-    }
-    /**
-     * @param leftDriveSpeed
-     *            the leftDriveSpeed to set
-     */
-    public void setLeftDriveSpeed(double leftDriveSpeed) {
-        this.leftDriveSpeed = leftDriveSpeed;
-    }
-    /**
-     * @return the rightDriveSpeed
-     */
-    public double getRightDriveSpeed() {
-        return rightDriveSpeed * (speeds.get(getTotes()) / maxSpeed);
-    }
-    /**
-     * @param rightDriveSpeed
-     *            the rightDriveSpeed to set
-     */
-    public void setRightDriveSpeed(double rightDriveSpeed) {
-        this.rightDriveSpeed = rightDriveSpeed
-                * (speeds.get(getTotes()) / maxSpeed);
-        ;
-    }
-    /**
-     * @return the driveMode
-     */
-    public DriveMode getDriveMode() {
-        return driveMode;
-    }
-    /**
-     * changes driveMode from TANK drive to STRAIGHT drive STRAIGHT only uses
-     * the right joystick to drive straight
-     */
-    public void toggleDriveMode() {
-        if (driveMode == DriveMode.TANK) {
-            driveMode = DriveMode.STRAIGHT;
-        } else {
-            driveMode = DriveMode.TANK;
-        }
-    }
-    /**
-     * @param driveSpeed
-     *            sets both drive speeds to a single speed controlled by the
-     *            right joystick
-     */
-    public void straightDrive(double driveSpeed) {
-        this.rightDriveSpeed = driveSpeed * (speeds.get(getTotes()) / maxSpeed);
-        ;
-        this.leftDriveSpeed = driveSpeed * (speeds.get(getTotes()) / maxSpeed);
-        ;
-    }
-    public GearState getGearState() {
-        return gearState;
-    }
-    public boolean getGearValue() {
-        if (this.gearState == GearState.HIGH_GEAR) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public void setGearState(GearState gearState) {
-        this.gearState = gearState;
-    }
-    public void turn90degrees() {
+	public void setGearState(GearState gearState) {
+		this.gearState = gearState;
+	}
+	public void turn90degrees() {
         if ( DriverInputControl.getInstance().getButton(
                 RobotButtonType.TURN_90) && !isTurning) {
             AutoTurn turn = new AutoTurn(90, 5);
@@ -166,9 +165,8 @@ public class DrivetrainControl {
             }
         }
     }
-    public void updateOutputs() {
-        RobotControl.getInstance().updateShifter(getGearValue());
-        RobotControl.getInstance().updateDriveSpeed(leftDriveSpeed,
-                rightDriveSpeed);
-    }
+	public void updateOutputs() {
+		RobotControl.getInstance().updateShifter(getGearValue());
+		RobotControl.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
+	}
 }
