@@ -24,7 +24,7 @@ public class RobotOutputTest
 	{
 		robotControl.updateDriveSpeed(.25, .25);
 		robotControl.updateGrabberPneumatics(true);
-		robotControl.updateLeftShifter(DoubleSolenoid.Value.kForward);
+		robotControl.updateShifter(true);
 		robotControl.updateRecycleMotor(.25);
 		robotControl.updateToteMotor(.25);
 	}

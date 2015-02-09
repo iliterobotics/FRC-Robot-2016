@@ -49,12 +49,14 @@ public class RobotConfiguration {
         RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 2 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 1 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 3 );
-        RobotControl.getInstance().addTalonOutput( RobotMotorType.TOTE_LIFT, 5 );
+        RobotControl.getInstance().addTalonOutput( RobotMotorType.TOTE_LIFT, 4 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.RECYCLE_LIFT, 7 );
-        RobotControl.getInstance().addRelay( RobotMotorType.CLAW_WRIST, 0 );
-        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_ROTATION, 1, 2);
-        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_EXTENSION, 3, 4);
-        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GRABBER_PNEUMATIC, 5);
+
+        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC, 5);
+        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.TOTE_LIFT_STOP, 2);
+        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_ROTATION, 1, 7);
+        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_EXTENSION, 0, 6);
+        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GRABBER_PNEUMATIC, 3);
         
     }
 }

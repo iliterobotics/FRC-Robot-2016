@@ -80,6 +80,9 @@ public class DrivetrainControl
 	public void update(double leftJoystick, double rightJoystick) {
 		leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
 		rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
+		
+		leftDriveSpeed = DriverInputControl.expScale(leftDriveSpeed);
+		rightDriveSpeed = DriverInputControl.expScale(rightDriveSpeed);
 	}
 	/**
 	 * @return the leftDriveSpeed
@@ -134,11 +137,11 @@ public class DrivetrainControl
 	public GearState getGearState() {
 		return gearState;
 	}
-	public Value getGearValue() {
+	public boolean getGearValue() {
     	if(this.gearState == GearState.HIGH_GEAR) {
-    		return Value.kForward;
+    		return true;
     	} else {
-    		return Value.kReverse;
+    		return false;
     	}
     }
 	public void setGearState(GearState gearState) {
@@ -146,7 +149,7 @@ public class DrivetrainControl
 	}
 	
 	public void updateOutputs() {
-		RobotControl.getInstance().updateLeftShifter(getGearValue());
+		RobotControl.getInstance().updateShifter(getGearValue());
 		RobotControl.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
 	}
 }

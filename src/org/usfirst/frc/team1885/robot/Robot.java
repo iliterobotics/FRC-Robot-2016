@@ -53,8 +53,8 @@ public class Robot extends SampleRobot
     	this.recycleBinLift = RecycleBinLift.getInstance();
     	this.toteLift = ToteLift.getInstance();
     	
-    	RobotServer.getInstance().setup(4444);
-    	RobotServer.getInstance().startServer();
+//    	RobotServer.getInstance().setup(4444);
+//    	RobotServer.getInstance().startServer();
     	
     }    
     /**
@@ -78,11 +78,14 @@ public class Robot extends SampleRobot
         	
         	DrivetrainControl.getInstance().update();
 //        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
-
+        	toteLift.updateLift();
         	ClawControl.getInstance().updateClaw();
+        	
+        	DrivetrainControl.getInstance().updateOutputs();
+        	toteLift.updateOutputs();
         	ClawControl.getInstance().updateOutputs();
         	
-//        	toteLift.updateLift();
+        	
         	
         	//robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
 //        	recycleBinLift.updateOutputs();
