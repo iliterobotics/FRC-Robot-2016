@@ -2,6 +2,8 @@ package org.usfirst.frc.team1885.robot.comms;
 
 import java.util.Arrays;
 
+import org.usfirst.frc.team1885.robot.common.type.ServerMessageType;
+
 public class TelemetryMessage extends Message {
 
 	private static final long serialVersionUID = 4021050113420280510L;
@@ -10,6 +12,10 @@ public class TelemetryMessage extends Message {
 	private double[] relays = new double[4];
 	private double[] digitalOutputs = new double[10];
 	private double[] solenoids = new double[8];
+
+	public TelemetryMessage() {
+		super(ServerMessageType.TELEMETRY_MSG);
+	}
 
 	public double getSolenoids(int index) {
 		if (index >= 0 && index < solenoids.length)

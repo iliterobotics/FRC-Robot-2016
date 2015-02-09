@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.auto;
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
@@ -27,7 +28,6 @@ public class AutoToteLift implements AutoCommand{
 		} else {
 			heightOutput = heightControlLoop.getPID(height, SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER).getDistance());
 			ToteLift.getInstance().updateLift(heightOutput);
-			RobotControl.getInstance().updateToteMotor(ToteLift.getInstance().getSpeed());
 			return false;
 		}
 	}
@@ -38,6 +38,15 @@ public class AutoToteLift implements AutoCommand{
 		ToteLift.getInstance().updateLift(0);
 		RobotControl.getInstance().updateToteMotor(0);		
 		
+	}
+	
+	public boolean updateOutputs() {
+		ToteLift.getInstance().updateOutputs();
+		return true;
+	}
+	@Override
+	public void init() {
+		reset();
 	}
 
 }

@@ -11,6 +11,8 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.usfirst.frc.team1885.robot.common.type.ServerMessageType;
+
 public class RobotServer implements Runnable {
 	private static RobotServer instance = null;
 	ServerSocket server;
@@ -20,7 +22,6 @@ public class RobotServer implements Runnable {
 	ObjectInputStream inStream;
 	ObjectOutputStream outStream;
 
-	List<Message> messages = new ArrayList<Message>();
 	protected RobotServer() {
 	}
 
@@ -36,14 +37,14 @@ public class RobotServer implements Runnable {
 		if (!this.isRunning) {
 			Thread serverThread = (new Thread(this));
 			serverThread.start();
-//			synchronized(serverThread) {
-//				try {
-//					serverThread.wait();
-//				} catch (InterruptedException e) {
-//					this.isRunning = false;
-//					e.printStackTrace();
-//				}
-//			}
+			// synchronized(serverThread) {
+			// try {
+			// serverThread.wait();
+			// } catch (InterruptedException e) {
+			// this.isRunning = false;
+			// e.printStackTrace();
+			// }
+			// }
 		}
 
 		return this.isRunning;
@@ -60,10 +61,10 @@ public class RobotServer implements Runnable {
 	@Override
 	public void run() {
 		this.isRunning = true;
-//		this.notify();
+		// this.notify();
 		while (this.isRunning) {
 			try {
-				//server.accept returns a client connection
+				// server.accept returns a client connection
 				robo = new RobotClientConnection(server.accept());
 				Thread t = new Thread(robo);
 				t.start();
@@ -94,21 +95,22 @@ public class RobotServer implements Runnable {
 
 		public void run() {
 			try {
-				in = new BufferedReader(new InputStreamReader(
-						client.getInputStream()));
-				outStream = new ObjectOutputStream(robo.client.getOutputStream());
-//				out = new PrintWriter(client.getOutputStream(), true);
+
+				inStream = new ObjectInputStream(robo.client.getInputStream());
+				outStream = new ObjectOutputStream(
+						robo.client.getOutputStream());
+				// out = new PrintWriter(client.getOutputStream(), true);
 			} catch (IOException e) {
 				System.out.println("in or out failed");
 			}
 
 			while (client.isConnected()) {
 				try {
-					line = in.readLine();
-					System.out.println("read: " + line);
-//					RobotServerEvent roboEvent = new RobotServerEvent(msg); // Is this the same message as the Send Method message?
-//					notifyListeners(roboEvent);
-				} catch (IOException e) {
+					receive();
+					// RobotServerEvent roboEvent = new RobotServerEvent(msg);
+					// // Is this the same message as the Send Method message?
+					// notifyListeners(roboEvent);
+				} catch (Exception e) {
 					System.out.println("Read failed");
 				}
 			}
@@ -146,12 +148,13 @@ public class RobotServer implements Runnable {
 
 	public void receive() {
 		try {
-			inStream = new ObjectInputStream(robo.client.getInputStream());
-			TelemetryMessage teleMessage = (TelemetryMessage) (inStream
-					.readObject());
-			System.out.println("Telemmetry Message Built.");
-			messages.add(teleMessage);
-			System.out.println("Telemmetry Message Stored.");
+			Object dataObject = inStream.readObject();
+
+			if (dataObject instanceof Message) {
+				RobotServerEvent e = new RobotServerEvent(
+						(Message) (dataObject));
+				notifyListeners(e);
+			}
 		} catch (Exception e) {
 			System.out.println("Error : " + e);
 		}
@@ -160,13 +163,20 @@ public class RobotServer implements Runnable {
 	public void send(Message message) {
 		try {
 
-			System.out.println("Telemmetry Message Built");
+			System.out.println("Telemetry Message Built");
 			outStream.writeObject(message);
 			outStream.flush();
 			outStream.reset();
-			System.out.println("Telemmetry Message Sent");
+			System.out.println("Telemetry Message Sent");
 		} catch (Exception e) {
 			System.out.println("Error : " + e);
 		}
 	}
 }
+
+/*
+ * 
+ * Distinguish between Vision and Telemetry Messages :: if Vision, update
+ * CameraDataService. if Telemetry, do something
+ */
+

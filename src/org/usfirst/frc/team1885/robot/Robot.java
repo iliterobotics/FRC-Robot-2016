@@ -45,6 +45,7 @@ public class Robot extends SampleRobot
     
     public Robot() {
         RobotConfiguration.configureRobot();
+        SensorInputControl.getInstance().getNAVX().zeroYaw();
         diameter = 4.0;
         maxSpeed = 15.0; 
 
@@ -64,7 +65,6 @@ public class Robot extends SampleRobot
     	
     	SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
     	SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
-    	SensorInputControl.getInstance().getNAVX().zeroYaw();
     	
     	boolean magnetState = false;
     	
@@ -114,7 +114,10 @@ public class Robot extends SampleRobot
     	    	
     	
     	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
-    		boolean commandState = commands.peek().execute();
+    		
+    		AutoCommand currCommand = commands.peek();
+    		boolean commandState = currCommand.execute();
+    		currCommand.updateOutputs();
     		if(commandState) {
     			System.out.println("Finished command " + commands.size());
     			commands.poll();

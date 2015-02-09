@@ -2,12 +2,14 @@ package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 public class AutoTurn implements AutoCommand{
 	
 	private PID angleControlLoop;
 	private double angle;
+	private double relativeAngle;
 	private double error;
 	private double rightAngleTraveled;
 	private double leftDriveOutput;
@@ -20,13 +22,13 @@ public class AutoTurn implements AutoCommand{
 	public AutoTurn(double inputAngle, double inputError) {
 		angleControlLoop = new PID(0.012, 0.00005, 0);
 		angle = inputAngle;
+		relativeAngle = 0;
 		error = inputError;
-		SensorInputControl.getInstance().getNAVX().zeroYaw();
 		steadyStateTime = 0;
 	}
 	public boolean execute() {
 		rightAngleTraveled = SensorInputControl.getInstance().getNAVX().getYaw();
-		if (Math.abs(rightAngleTraveled  - angle) <= error ) {
+		if (Math.abs(rightAngleTraveled  - relativeAngle) <= error ) {
 			
 			this.steadyStateTime = System.currentTimeMillis();
 			
@@ -38,10 +40,9 @@ public class AutoTurn implements AutoCommand{
 			}
 		} else {
 			steadyStateTime = 0;
-			rightDriveOutput = angleControlLoop.getPID(angle, rightAngleTraveled);
+			rightDriveOutput = angleControlLoop.getPID(relativeAngle, rightAngleTraveled);
 			leftDriveOutput = rightDriveOutput * -1;
-			System.out.println("Autonomous::AutoTurn - [right, left, yaw]: " + rightDriveOutput + ", " + leftDriveOutput + ", " + rightAngleTraveled);
-			RobotControl.getInstance().updateDriveSpeed(leftDriveOutput, rightDriveOutput);
+			DrivetrainControl.getInstance().update(leftDriveOutput, rightDriveOutput);
 			return false;
 		}
 	}
@@ -49,7 +50,17 @@ public class AutoTurn implements AutoCommand{
 	public void reset() {
 		angleControlLoop.reset();
 		RobotControl.getInstance().updateDriveSpeed(0, 0);
-		SensorInputControl.getInstance().getNAVX().zeroYaw();
+	}
+	
+	public boolean updateOutputs() {
+		RobotControl.getInstance().updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
+		return true;
+	}
+	
+	public void init() {
+		relativeAngle = angle + SensorInputControl.getInstance().getNAVX().getYaw();
+		reset();
+		
 	}
 
 }
