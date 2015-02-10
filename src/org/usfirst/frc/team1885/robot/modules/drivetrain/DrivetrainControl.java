@@ -28,6 +28,7 @@ public class DrivetrainControl {
     private DriverInputControl driverInput;
     private static DrivetrainControl instance;
     private boolean isTurning;
+	private AutoTurn turn;
 
     protected DrivetrainControl(final double d, final double m) {
         maxSpeed = m;
@@ -76,20 +77,43 @@ public class DrivetrainControl {
 		}
 		
 		//FIXME: add slow straight drive state + button
-		
-		update( driverInput.getLeftDrive(), driverInput.getRightDrive() );
+		if ( (DriverInputControl.getInstance().getButton(
+                RobotButtonType.LEFT_DRIFT) || DriverInputControl.getInstance().getButton(
+                        RobotButtonType.RIGHT_DRIFT)) && !isTurning) {
+			
+			if(!isTurning) {
+				
+				double angle = (DriverInputControl.getInstance().getButton(
+                RobotButtonType.LEFT_DRIFT) ? 90 : -90);
+				
+				turn = new AutoTurn(angle, 5);
+				turn.init();
+			}
+			
+			isTurning = turn.execute();
+			
+        } else {
+        	update( driverInput.getLeftDrive(), driverInput.getRightDrive() );
+        }
 	}
 	
 	public void update(double leftJoystick, double rightJoystick) {
-		if(Math.abs(leftDriveSpeed - rightDriveSpeed) < DriverInputControl.DEADZONE) {
-			leftDriveSpeed = rightDriveSpeed = (leftDriveSpeed + rightDriveSpeed) / 2;
-		} else {
+		
+		if(!isTurning || (leftJoystick > 0 || rightJoystick > 0)) {
+			isTurning = false;
+			leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
+			rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
+			
+			if(Math.abs(leftJoystick - rightJoystick) < DriverInputControl.DEADZONE) {
+				leftDriveSpeed = rightDriveSpeed = (leftDriveSpeed + rightDriveSpeed) / 2;
+			}
+			 
+			leftDriveSpeed = DriverInputControl.expScale(leftDriveSpeed);
+			rightDriveSpeed = DriverInputControl.expScale(rightDriveSpeed);
+		} else if(isTurning) {
 			leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
 			rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
 		}
-		
-		leftDriveSpeed = DriverInputControl.expScale(leftDriveSpeed);
-		rightDriveSpeed = DriverInputControl.expScale(rightDriveSpeed);
 	}
 	/**
 	 * @return the leftDriveSpeed
@@ -154,17 +178,7 @@ public class DrivetrainControl {
 	public void setGearState(GearState gearState) {
 		this.gearState = gearState;
 	}
-	public void turn90degrees() {
-        if ( DriverInputControl.getInstance().getButton(
-                RobotButtonType.TURN_90) && !isTurning) {
-            AutoTurn turn = new AutoTurn(90, 5);
-            if (turn.execute()) {
-                isTurning = true;
-            } else {
-                isTurning = false;
-            }
-        }
-    }
+	
 	public void updateOutputs() {
 		RobotControl.getInstance().updateShifter(getGearValue());
 		RobotControl.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);

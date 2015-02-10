@@ -23,6 +23,7 @@ public class ToteLift {
     private double distanceTraveled;
     private final double DEAD_ZONE = .1;
     private boolean isIncrementing;
+    private boolean isDecrementing;
     private boolean isBraked;
 
     protected ToteLift() {
@@ -31,6 +32,7 @@ public class ToteLift {
         isBraked = false;
         liftSpeed = 0;
         isIncrementing = false;
+        isDecrementing = false;
     }
     public static ToteLift getInstance() {
         if (instance == null) {
@@ -64,14 +66,14 @@ public class ToteLift {
         
         if (DriverInputControl.getInstance().getButton(
                 RobotButtonType.TOTE_LIFT_DECREMENT)
-                && !isIncrementing || isIncrementing) {
+                && !isDecrementing || isDecrementing) {
         	
-        	if(!isIncrementing) {
+        	if(!isDecrementing) {
         		this.reset();
         	}
         	
-            state = MotorState.UP;
-            this.isIncrementing = !incrementLift(-1200, 25);
+            state = MotorState.DOWN;
+            this.isDecrementing = !incrementLift(-1200, 25);
 
         } 
 
@@ -91,10 +93,7 @@ public class ToteLift {
             liftSpeed = DriverInputControl.getInstance().getPressureButton(
                     RobotButtonType.TOTE_LIFT);
             
-        } else if(DriverInputControl.getInstance().getButton(
-        		RobotButtonType.HARD_STOP)) {
-        	state = MotorState.STOP;
-    	} else if(!isIncrementing){
+        } else if(!isIncrementing && !isDecrementing){
             state = MotorState.STOP;
         }
         
@@ -103,6 +102,11 @@ public class ToteLift {
         } else {
         	isBraked = false;
         }
+        
+        if(DriverInputControl.getInstance().getButton(
+        		RobotButtonType.HARD_STOP)) {
+        	isBraked = false;
+    	}
         
         if (state == MotorState.UP) {
             liftSpeed = (liftSpeed < DEFAULT_LIFT_SPEED ? DEFAULT_LIFT_SPEED : liftSpeed);

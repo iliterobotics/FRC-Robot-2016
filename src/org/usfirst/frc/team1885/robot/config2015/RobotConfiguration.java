@@ -31,8 +31,9 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_RELEASE, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 7 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_INCREMENT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 6 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_DECREMENT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 5 ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.GEAR_SHIFT, new JoystickButtonMatch( RobotJoystickType.RIGHT_DRIVE, 1 ) );//trigger
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TURN_90, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 1 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.GEAR_SHIFT, new JoystickButtonMatch( RobotJoystickType.RIGHT_DRIVE, 2 ) );//trigger
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RIGHT_DRIFT, new JoystickButtonMatch( RobotJoystickType.RIGHT_DRIVE, 1 ) );//trigger
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.LEFT_DRIFT, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 1 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.HARD_STOP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
         SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_LEFT_ENCODER, 0, 1 );
         SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_RIGHT_ENCODER, 2, 3 );
