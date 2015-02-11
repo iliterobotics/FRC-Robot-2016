@@ -24,7 +24,7 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kY ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.WRIST_ROTATION, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kZ ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.WRIST_EXTENSION, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kTwist ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.CLAW, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 8 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.CLAW, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 8) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_UP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_DOWN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 3 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_PICKUP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 8 ) );
@@ -36,6 +36,7 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RIGHT_DRIFT, new JoystickButtonMatch( RobotJoystickType.RIGHT_DRIVE, 1 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.LEFT_DRIFT, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 1 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.HARD_STOP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.NUDGE, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, true) );
         SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_LEFT_ENCODER, 0, 1 );
         SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_RIGHT_ENCODER, 2, 3 );
         SensorInputControl.getInstance().addSensor( SensorType.TOTE_ENCODER, 4, 5 );

@@ -17,5 +17,6 @@ public enum RobotButtonType {
 	HARD_STOP, 
 	WRIST_ROTATION,
 	WRIST_EXTENSION,
-	CLAW
+	CLAW,
+	NUDGE
 }

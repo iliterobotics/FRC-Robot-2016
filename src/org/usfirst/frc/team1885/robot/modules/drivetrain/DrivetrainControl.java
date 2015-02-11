@@ -29,12 +29,14 @@ public class DrivetrainControl {
     private static DrivetrainControl instance;
     private boolean isTurning;
 	private AutoTurn turn;
+	private final double NUDGE_POWER;
 
     protected DrivetrainControl(final double d, final double m) {
         maxSpeed = m;
         speeds = new HashMap<Integer, Double>();
         diameter = d;
         circumference = Math.PI * (diameter);
+        NUDGE_POWER = .15;
         isTurning = false;
 
         SensorInputControl.getInstance()
@@ -92,7 +94,13 @@ public class DrivetrainControl {
 			
 			isTurning = turn.execute();
 			
-        } else {
+        } else if(DriverInputControl.getInstance().getPOVButton(
+        		RobotButtonType.NUDGE) == 6) {
+        	update(NUDGE_POWER, -NUDGE_POWER);
+        } else if(DriverInputControl.getInstance().getPOVButton(
+        		RobotButtonType.NUDGE) == 2) {
+        	update(-NUDGE_POWER, NUDGE_POWER);
+        }	else {
         	update( driverInput.getLeftDrive(), driverInput.getRightDrive() );
         }
 	}

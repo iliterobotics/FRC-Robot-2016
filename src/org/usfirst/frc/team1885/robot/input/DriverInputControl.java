@@ -74,10 +74,15 @@ public class DriverInputControl {
         return joystickMap.get(joystickType);
     }
     public boolean getButton(RobotButtonType buttonType) {
-        JoystickButtonMatch buttonMatch = (JoystickButtonMatch) JoystickButtonMap
+    	JoystickButtonMatch buttonMatch = (JoystickButtonMatch) JoystickButtonMap
                 .getInstance().getButtonMap().get(buttonType);
         return getJoystick(buttonMatch.getJoystickType()).getRawButton(
                 buttonMatch.getPort());
+    }
+    public int getPOVButton(RobotButtonType buttonType) {
+    	JoystickButtonMatch buttonMatch = (JoystickButtonMatch) JoystickButtonMap
+				.getInstance().getButtonMap().get(buttonType);
+		return getJoystick(buttonMatch.getJoystickType()).getPOV(buttonMatch.getPort());
     }
     public double getPressureButton(RobotButtonType buttonType){
         JoystickButtonMatch buttonMatch = (JoystickButtonMatch) JoystickButtonMap
