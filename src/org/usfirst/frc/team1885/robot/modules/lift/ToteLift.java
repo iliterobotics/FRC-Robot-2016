@@ -108,7 +108,7 @@ public class ToteLift {
             liftSpeed = DriverInputControl.getInstance().getPressureButton(
                     RobotButtonType.TOTE_LIFT);
 
-        } else if (!isIncrementing && !isDecrementing) {
+        } else if (!isIncrementing && !isDecrementing && !isResetting) {
             state = MotorState.STOP;
         }
 
