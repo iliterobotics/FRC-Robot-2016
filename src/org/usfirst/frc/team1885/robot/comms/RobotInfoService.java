@@ -48,7 +48,8 @@ public class RobotInfoService {
 	}
 	
 	private void updateToteDistance(){
-		toteDistance = tlInstance.getDistanceTraveled();
+		double tickDistance = tlInstance.getDistanceTraveled();
+		//toteDistance = -enter distance calculation to cm here-
 	}
 	
 	private void updateGearState(){
@@ -61,6 +62,34 @@ public class RobotInfoService {
 	private void updateStabilizer(){
 		stabilizer = rcInstance.getSolenoids(RobotPneumaticType.TOTE_LIFT_STOP); //Confirm
 	}
+
+	public int getLiftEncoderTicks() {
+		return liftEncoderTicks;
+	}
+
+	public boolean isStabilizer() {
+		return stabilizer;
+	}
+
+	public boolean isFirstHookAtBottom() {
+		return firstHookAtBottom;
+	}
+
+	public boolean isLowPressure() {
+		return lowPressure;
+	}
+
+	public String getGearState() {
+		return gearState;
+	}
+
+	public double getPowerLevel() {
+		return powerLevel;
+	}
+
+	public double getToteDistance() {
+		return toteDistance;
+	}
 }
 
 
@@ -70,12 +99,12 @@ public class RobotInfoService {
 	- Update the FRC-Vision page on github 
 	
 	- Encoder ticks for the lift (DONE)
-	- ToteLift distance (DONE)
-	- Lift position 
+	- ToteLift distance (DONE) (Distance given back in ticks)
 	- Current speed (low priority)
 	- Where the first hook is (Bottom / Top) * (DONE)
 	- Gear (low/high)  *  (DONE)
-	- Which hook is currently at the bottom  * 
+	- Which hook is currently at the bottom  *
+					:: Have int positions for specific places, default to a single value
 	- If the hook is at the magnet (proximity to the reset value)   *
 	- Distance from ramp (vision, maybe)
 	- Distance from white tape thing (vision, maybe)
