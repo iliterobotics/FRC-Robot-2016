@@ -69,7 +69,7 @@ public class SensorInputControl {
 		return encoders.get(sensor_type);
 	}
 
-	public DigitalInput getLimitSwitch(SensorType sensor_type) {
+	public DigitalInput getLimitSwitch(SensorType sensor_type) { //Gets digital_inputs
 		return digital_inputs.get(sensor_type);
 	}
 

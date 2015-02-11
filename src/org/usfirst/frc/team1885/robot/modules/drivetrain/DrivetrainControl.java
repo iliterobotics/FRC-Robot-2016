@@ -2,73 +2,67 @@ package org.usfirst.frc.team1885.robot.modules.drivetrain;
 
 import java.util.HashMap;
 
-import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
+import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
-public class DrivetrainControl {
-    /**
-     * drive mode where you can only move straight using the right joystick
-     */
-    private double leftDriveSpeed;
-    private double rightDriveSpeed;
-    private DriveMode driveMode;
-    private GearState gearState;
-    private PID speedControlLoop;
-    private final double maxSpeed;
-    private final double diameter;
-    private final double circumference;
-    private HashMap<Integer, Double> speeds;
-    private DriverInputControl driverInput;
-    private static DrivetrainControl instance;
-    private boolean isTurning;
-	private AutoTurn turn;
-	private final double NUDGE_POWER;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
-    protected DrivetrainControl(final double d, final double m) {
-        maxSpeed = m;
-        speeds = new HashMap<Integer, Double>();
-        diameter = d;
-        circumference = Math.PI * (diameter);
-        NUDGE_POWER = .15;
-        isTurning = false;
 
-        SensorInputControl.getInstance()
-                .getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER)
-                .setDistancePerPulse(circumference / 256);
-        SensorInputControl.getInstance()
-                .getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER)
-                .setDistancePerPulse(circumference / 256);
-        driveMode = DriveMode.TANK;
-        setGearState(GearState.HIGH_GEAR);
-        driverInput = DriverInputControl.getInstance();
-    }
-    public static DrivetrainControl getInstance() {
-        if (instance == null) {
-            instance = new DrivetrainControl(4.0, 15.0);
-        }
-        return instance;
-    }
-    public void addSpeed(Integer gear, Double speed) {
-        speeds.put(gear, speed);
-    }
-    public Integer getTotes() {
-        return 1; // CHANGE TO WHAT SENSOR INPUTS SAYS
-    }
-    public double getSpeed(double speed) {
-        return speed * circumference;
-    }
-    public double getDistance() {
-        return SensorInputControl.getInstance().getEncoderTicks(
-                SensorType.DRIVE_TRAIN_LEFT_ENCODER)
-                * circumference;
-    }
+public class DrivetrainControl 
+{
+	/**
+	 * drive mode where you can only move straight using the right joystick
+	 */
+	private double leftDriveSpeed;
+	private double rightDriveSpeed;
+	private DriveMode driveMode;
+	private GearState gearState;
+	private PID speedControlLoop;
+	private final double maxSpeed;
+	private final double diameter;
+	private final double circumference;
+	private  HashMap<Integer, Double> speeds;
+	private DriverInputControl driverInput;
+	private static DrivetrainControl instance;
+	
+	protected DrivetrainControl(final double d, final double m) {
+		maxSpeed = m;
+		speeds = new HashMap<Integer, Double>();
+		diameter = d;
+		circumference = Math.PI * (diameter);
+
+		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).setDistancePerPulse(circumference/256);
+		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).setDistancePerPulse(circumference/256);
+		driveMode = DriveMode.TANK;
+		setGearState(GearState.HIGH_GEAR);
+		driverInput = DriverInputControl.getInstance();
+	}
+	public static DrivetrainControl getInstance(){
+	    if(instance == null){
+	        instance = new DrivetrainControl(4.0, 15.0);
+	    }
+	    return instance;
+	}
+	public void addSpeed(Integer gear, Double speed) {
+		speeds.put(gear, speed);
+	}
+	public Integer getTotes() {
+		return 1; //CHANGE TO WHAT SENSOR INPUTS SAYS
+	}
+	public double getSpeed(double speed) {
+		return speed * circumference; 
+	}
+	public double getDistance () {
+		return SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) * circumference;
+	}
+	
 	public void update()
 	{
 		if (driverInput.getButton(RobotButtonType.GEAR_SHIFT)){
@@ -79,49 +73,13 @@ public class DrivetrainControl {
 		}
 		
 		//FIXME: add slow straight drive state + button
-		if ( (DriverInputControl.getInstance().getButton(
-                RobotButtonType.LEFT_DRIFT) || DriverInputControl.getInstance().getButton(
-                        RobotButtonType.RIGHT_DRIFT)) && !isTurning) {
-			
-			if(!isTurning) {
-				
-				double angle = (DriverInputControl.getInstance().getButton(
-                RobotButtonType.LEFT_DRIFT) ? 90 : -90);
-				
-				turn = new AutoTurn(angle, 5);
-				turn.init();
-			}
-			
-			isTurning = turn.execute();
-			
-        } else if(DriverInputControl.getInstance().getPOVButton(
-        		RobotButtonType.NUDGE) == 6) {
-        	update(NUDGE_POWER, -NUDGE_POWER);
-        } else if(DriverInputControl.getInstance().getPOVButton(
-        		RobotButtonType.NUDGE) == 2) {
-        	update(-NUDGE_POWER, NUDGE_POWER);
-        }	else {
-        	update( driverInput.getLeftDrive(), driverInput.getRightDrive() );
-        }
+		
+		update( driverInput.getLeftDrive(), driverInput.getRightDrive() );
 	}
 	
 	public void update(double leftJoystick, double rightJoystick) {
-		
-		if(!isTurning || (leftJoystick > 0 || rightJoystick > 0)) {
-			isTurning = false;
-			leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
-			rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
-			
-			if(Math.abs(leftJoystick - rightJoystick) < DriverInputControl.DEADZONE) {
-				leftDriveSpeed = rightDriveSpeed = (leftDriveSpeed + rightDriveSpeed) / 2;
-			}
-			 
-			leftDriveSpeed = DriverInputControl.expScale(leftDriveSpeed);
-			rightDriveSpeed = DriverInputControl.expScale(rightDriveSpeed);
-		} else if(isTurning) {
-			leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
-			rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
-		}
+		leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
+		rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
 	}
 	/**
 	 * @return the leftDriveSpeed
@@ -176,11 +134,11 @@ public class DrivetrainControl {
 	public GearState getGearState() {
 		return gearState;
 	}
-	public boolean getGearValue() {
+	public Value getGearValue() {
     	if(this.gearState == GearState.HIGH_GEAR) {
-    		return true;
+    		return Value.kForward;
     	} else {
-    		return false;
+    		return Value.kReverse;
     	}
     }
 	public void setGearState(GearState gearState) {
@@ -188,7 +146,7 @@ public class DrivetrainControl {
 	}
 	
 	public void updateOutputs() {
-		RobotControl.getInstance().updateShifter(getGearValue());
+		RobotControl.getInstance().updateLeftShifter(getGearValue());
 		RobotControl.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
 	}
 }

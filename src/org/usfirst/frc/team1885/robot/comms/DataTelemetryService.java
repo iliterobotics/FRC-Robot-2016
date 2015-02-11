@@ -73,6 +73,16 @@ public class DataTelemetryService {
 					((Encoder) (encoder.get(i))).get());
 		}
 	}
+
+	public TelemetryMessage getTm() {
+		return tm;
+	}
+
+	public void setTm(TelemetryMessage tm) {
+		this.tm = tm;
+	}
+	
+	
 	
 	/*
 	public void setAnalogInputs(){
