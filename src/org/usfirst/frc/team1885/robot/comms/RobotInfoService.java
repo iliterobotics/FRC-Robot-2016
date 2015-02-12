@@ -28,7 +28,7 @@ public class RobotInfoService {
 		if (instance == null)
 			instance = new RobotInfoService();
 		return instance;
-	}
+	} 
 	
 	public void updatePowerLevel(){
 		PowerDistributionPanel pdp = new PowerDistributionPanel();

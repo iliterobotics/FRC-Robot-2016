@@ -9,3 +9,4 @@ public class RobotInfoMessage extends Message {
 	}
 
 }
+ 
