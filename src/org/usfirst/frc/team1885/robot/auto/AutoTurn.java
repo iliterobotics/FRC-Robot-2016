@@ -5,7 +5,7 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
-public class AutoTurn implements AutoCommand{
+public class AutoTurn extends AutoCommand{
 	
 	private PID angleControlLoop;
 	private double angle;
@@ -57,9 +57,10 @@ public class AutoTurn implements AutoCommand{
 		return true;
 	}
 	
-	public void init() {
+	public boolean init() {
 		relativeAngle = angle + SensorInputControl.getInstance().getNAVX().getYaw();
 		reset();
+		return true;
 		
 	}
 

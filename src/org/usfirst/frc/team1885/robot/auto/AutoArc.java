@@ -3,7 +3,7 @@ package org.usfirst.frc.team1885.robot.auto;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
-public class AutoArc implements AutoCommand{
+public class AutoArc extends AutoCommand{
 	
 	private double threshold;
 	
@@ -56,7 +56,8 @@ public class AutoArc implements AutoCommand{
 		return true;
 	}
 	
-	public void init() {
+	public boolean init() {
 		reset();	
+		return true;
 	}
 }

@@ -3,11 +3,10 @@ package org.usfirst.frc.team1885.robot.auto;
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
-import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
-public class AutoToteLift implements AutoCommand{
+public class AutoToteLift extends AutoCommand{
 	private PID heightControlLoop;
 	private double height;
 	private double error;
@@ -44,9 +43,10 @@ public class AutoToteLift implements AutoCommand{
 		ToteLift.getInstance().updateOutputs();
 		return true;
 	}
-	@Override
-	public void init() {
+
+	public boolean init() {
 		reset();
+		return true;
 	}
 
 }
