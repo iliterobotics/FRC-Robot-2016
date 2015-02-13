@@ -8,6 +8,7 @@ import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
 import org.usfirst.frc.team1885.robot.auto.AutoToteLift;
 import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.comms.DataTelemetryService;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
 import org.usfirst.frc.team1885.robot.comms.TelemetryMessage;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
@@ -54,8 +55,8 @@ public class Robot extends SampleRobot
     	this.recycleBinLift = RecycleBinLift.getInstance();
     	this.toteLift = ToteLift.getInstance();
     	
-//    	RobotServer.getInstance().setup(4444);
-//    	RobotServer.getInstance().startServer();
+    	RobotServer.getInstance().setup(4444);
+    	RobotServer.getInstance().startServer();
     	
     }    
     /**
@@ -68,24 +69,27 @@ public class Robot extends SampleRobot
     	
     	boolean magnetState = false;
     	
+    	DataTelemetryService telemetryService = new DataTelemetryService();
+    	
         while (isOperatorControl() && isEnabled()) {
         	
-//        	try {
-//        		RobotServer.getInstance().send(new TelemetryMessage());
-//        	} catch(Exception e) {
-//        		e.printStackTrace();
-//        	}
+        	try {
+        		telemetryService.setDigitalInputs();
+        		telemetryService.setRelays();
+        		telemetryService.setSolenoids();
+        		telemetryService.setTalons();
+        		RobotServer.getInstance().send(telemetryService.getTm());
+        	} catch(Exception e) {
+        		e.printStackTrace();
+        	}
         	
-        	DrivetrainControl.getInstance().update();
+//        	DrivetrainControl.getInstance().update();
 //        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
-        	toteLift.updateLift();
-        	ClawControl.getInstance().updateClaw();
+
+//        	ClawControl.getInstance().updateClaw();
+//        	ClawControl.getInstance().updateOutputs();
         	
-        	DrivetrainControl.getInstance().updateOutputs();
-        	toteLift.updateOutputs();
-        	ClawControl.getInstance().updateOutputs();
-        	
-        	
+//        	toteLift.updateLift();
         	
         	//robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
 //        	recycleBinLift.updateOutputs();

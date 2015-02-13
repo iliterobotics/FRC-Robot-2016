@@ -6,7 +6,6 @@ public class JoystickButtonMatch {
 	private RobotJoystickType joystickType;
 	private int port;
 	private Joystick.AxisType axisType;
-	private boolean isPOV;
 	
 	public JoystickButtonMatch(RobotJoystickType joystickType, int port) {
 		this.joystickType = joystickType;
@@ -16,11 +15,6 @@ public class JoystickButtonMatch {
 	public JoystickButtonMatch( RobotJoystickType joystickType, Joystick.AxisType axisType ){
 	    this.joystickType = joystickType;
 	    this.axisType = axisType;
-	}
-	
-	public JoystickButtonMatch(RobotJoystickType joystickType, boolean isPOV) {
-		this.joystickType = joystickType;
-		this.isPOV = isPOV;
 	}
 	
 	public RobotJoystickType getJoystickType() {
@@ -33,9 +27,5 @@ public class JoystickButtonMatch {
 	
 	public Joystick.AxisType getAxisType(){
 	    return axisType;
-	}
-	
-	public boolean isPOV() {
-		return isPOV;
 	}
 }

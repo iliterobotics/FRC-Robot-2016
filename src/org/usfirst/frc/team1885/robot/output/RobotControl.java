@@ -50,6 +50,10 @@ public class RobotControl {
 		rightDrive = new ArrayList<Talon>();
 		leftDrive = new ArrayList<Talon>();
 	}
+	
+	public Compressor getCompressor(){
+		return compressor;
+	}
 
 	public void addTalonOutput(RobotMotorType type, int port) {
 		if (type == RobotMotorType.LEFT_DRIVE) {
@@ -69,7 +73,11 @@ public class RobotControl {
 		}
 		return temp;
 	}
-
+	
+	public boolean getSolenoids(RobotPneumaticType rpt){
+		return solenoid.get(rpt).get();
+	}
+	
 	public ArrayList[] getSolenoids() {
 		ArrayList[] temp = new ArrayList[2];
 		ArrayList<Solenoid> tempRegular = new ArrayList<Solenoid>();
@@ -132,8 +140,8 @@ public class RobotControl {
 		solenoid.get(RobotPneumaticType.TOTE_LIFT_STOP).set(start);
 	}
 
-	public void updateShifter(boolean start) {
-		solenoid.get(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC).set(
+	public void updateLeftShifter(DoubleSolenoid.Value start) {
+		outputSolenoids.get(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC).set(
 				start);
 	}
 
