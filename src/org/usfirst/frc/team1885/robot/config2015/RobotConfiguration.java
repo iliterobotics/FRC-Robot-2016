@@ -21,16 +21,18 @@ public class RobotConfiguration {
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, 0 );
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, 1 );
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.CONTROLLER, 2 );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kY ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.WRIST_ROTATION, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kZ ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.WRIST_EXTENSION, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kTwist ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.CLAW, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 8) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kTwist ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.WRIST_ROTATION, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kX ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.WRIST_EXTENSION, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kY ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.CLAW, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 4) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_UP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_DOWN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 3 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_PICKUP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 8 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_RELEASE, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 7 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_INCREMENT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 6 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_DECREMENT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 5 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_NUDGE_UP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 8 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_NUDGE_DOWN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 7 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_RESET, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.GEAR_SHIFT, new JoystickButtonMatch( RobotJoystickType.RIGHT_DRIVE, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RIGHT_DRIFT, new JoystickButtonMatch( RobotJoystickType.RIGHT_DRIVE, 1 ) );
@@ -57,11 +59,11 @@ public class RobotConfiguration {
         RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 3 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.TOTE_LIFT, 4 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.RECYCLE_LIFT, 7 );
-        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC, 5);
-        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.TOTE_LIFT_STOP, 2);
+        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC, 2);
+        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.TOTE_LIFT_STOP, 3);
         RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_ROTATION, 1, 7);
         RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_EXTENSION, 0, 6);
-        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GRABBER_PNEUMATIC, 3);
+        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GRABBER_PNEUMATIC, 5);
         
     }
 }

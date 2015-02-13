@@ -26,6 +26,9 @@ public class ToteLift {
     private boolean isDecrementing;
     private boolean isBraked;
     private boolean isResetting;
+    
+    private double liftIncrementHeight = 1210;
+
 
     protected ToteLift() {
         this.state = MotorState.STOP;
@@ -53,42 +56,70 @@ public class ToteLift {
     }
     public void updateLift() {
 
-        if (DriverInputControl.getInstance().getButton(
-                RobotButtonType.TOTE_LIFT_INCREMENT)
+    	
+        if ((DriverInputControl.getInstance().getButton(
+                RobotButtonType.TOTE_LIFT_INCREMENT) ||
+                DriverInputControl.getInstance().getButton(
+                        RobotButtonType.TOTE_LIFT_NUDGE_UP))
                 && !isIncrementing || isIncrementing) {
 
             if (!isIncrementing) {
                 this.reset();
-            }
-
+                
+                liftIncrementHeight = 1210;
+                
+                if(DriverInputControl.getInstance().getButton(
+                        RobotButtonType.TOTE_LIFT_NUDGE_UP)) {
+                	liftIncrementHeight = 250;
+                }
+            }            
+            
+            
             state = MotorState.UP;
-            this.isIncrementing = !incrementLift(1200, 25);
+            
+            this.isIncrementing = !incrementLift(liftIncrementHeight, 10);
 
         }
 
-        if (DriverInputControl.getInstance().getButton(
-                RobotButtonType.TOTE_LIFT_DECREMENT)
+        if ((DriverInputControl.getInstance().getButton(
+                RobotButtonType.TOTE_LIFT_DECREMENT) ||
+                DriverInputControl.getInstance().getButton(
+                        RobotButtonType.TOTE_LIFT_NUDGE_DOWN))
                 && !isDecrementing || isDecrementing) {
 
             if (!isDecrementing) {
                 this.reset();
+                
+                liftIncrementHeight = -1210;
+                
+                if(DriverInputControl.getInstance().getButton(
+                            RobotButtonType.TOTE_LIFT_NUDGE_DOWN)) {
+                	
+                	liftIncrementHeight = -250;
+                	
+                }
             }
+            
 
             state = MotorState.DOWN;
-            this.isDecrementing = !incrementLift(-1200, 25);
+            this.isDecrementing = !incrementLift(liftIncrementHeight, 10);
 
         }
 
         if (DriverInputControl.getInstance().getButton(
                 RobotButtonType.TOTE_LIFT_RESET)
                 && !isResetting || isResetting) {
-            
+                    	
             if(!isResetting){
                 isResetting = true;
                 state = MotorState.UP;
-            } else if (SensorInputControl.getInstance().isActive(SensorType.MAGNET_SENSOR)) {
+                liftSpeed = DEFAULT_LIFT_SPEED;
+            }
+            
+            if (!SensorInputControl.getInstance().isActive(SensorType.MAGNET_SENSOR)) {
                 isResetting = false;
                 state = MotorState.STOP;
+                liftSpeed = 0;
             }
         }
 
@@ -97,6 +128,8 @@ public class ToteLift {
 
             state = MotorState.DOWN;
             this.isIncrementing = false;
+            this.isDecrementing = false;
+            isResetting = false;
             this.reset();
             liftSpeed = DriverInputControl.getInstance().getPressureButton(
                     RobotButtonType.TOTE_LIFT);
@@ -104,6 +137,8 @@ public class ToteLift {
                 RobotButtonType.TOTE_LIFT) < -DEAD_ZONE) {
             this.reset();
             this.isIncrementing = false;
+            this.isDecrementing = false;
+            isResetting = false;
             state = MotorState.UP;
             liftSpeed = DriverInputControl.getInstance().getPressureButton(
                     RobotButtonType.TOTE_LIFT);

@@ -78,6 +78,9 @@ public class DrivetrainControl {
 			setGearState(GearState.HIGH_GEAR);
 		}
 		
+		System.out.println("DrivetrainControl::POV STATE: " + DriverInputControl.getInstance().getPOVButton(
+        		RobotButtonType.NUDGE));
+		
 		//FIXME: add slow straight drive state + button
 		if ( (DriverInputControl.getInstance().getButton(
                 RobotButtonType.LEFT_DRIFT) || DriverInputControl.getInstance().getButton(
@@ -95,12 +98,18 @@ public class DrivetrainControl {
 			isTurning = turn.execute();
 			
         } else if(DriverInputControl.getInstance().getPOVButton(
-        		RobotButtonType.NUDGE) == 6) {
+        		RobotButtonType.NUDGE) == 90) {
+        	update(-NUDGE_POWER, NUDGE_POWER);
+        } else if(DriverInputControl.getInstance().getPOVButton(
+        		RobotButtonType.NUDGE) == 270) {
         	update(NUDGE_POWER, -NUDGE_POWER);
         } else if(DriverInputControl.getInstance().getPOVButton(
-        		RobotButtonType.NUDGE) == 2) {
-        	update(-NUDGE_POWER, NUDGE_POWER);
-        }	else {
+        		RobotButtonType.NUDGE) == 0) {
+        	update(-NUDGE_POWER, -NUDGE_POWER);
+        } else if(DriverInputControl.getInstance().getPOVButton(
+        		RobotButtonType.NUDGE) == 180) {
+        	update(NUDGE_POWER, NUDGE_POWER);
+        } else {
         	update( driverInput.getLeftDrive(), driverInput.getRightDrive() );
         }
 	}
