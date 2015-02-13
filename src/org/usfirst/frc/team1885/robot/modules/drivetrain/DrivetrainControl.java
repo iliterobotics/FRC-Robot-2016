@@ -3,10 +3,8 @@ package org.usfirst.frc.team1885.robot.modules.drivetrain;
 import java.util.HashMap;
 
 import org.usfirst.frc.team1885.robot.auto.AutoTurn;
-import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
-import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControl;
@@ -25,7 +23,6 @@ public class DrivetrainControl
 	private double rightDriveSpeed;
 	private DriveMode driveMode;
 	private GearState gearState;
-	private PID speedControlLoop;
 	private final double maxSpeed;
 	private final double diameter;
 	private final double circumference;
@@ -75,10 +72,7 @@ public class DrivetrainControl
 		else{
 			setGearState(GearState.HIGH_GEAR);
 		}
-		
-		System.out.println("DrivetrainControl::POV STATE: " + DriverInputControl.getInstance().getPOVButton(
-        		RobotButtonType.NUDGE));
-		
+				
 		//FIXME: add slow straight drive state + button
 		if ( (DriverInputControl.getInstance().getButton(
                 RobotButtonType.LEFT_DRIFT) || DriverInputControl.getInstance().getButton(
@@ -170,11 +164,11 @@ public class DrivetrainControl
 	public GearState getGearState() {
 		return gearState;
 	}
-	public Value getGearValue() {
+	public boolean getGearValue() {
     	if(this.gearState == GearState.HIGH_GEAR) {
-    		return Value.kForward;
+    		return true;
     	} else {
-    		return Value.kReverse;
+    		return false;
     	}
     }
 	public void setGearState(GearState gearState) {
@@ -182,7 +176,7 @@ public class DrivetrainControl
 	}
 	
 	public void updateOutputs() {
-		RobotControl.getInstance().updateLeftShifter(getGearValue());
+		RobotControl.getInstance().updateGearShifter(getGearValue());
 		RobotControl.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
 	}
 }

@@ -6,7 +6,6 @@ import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
-import edu.wpi.first.wpilibj.Joystick;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -83,16 +82,12 @@ public class DriverInputControl {
     public int getPOVButton(RobotButtonType buttonType) {
     	JoystickButtonMatch buttonMatch = (JoystickButtonMatch) JoystickButtonMap
 				.getInstance().getButtonMap().get(buttonType);
-    	
-    	
-    	for(int povIndex = 0; povIndex < getJoystick(buttonMatch.getJoystickType()).getPOVCount(); povIndex++) {
     		
-    		int povValue = getJoystick(buttonMatch.getJoystickType()).getPOV(povIndex);
-    		
-    		if(povValue > -1) {
-    			return povValue;
-    		}
-    	}
+		int povValue = getJoystick(buttonMatch.getJoystickType()).getPOV(buttonMatch.getPort());
+		
+		if(povValue > -1) {
+			return povValue;
+		}
     	
 		return -1;
     }

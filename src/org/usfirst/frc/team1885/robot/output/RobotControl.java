@@ -140,8 +140,8 @@ public class RobotControl {
 		solenoid.get(RobotPneumaticType.TOTE_LIFT_STOP).set(start);
 	}
 
-	public void updateLeftShifter(DoubleSolenoid.Value start) {
-		outputSolenoids.get(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC).set(
+	public void updateGearShifter(boolean start) {
+		solenoid.get(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC).set(
 				start);
 	}
 
