@@ -5,7 +5,9 @@ import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.auto.AutoArc;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
+import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
 import org.usfirst.frc.team1885.robot.auto.AutoToteLift;
+import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.comms.DataTelemetryService;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
@@ -82,6 +84,8 @@ public class Robot extends SampleRobot
 //        		e.printStackTrace();
 //        	}
         	
+//        	System.out.println(SensorInputControl.getInstance().getNAVX().getYaw360());
+        	
         	DrivetrainControl.getInstance().update();
         	ClawControl.getInstance().updateClaw();
         	toteLift.updateLift();
@@ -114,11 +118,12 @@ public class Robot extends SampleRobot
 //    	commands.add(new AutoToteLift(100, 5));
 //    	commands.add(new AutoTurn(45, 5));
     	
-    	commands.add(new AutoToteLift(100, 5));
-    	commands.add(new AutoArc(6.0 * 12, 3.0, .5));
-    	commands.add(new AutoToteLift(100, 5));
-    	commands.add(new AutoArc(6.0 * 12, 3.0, -.5));
-    	commands.add(new AutoToteLift(100, 5));
+    	commands.add(new AutoTurn(-45, 5));
+//    	commands.add(new AutoDriveForward(.5*12, 3, 2));
+    	commands.add(new AutoTurn(180, 5));
+    	commands.add(new AutoDriveForward(2.5*12, 3, 2));
+    	commands.add(new AutoTurn(-120, 5));
+    	commands.add(new AutoDriveForward(5*12, 3, 2));
     	    	
     	
     	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
@@ -132,8 +137,6 @@ public class Robot extends SampleRobot
 	    		if(commandState) {
 	    			System.out.println("Finished command " + commands.size());
 	    			commands.poll();
-	    		} else {
-	    			System.out.println("Executing command " + commands.size());
 	    		}
     		} else {
     			currCommand.setInit(currCommand.init());

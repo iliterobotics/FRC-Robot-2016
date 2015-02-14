@@ -15,16 +15,20 @@ public class AutoTurn extends AutoCommand{
 	private double leftDriveOutput;
 	private double rightDriveOutput;
 	
+	private static final double MAX_TURN_SPEED = .75;
+	
+	private static final double MIN_TURN_SPEED = .15;
+	
 	private final static long steadyStatePeriod = 100;
-	private long steadyStateTime;
+	private long steadyStateStartTime;
 	
 	
 	public AutoTurn(double inputAngle, double inputError) {
-		angleControlLoop = new PID(0.008, 0.00001, 0);
+		angleControlLoop = new PID(0.01, 0.00003, 0);
 		angle = inputAngle;
 		relativeAngle = 0;
 		error = inputError;
-		steadyStateTime = 0;
+		steadyStateStartTime = 0;
 	}
 	public boolean execute() {
 		rightAngleTraveled = SensorInputControl.getInstance().getNAVX().getYaw360();
@@ -33,28 +37,37 @@ public class AutoTurn extends AutoCommand{
 		double difference = (rightAngleTraveled - relativeAngle);
 		
 		if(Math.abs(difference) > Math.abs((360 - rightAngleTraveled) + relativeAngle)) {
-			difference = -((360 - rightAngleTraveled) + relativeAngle);
+			difference = ((360 - rightAngleTraveled) + relativeAngle);
 		}
 		
 		if(Math.abs(difference) > Math.abs((360 - relativeAngle) + rightAngleTraveled)) {
-			difference = ((360 - relativeAngle) + rightAngleTraveled);
+			difference = -((360 - relativeAngle) + rightAngleTraveled);
 		}
 		
-		System.out.println(difference);
+		
 		
 		if (Math.abs(difference) <= error ) {
 			
-			this.steadyStateTime = System.currentTimeMillis();
-			
-			if(this.steadyStateTime > System.currentTimeMillis() + AutoTurn.steadyStatePeriod) {
+			if(this.steadyStateStartTime == 0) {
+				this.steadyStateStartTime = System.currentTimeMillis();
+			}
+						
+			if(this.steadyStateStartTime + AutoTurn.steadyStatePeriod > System.currentTimeMillis()) {
 				this.reset();
 				return true;
 			} else {
 				return false;
 			}
 		} else {
-			steadyStateTime = 0;
+			steadyStateStartTime = 0;
 			rightDriveOutput = angleControlLoop.getPID(0, difference);
+			
+			if(rightDriveOutput > AutoTurn.MAX_TURN_SPEED) {
+				rightDriveOutput = AutoTurn.MAX_TURN_SPEED;
+			} else if(rightDriveOutput < -AutoTurn.MAX_TURN_SPEED) {
+				rightDriveOutput = AutoTurn.MAX_TURN_SPEED;
+			}
+			
 			leftDriveOutput = rightDriveOutput * -1;
 			DrivetrainControl.getInstance().update(leftDriveOutput, rightDriveOutput);
 			return false;
@@ -84,7 +97,7 @@ public class AutoTurn extends AutoCommand{
 				+ error + ", rightAngleTraveled=" + rightAngleTraveled
 				+ ", leftDriveOutput=" + leftDriveOutput
 				+ ", rightDriveOutput=" + rightDriveOutput
-				+ ", steadyStateTime=" + steadyStateTime + "]";
+				+ ", steadyStateTime=" + steadyStateStartTime + "]";
 	}
 
 }

@@ -202,6 +202,7 @@ public class IMU extends SensorBase implements PIDSource, LiveWindowSendable, Ru
      */
     public float getYaw() {
         float calculated_yaw = (float) (this.yaw - user_yaw_offset);
+//        System.out.println(calculated_yaw);
         if (calculated_yaw < -180) {
             calculated_yaw += 360;
         }
@@ -213,6 +214,7 @@ public class IMU extends SensorBase implements PIDSource, LiveWindowSendable, Ru
     
     public float getYaw360() {
         float calculated_yaw = (float) (this.yaw - user_yaw_offset);
+//        System.out.println(calculated_yaw);
         if (calculated_yaw < -180) {
             calculated_yaw += 360;
         }

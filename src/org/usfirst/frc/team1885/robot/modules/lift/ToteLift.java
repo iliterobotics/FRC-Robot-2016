@@ -125,6 +125,8 @@ public class ToteLift implements Module{
 			}
 		}
 
+//		System.out.println(toString());
+		
 		if (DriverInputControl.getInstance().getPressureButton(
 				RobotButtonType.TOTE_LIFT) > DEAD_ZONE) {
 
@@ -163,7 +165,7 @@ public class ToteLift implements Module{
 		if (state == MotorState.UP) {
 			liftSpeed = (liftSpeed < DEFAULT_LIFT_SPEED ? DEFAULT_LIFT_SPEED
 					: liftSpeed);
-			if (SensorInputControl.getInstance()
+			if (!SensorInputControl.getInstance()
 					.getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {
 				stop();
 			}
@@ -193,7 +195,7 @@ public class ToteLift implements Module{
 		}
 
 		if (state == MotorState.UP) {
-			if (SensorInputControl.getInstance()
+			if (!SensorInputControl.getInstance()
 					.getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {
 				stop();
 			}
@@ -202,21 +204,32 @@ public class ToteLift implements Module{
 
 	public boolean incrementLift(double distance, double error) {
 
-		distanceTraveled = SensorInputControl.getInstance()
-				.getEncoder(SensorType.TOTE_ENCODER).getDistance();
-		if (Math.abs(distanceTraveled - distance) <= error) {
-			this.reset();
-			this.stop();
-			return true;
-		} else {
-			liftSpeed = distanceControlLoop.getPID(distance, SensorInputControl
-					.getInstance().getEncoder(SensorType.TOTE_ENCODER)
-					.getDistance());
-			updateLift(liftSpeed);
+        distanceTraveled = -SensorInputControl.getInstance()
+                .getEncoder(SensorType.TOTE_ENCODER).getDistance();
 
-			return false;
-		}
-	}
+        double difference = Math.abs(distanceTraveled - distance);
+        boolean isDone = difference <= error;
+
+        System.out
+                .println("incrementLift - [encoder distance, wanted distance, error, difference, isDone]"
+                        + distanceTraveled
+                        + ", "
+                        + distance
+                        + ", "
+                        + error
+                        + ", " + difference + ", " + isDone);
+
+        if (isDone) {
+            this.reset();
+            this.stop();
+            return true;
+        } else {
+            liftSpeed = distanceControlLoop.getPID(distance, distanceTraveled);
+            updateLift(-liftSpeed);
+            System.out.println("incrementLift speed - " + liftSpeed);
+            return false;
+        }
+    }
 
 	public void reset() {
 		distanceControlLoop.reset();
@@ -240,7 +253,7 @@ public class ToteLift implements Module{
 	}
 
 	public void updateOutputs() {
-		RobotControl.getInstance().updateToteMotor(liftSpeed);
+		RobotControl.getInstance().updateToteMotor(-liftSpeed);
 		RobotControl.getInstance().updateToteStop(!isBraked);
 	}
 

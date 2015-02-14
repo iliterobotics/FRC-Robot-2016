@@ -59,15 +59,15 @@ public class RobotConfiguration {
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_LOWER_LIMIT, 11 );
         SensorInputControl.getInstance().addSensor( SensorType.LINE_SENSOR, 12 );
         SensorInputControl.getInstance().addSensor( SensorType.MAGNET_SENSOR, 13 );
-        SensorInputControl.getInstance().setUpNAVX( (byte)(50), SerialPort.Port.kMXP );
+        SensorInputControl.getInstance().setUpNAVX( (byte)(200), SerialPort.Port.kMXP );
         SensorInputControl.getInstance().addLidarSensor( I2C.Port.kMXP );
         SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).start();
         RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 0 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 2 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 1 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 3 );
-        RobotControl.getInstance().addTalonOutput( RobotMotorType.TOTE_LIFT, 5 );
-        RobotControl.getInstance().addTalonOutput( RobotMotorType.RECYCLE_LIFT, 7 );
+        RobotControl.getInstance().addTalonOutput( RobotMotorType.TOTE_LIFT, 4 );
+        RobotControl.getInstance().addTalonOutput( RobotMotorType.RECYCLE_LIFT, 5 );
 
         RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC, 2);
         RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.TOTE_LIFT_STOP, 3);
