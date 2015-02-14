@@ -17,8 +17,8 @@ public class AutoDriveForward extends AutoCommand{
 	private double leftDistanceTraveled;
 	private double rightDistanceTraveled;
 	public AutoDriveForward(double d, double e) {
-		rightDistanceControlLoop = new PID(0.01, 0, 0);
-		leftDistanceControlLoop = new PID(0.01, 0, 0);
+		rightDistanceControlLoop = new PID(0.01, 0.00001, 0);
+		leftDistanceControlLoop = new PID(0.01, 0.00001, 0);
 		distance = d;
 		error = e;
 		reset();

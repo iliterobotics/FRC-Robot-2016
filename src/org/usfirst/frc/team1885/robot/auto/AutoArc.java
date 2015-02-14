@@ -5,48 +5,39 @@ import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 public class AutoArc extends AutoCommand{
 	
-	private double threshold;
+	private double turnPower;
 	
-	private AutoTurn autoTurn;
 	private AutoDriveForward autoDriveForward;
 	
-	public AutoArc(double inputDistance, double inputDistanceError, double inputAngle, double inputAngleError, double inputThreshold) {
+	boolean driveForwardState;
+	
+	public AutoArc(double inputDistance, double inputDistanceError, double turnPower) {
 
 		autoDriveForward = new AutoDriveForward(inputDistance, inputDistanceError);
-		autoTurn = new AutoTurn(inputAngle, inputAngleError);
 		
-		this.threshold = inputThreshold;
+		this.turnPower = turnPower;
 		
 		reset();
 	}
+	
+	
 	public boolean execute() {
 		
 		//execute drive forward
-		boolean driveForwardState = autoDriveForward.execute();
+		if(!driveForwardState) {
+			driveForwardState = autoDriveForward.execute();
+		}
 		
 		//get the left/right values from DriveTrainControl
 		double fwdLeftOutput = DrivetrainControl.getInstance().getLeftDriveSpeed();
 		double fwdRightOutput = DrivetrainControl.getInstance().getRightDriveSpeed();
-		
-		//execute turn
-		boolean turnState = autoTurn.execute();
-		
-		//get the left/right outputs
-		double turnLeftOutput = DrivetrainControl.getInstance().getLeftDriveSpeed();
-		
-		//set new output
-		if(turnLeftOutput > threshold) {
-			turnLeftOutput = threshold;
-		} else if(turnLeftOutput < -threshold) {
-			turnLeftOutput = -threshold;
-		}
 			
-		DrivetrainControl.getInstance().update(fwdLeftOutput - turnLeftOutput, fwdRightOutput + turnLeftOutput);
-				
-		return (driveForwardState && turnState);
+		DrivetrainControl.getInstance().update(fwdLeftOutput + this.turnPower, fwdRightOutput);
+		
+		return driveForwardState;
 	}
 	public void reset() {
-		autoTurn.reset();
+		driveForwardState = false;
 		autoDriveForward.reset();
 		RobotControl.getInstance().updateDriveSpeed(0, 0);
 	}
@@ -57,7 +48,8 @@ public class AutoArc extends AutoCommand{
 	}
 	
 	public boolean init() {
+		
 		reset();	
-		return true;
+		return (autoDriveForward.init());
 	}
 }

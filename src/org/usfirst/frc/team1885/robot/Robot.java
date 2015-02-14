@@ -3,9 +3,8 @@ package org.usfirst.frc.team1885.robot;
 
 import java.util.LinkedList;
 
+import org.usfirst.frc.team1885.robot.auto.AutoArc;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
-import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
-import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.comms.DataTelemetryService;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
@@ -86,7 +85,7 @@ public class Robot extends SampleRobot
         	ClawControl.getInstance().updateClaw();
         	toteLift.updateLift();
 //        	System.out.println("Robot::tele - lidar: " + SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance());
-        	BackupRoutine.getInstance().update();
+//        	BackupRoutine.getInstance().update();
         	
         	//robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
 //        	recycleBinLift.updateOutputs();
@@ -103,7 +102,7 @@ public class Robot extends SampleRobot
     	LinkedList<AutoCommand> commands;
     	commands = new LinkedList<AutoCommand>();
     	
-    	commands.add(new AutoDriveForward(3.0*12,3.0));
+//    	commands.add(new AutoDriveForward(3.0*12,3.0));
 ////    	commands.add(new AutoWait(5000.0));
 //    	commands.add(new AutoToteLift(100, 5));
 //    	commands.add(new AutoDriveForward(3.0*12,6.0));
@@ -112,7 +111,9 @@ public class Robot extends SampleRobot
 //    	commands.add(new AutoDriveForward(3.0*12,6.0));
 ////    	commands.add(new AutoWait(5000.0));
 //    	commands.add(new AutoToteLift(100, 5));
-    	commands.add(new AutoTurn(45, 5));
+//    	commands.add(new AutoTurn(45, 5));
+    	
+    	commands.add(new AutoArc(6.0 * 12, 3.0, .5));
     	    	
     	
     	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
