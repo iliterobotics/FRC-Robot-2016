@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.auto.AutoArc;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
+import org.usfirst.frc.team1885.robot.auto.AutoToteLift;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.comms.DataTelemetryService;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
@@ -47,7 +48,7 @@ public class Robot extends SampleRobot
         SensorInputControl.getInstance().getNAVX().zeroYaw();
         diameter = 4.0;
         maxSpeed = 15.0; 
-
+         
     	DrivetrainControl.getInstance().addSpeed(1, 15.0);
     	this.robotControl = RobotControl.getInstance();
     	this.recycleBinLift = RecycleBinLift.getInstance();
@@ -113,7 +114,11 @@ public class Robot extends SampleRobot
 //    	commands.add(new AutoToteLift(100, 5));
 //    	commands.add(new AutoTurn(45, 5));
     	
+    	commands.add(new AutoToteLift(100, 5));
     	commands.add(new AutoArc(6.0 * 12, 3.0, .5));
+    	commands.add(new AutoToteLift(100, 5));
+    	commands.add(new AutoArc(6.0 * 12, 3.0, -.5));
+    	commands.add(new AutoToteLift(100, 5));
     	    	
     	
     	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
