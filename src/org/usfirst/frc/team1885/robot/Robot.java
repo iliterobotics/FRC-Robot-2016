@@ -3,17 +3,15 @@ package org.usfirst.frc.team1885.robot;
 
 import java.util.LinkedList;
 
+import org.usfirst.frc.team1885.robot.auto.AutoArc;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
-import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
-import org.usfirst.frc.team1885.robot.auto.AutoToteLift;
-import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.comms.DataTelemetryService;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
-import org.usfirst.frc.team1885.robot.comms.TelemetryMessage;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
+import org.usfirst.frc.team1885.robot.modules.drivetrain.BackupRoutine;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
@@ -73,30 +71,29 @@ public class Robot extends SampleRobot
     	
         while (isOperatorControl() && isEnabled()) {
         	
-        	try {
-        		telemetryService.setDigitalInputs();
-        		telemetryService.setRelays();
-        		telemetryService.setSolenoids();
-        		telemetryService.setTalons();
-        		RobotServer.getInstance().send(telemetryService.getTm());
-        	} catch(Exception e) {
-        		e.printStackTrace();
-        	}
+//        	try {
+//        		telemetryService.setDigitalInputs();
+//        		telemetryService.setRelays();
+//        		telemetryService.setSolenoids();
+//        		telemetryService.setTalons();
+//        		RobotServer.getInstance().send(telemetryService.getTm());
+//        	} catch(Exception e) {
+//        		e.printStackTrace();
+//        	}
         	
-//        	DrivetrainControl.getInstance().update();
-//        	System.out.println( driveTrainControl.getLeftDriveSpeed() + " " + driveTrainControl.getRightDriveSpeed());
-
-//        	ClawControl.getInstance().updateClaw();
-//        	ClawControl.getInstance().updateOutputs();
-        	
-//        	toteLift.updateLift();
+        	DrivetrainControl.getInstance().update();
+        	ClawControl.getInstance().updateClaw();
+        	toteLift.updateLift();
+//        	System.out.println("Robot::tele - lidar: " + SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance());
+//        	BackupRoutine.getInstance().update();
         	
         	//robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
 //        	recycleBinLift.updateOutputs();
 //        	recycleBinLift.updateLift();
         	
-//        	toteLift.updateOutputs();
-//        	DrivetrainControl.getInstance().updateOutputs();
+        	toteLift.updateOutputs();
+        	DrivetrainControl.getInstance().updateOutputs();
+        	ClawControl.getInstance().updateOutputs();
             Timer.delay(.005);		// wait for a motor update time
         }
     }
@@ -105,7 +102,7 @@ public class Robot extends SampleRobot
     	LinkedList<AutoCommand> commands;
     	commands = new LinkedList<AutoCommand>();
     	
-    	commands.add(new AutoDriveForward(3.0*12,3.0));
+//    	commands.add(new AutoDriveForward(3.0*12,3.0));
 ////    	commands.add(new AutoWait(5000.0));
 //    	commands.add(new AutoToteLift(100, 5));
 //    	commands.add(new AutoDriveForward(3.0*12,6.0));
@@ -114,19 +111,27 @@ public class Robot extends SampleRobot
 //    	commands.add(new AutoDriveForward(3.0*12,6.0));
 ////    	commands.add(new AutoWait(5000.0));
 //    	commands.add(new AutoToteLift(100, 5));
-    	commands.add(new AutoTurn(45, 5));
+//    	commands.add(new AutoTurn(45, 5));
+    	
+    	commands.add(new AutoArc(6.0 * 12, 3.0, .5));
     	    	
     	
     	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
     		
     		AutoCommand currCommand = commands.peek();
-    		boolean commandState = currCommand.execute();
-    		currCommand.updateOutputs();
-    		if(commandState) {
-    			System.out.println("Finished command " + commands.size());
-    			commands.poll();
+    		
+    		
+    		if(currCommand.isInit()) {
+	    		boolean commandState = currCommand.execute();
+	    		currCommand.updateOutputs();
+	    		if(commandState) {
+	    			System.out.println("Finished command " + commands.size());
+	    			commands.poll();
+	    		} else {
+	    			System.out.println("Executing command " + commands.size());
+	    		}
     		} else {
-    			System.out.println("Executing command " + commands.size());
+    			currCommand.setInit(currCommand.init());
     		}
     	    		
     		Timer.delay(.005);

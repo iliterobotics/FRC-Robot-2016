@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-public class AutoWait implements AutoCommand{
+public class AutoWait extends AutoCommand{
 	private double miliseconds;
 	private double startTime;
 	
@@ -21,9 +21,10 @@ public class AutoWait implements AutoCommand{
 		return true;
 	}
 	
-	@Override
-	public void init() {
+
+	public boolean init() {
 		startTime = System.currentTimeMillis();
+		return true;
 	}
 
 }

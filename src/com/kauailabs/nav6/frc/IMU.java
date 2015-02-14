@@ -210,6 +210,17 @@ public class IMU extends SensorBase implements PIDSource, LiveWindowSendable, Ru
         }
         return calculated_yaw;
     }
+    
+    public float getYaw360() {
+        float calculated_yaw = (float) (this.yaw - user_yaw_offset);
+        if (calculated_yaw < -180) {
+            calculated_yaw += 360;
+        }
+        if (calculated_yaw > 180) {
+            calculated_yaw -= 360;
+        }
+        return (calculated_yaw < 0 ? (calculated_yaw + 360) : calculated_yaw);
+    }
 
     /**
      * Returns the current tilt-compensated compass heading 

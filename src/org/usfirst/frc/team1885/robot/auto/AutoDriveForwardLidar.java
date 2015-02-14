@@ -6,7 +6,7 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
-public class AutoDriveForwardLidar implements AutoCommand{
+public class AutoDriveForwardLidar extends AutoCommand{
 	
 	private PID distanceControlLoop;
 	private double stopDistance;
@@ -50,7 +50,8 @@ public class AutoDriveForwardLidar implements AutoCommand{
 		return true;
 	}
 	
-	public void init() {
+	public boolean init() {
 		reset();
+		return true;
 	}
 }
