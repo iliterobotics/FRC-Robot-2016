@@ -28,7 +28,7 @@ public class AutoDriveForward extends AutoCommand{
 	public boolean execute() {
 		System.out.println("AutoDriveFwd::[left dist, right dist] " + leftDistanceTraveled + ", " + rightDistanceTraveled);
 		if( numberOfEncoders == 1) {
-			if (Math.abs(rightDistanceTraveled  - distance) <= error ) {
+			if (Math.abs(rightDistanceTraveled  - distance) <= error || Math.abs(leftDistanceTraveled  - distance) <= error) {
 				this.reset();
 				return true;
 			}

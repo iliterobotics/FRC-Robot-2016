@@ -13,7 +13,7 @@ public class AutoArc extends AutoCommand{
 	
 	public AutoArc(double inputDistance, double inputDistanceError, double turnPower) {
 
-		autoDriveForward = new AutoDriveForward(inputDistance, inputDistanceError);
+		autoDriveForward = new AutoDriveForward(inputDistance, inputDistanceError, 2);
 		
 		this.turnPower = turnPower;
 		

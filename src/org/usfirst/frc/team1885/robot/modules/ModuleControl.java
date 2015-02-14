@@ -22,6 +22,10 @@ public class ModuleControl {
 		return instance;
 	}
 	
+	public Module[] getModules() {
+		return this.modules.values().toArray(new Module[modules.size()]);
+	}
+	
 	public void addModule(ModuleType module_type, Module module) {
 		modules.put(module_type, module);
 	}
