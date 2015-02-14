@@ -5,6 +5,8 @@ import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
 import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.auto.AutoWait;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
+import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
+import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 
 public class DriveTrainTest {
@@ -14,14 +16,19 @@ public class DriveTrainTest {
 	private AutoTurn turner;
 	private DrivetrainControl gear;
 	private AutoWait waitForIt;
+	//private boolean toggle;
 	public DriveTrainTest()
 	{
 		driveFward = new AutoDriveForward(inches, error);
 		turner = new AutoTurn(45, 1);
 		waitForIt = new AutoWait(5000);
 	}
+	
 	public void testDrive()
 	{
+		if (DriverInputControl.getInstance().getButton(
+				RobotButtonType.DRIVE_TRAIN_TEST))
+				{
 		driveOn();
 		driveFward = new AutoDriveForward(-inches, error);
 		driveOn();
@@ -40,6 +47,7 @@ public class DriveTrainTest {
 		gear.setGearState(GearState.LOW_GEAR);
 		stopIt();
 		gear.setGearState(GearState.HIGH_GEAR);
+				}
 	}
 	public void stopIt()
 	{

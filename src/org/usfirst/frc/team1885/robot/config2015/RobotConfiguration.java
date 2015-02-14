@@ -76,8 +76,10 @@ public class RobotConfiguration {
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, 0 );
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, 1 );
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.CONTROLLER, 2 );
+        
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.DRIVE_TRAIN_TEST, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_TEST, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );
+        
         SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_LEFT_ENCODER, 0, 1 );
         SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_RIGHT_ENCODER, 2, 3 );
         SensorInputControl.getInstance().addSensor( SensorType.TOTE_ENCODER, 4, 5 );
@@ -90,6 +92,7 @@ public class RobotConfiguration {
         SensorInputControl.getInstance().addSensor( SensorType.MAGNET_SENSOR, 13 );
         SensorInputControl.getInstance().setUpNAVX( (byte)(50), SerialPort.Port.kMXP );
         SensorInputControl.getInstance().addLidarSensor( I2C.Port.kMXP );
+        
         RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 0 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 2 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 1 );
