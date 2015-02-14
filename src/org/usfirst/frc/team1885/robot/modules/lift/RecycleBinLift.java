@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot.modules.lift;
 
+import org.usfirst.frc.team1885.robot.common.Module;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
@@ -7,7 +8,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
-public class RecycleBinLift {
+public class RecycleBinLift implements Module{
 
     public static final double DEFAULT_LIFT_SPEED = .5;
     private static RecycleBinLift instance;
@@ -102,4 +103,8 @@ public class RecycleBinLift {
     public void updateOutputs() {
     	RobotControl.getInstance().updateRecycleMotor(liftSpeed);
     }
+	@Override
+	public void update() {
+		updateLift();
+	}
 }

@@ -1,11 +1,12 @@
 package org.usfirst.frc.team1885.robot.modules.drivetrain;
 
+import org.usfirst.frc.team1885.robot.common.Module;
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
-public class BackupRoutine {
+public class BackupRoutine implements Module{
     private PID distanceControlLoop;
     private final double ERROR = 100;
     private final double minDistance = 50;
