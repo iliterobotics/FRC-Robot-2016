@@ -3,13 +3,13 @@ package org.usfirst.frc.team1885.robot.modules.drivetrain;
 import java.util.HashMap;
 
 import org.usfirst.frc.team1885.robot.auto.AutoTurn;
-import org.usfirst.frc.team1885.robot.common.Module;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
