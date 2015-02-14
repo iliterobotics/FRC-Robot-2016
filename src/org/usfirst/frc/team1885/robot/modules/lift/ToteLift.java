@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot.modules.lift;
 
+import org.usfirst.frc.team1885.robot.common.Module;
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
@@ -8,7 +9,7 @@ import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
-public class ToteLift {
+public class ToteLift implements Module{
 
 	private final int toteHeight = 42; /* psuedoheight */
 	public static final double DEFAULT_LIFT_SPEED = -.5;
@@ -251,6 +252,12 @@ public class ToteLift {
 				+ distanceTraveled + ", DEAD_ZONE=" + DEAD_ZONE
 				+ ", isIncrementing=" + isIncrementing + ", isBraked="
 				+ isBraked + "]";
+	}
+
+	@Override
+	public void update() {
+		// TODO Auto-generated method stub
+		updateLift();
 	}
 
 }
