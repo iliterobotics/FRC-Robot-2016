@@ -2,18 +2,14 @@ package org.usfirst.frc.team1885.robot.input;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 
-import com.kauailabs.nav6.frc.IMUAdvanced;
+import com.kauailabs.nav6.frc.IMU;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.SerialPort;
 
@@ -23,7 +19,7 @@ public class SensorInputControl {
 	private HashMap<SensorType, Encoder> encoders;
 	private HashMap<SensorType, DigitalInput> digital_inputs;
 	private HashMap<SensorType, LidarSensor> lidar_sensor;
-	private IMUAdvanced imu;
+	private IMU imu;
 	SerialPort serial_port;
 
 	public static final double DEADZONE = 0.1;
@@ -51,7 +47,7 @@ public class SensorInputControl {
 	public void setUpNAVX(byte rate, edu.wpi.first.wpilibj.SerialPort.Port port) {
 		
 		serial_port = new SerialPort(57600, port);
-		imu = new IMUAdvanced(serial_port, rate);
+		imu = new IMU(serial_port, rate);
 	}
 
 	public static SensorInputControl getInstance() {
@@ -61,7 +57,7 @@ public class SensorInputControl {
 		return instance;
 	}
 
-	public IMUAdvanced getNAVX() {
+	public IMU getNAVX() {
 		return imu;
 	}
 

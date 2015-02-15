@@ -165,7 +165,7 @@ public class ToteLift implements Module{
 		if (state == MotorState.UP) {
 			liftSpeed = (liftSpeed < DEFAULT_LIFT_SPEED ? DEFAULT_LIFT_SPEED
 					: liftSpeed);
-			if (!SensorInputControl.getInstance()
+			if (SensorInputControl.getInstance()
 					.getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {
 				stop();
 			}
@@ -188,6 +188,21 @@ public class ToteLift implements Module{
 			state = MotorState.STOP;
 		}
 
+		if (state == MotorState.UP) {
+			liftSpeed = (liftSpeed < DEFAULT_LIFT_SPEED ? DEFAULT_LIFT_SPEED
+					: liftSpeed);
+			if (SensorInputControl.getInstance()
+					.getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {
+				stop();
+			}
+		} else if (state == MotorState.DOWN) {
+			liftSpeed = (liftSpeed > DEFAULT_LIFT_SPEED_DOWN ? DEFAULT_LIFT_SPEED_DOWN
+					: liftSpeed);
+			// liftSpeed = -DEFAULT_LIFT_SPEED;
+		} else {
+			stop();
+		}
+		
 		if (state == MotorState.STOP) {
 			isBraked = true;
 		} else {
@@ -195,7 +210,7 @@ public class ToteLift implements Module{
 		}
 
 		if (state == MotorState.UP) {
-			if (!SensorInputControl.getInstance()
+			if (SensorInputControl.getInstance()
 					.getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {
 				stop();
 			}

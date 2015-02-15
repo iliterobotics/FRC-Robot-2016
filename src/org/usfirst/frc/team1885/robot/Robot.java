@@ -46,8 +46,13 @@ public class Robot extends SampleRobot
     private ToteLift toteLift;
     
     public Robot() {
-        RobotConfiguration.configureRobot();
-        SensorInputControl.getInstance().getNAVX().zeroYaw();
+    	try {
+	        RobotConfiguration.configureRobot();
+	        SensorInputControl.getInstance().getNAVX().zeroYaw();
+    	} catch(Exception e) {
+    		System.out.println("Robot - Error configuring Robot");
+    		e.printStackTrace();
+    	}
         diameter = 4.0;
         maxSpeed = 15.0; 
          
@@ -56,8 +61,8 @@ public class Robot extends SampleRobot
     	this.recycleBinLift = RecycleBinLift.getInstance();
     	this.toteLift = ToteLift.getInstance();
     	
-    	RobotServer.getInstance().setup(4444);
-    	RobotServer.getInstance().startServer();
+//    	RobotServer.getInstance().setup(4444);
+//    	RobotServer.getInstance().startServer();
     	
     }    
     /**
@@ -84,7 +89,7 @@ public class Robot extends SampleRobot
 //        		e.printStackTrace();
 //        	}
         	
-//        	System.out.println(SensorInputControl.getInstance().getNAVX().getYaw360());
+        	System.out.println(SensorInputControl.getInstance().getNAVX().getYaw360());
         	
         	DrivetrainControl.getInstance().update();
         	ClawControl.getInstance().updateClaw();
@@ -118,12 +123,15 @@ public class Robot extends SampleRobot
 //    	commands.add(new AutoToteLift(100, 5));
 //    	commands.add(new AutoTurn(45, 5));
     	
-    	commands.add(new AutoTurn(-45, 5));
-//    	commands.add(new AutoDriveForward(.5*12, 3, 2));
-    	commands.add(new AutoTurn(180, 5));
-    	commands.add(new AutoDriveForward(2.5*12, 3, 2));
-    	commands.add(new AutoTurn(-120, 5));
-    	commands.add(new AutoDriveForward(5*12, 3, 2));
+    	commands.add(new AutoTurn(180, 1));
+//    	commands.add(new AutoDriveForward(1*12, 1, 2));
+//    	commands.add(new AutoToteLift(1210, 10));
+//    	commands.add(new AutoTurn(180, 5));
+//    	commands.add(new AutoDriveForward(48, 1, 2));
+//    	commands.add(new AutoToteLift(1210, 10));
+//    	commands.add(new AutoTurn(-120, 5));
+//    	commands.add(new AutoDriveForward(5*12, 1, 2));
+//    	commands.add(new AutoToteLift(-1210, 10));
     	    	
     	
     	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
@@ -143,7 +151,10 @@ public class Robot extends SampleRobot
     		}
     	    		
     		Timer.delay(.005);
-    	}    	
+    	}
+    	
+    	DrivetrainControl.getInstance().update(0,0);
+    	DrivetrainControl.getInstance().updateOutputs();
     }
 
 }

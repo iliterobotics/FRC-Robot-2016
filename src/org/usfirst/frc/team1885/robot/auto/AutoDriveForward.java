@@ -17,9 +17,14 @@ public class AutoDriveForward extends AutoCommand{
 	private double rightDriveOutput; 
 	private double leftDistanceTraveled;
 	private double rightDistanceTraveled;
+	
+	private static double MIN_SPEED = 0.0;
+	
 	public AutoDriveForward(double d, double e, int n) {
-		rightDistanceControlLoop = new PID(0.01, 0.00005, 0);
-		leftDistanceControlLoop = new PID(0.01, 0.00005, 0);
+		rightDistanceControlLoop = new PID(.3, 0.005, 0);
+		rightDistanceControlLoop.setScalingValue(d);
+		leftDistanceControlLoop = new PID(.3, 0.005, 0);
+		leftDistanceControlLoop.setScalingValue(d);
 		numberOfEncoders = n;
 		distance = d;
 		error = e;
@@ -28,21 +33,27 @@ public class AutoDriveForward extends AutoCommand{
 	public boolean execute() {
 		System.out.println("AutoDriveFwd::[left dist, right dist] " + leftDistanceTraveled + ", " + rightDistanceTraveled);
 		if( numberOfEncoders == 1) {
-			if (Math.abs(rightDistanceTraveled  - distance) <= error || Math.abs(leftDistanceTraveled  - distance) <= error) {
-				this.reset();
-				return true;
-			}
+//			if (Math.abs(rightDistanceTraveled  - distance) <= error || Math.abs(leftDistanceTraveled  - distance) <= error) {
+//				this.reset();
+//				return true;
+//			}
 		}
 		else if( numberOfEncoders == 2) {
-			if (Math.abs(leftDistanceTraveled  - distance) <= error && Math.abs(rightDistanceTraveled  - distance) <= error ) {
-				this.reset();
-				return true;
-			}
+//			if (Math.abs(leftDistanceTraveled  - distance) <= error && Math.abs(rightDistanceTraveled  - distance) <= error ) {
+//				this.reset();
+//				return true;
+//			}
 		}
 		
 		if(Math.abs(leftDistanceTraveled  - distance) > error) {
 			leftDistanceTraveled = SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).getDistance();
 			leftDriveOutput = leftDistanceControlLoop.getPID(distance, leftDistanceTraveled);
+			
+			if(leftDriveOutput > 0) {
+				leftDriveOutput = (leftDriveOutput < AutoDriveForward.MIN_SPEED ? AutoDriveForward.MIN_SPEED : leftDriveOutput);
+			} else if(leftDriveOutput < 0) {
+				leftDriveOutput = (leftDriveOutput > -AutoDriveForward.MIN_SPEED ? -AutoDriveForward.MIN_SPEED : leftDriveOutput);
+			}
 		} else {
 			leftDistanceControlLoop.reset();
 			leftDriveOutput = 0;
@@ -51,14 +62,21 @@ public class AutoDriveForward extends AutoCommand{
 		if(Math.abs(rightDistanceTraveled  - distance) > error) {
 			rightDistanceTraveled = -SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).getDistance();
 			rightDriveOutput = rightDistanceControlLoop.getPID(distance, rightDistanceTraveled);
+			
+			if(rightDriveOutput > 0) {
+				rightDriveOutput = (rightDriveOutput < AutoDriveForward.MIN_SPEED ? AutoDriveForward.MIN_SPEED : rightDriveOutput);
+			} else if (rightDriveOutput < 0) {
+				rightDriveOutput = (rightDriveOutput > -AutoDriveForward.MIN_SPEED ? -AutoDriveForward.MIN_SPEED : rightDriveOutput);
+			}
 		} else {
 			rightDistanceControlLoop.reset();
 			rightDriveOutput = 0;
 		}
 		
-		System.out.println("AutoDriveFwd::[left speed, right speed] " + leftDriveOutput + ", " + rightDriveOutput);
+//		System.out.println("AutoDriveFwd::[left speed, right speed] " + leftDriveOutput + ", " + rightDriveOutput);
 		
-		DrivetrainControl.getInstance().update(-leftDriveOutput, -rightDriveOutput);
+		DrivetrainControl.getInstance().setLeftDriveSpeed(-leftDriveOutput);
+		DrivetrainControl.getInstance().setRightDriveSpeed(-rightDriveOutput);
 		
 		return false;
 		

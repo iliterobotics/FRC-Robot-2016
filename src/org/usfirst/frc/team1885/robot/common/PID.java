@@ -6,7 +6,7 @@ public class PID {
 	private final double d;
 	private double error, previousError;
 	private double integral;
-	private boolean scaleOutput;
+	private double scaleOutput;
 	
 	public PID(double inputP, double inputI, double inputD) {
 		p = inputP;
@@ -14,7 +14,7 @@ public class PID {
 		d = inputD;
 		error = 0.0;
 		integral = 0.0;
-		scaleOutput = true;
+		scaleOutput = 1.0;
 	}
 
 	public void reset() {
@@ -22,16 +22,19 @@ public class PID {
 		previousError = 0;
 		integral = 0;
 	}
+	
+	public void setScalingValue(double scaleFactor) {
+		this.scaleOutput = Math.abs(scaleFactor);
+	}
 
 	public double getPID (double projectedValue, double currentValue) {
 		previousError = error;
+		
 		error = projectedValue - currentValue;
 		
-		double output = (p * getP()) + (i * getI(1.0)) + (d * getD());
+		error = error / this.scaleOutput;
 		
-		if(scaleOutput) {
-			output = output / Math.abs(projectedValue);
-		}
+		double output = (p * getP()) + (i * getI(1.0)) + (d * getD());
 		
 		return output;
 	}

@@ -22,6 +22,10 @@ import edu.wpi.first.wpilibj.SerialPort;
 
 public class RobotConfiguration {
 
+	public static final double WHEEL_DIAMETER = 4;
+	public static final double FRAME_LENGTH = 37.5;
+//	public static final double FRAME_LENGTH = 25;
+	
     public static void configureRobot(){
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, 0 );
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, 1 );
@@ -59,7 +63,7 @@ public class RobotConfiguration {
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_LOWER_LIMIT, 11 );
         SensorInputControl.getInstance().addSensor( SensorType.LINE_SENSOR, 12 );
         SensorInputControl.getInstance().addSensor( SensorType.MAGNET_SENSOR, 13 );
-        SensorInputControl.getInstance().setUpNAVX( (byte)(200), SerialPort.Port.kMXP );
+        SensorInputControl.getInstance().setUpNAVX( (byte)(100), SerialPort.Port.kMXP );
         SensorInputControl.getInstance().addLidarSensor( I2C.Port.kMXP );
         SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).start();
         RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 0 );

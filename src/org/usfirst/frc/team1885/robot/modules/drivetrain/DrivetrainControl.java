@@ -47,7 +47,7 @@ public class DrivetrainControl implements Module{
 	}
 	public static DrivetrainControl getInstance(){
 	    if(instance == null){
-	        instance = new DrivetrainControl(4.0, 15.0);
+	        instance = new DrivetrainControl(4.0 * 1.5, 15.0);
 	    }
 	    return instance;
 	}

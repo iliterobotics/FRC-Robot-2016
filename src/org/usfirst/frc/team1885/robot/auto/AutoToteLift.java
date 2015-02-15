@@ -12,7 +12,7 @@ public class AutoToteLift extends AutoCommand{
 	private double error;
 	private double heightOutput;
 	private double heightTraveled;
-	
+		
 	public AutoToteLift(double h, double e) {
 		heightControlLoop = new PID(0.08, 0.0001, 0);
 		height = h;
@@ -20,13 +20,13 @@ public class AutoToteLift extends AutoCommand{
 		SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER).reset();
 	}
 	public boolean execute() {
-		heightTraveled = SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER).getDistance();
+		heightTraveled = -SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER).getDistance();
 		if (Math.abs(heightTraveled  - height) <= error ) {
 			this.reset(); 
 			return true;
 		} else {
 			heightOutput = heightControlLoop.getPID(height, SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER).getDistance());
-			ToteLift.getInstance().updateLift(heightOutput);
+			ToteLift.getInstance().updateLift(-heightOutput);
 			return false;
 		}
 	}
