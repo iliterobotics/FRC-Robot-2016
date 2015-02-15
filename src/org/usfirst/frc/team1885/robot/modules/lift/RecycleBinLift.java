@@ -1,7 +1,9 @@
 package org.usfirst.frc.team1885.robot.modules.lift;
 
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
+import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
@@ -13,6 +15,7 @@ public class RecycleBinLift implements Module{
     public static final double DEFAULT_LIFT_SPEED = .5;
     private static RecycleBinLift instance;
     private double liftSpeed;
+    private final double DEAD_ZONE = .1;
     private boolean hasBin;
     private MotorState state;
 
@@ -43,21 +46,17 @@ public class RecycleBinLift implements Module{
         return liftSpeed;
     }
     public void updateLift() {
-        if (state == MotorState.UP) {
-            liftSpeed = DEFAULT_LIFT_SPEED;
-            if (SensorInputControl.getInstance()
-                    .getLimitSwitch(SensorType.RECYCLE_BIN_UPPER_LIMIT).get()) {
-                hasBin = true;
-                stop();
-            }
-        }
-        if (state == MotorState.DOWN) {
-            liftSpeed = -DEFAULT_LIFT_SPEED;
-            if (SensorInputControl.getInstance()
-                    .getLimitSwitch(SensorType.RECYCLE_BIN_LOWER_LIMIT).get()) {
-                hasBin = false;
-                stop();
-            }
+        if (DriverInputControl.getInstance().getPressureButton(
+                RobotButtonType.RECYCLE_BIN_LIFT) > DEAD_ZONE) {
+            state = MotorState.DOWN;
+            liftSpeed = DriverInputControl.getInstance().getPressureButton(
+                    RobotButtonType.RECYCLE_BIN_LIFT);
+        } else if (DriverInputControl.getInstance().getPressureButton(
+                RobotButtonType.RECYCLE_BIN_LIFT) < -DEAD_ZONE) {
+            state = MotorState.UP;
+            liftSpeed = DriverInputControl.getInstance().getPressureButton(
+                    RobotButtonType.RECYCLE_BIN_LIFT);
+
         }
     }
     public void updateLift(double speed) {

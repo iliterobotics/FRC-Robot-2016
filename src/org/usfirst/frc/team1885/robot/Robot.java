@@ -159,6 +159,15 @@ public class Robot extends SampleRobot
     	commands.add(new AutoToteLift(1 * 1210, 10));
     	commands.add(new AutoTurn(-90, 1));
     	commands.add(new AutoDriveForward(5 * 12, 1, 2));
+    }
+    public void autoSimple() {
+        commands.add(new AutoToteLift(2 * 1210, 10));
+        commands.add(new AutoDriveForward(1 * 12, 1, 2));
+        commands.add(new AutoTurn(-60, 1));
+        commands.add(new AutoDriveForward(.5 * 12, 1, 2)); 
+        commands.add(new AutoToteLift(1 * 1210, 10));
+        commands.add(new AutoTurn(-90, 1));
+        commands.add(new AutoDriveForward(5 * 12, 1, 2));
   
     }
 
