@@ -80,41 +80,46 @@ public class RobotConfiguration {
         RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_EXTENSION, 0, 6);
 
         RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GRABBER_PNEUMATIC, 5);
+
+        RobotControl.getInstance().addRelay( RobotMotorType.ALIGNMENT_LEFT, 0 );
+        RobotControl.getInstance().addRelay( RobotMotorType.ALIGNMENT_RIGHT, 1 );
         ModuleControl.getInstance().addModule(ModuleType.TOTE_LIFT, ToteLift.getInstance());
         ModuleControl.getInstance().addModule(ModuleType.RECYCLE_BIN_LIFT,  RecycleBinLift.getInstance());
         ModuleControl.getInstance().addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
     }
-    public static void configureRobotTest(){
-        DriverInputControl.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, 0 );
-        DriverInputControl.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, 1 );
-        DriverInputControl.getInstance().addJoystick( RobotJoystickType.CONTROLLER, 2 );
-        
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.DRIVE_TRAIN_TEST, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_TEST, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );
-        
-        SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_LEFT_ENCODER, 0, 1 );
-        SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_RIGHT_ENCODER, 2, 3 );
-        SensorInputControl.getInstance().addSensor( SensorType.TOTE_ENCODER, 4, 5 );
-        SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_ENCODER, 6, 7 );
-        SensorInputControl.getInstance().addSensor( SensorType.TOTE_UPPER_LIMIT_SWITCH, 8 );
-        SensorInputControl.getInstance().addSensor( SensorType.TOTE_LOWER_LIMIT_SWITCH, 9 );
-        SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_UPPER_LIMIT, 10 );
-        SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_LOWER_LIMIT, 11 );
-        SensorInputControl.getInstance().addSensor( SensorType.LINE_SENSOR, 12 );
-        SensorInputControl.getInstance().addSensor( SensorType.MAGNET_SENSOR, 13 );
-        SensorInputControl.getInstance().setUpNAVX( (byte)(50), SerialPort.Port.kMXP );
-        SensorInputControl.getInstance().addLidarSensor( I2C.Port.kMXP );
-        
-        RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 0 );
-        RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 2 );
-        RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 1 );
-        RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 3 );
-        RobotControl.getInstance().addTalonOutput( RobotMotorType.TOTE_LIFT, 5 );
-        RobotControl.getInstance().addTalonOutput( RobotMotorType.RECYCLE_LIFT, 7 );
-        RobotControl.getInstance().addRelay( RobotMotorType.CLAW_WRIST, 0 );
-        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_ROTATION, 1, 2);
-        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_EXTENSION, 3, 4);
-        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GRABBER_PNEUMATIC, 5);
-        
-    }
+    
+//    public static void configureRobotTest(){
+//        DriverInputControl.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, 0 );
+//        DriverInputControl.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, 1 );
+//        DriverInputControl.getInstance().addJoystick( RobotJoystickType.CONTROLLER, 2 );
+//        
+//        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.DRIVE_TRAIN_TEST, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
+//        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_TEST, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );
+//        
+//        SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_LEFT_ENCODER, 0, 1 );
+//        SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_RIGHT_ENCODER, 2, 3 );
+//        SensorInputControl.getInstance().addSensor( SensorType.TOTE_ENCODER, 4, 5 );
+//        SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_ENCODER, 6, 7 );
+//        SensorInputControl.getInstance().addSensor( SensorType.TOTE_UPPER_LIMIT_SWITCH, 8 );
+//        SensorInputControl.getInstance().addSensor( SensorType.TOTE_LOWER_LIMIT_SWITCH, 9 );
+//        SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_UPPER_LIMIT, 10 );
+//        SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_LOWER_LIMIT, 11 );
+//        SensorInputControl.getInstance().addSensor( SensorType.LINE_SENSOR, 12 );
+//        SensorInputControl.getInstance().addSensor( SensorType.MAGNET_SENSOR, 13 );
+//        SensorInputControl.getInstance().setUpNAVX( (byte)(50), SerialPort.Port.kMXP );
+//        SensorInputControl.getInstance().addLidarSensor( I2C.Port.kMXP );
+//        
+//        RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 0 );
+//        RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 2 );
+//        RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 1 );
+//        RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 3 );
+//        RobotControl.getInstance().addTalonOutput( RobotMotorType.TOTE_LIFT, 5 );
+//        RobotControl.getInstance().addTalonOutput( RobotMotorType.RECYCLE_LIFT, 7 );
+//        RobotControl.getInstance().addRelay( RobotMotorType.ALIGNMENT_LEFT, 0 );
+//        RobotControl.getInstance().addRelay( RobotMotorType.ALIGNMENT_RIGHT, 1 );
+//        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_ROTATION, 1, 2);
+//        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_EXTENSION, 3, 4);
+//        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GRABBER_PNEUMATIC, 5);
+//        
+//    }
 }
