@@ -30,7 +30,7 @@ public class PID {
 		double output = (p * getP()) + (i * getI(1.0)) + (d * getD());
 		
 		if(scaleOutput) {
-			output = output / projectedValue;
+			output = output / Math.abs(projectedValue);
 		}
 		
 		return output;
