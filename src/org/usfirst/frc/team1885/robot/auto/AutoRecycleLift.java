@@ -6,14 +6,14 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
-public class AutoRecyleLift extends AutoCommand{
+public class AutoRecycleLift extends AutoCommand{
 	private PID heightControlLoop;
 	private double height;
 	private double error;
 	private double heightOutput;
 	private double heightTraveled;
 	
-	public AutoRecyleLift(double h, double e) {
+	public AutoRecycleLift(double h, double e) {
 		heightControlLoop = new PID(0.08, 0.0001, 0);
 		height = h;
 		error = e;

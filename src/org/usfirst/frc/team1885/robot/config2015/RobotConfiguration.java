@@ -63,6 +63,8 @@ public class RobotConfiguration {
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_LOWER_LIMIT, 11 );
         SensorInputControl.getInstance().addSensor( SensorType.LINE_SENSOR, 12 );
         SensorInputControl.getInstance().addSensor( SensorType.MAGNET_SENSOR, 13 );
+        SensorInputControl.getInstance().addSensor( SensorType.TOUCH_SENSOR_TOTE_LEFT, 14 );
+        SensorInputControl.getInstance().addSensor( SensorType.TOUCH_SENSOR_TOTE_RIGHT, 15 );
         SensorInputControl.getInstance().setUpNAVX( (byte)(100), SerialPort.Port.kMXP );
         SensorInputControl.getInstance().addLidarSensor( I2C.Port.kMXP );
         SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).start();

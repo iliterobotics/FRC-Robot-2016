@@ -79,7 +79,8 @@ public class SensorInputControl {
 	public boolean addSensor(SensorType sensor_type, int port) {
 		if (sensor_type.name().contains("LIMIT")
 				|| sensor_type.name().contains("LINE")
-				|| sensor_type.name().contains("MAGNET")) {
+				|| sensor_type.name().contains("MAGNET")
+				|| sensor_type.name().contains("TOUCH")) {
 			digital_inputs.put(sensor_type, new DigitalInput(port));
 		} else {
 			return false;

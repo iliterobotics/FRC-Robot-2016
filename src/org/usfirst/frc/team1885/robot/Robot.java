@@ -4,6 +4,7 @@ package org.usfirst.frc.team1885.robot;
 import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.auto.AutoArc;
+import org.usfirst.frc.team1885.robot.auto.AutoClaw;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
 import org.usfirst.frc.team1885.robot.auto.AutoToteLift;
@@ -44,6 +45,7 @@ public class Robot extends SampleRobot
     private RobotControl robotControl;
     private RecycleBinLift recycleBinLift;
     private ToteLift toteLift;
+    private LinkedList<AutoCommand> commands;
     
     public Robot() {
     	try {
@@ -109,30 +111,9 @@ public class Robot extends SampleRobot
     }
     
     public void autonomous() {
-    	LinkedList<AutoCommand> commands;
     	commands = new LinkedList<AutoCommand>();
     	
-//    	commands.add(new AutoDriveForward(3.0*12,3.0));
-////    	commands.add(new AutoWait(5000.0));
-//    	commands.add(new AutoToteLift(100, 5));
-//    	commands.add(new AutoDriveForward(3.0*12,6.0));
-////    	commands.add(new AutoWait(5000.0));
-//    	commands.add(new AutoToteLift(100, 5));
-//    	commands.add(new AutoDriveForward(3.0*12,6.0));
-////    	commands.add(new AutoWait(5000.0));
-//    	commands.add(new AutoToteLift(100, 5));
-//    	commands.add(new AutoTurn(45, 5));
-    	
-    	commands.add(new AutoTurn(180, 1));
-//    	commands.add(new AutoDriveForward(1*12, 1, 2));
-//    	commands.add(new AutoToteLift(1210, 10));
-//    	commands.add(new AutoTurn(180, 5));
-//    	commands.add(new AutoDriveForward(48, 1, 2));
-//    	commands.add(new AutoToteLift(1210, 10));
-//    	commands.add(new AutoTurn(-120, 5));
-//    	commands.add(new AutoDriveForward(5*12, 1, 2));
-//    	commands.add(new AutoToteLift(-1210, 10));
-    	    	
+    	autoOneBinOneTote();
     	
     	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
     		
@@ -155,6 +136,30 @@ public class Robot extends SampleRobot
     	
     	DrivetrainControl.getInstance().update(0,0);
     	DrivetrainControl.getInstance().updateOutputs();
+    }
+    
+    public void autoOneBinOneTote() {
+    	commands.add(new AutoClaw(false, false, true)); //rotation, extension, pinch
+    	commands.add(new AutoTurn(270, 1));
+    	commands.add(new AutoDriveForward(.5 *12, 1, 2));
+    	commands.add(new AutoToteLift(1210, 10));
+    	commands.add(new AutoDriveForward(-5 * 12, 1, 2));
+    	commands.add(new AutoToteLift(-1210, 10));
+    	commands.add(new AutoTurn(180, 1));
+    }
+    public void autoOneBinThreeTotes() {
+    	commands.add(new AutoToteLift(2 * 1210, 10));
+    	commands.add(new AutoDriveForward(1 * 12, 1, 2));
+    	commands.add(new AutoTurn(-60, 1));
+    	commands.add(new AutoDriveForward(.5 * 12, 1, 2)); 
+    	commands.add(new AutoToteLift(1 * 1210, 10));
+    	commands.add(new AutoDriveForward(6 * 12, 1, 2));
+    	commands.add(new AutoToteLift(1 * 1210, 10));
+    	commands.add(new AutoDriveForward(6 * 12, 1, 2));
+    	commands.add(new AutoToteLift(1 * 1210, 10));
+    	commands.add(new AutoTurn(-90, 1));
+    	commands.add(new AutoDriveForward(5 * 12, 1, 2));
+  
     }
 
 }

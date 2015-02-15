@@ -40,13 +40,18 @@ public class ClawControl
 	            pinchState = false;
 	        }
 	}
+	public void updateClaw(boolean rotationState, boolean extensionState, boolean pinchState){
+		this.rotationState = rotationState;
+		this.extensionState = extensionState;
+		this.pinchState = pinchState;
+	}
 	public boolean clawWristRotationState(){
 	    return rotationState;
 	}
 	public boolean clawWristExtentionState(){
 	    return extensionState;
 	}
-	public boolean clawState(){
+	public boolean clawPinchState(){
 	    return pinchState;
 	}
 	public void updateOutputs() {
