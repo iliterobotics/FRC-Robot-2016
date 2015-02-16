@@ -140,6 +140,12 @@ public class Robot extends SampleRobot
     	DrivetrainControl.getInstance().updateOutputs();
     }
     
+    public void autoOneTote() {
+    	commands.add(new AutoToteLift(1210, 10));
+    	commands.add(new AutoDriveForward(-7 *12, 1, 2));
+    	commands.add(new AutoToteLift(-1210, 10));
+    }
+    
     public void autoOneBinOneTote() {
     	commands.add(new AutoClaw(true, true, true)); //rotation, extension, pinch
     	commands.add(new AutoDriveForward(.5 *12, 1, 2));
