@@ -9,6 +9,7 @@ import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
 import org.usfirst.frc.team1885.robot.auto.AutoToteLift;
 import org.usfirst.frc.team1885.robot.auto.AutoTurn;
+import org.usfirst.frc.team1885.robot.auto.AutoWait;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.comms.DataTelemetryService;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
@@ -146,14 +147,47 @@ public class Robot extends SampleRobot
     	commands.add(new AutoToteLift(-1210, 10));
     }
     public void autoPushOneBinOneTote() {
-    	commands.add(new AutoDriveForward(16, 1, 2));
+    	commands.add(new AutoDriveForward(30, 1, 2));
     	commands.add(new AutoDriveForward(-6, 1, 2));
     	commands.add(new AutoTurn(90, 5));
-    	commands.add(new AutoToteLift(3 * 1210, 10));
+    	
+    	commands.add(new AutoCommand() {
+
+    		AutoDriveForward driveFwd = new AutoDriveForward(10, 1, 2);
+    		AutoToteLift toteLift = new AutoToteLift(3 * 1210, 10);
+    		
+			@Override
+			public boolean init() {
+				// TODO Auto-generated method stub
+				return driveFwd.init() && toteLift.init();
+			}
+
+			@Override
+			public boolean execute() {
+				return driveFwd.execute() && toteLift.execute();
+			}
+
+			@Override
+			public boolean updateOutputs() {
+				return driveFwd.updateOutputs() && toteLift.updateOutputs();
+			}
+
+			@Override
+			public void reset() {
+				driveFwd.reset();
+				toteLift.reset();
+			}
+    		
+    	});
+    	commands.add(new AutoDriveForward(-5, 1, 2));
     	commands.add(new AutoTurn(-90, 5));
-    	commands.add(new AutoDriveForward(7, 1, 2));
+    	commands.add(new AutoDriveForward(18, 1, 2));
+    	commands.add(new AutoWait(250));
+//     	commands.add(new AutoToteLift(-1 * 1210, 10));
+     	commands.add(new AutoDriveForward(3, 1, 2));
     	commands.add(new AutoToteLift(1 * 1210, 10));
     	commands.add(new AutoDriveForward(-7 * 12, 1, 2));
+    	commands.add(new AutoToteLift(-1 * 1210, 10));
     	
     }
     public void autoOneBinOneTote() {

@@ -74,10 +74,10 @@ public class ToteLift implements Module{
 
 				liftIncrementHeight = 1210;
 
-				if (DriverInputControl.getInstance().getButton(
-						RobotButtonType.TOTE_LIFT_NUDGE_UP)) {
-					liftIncrementHeight = 250;
-				}
+//				if (DriverInputControl.getInstance().getButton(
+//						RobotButtonType.TOTE_LIFT_NUDGE_UP)) {
+//					liftIncrementHeight = 250;
+//				}
 			}
 
 			state = MotorState.UP;
@@ -97,12 +97,12 @@ public class ToteLift implements Module{
 
 				liftIncrementHeight = -1210;
 
-				if (DriverInputControl.getInstance().getButton(
-						RobotButtonType.TOTE_LIFT_NUDGE_DOWN)) {
-
-					liftIncrementHeight = -250;
-
-				}
+//				if (DriverInputControl.getInstance().getButton(
+//						RobotButtonType.TOTE_LIFT_NUDGE_DOWN)) {
+//
+//					liftIncrementHeight = -250;
+//
+//				}
 			}
 
 			state = MotorState.DOWN;
