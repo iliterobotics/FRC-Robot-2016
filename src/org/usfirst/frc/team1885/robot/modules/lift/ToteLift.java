@@ -36,7 +36,7 @@ public class ToteLift implements Module{
 		isIncrementing = false;
 		isDecrementing = false;
 	}
-
+s
 	public static ToteLift getInstance() {
 		if (instance == null) {
 			instance = new ToteLift();
@@ -63,8 +63,10 @@ public class ToteLift implements Module{
 	public void updateLift() {
 
 		if ((DriverInputControl.getInstance().getButton(
-				RobotButtonType.TOTE_LIFT_INCREMENT) || DriverInputControl
-				.getInstance().getButton(RobotButtonType.TOTE_LIFT_NUDGE_UP))
+				RobotButtonType.TOTE_LIFT_INCREMENT) //|| 
+//				DriverInputControl
+//				.getInstance().getButton(RobotButtonType.TOTE_LIFT_NUDGE_UP)
+				)
 				&& !isIncrementing || isIncrementing) {
 
 			if (!isIncrementing) {
@@ -85,8 +87,9 @@ public class ToteLift implements Module{
 		}
 
 		if ((DriverInputControl.getInstance().getButton(
-				RobotButtonType.TOTE_LIFT_DECREMENT) || DriverInputControl
-				.getInstance().getButton(RobotButtonType.TOTE_LIFT_NUDGE_DOWN))
+				RobotButtonType.TOTE_LIFT_DECREMENT) //|| DriverInputControl
+//				.getInstance().getButton(RobotButtonType.TOTE_LIFT_NUDGE_DOWN)
+				)
 				&& !isDecrementing || isDecrementing) {
 
 			if (!isDecrementing) {

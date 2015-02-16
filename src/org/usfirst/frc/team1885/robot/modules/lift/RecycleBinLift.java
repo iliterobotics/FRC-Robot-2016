@@ -46,6 +46,7 @@ public class RecycleBinLift implements Module{
         return liftSpeed;
     }
     public void updateLift() {
+    	
         if (DriverInputControl.getInstance().getPressureButton(
                 RobotButtonType.RECYCLE_BIN_LIFT) > DEAD_ZONE) {
             state = MotorState.DOWN;
@@ -57,17 +58,22 @@ public class RecycleBinLift implements Module{
             liftSpeed = DriverInputControl.getInstance().getPressureButton(
                     RobotButtonType.RECYCLE_BIN_LIFT);
 
+        } else {
+        	state = MotorState.STOP;
+        	liftSpeed = 0;
         }
+        updateLift(liftSpeed);
     }
     public void updateLift(double speed) {
         liftSpeed = speed;
         if (speed > 0) {
-            state = MotorState.UP;
-        } else if (speed < 0) {
             state = MotorState.DOWN;
+        } else if (speed < 0) {
+            state = MotorState.UP;
         } else {
             state = MotorState.STOP;
         }
+        
         if (state == MotorState.UP) {
             if (SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.RECYCLE_BIN_UPPER_LIMIT).get()) {
@@ -75,8 +81,9 @@ public class RecycleBinLift implements Module{
                 stop();
             }
         }
+        
         if (state == MotorState.DOWN) {
-            if (SensorInputControl.getInstance()
+            if (!SensorInputControl.getInstance()
                     .getLimitSwitch(SensorType.RECYCLE_BIN_LOWER_LIMIT).get()) {
                 hasBin = false;
                 stop();
@@ -100,7 +107,7 @@ public class RecycleBinLift implements Module{
     }
     
     public void updateOutputs() {
-    	RobotControl.getInstance().updateRecycleMotor(liftSpeed);
+    	RobotControl.getInstance().updateRecycleMotor(-liftSpeed);
     }
 	@Override
 	public void update() {

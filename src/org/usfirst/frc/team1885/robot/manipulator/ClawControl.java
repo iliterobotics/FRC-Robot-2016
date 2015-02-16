@@ -13,7 +13,14 @@ public class ClawControl
 	private boolean extensionState;
 	private boolean pinchState;
 	
+	private boolean prevWristToggleState = false;
+	private boolean prevElbowToggleState = false;
+	private boolean prevClawState = false;
+	
 	protected ClawControl(){
+		rotationState = false;
+		extensionState = false;
+		pinchState = false;
 	}
 	public static ClawControl getInstance(){
 	    if(instance == null){
@@ -22,23 +29,22 @@ public class ClawControl
 	    return instance;
 	}
 	public void updateClaw(){
-	        if (DriverInputControl.getInstance().getPressureButton(RobotButtonType.WRIST_ROTATION) >= .35) {
-	            rotationState = true;
-	    	} else{
-	            rotationState = false;
-	        }
+		
+	        if (DriverInputControl.getInstance().getButton(RobotButtonType.WRIST_ROTATION) && !prevWristToggleState) {
+	            rotationState = !rotationState;
+	    	}
 	        
-	        if (DriverInputControl.getInstance().getPressureButton(RobotButtonType.WRIST_EXTENSION) >= .35) {
-	            extensionState = true;
-	    	} else{
-	            extensionState = false;
-	        }
+	        if (DriverInputControl.getInstance().getButton(RobotButtonType.WRIST_EXTENSION) && !prevElbowToggleState) {
+	            extensionState = !extensionState;
+	    	}
 	        
-	        if (DriverInputControl.getInstance().getButton(RobotButtonType.CLAW)) {
-	            pinchState = true;
-	    	} else{
-	            pinchState = false;
-	        }
+	        if (DriverInputControl.getInstance().getButton(RobotButtonType.CLAW) && !prevClawState) {
+	            pinchState = !pinchState;
+	    	}
+	        
+	        prevWristToggleState = DriverInputControl.getInstance().getButton(RobotButtonType.WRIST_ROTATION);
+	        prevElbowToggleState = DriverInputControl.getInstance().getButton(RobotButtonType.WRIST_EXTENSION);
+	        prevClawState = DriverInputControl.getInstance().getButton(RobotButtonType.CLAW);
 	}
 	public void updateClaw(boolean rotationState, boolean extensionState, boolean pinchState){
 		this.rotationState = rotationState;
