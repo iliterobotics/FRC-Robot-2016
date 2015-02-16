@@ -115,7 +115,7 @@ public class Robot extends SampleRobot
     public void autonomous() {
     	commands = new LinkedList<AutoCommand>();
     	
-    	autoOneBinOneTote();
+    	autoPushOneBinOneTote();
     	
     	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
     		
@@ -145,7 +145,17 @@ public class Robot extends SampleRobot
     	commands.add(new AutoDriveForward(-7 *12, 1, 2));
     	commands.add(new AutoToteLift(-1210, 10));
     }
-    
+    public void autoPushOneBinOneTote() {
+    	commands.add(new AutoDriveForward(16, 1, 2));
+    	commands.add(new AutoDriveForward(-6, 1, 2));
+    	commands.add(new AutoTurn(90, 5));
+    	commands.add(new AutoToteLift(3 * 1210, 10));
+    	commands.add(new AutoTurn(-90, 5));
+    	commands.add(new AutoDriveForward(7, 1, 2));
+    	commands.add(new AutoToteLift(1 * 1210, 10));
+    	commands.add(new AutoDriveForward(-7 * 12, 1, 2));
+    	
+    }
     public void autoOneBinOneTote() {
     	commands.add(new AutoClaw(true, true, true)); //rotation, extension, pinch
     	commands.add(new AutoDriveForward(.5 *12, 1, 2));
