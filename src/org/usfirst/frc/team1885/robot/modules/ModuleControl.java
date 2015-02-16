@@ -7,7 +7,7 @@ import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
 
-public class ModuleControl {
+public class ModuleControl{
 	private static ModuleControl instance = null;
 	private HashMap<ModuleType, Module> modules;
 	
