@@ -145,11 +145,26 @@ public class Robot extends SampleRobot
     
     
     public void autoOneTote() {
+    	//Picks up one tote, drives backwards to autozone, drops tote
     	commands.add(new AutoToteLift(1210, 10));
     	commands.add(new AutoDriveForward(-7 *12, 1, 2));
     	commands.add(new AutoToteLift(-1210, 10));
     }
+    public void autoOneToteTwoBin() {
+    	//Picks up one tote, pivots and pinches the bin, drives forward and lifts the bin, turn 90 degrees and drive to autozone
+    	commands.add(new AutoToteLift(1 * 1210, 10));
+    	commands.add(new AutoTurn(-45, 5));
+    	commands.add(new AutoDriveForward(1 * 12, 1, 2));
+    	commands.add(new AutoTurn(-45, 5));
+    	commands.add(new AutoClaw(false, false, true));
+    	commands.add(new AutoDriveForward(6 * 12, 1, 2));
+    	commands.add(new AutoToteLift(3 * 1210, 10));
+    	commands.add(new AutoTurn(90, 5));
+    	commands.add(new AutoDriveForward(7 * 12, 1, 2));
+    	
+    }
     public void autoOneToteOneBin() {
+    	//Lifts up tote, pivot and lift up bin, drive backwards to autozone
 //    	commands.add(new AutoDriveForward(3, 1, 2));
     	commands.add(new AutoToteLift(1*1190, 10));
     	commands.add(new AutoToteLift(2*1210, 10));
@@ -163,6 +178,8 @@ public class Robot extends SampleRobot
 //    	commands.add(new AutoToteLift(-3 * 1210, 10));
     }
     public void autoPushOneBinOneTote() {
+    	//Pushes the tote out of the way, lifts bin, lifts tote, drives backwards to autozone, drops totes
+    	//Pushes one bin out of the way, pivots and lifts 
     	commands.add(new AutoDriveForward(30, 1, 2));
     	commands.add(new AutoDriveForward(-6, 1, 2));
     	commands.add(new AutoTurn(90, 5));
@@ -206,7 +223,8 @@ public class Robot extends SampleRobot
     	
     }
     public void autoOneBinOneTote() {
-    	commands.add(new AutoClaw(true, true, true)); //rotation, extension, pinch
+    	//Pinches the bin, lifts the tote
+    	commands.add(new AutoClaw(false, false, true)); //rotation, extension, pinch
     	commands.add(new AutoDriveForward(.5 *12, 1, 2));
     	commands.add(new AutoTurn(90, 1));
     	commands.add(new AutoDriveForward(2.0 *12, 3, 2));
@@ -218,6 +236,7 @@ public class Robot extends SampleRobot
 //    	commands.add(new AutoTurn(180, 1));
     }
     public void autoOneBinThreeTotes() {
+    	//
     	commands.add(new AutoToteLift(2 * 1210, 10));
     	commands.add(new AutoDriveForward(1 * 12, 1, 2));
     	commands.add(new AutoTurn(-60, 1));
