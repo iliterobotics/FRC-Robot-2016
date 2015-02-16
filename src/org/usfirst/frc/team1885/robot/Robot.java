@@ -116,7 +116,7 @@ public class Robot extends SampleRobot
     public void autonomous() {
     	commands = new LinkedList<AutoCommand>();
     	
-    	autoPushOneBinOneTote();
+    	autoOneToteOneBin();
     	
     	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
     		
@@ -141,10 +141,22 @@ public class Robot extends SampleRobot
     	DrivetrainControl.getInstance().updateOutputs();
     }
     
+    
+    
+    
     public void autoOneTote() {
     	commands.add(new AutoToteLift(1210, 10));
     	commands.add(new AutoDriveForward(-7 *12, 1, 2));
     	commands.add(new AutoToteLift(-1210, 10));
+    }
+    public void autoOneToteOneBin() {
+    	commands.add(new AutoDriveForward(24, 1, 2));
+    	commands.add(new AutoToteLift(1*1210, 10));
+    	commands.add(new AutoTurn(90, 5));
+    	commands.add(new AutoToteLift(3*1210, 10));
+    	commands.add(new AutoTurn(90, 5));
+    	commands.add(new AutoDriveForward(7*12, 1, 2));
+    	commands.add(new AutoToteLift(-3 * 1210, 10));
     }
     public void autoPushOneBinOneTote() {
     	commands.add(new AutoDriveForward(30, 1, 2));
@@ -183,7 +195,6 @@ public class Robot extends SampleRobot
     	commands.add(new AutoTurn(-90, 5));
     	commands.add(new AutoDriveForward(18, 1, 2));
     	commands.add(new AutoWait(250));
-//     	commands.add(new AutoToteLift(-1 * 1210, 10));
      	commands.add(new AutoDriveForward(3, 1, 2));
     	commands.add(new AutoToteLift(1 * 1210, 10));
     	commands.add(new AutoDriveForward(-7 * 12, 1, 2));
