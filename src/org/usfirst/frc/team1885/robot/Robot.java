@@ -141,13 +141,16 @@ public class Robot extends SampleRobot
     }
     
     public void autoOneBinOneTote() {
-    	commands.add(new AutoClaw(false, false, true)); //rotation, extension, pinch
-    	commands.add(new AutoTurn(270, 1));
+    	commands.add(new AutoClaw(true, true, true)); //rotation, extension, pinch
     	commands.add(new AutoDriveForward(.5 *12, 1, 2));
+    	commands.add(new AutoTurn(90, 1));
+    	commands.add(new AutoDriveForward(2.0 *12, 3, 2));
+    	commands.add(new AutoTurn(90, 1));
+    	commands.add(new AutoDriveForward(3.5 *12, 1, 2));
     	commands.add(new AutoToteLift(1210, 10));
-    	commands.add(new AutoDriveForward(-5 * 12, 1, 2));
+    	commands.add(new AutoDriveForward(-6 * 12, 1, 2));
     	commands.add(new AutoToteLift(-1210, 10));
-    	commands.add(new AutoTurn(180, 1));
+//    	commands.add(new AutoTurn(180, 1));
     }
     public void autoOneBinThreeTotes() {
     	commands.add(new AutoToteLift(2 * 1210, 10));
@@ -163,14 +166,15 @@ public class Robot extends SampleRobot
     	commands.add(new AutoDriveForward(5 * 12, 1, 2));
     }
     public void autoSimple() {
-        commands.add(new AutoToteLift(2 * 1210, 10));
-        commands.add(new AutoDriveForward(1 * 12, 1, 2));
-        commands.add(new AutoTurn(-60, 1));
-        commands.add(new AutoDriveForward(.5 * 12, 1, 2)); 
+        commands.add(new AutoToteLift(3 * 1210, 10));
+        commands.add(new AutoDriveForward(1.5 * 12, 1, 2));
+        commands.add(new AutoTurn(-55, 1));
+        commands.add(new AutoDriveForward(.5 * 12, 1, 2));
+//        commands.add(new AutoToteLift(-1 * 1210, 10));
         commands.add(new AutoToteLift(1 * 1210, 10));
         commands.add(new AutoTurn(-90, 1));
         commands.add(new AutoDriveForward(5 * 12, 1, 2));
-  
+        commands.add(new AutoToteLift(-1 * 1210, 10));
     }
 
 }

@@ -46,10 +46,10 @@ public class ClawControl
 	        prevElbowToggleState = DriverInputControl.getInstance().getButton(RobotButtonType.WRIST_EXTENSION);
 	        prevClawState = DriverInputControl.getInstance().getButton(RobotButtonType.CLAW);
 	}
-	public void updateClaw(boolean rotationState, boolean extensionState, boolean pinchState){
+	public void updateClaw(boolean rotationState, boolean extensionState, boolean pState){
 		this.rotationState = rotationState;
 		this.extensionState = extensionState;
-		this.pinchState = pinchState;
+		this.pinchState = pState;
 	}
 	public boolean clawWristRotationState(){
 	    return rotationState;

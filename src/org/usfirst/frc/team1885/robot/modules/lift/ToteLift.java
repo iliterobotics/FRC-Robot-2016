@@ -36,7 +36,7 @@ public class ToteLift implements Module{
 		isIncrementing = false;
 		isDecrementing = false;
 	}
-s
+
 	public static ToteLift getInstance() {
 		if (instance == null) {
 			instance = new ToteLift();
@@ -272,7 +272,7 @@ s
 
 	public void updateOutputs() {
 		RobotControl.getInstance().updateToteMotor(-liftSpeed);
-		RobotControl.getInstance().updateToteStop(!isBraked);
+		RobotControl.getInstance().updateToteStop(isBraked);
 	}
 
 	@Override

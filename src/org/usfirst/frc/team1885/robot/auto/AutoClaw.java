@@ -26,9 +26,6 @@ public class AutoClaw extends AutoCommand{
 		extensionState = false;
 		pinchState = false;
 		
-		RobotControl.getInstance().updateWristRotationPneumatics(Value.kReverse);
-		RobotControl.getInstance().updateWristExtensionPneumatics(Value.kReverse);
-		RobotControl.getInstance().updateGrabberPneumatics(pinchState);
 	}
 
 	public boolean init() {
@@ -37,19 +34,7 @@ public class AutoClaw extends AutoCommand{
 	}
 
 	public boolean updateOutputs() {
-		if (ClawControl.getInstance().clawWristRotationState()) {
-			RobotControl.getInstance().updateWristRotationPneumatics(Value.kForward);
-    	} else{
-    		RobotControl.getInstance().updateWristRotationPneumatics(Value.kReverse);
-        }
-        
-        if (ClawControl.getInstance().clawWristExtentionState()) {
-        	RobotControl.getInstance().updateWristExtensionPneumatics(Value.kForward);
-    	} else{
-    		RobotControl.getInstance().updateWristExtensionPneumatics(Value.kReverse);
-        }
-        
-        RobotControl.getInstance().updateGrabberPneumatics(ClawControl.getInstance().clawPinchState());
+		ClawControl.getInstance().updateOutputs();
         return true;
 	}
 

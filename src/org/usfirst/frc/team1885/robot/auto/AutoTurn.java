@@ -15,7 +15,7 @@ public class AutoTurn extends AutoCommand{
 	private double leftDriveOutput;
 	private double rightDriveOutput;
 	
-	private static final double MAX_TURN_SPEED = .75;
+	private static final double MAX_TURN_SPEED = 1.0;
 	
 //	private static final double MIN_TURN_SPEED = .25;
 	
@@ -24,7 +24,7 @@ public class AutoTurn extends AutoCommand{
 	
 	
 	public AutoTurn(double inputAngle, double inputError) {
-		angleControlLoop = new PID(.45, 0.0009, 0);
+		angleControlLoop = new PID(.6, 0.0015, 0);
 		angleControlLoop.setScalingValue(inputAngle);
 		angle = inputAngle;
 		relativeAngle = 0;
