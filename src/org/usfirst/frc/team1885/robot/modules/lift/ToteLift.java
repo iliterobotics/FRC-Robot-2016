@@ -22,15 +22,19 @@ public class ToteLift implements Module{
 	private final double DEAD_ZONE = .1;
 	private boolean isIncrementing;
 	private boolean isBraked;
+	private boolean isSupported;
+	private boolean liftSupported = false;
 
 	private boolean isResetting;
 
 	private double liftIncrementHeight = 1210;
 	private boolean isDecrementing;
+	
+	private boolean prevSupportState = false;
 
 	protected ToteLift() {
 		this.state = MotorState.STOP;
-		distanceControlLoop = new PID(0.01, 0.00001, 0);
+		distanceControlLoop = new PID(0.01, 0.00002, 0);
 		isBraked = false;
 		liftSpeed = 0;
 		isIncrementing = false;
@@ -137,6 +141,7 @@ public class ToteLift implements Module{
 			this.isIncrementing = false;
 			this.isDecrementing = false;
 			this.isResetting = false;
+			this.isSupported = false;
 			this.reset();
 			liftSpeed = DriverInputControl.getInstance().getPressureButton(
 					RobotButtonType.TOTE_LIFT);
@@ -145,6 +150,7 @@ public class ToteLift implements Module{
 			this.reset();
 			this.isIncrementing = false;
 			this.isDecrementing = false;
+			this.isSupported = false;
 			this.isResetting = false;
 			state = MotorState.UP;
 			liftSpeed = DriverInputControl.getInstance().getPressureButton(
@@ -156,18 +162,25 @@ public class ToteLift implements Module{
 
 		if (state == MotorState.STOP) {
 			isBraked = true;
+			this.isSupported = true;
 		} else {
 			isBraked = false;
 		}
 
-		if (DriverInputControl.getInstance().getButton(
-				RobotButtonType.HARD_STOP)) {
-			isBraked = false;
-		}
+		if (DriverInputControl.getInstance().getButton(RobotButtonType.LIFT_SUPPORT) && !prevSupportState) {
+            this.liftSupported = !this.liftSupported;
+            
+    	}
+		
+		this.isSupported = this.liftSupported;
+		
+		prevSupportState = DriverInputControl.getInstance().getButton(RobotButtonType.LIFT_SUPPORT);
+		
 
 		if (state == MotorState.UP) {
 			liftSpeed = (liftSpeed < DEFAULT_LIFT_SPEED ? DEFAULT_LIFT_SPEED
 					: liftSpeed);
+			this.isSupported = false;
 			if (SensorInputControl.getInstance()
 					.getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {
 				stop();
@@ -175,6 +188,7 @@ public class ToteLift implements Module{
 		} else if (state == MotorState.DOWN) {
 			liftSpeed = (liftSpeed > DEFAULT_LIFT_SPEED_DOWN ? DEFAULT_LIFT_SPEED_DOWN
 					: liftSpeed);
+			this.isSupported = false;
 			// liftSpeed = -DEFAULT_LIFT_SPEED;
 		} else {
 			stop();
@@ -194,11 +208,13 @@ public class ToteLift implements Module{
 		if (state == MotorState.UP) {
 			liftSpeed = (liftSpeed < DEFAULT_LIFT_SPEED ? DEFAULT_LIFT_SPEED
 					: liftSpeed);
+			this.isSupported = false;
 			if (SensorInputControl.getInstance()
 					.getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {
 				stop();
 			}
 		} else if (state == MotorState.DOWN) {
+			this.isSupported = false;
 			liftSpeed = (liftSpeed > DEFAULT_LIFT_SPEED_DOWN ? DEFAULT_LIFT_SPEED_DOWN
 					: liftSpeed);
 			// liftSpeed = -DEFAULT_LIFT_SPEED;
@@ -208,8 +224,10 @@ public class ToteLift implements Module{
 		
 		if (state == MotorState.STOP) {
 			isBraked = true;
+			this.isSupported = true;
 		} else {
 			isBraked = false;
+			this.isSupported = false;
 		}
 
 		if (state == MotorState.UP) {
@@ -273,6 +291,7 @@ public class ToteLift implements Module{
 	public void updateOutputs() {
 		RobotControl.getInstance().updateToteMotor(-liftSpeed);
 		RobotControl.getInstance().updateToteStop(isBraked);
+		RobotControl.getInstance().updateToteSupport(isSupported);
 	}
 
 	@Override
