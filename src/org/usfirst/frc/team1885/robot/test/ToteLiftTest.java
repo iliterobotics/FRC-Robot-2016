@@ -17,7 +17,6 @@ public class ToteLiftTest {
 		liftIt(12, -.5);
 		stopIt();
 		ToteLift.getInstance().updateLift(0.42);
-		ToteLift.getInstance().cycle();
 		}
 	}
 	public void stopIt()

@@ -14,6 +14,29 @@ public class RobotStatusService
 	private SensorInputControl sic = SensorInputControl.getInstance();	
 
 	private TelemetryMessage tm = new TelemetryMessage();
+	
+	public void update() {
+		setToteLiftSpeed();
+		setToteReset();
+		setToteState();
+		setToteBrake();
+		setRecycleBinHasBin();
+		setRecycleBinSpeed();
+		setRecycleBinState();
+		setLeftDriveSpeed();
+		setRightDriveSpeed();
+		setDriveMode();
+		setIsTurning();
+		setUpperRecycleLimitSensor();
+		setLowerRecycleLimitSensor();
+		setUpperToteLimitSwitch();
+		setLowerToteLimitSwitch();
+		setLeftTouchSensor();
+		setRightTouchSensor();
+		setLineSensor();
+		setMagnetSensor();
+	}
+	
 	public void setToteLiftSpeed()
 	{
 		tm.setToteLiftSpeed(tl.getSpeed());
@@ -75,7 +98,7 @@ public class RobotStatusService
 	}
 	public void setLowerToteLimitSwitch()
 	{
-		tm.setLowerToteLimitSwitch(sic.getLimitSwitch(SensorType.TOTE_LOWER_LIMIT_SWITCH).get());
+		tm.setLowerToteLimitSwitch(false);
 	}
 	public void setLeftTouchSensor()
 	{
@@ -93,4 +116,14 @@ public class RobotStatusService
 	{
 		tm.setMagnetSensor(sic.getLimitSwitch(SensorType.MAGNET_SENSOR).get());
 	}
+
+	public TelemetryMessage getTm() {
+		return tm;
+	}
+
+	public void setTm(TelemetryMessage tm) {
+		this.tm = tm;
+	}
+	
+	
 }

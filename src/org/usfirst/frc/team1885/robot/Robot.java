@@ -3,7 +3,6 @@ package org.usfirst.frc.team1885.robot;
 
 import java.util.LinkedList;
 
-import org.usfirst.frc.team1885.robot.auto.AutoArc;
 import org.usfirst.frc.team1885.robot.auto.AutoClaw;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
@@ -11,13 +10,12 @@ import org.usfirst.frc.team1885.robot.auto.AutoToteLift;
 import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.auto.AutoWait;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.comms.DataTelemetryService;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
+import org.usfirst.frc.team1885.robot.comms.RobotStatusService;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.Alignment;
-import org.usfirst.frc.team1885.robot.modules.drivetrain.BackupRoutine;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
@@ -65,8 +63,8 @@ public class Robot extends SampleRobot
     	this.recycleBinLift = RecycleBinLift.getInstance();
     	this.toteLift = ToteLift.getInstance();
     	
-//    	RobotServer.getInstance().setup(4444);
-//    	RobotServer.getInstance().startServer();
+    	RobotServer.getInstance().setup(4444);
+    	RobotServer.getInstance().startServer();
     	
     }    
     /**
@@ -79,19 +77,16 @@ public class Robot extends SampleRobot
     	
     	boolean magnetState = false;
     	
-    	DataTelemetryService telemetryService = new DataTelemetryService();
+    	RobotStatusService robotStatusService = new RobotStatusService();
     	
         while (isOperatorControl() && isEnabled()) {
         	
-//        	try {
-//        		telemetryService.setDigitalInputs();
-//        		telemetryService.setRelays();
-//        		telemetryService.setSolenoids();
-//        		telemetryService.setTalons();
-//        		RobotServer.getInstance().send(telemetryService.getTm());
-//        	} catch(Exception e) {
-//        		e.printStackTrace();
-//        	}
+        	try {
+        		robotStatusService.update();
+        		RobotServer.getInstance().send(robotStatusService.getTm());
+        	} catch(Exception e) {
+        		e.printStackTrace();
+        	}
         	
 //        	System.out.println(SensorInputControl.getInstance().getNAVX().getYaw360());
         	

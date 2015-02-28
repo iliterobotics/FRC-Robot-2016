@@ -96,7 +96,7 @@ public class RobotServer implements Runnable {
 		public void run() {
 			try {
 
-				inStream = new ObjectInputStream(robo.client.getInputStream());
+//				inStream = new ObjectInputStream(robo.client.getInputStream());
 				outStream = new ObjectOutputStream(
 						robo.client.getOutputStream());
 				// out = new PrintWriter(client.getOutputStream(), true);
@@ -163,13 +163,13 @@ public class RobotServer implements Runnable {
 	public void send(Message message) {
 		try {
 
-			System.out.println("Telemetry Message Built");
+//			System.out.println("Telemetry Message Built");
 			outStream.writeObject(message);
 			outStream.flush();
 			outStream.reset();
-			System.out.println("Telemetry Message Sent");
+//			System.out.println("Telemetry Message Sent");
 		} catch (Exception e) {
-			System.out.println("Error : " + e);
+//			System.out.println("Error : " + e);
 		}
 	}
 }
