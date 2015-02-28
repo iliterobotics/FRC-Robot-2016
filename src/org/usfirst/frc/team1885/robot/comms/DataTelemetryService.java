@@ -3,6 +3,9 @@ package org.usfirst.frc.team1885.robot.comms;
 import java.util.ArrayList;
 
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
+import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
+import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.DigitalInput;
@@ -13,9 +16,13 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Talon;
 
 public class DataTelemetryService {
-	private RobotControl rc = RobotControl.getInstance();
-	private TelemetryMessage tm = new TelemetryMessage();
+	private ToteLift tl = ToteLift.getInstance();
+	private RecycleBinLift rb = RecycleBinLift.getInstance();
+	private DrivetrainControl dt = DrivetrainControl.getInstance();
 	private SensorInputControl sic = SensorInputControl.getInstance();
+	private RobotControl rc = RobotControl.getInstance();
+
+	private TelemetryMessage tm = new TelemetryMessage();
 
 	public void setRelays() {
 		ArrayList<Relay> temp = (ArrayList<Relay>) rc.getRelay();
@@ -48,7 +55,7 @@ public class DataTelemetryService {
 			else
 				tm.setSolenoids(i, 1);
 		}
-		for (int i = 0; i < doubleSolenoids.size(); i+=2) {
+		for (int i = 0; i < doubleSolenoids.size(); i += 2) {
 			if (((DoubleSolenoid) doubleSolenoids.get(i)).get().equals(0))
 				tm.setSolenoids(i + solenoids.size(), 0);
 			else if (((DoubleSolenoid) doubleSolenoids.get(i)).get().equals(1))
@@ -81,25 +88,15 @@ public class DataTelemetryService {
 	public void setTm(TelemetryMessage tm) {
 		this.tm = tm;
 	}
-	
-	
-	
+
 	/*
-	public void setAnalogInputs(){
-		ArrayList[] AnalogBase = sic.getDigitalInputs();
-		ArrayList TempAnalog1 = AnalogBase[0];
-		ArrayList TempAnalog2 = AnalogBase[1];
-		for (int i = 0; i < TempAnalog1.size(); i++) {
-			if (((TempAnalog1) TempAnalog1.get(i)).get())
-				tm.setAnalogInputs(i, 1);
-			else
-				tm.setAnalogInputs(i, 0);
-		}
-		for (int i = 0; i < TempAnalog2.size(); i++) {
-			tm.setAnalogInputs(i + TempAnalog1.size();
-					((TempAnalog2) (TempAnalog2.get(i))).get());
-		}
-	}
-	*/
-	
+	 * public void setAnalogInputs(){ ArrayList[] AnalogBase =
+	 * sic.getDigitalInputs(); ArrayList TempAnalog1 = AnalogBase[0]; ArrayList
+	 * TempAnalog2 = AnalogBase[1]; for (int i = 0; i < TempAnalog1.size(); i++)
+	 * { if (((TempAnalog1) TempAnalog1.get(i)).get()) tm.setAnalogInputs(i, 1);
+	 * else tm.setAnalogInputs(i, 0); } for (int i = 0; i < TempAnalog2.size();
+	 * i++) { tm.setAnalogInputs(i + TempAnalog1.size(); ((TempAnalog2)
+	 * (TempAnalog2.get(i))).get()); } }
+	 */
+
 }

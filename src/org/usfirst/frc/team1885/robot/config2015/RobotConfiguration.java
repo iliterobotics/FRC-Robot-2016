@@ -51,19 +51,19 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RIGHT_DRIFT, new JoystickButtonMatch( RobotJoystickType.RIGHT_DRIVE, 1 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.LEFT_DRIFT, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 1 ) );
 
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.HARD_STOP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.LIFT_SUPPORT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
         SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_LEFT_ENCODER, 0, 1 );
         SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_RIGHT_ENCODER, 2, 3 );
         SensorInputControl.getInstance().addSensor( SensorType.TOTE_ENCODER, 4, 5 );
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_ENCODER, 6, 7 );
         SensorInputControl.getInstance().addSensor( SensorType.TOTE_UPPER_LIMIT_SWITCH, 8 );
-        SensorInputControl.getInstance().addSensor( SensorType.TOTE_LOWER_LIMIT_SWITCH, 9 );
+//        SensorInputControl.getInstance().addSensor( SensorType.TOTE_LOWER_LIMIT_SWITCH, 9 );
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_UPPER_LIMIT, 10 );
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_LOWER_LIMIT, 11 );
         SensorInputControl.getInstance().addSensor( SensorType.LINE_SENSOR, 12 );
         SensorInputControl.getInstance().addSensor( SensorType.MAGNET_SENSOR, 13 );
         SensorInputControl.getInstance().addSensor( SensorType.TOUCH_SENSOR_TOTE_LEFT, 14 );
-        SensorInputControl.getInstance().addSensor( SensorType.TOUCH_SENSOR_TOTE_RIGHT, 15 );
+        SensorInputControl.getInstance().addSensor( SensorType.TOUCH_SENSOR_TOTE_RIGHT, 9 );
         SensorInputControl.getInstance().setUpNAVX( (byte)(100), SerialPort.Port.kMXP );
         SensorInputControl.getInstance().addLidarSensor( I2C.Port.kMXP );
         SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).start();
@@ -76,8 +76,9 @@ public class RobotConfiguration {
 
         RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC, 2);
         RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.TOTE_LIFT_STOP, 3);
-        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_ROTATION, 1, 7);
+        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_ROTATION, 1, 4);
         RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.WRIST_EXTENSION, 0, 6);
+        RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.LIFT_SUPPORT, 7);
 
         RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GRABBER_PNEUMATIC, 5);
 

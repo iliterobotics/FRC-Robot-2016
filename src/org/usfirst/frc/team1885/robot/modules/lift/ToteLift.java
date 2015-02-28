@@ -18,7 +18,9 @@ public class ToteLift implements Module{
 	private double liftSpeed;
 	private MotorState state;
 	private PID distanceControlLoop;
+	private PID motorPowerControlLoop;
 	private double distanceTraveled;
+	private double motorPower;
 	private final double DEAD_ZONE = .1;
 	private boolean isIncrementing;
 	private boolean isBraked;
@@ -34,7 +36,9 @@ public class ToteLift implements Module{
 
 	protected ToteLift() {
 		this.state = MotorState.STOP;
-		distanceControlLoop = new PID(0.01, 0.00002, 0);
+		distanceControlLoop = new PID(0.01, 0.00001, 0);
+//		encoderDistanceControlLoop = new PID(.01, .00001, 0);
+
 		isBraked = false;
 		liftSpeed = 0;
 		isIncrementing = false;
@@ -63,7 +67,14 @@ public class ToteLift implements Module{
 	public double getSpeed() {
 		return liftSpeed;
 	}
-
+	public boolean getIsBraked()
+	{
+		return isBraked;
+	}
+	public boolean getIsResetting()
+	{
+		return isResetting;
+	}
 	public void updateLift() {
 
 		if ((DriverInputControl.getInstance().getButton(
@@ -185,11 +196,13 @@ public class ToteLift implements Module{
 					.getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {
 				stop();
 			}
+			updateLift(liftIncrementHeight);
 		} else if (state == MotorState.DOWN) {
 			liftSpeed = (liftSpeed > DEFAULT_LIFT_SPEED_DOWN ? DEFAULT_LIFT_SPEED_DOWN
 					: liftSpeed);
 			this.isSupported = false;
 			// liftSpeed = -DEFAULT_LIFT_SPEED;
+			updateLift(liftIncrementHeight);
 		} else {
 			stop();
 		}
@@ -266,6 +279,14 @@ public class ToteLift implements Module{
             return false;
         }
     }
+	
+	public void incrementLift(double distance) {
+		motorPower = -SensorInputControl.getInstance()
+				.getEncoder(SensorType.TOTE_ENCODER).getRate();
+
+		liftSpeed = motorPowerControlLoop.getPID(distance, motorPower);
+		updateLift(-liftSpeed);
+	}
 
 	public void reset() {
 		distanceControlLoop.reset();

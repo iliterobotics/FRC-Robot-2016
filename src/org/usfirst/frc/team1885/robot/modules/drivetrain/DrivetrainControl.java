@@ -31,6 +31,7 @@ public class DrivetrainControl implements Module{
 	private boolean isTurning;
 	private AutoTurn turn;
 	public static final double NUDGE_POWER = 0.15;
+	public static final double NUDGE_POWER_TURN = 0.75;
 	private static DrivetrainControl instance;
 	
 	protected DrivetrainControl(final double d, final double m) {
@@ -63,7 +64,10 @@ public class DrivetrainControl implements Module{
 	public double getDistance () {
 		return SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) * circumference;
 	}
-	
+	public boolean getIsTurning()
+	{
+		return isTurning;
+	}
 	public void update()
 	{
 		if (driverInput.getButton(RobotButtonType.GEAR_SHIFT)){
@@ -91,10 +95,10 @@ public class DrivetrainControl implements Module{
 			
         } else if(DriverInputControl.getInstance().getPOVButton(
         		RobotButtonType.NUDGE) == 90) {
-        	update(-NUDGE_POWER , NUDGE_POWER);
+        	update(-NUDGE_POWER_TURN , NUDGE_POWER_TURN);
         } else if(DriverInputControl.getInstance().getPOVButton(
         		RobotButtonType.NUDGE) == 270) {
-        	update(NUDGE_POWER, -NUDGE_POWER);
+        	update(NUDGE_POWER_TURN, -NUDGE_POWER_TURN);
         } else if(DriverInputControl.getInstance().getPOVButton(
         		RobotButtonType.NUDGE) == 0) {
         	update(-NUDGE_POWER, -NUDGE_POWER);
