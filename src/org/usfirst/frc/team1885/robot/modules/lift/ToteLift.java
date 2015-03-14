@@ -39,7 +39,7 @@ public class ToteLift implements Module{
 	private boolean prevSupportState = false;
 
 	protected ToteLift() {
-		this.state = MotorState.STOP;
+		this.state = MotorState.OFF;
 		distanceControlLoop = new PID(0.50, 0.005, 0);
 		motorPowerControlLoop = new PID(.35, .1, 0);
 		motorPowerControlLoop.setScalingValue(MAX_LIFT_SPEED_ENC);
@@ -185,16 +185,16 @@ public class ToteLift implements Module{
 	public void updateLift(double speed) {
 		liftSpeed = speed;
 		if (speed < 0) {
-			state = MotorState.UP;
+			state = MotorState.FORWARD;
 		} else if (speed > 0) {
-			state = MotorState.DOWN;
+			state = MotorState.REVERSE;
 		} else {
-			state = MotorState.STOP;
+			state = MotorState.OFF;
 		}
 
 		this.desiredLiftSpeedTicks = this.liftSpeed * ToteLift.MAX_LIFT_SPEED_ENC;
 		
-		if (state == MotorState.UP) {
+		if (state == MotorState.FORWARD) {
 			desiredLiftSpeedTicks = (desiredLiftSpeedTicks < ToteLift.MAX_LIFT_SPEED_UP_ENC ? ToteLift.MAX_LIFT_SPEED_UP_ENC
 					: desiredLiftSpeedTicks);
 			this.isSupported = false;
@@ -203,7 +203,7 @@ public class ToteLift implements Module{
 					.getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get()) {
 				stop();
 			}
-		} else if (state == MotorState.DOWN) {
+		} else if (state == MotorState.REVERSE) {
 			this.isSupported = false;
 			desiredLiftSpeedTicks = (desiredLiftSpeedTicks > ToteLift.MAX_LIFT_SPEED_DOWN_ENC ? ToteLift.MAX_LIFT_SPEED_DOWN_ENC
 					: desiredLiftSpeedTicks);
@@ -211,7 +211,7 @@ public class ToteLift implements Module{
 			stop();
 		}
 		
-		if (state == MotorState.STOP) {
+		if (state == MotorState.OFF) {
 			isBraked = true;
 			this.isSupported = this.liftSupported;
 			this.motorPowerControlLoop.reset();
@@ -264,7 +264,7 @@ public class ToteLift implements Module{
 	}
 
 	public void stop() {
-		state = MotorState.STOP;
+		state = MotorState.OFF;
 		liftSpeed = 0;
 		desiredLiftSpeedTicks = 0;
 		motorSpeed = 0;

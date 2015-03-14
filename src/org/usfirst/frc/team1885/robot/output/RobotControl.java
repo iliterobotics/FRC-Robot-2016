@@ -152,6 +152,10 @@ public class RobotControl {
 	public void updateRecycleMotor(double speed) {
 		outputTalons.get(RobotMotorType.RECYCLE_LIFT).set(speed);
 	}
+	public void updateIntakeMotors(double speed) {
+		outputTalons.get(RobotMotorType.ACTIVE_INTAKE_MOTOR_LEFT).set(speed);
+		outputTalons.get(RobotMotorType.ACTIVE_INTAKE_MOTOR_LEFT).set(-speed);
+	}
 
 	public void updateToteSupport(boolean isSupported) {
 		solenoid.get(RobotPneumaticType.LIFT_SUPPORT).set(isSupported);

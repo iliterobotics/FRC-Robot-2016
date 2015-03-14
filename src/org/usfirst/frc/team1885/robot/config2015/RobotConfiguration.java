@@ -38,9 +38,10 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.WRIST_EXTENSION, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 8 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.CLAW, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 4) );
 
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_IN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 11 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_OUT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 12 ) );
+        
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kY ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_PICKUP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 5 ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RECYCLE_BIN_LIFT_RELEASE, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 9 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_INCREMENT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 6 ) );
 
           JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_DECREMENT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 5 ) );
