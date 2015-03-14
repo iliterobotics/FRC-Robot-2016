@@ -2,10 +2,12 @@ package org.usfirst.frc.team1885.robot.input;
 
 import java.util.HashMap;
 
+import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
+import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 
 import edu.wpi.first.wpilibj.Joystick;
 
@@ -62,12 +64,12 @@ public class DriverInputControl {
     public double getLeftDrive() {
         double axis = joystickMap.get(RobotJoystickType.LEFT_DRIVE).getAxis(
                 Joystick.AxisType.kY);
-        return deadzone(axis);
+        return (DrivetrainControl.getInstance().getGearState() == GearState.LOW_GEAR ? deadzone(axis) : deadzone(axis) * .6);
     }
     public double getRightDrive() {
         double axis = joystickMap.get(RobotJoystickType.RIGHT_DRIVE).getAxis(
                 Joystick.AxisType.kY);
-        return deadzone(axis);
+        return (DrivetrainControl.getInstance().getGearState() == GearState.LOW_GEAR ? deadzone(axis) : deadzone(axis) * .6);
     }
     public Joystick getJoystick(RobotJoystickType joystickType) {
         return joystickMap.get(joystickType);

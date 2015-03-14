@@ -224,14 +224,14 @@ public class ToteLift implements Module{
 			double currEncRate = -SensorInputControl.getInstance()
 					.getEncoder(SensorType.TOTE_ENCODER).getRate();
 
-			this.motorSpeed = -motorPowerControlLoop.getPID(this.desiredLiftSpeedTicks, currEncRate);
+			this.motorSpeed = -motorPowerControlLoop.getPID(this.desiredLiftSpeedTicks, -currEncRate);
 			
 		}
 	}
 
 	public boolean incrementLift(double distance, double error) {
 
-        distanceTraveled = SensorInputControl.getInstance()
+        distanceTraveled = -SensorInputControl.getInstance()
                 .getEncoder(SensorType.TOTE_ENCODER).getDistance();
 
         double difference = Math.abs(distanceTraveled - distance);
@@ -273,7 +273,7 @@ public class ToteLift implements Module{
 	public void updateOutputs() {
 //		System.out.println(toString());
 		//FIXME: do not commit, was -liftSpeed for non-testbed
-		RobotControl.getInstance().updateToteMotor(-motorSpeed);
+		RobotControl.getInstance().updateToteMotor(motorSpeed);
 		RobotControl.getInstance().updateToteStop(isBraked);
 		RobotControl.getInstance().updateToteSupport(isSupported);
 	}
@@ -290,6 +290,11 @@ public class ToteLift implements Module{
 
 	public void setMotorSpeed(double motorSpeed) {
 		this.motorSpeed = motorSpeed;
+	}
+
+	public void setScalingValue(double height) {
+		this.distanceControlLoop.setScalingValue(height);
+		
 	}
 
 }

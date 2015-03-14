@@ -194,6 +194,7 @@ public class DrivetrainControl implements Module{
 	}
 	
 	public void updateOutputs() {
+		//udicious - 3/6 hard coding low gear with 2 speeds.
 		RobotControl.getInstance().updateGearShifter(getGearValue());
 		RobotControl.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
 	}

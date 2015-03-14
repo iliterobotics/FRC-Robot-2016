@@ -81,12 +81,12 @@ public class Robot extends SampleRobot
     	
         while (isOperatorControl() && isEnabled()) {
         	
-        	try {
-        		robotStatusService.update();
-        		RobotServer.getInstance().send(robotStatusService.getTm());
-        	} catch(Exception e) {
-        		e.printStackTrace();
-        	}
+//        	try {
+//        		robotStatusService.update();
+//        		RobotServer.getInstance().send(robotStatusService.getTm());
+//        	} catch(Exception e) {
+//        		e.printStackTrace();
+//        	}
         	
 //        	System.out.println(SensorInputControl.getInstance().getNAVX().getYaw360());
         	
@@ -111,7 +111,7 @@ public class Robot extends SampleRobot
     public void autonomous() {
     	commands = new LinkedList<AutoCommand>();
     	
-    	autoOneToteOneBin();
+    	autoOneTote();
     	
     	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
     		
@@ -143,7 +143,7 @@ public class Robot extends SampleRobot
     	//Picks up one tote, drives backwards to autozone, drops tote
     	commands.add(new AutoToteLift(1210, 10));
     	commands.add(new AutoDriveForward(-7 *12, 1, 2));
-    	commands.add(new AutoToteLift(-1210, 10));
+//    	commands.add(new AutoToteLift(-1210, 10));
     }
     public void autoOneToteTwoBin() {
     	//Picks up one tote, pivots and pinches the bin, drives forward and lifts the bin, turn 90 degrees and drive to autozone
