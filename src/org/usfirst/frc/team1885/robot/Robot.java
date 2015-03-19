@@ -46,210 +46,217 @@ public class Robot extends SampleRobot
     private RecycleBinLift recycleBinLift;
     private ToteLift toteLift;
     private LinkedList<AutoCommand> commands;
-    
+    private long timeTracker = 0;
+    private double delayTime = 1;//Input time in seconds
+
     public Robot() {
-    	try {
-	        RobotConfiguration.configureRobot();
-	        SensorInputControl.getInstance().getNAVX().zeroYaw();
-    	} catch(Exception e) {
-    		System.out.println("Robot - Error configuring Robot");
-    		e.printStackTrace();
-    	}
+        if(System.currentTimeMillis() - timeTracker >= (delayTime * 1000)){
+        timeTracker = System.currentTimeMillis();
+            try {
+                RobotConfiguration.configureRobot();
+                SensorInputControl.getInstance().getNAVX().zeroYaw();
+            } catch(Exception e) {
+                System.out.println("Robot - Error configuring Robot");
+                e.printStackTrace();
+            }
+        }
         diameter = 4.0;
         maxSpeed = 15.0; 
-         
-    	DrivetrainControl.getInstance().addSpeed(1, 15.0);
-    	this.robotControl = RobotControl.getInstance();
-    	this.recycleBinLift = RecycleBinLift.getInstance();
-    	this.toteLift = ToteLift.getInstance();
-    	
-    	RobotServer.getInstance().setup(4444);
-    	RobotServer.getInstance().startServer();
-    	
+
+        DrivetrainControl.getInstance().addSpeed(1, 15.0);
+        this.robotControl = RobotControl.getInstance();
+        this.recycleBinLift = RecycleBinLift.getInstance();
+        this.toteLift = ToteLift.getInstance();
+
+        RobotServer.getInstance().setup(4444);
+        RobotServer.getInstance().startServer();
+
     }    
     /**
      * Runs the motors with tank steering.
      */
     public void operatorControl() {
-    	
-    	SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
-    	SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
-    	
-    	boolean magnetState = false;
-    	
-    	RobotStatusService robotStatusService = new RobotStatusService();
-    	
+
+        SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
+        SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
+
+        boolean magnetState = false;
+
+        RobotStatusService robotStatusService = new RobotStatusService();
+
         while (isOperatorControl() && isEnabled()) {
-        	
-//        	try {
-//        		robotStatusService.update();
-//        		RobotServer.getInstance().send(robotStatusService.getTm());
-//        	} catch(Exception e) {
-//        		e.printStackTrace();
-//        	}
-        	
-//        	System.out.println(SensorInputControl.getInstance().getNAVX().getYaw360());
-        	
-        	DrivetrainControl.getInstance().update();
-        	ClawControl.getInstance().updateClaw();
-        	toteLift.updateLift();
-        	recycleBinLift.updateLift();
-        	Alignment.getInstance().update();
-//        	System.out.println("Robot::tele - lidar: " + SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance());
-//        	BackupRoutine.getInstance().update();
-        	
-        	//robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
-        	recycleBinLift.updateOutputs();
-        	toteLift.updateOutputs();
-        	DrivetrainControl.getInstance().updateOutputs();
-        	ClawControl.getInstance().updateOutputs();
-        	Alignment.getInstance().updateOutputs();
+
+
+
+            //        	try {
+                //        		robotStatusService.update();
+            //        		RobotServer.getInstance().send(robotStatusService.getTm());
+            //        	} catch(Exception e) {
+            //        		e.printStackTrace();
+            //        	}
+
+            //        	System.out.println(SensorInputControl.getInstance().getNAVX().getYaw360());
+
+            DrivetrainControl.getInstance().update();
+            ClawControl.getInstance().updateClaw();
+            toteLift.updateLift();
+            recycleBinLift.updateLift();
+            Alignment.getInstance().update();
+            //        	System.out.println("Robot::tele - lidar: " + SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance());
+            //        	BackupRoutine.getInstance().update();
+
+            //robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
+            recycleBinLift.updateOutputs();
+            toteLift.updateOutputs();
+            DrivetrainControl.getInstance().updateOutputs();
+            ClawControl.getInstance().updateOutputs();
+            Alignment.getInstance().updateOutputs();
             Timer.delay(.005);		// wait for a motor update time
         }
     }
-    
+
     public void autonomous() {
-    	commands = new LinkedList<AutoCommand>();
-    	
-    	autoOneTote();
-    	
-    	while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
-    		
-    		AutoCommand currCommand = commands.peek();
-    		
-    		
-    		if(currCommand.isInit()) {
-	    		boolean commandState = currCommand.execute();
-	    		currCommand.updateOutputs();
-	    		if(commandState) {
-	    			System.out.println("Finished command " + commands.size());
-	    			commands.poll();
-	    		}
-    		} else {
-    			currCommand.setInit(currCommand.init());
-    		}
-    	    		
-    		Timer.delay(.005);
-    	}
-    	
-    	DrivetrainControl.getInstance().update(0,0);
-    	DrivetrainControl.getInstance().updateOutputs();
+        commands = new LinkedList<AutoCommand>();
+
+        autoOneTote();
+
+        while(!commands.isEmpty() &&  isEnabled() && isAutonomous()) {
+
+            AutoCommand currCommand = commands.peek();
+
+
+            if(currCommand.isInit()) {
+                boolean commandState = currCommand.execute();
+                currCommand.updateOutputs();
+                if(commandState) {
+                    System.out.println("Finished command " + commands.size());
+                    commands.poll();
+                }
+            } else {
+                currCommand.setInit(currCommand.init());
+            }
+
+            Timer.delay(.005);
+        }
+
+        DrivetrainControl.getInstance().update(0,0);
+        DrivetrainControl.getInstance().updateOutputs();
     }
-    
-    
-    
-    
+
+
+
+
     public void autoOneTote() {
-    	//Picks up one tote, drives backwards to autozone, drops tote
-    	commands.add(new AutoToteLift(1210, 10));
-    	commands.add(new AutoDriveForward(-7 *12, 1, 2));
-//    	commands.add(new AutoToteLift(-1210, 10));
+        //Picks up one tote, drives backwards to autozone, drops tote
+        commands.add(new AutoToteLift(1210, 10));
+        commands.add(new AutoDriveForward(-7 *12, 1, 2));
+        //    	commands.add(new AutoToteLift(-1210, 10));
     }
     public void autoOneToteTwoBin() {
-    	//Picks up one tote, pivots and pinches the bin, drives forward and lifts the bin, turn 90 degrees and drive to autozone
-    	commands.add(new AutoToteLift(1 * 1210, 10));
-    	commands.add(new AutoTurn(-45, 5));
-    	commands.add(new AutoDriveForward(1 * 12, 1, 2));
-    	commands.add(new AutoTurn(-45, 5));
-    	commands.add(new AutoClaw(false, false, true));
-    	commands.add(new AutoDriveForward(6 * 12, 1, 2));
-    	commands.add(new AutoToteLift(3 * 1210, 10));
-    	commands.add(new AutoTurn(90, 5));
-    	commands.add(new AutoDriveForward(7 * 12, 1, 2));
-    	
+        //Picks up one tote, pivots and pinches the bin, drives forward and lifts the bin, turn 90 degrees and drive to autozone
+        commands.add(new AutoToteLift(1 * 1210, 10));
+        commands.add(new AutoTurn(-45, 5));
+        commands.add(new AutoDriveForward(1 * 12, 1, 2));
+        commands.add(new AutoTurn(-45, 5));
+        commands.add(new AutoClaw(false, false, true));
+        commands.add(new AutoDriveForward(6 * 12, 1, 2));
+        commands.add(new AutoToteLift(3 * 1210, 10));
+        commands.add(new AutoTurn(90, 5));
+        commands.add(new AutoDriveForward(7 * 12, 1, 2));
+
     }
     public void autoOneToteOneBin() {
-    	//Lifts up tote, pivot and lift up bin, drive backwards to autozone
-//    	commands.add(new AutoDriveForward(3, 1, 2));
-    	commands.add(new AutoToteLift(1*1190, 10));
-    	commands.add(new AutoToteLift(2*1210, 10));
-    	commands.add(new AutoTurn(48, 5));    	
-    	commands.add(new AutoDriveForward(10, 1, 2));
-    	commands.add(new AutoToteLift(1 * 1210, 10));
-    	
-//    	commands.add(new AutoToteLift(3*1210, 10));
-    	commands.add(new AutoTurn(-45, 5));
-    	commands.add(new AutoDriveForward(-7*12, 1, 2));
-//    	commands.add(new AutoToteLift(-3 * 1210, 10));
+        //Lifts up tote, pivot and lift up bin, drive backwards to autozone
+        //    	commands.add(new AutoDriveForward(3, 1, 2));
+        commands.add(new AutoToteLift(1*1190, 10));
+        commands.add(new AutoToteLift(2*1210, 10));
+        commands.add(new AutoTurn(48, 5));    	
+        commands.add(new AutoDriveForward(10, 1, 2));
+        commands.add(new AutoToteLift(1 * 1210, 10));
+
+        //    	commands.add(new AutoToteLift(3*1210, 10));
+        commands.add(new AutoTurn(-45, 5));
+        commands.add(new AutoDriveForward(-7*12, 1, 2));
+        //    	commands.add(new AutoToteLift(-3 * 1210, 10));
     }
     public void autoPushOneBinOneTote() {
-    	//Pushes the tote out of the way, lifts bin, lifts tote, drives backwards to autozone, drops totes
-    	//Pushes one bin out of the way, pivots and lifts 
-    	commands.add(new AutoDriveForward(30, 1, 2));
-    	commands.add(new AutoDriveForward(-6, 1, 2));
-    	commands.add(new AutoTurn(90, 5));
-    	
-    	commands.add(new AutoCommand() {
+        //Pushes the tote out of the way, lifts bin, lifts tote, drives backwards to autozone, drops totes
+        //Pushes one bin out of the way, pivots and lifts 
+        commands.add(new AutoDriveForward(30, 1, 2));
+        commands.add(new AutoDriveForward(-6, 1, 2));
+        commands.add(new AutoTurn(90, 5));
 
-    		AutoDriveForward driveFwd = new AutoDriveForward(10, 1, 2);
-    		AutoToteLift toteLift = new AutoToteLift(3 * 1210, 10);
-    		
-			@Override
-			public boolean init() {
-				// TODO Auto-generated method stub
-				return driveFwd.init() && toteLift.init();
-			}
+        commands.add(new AutoCommand() {
 
-			@Override
-			public boolean execute() {
-				return driveFwd.execute() && toteLift.execute();
-			}
+            AutoDriveForward driveFwd = new AutoDriveForward(10, 1, 2);
+            AutoToteLift toteLift = new AutoToteLift(3 * 1210, 10);
 
-			@Override
-			public boolean updateOutputs() {
-				return driveFwd.updateOutputs() && toteLift.updateOutputs();
-			}
+            @Override
+            public boolean init() {
+                // TODO Auto-generated method stub
+                return driveFwd.init() && toteLift.init();
+            }
 
-			@Override
-			public void reset() {
-				driveFwd.reset();
-				toteLift.reset();
-			}
-    		
-    	});
-    	commands.add(new AutoDriveForward(-5, 1, 2));
-    	commands.add(new AutoTurn(-90, 5));
-    	commands.add(new AutoDriveForward(18, 1, 2));
-    	commands.add(new AutoWait(250));
-     	commands.add(new AutoDriveForward(3, 1, 2));
-    	commands.add(new AutoToteLift(1 * 1210, 10));
-    	commands.add(new AutoDriveForward(-7 * 12, 1, 2));
-    	commands.add(new AutoToteLift(-1 * 1210, 10));
-    	
+            @Override
+            public boolean execute() {
+                return driveFwd.execute() && toteLift.execute();
+            }
+
+            @Override
+            public boolean updateOutputs() {
+                return driveFwd.updateOutputs() && toteLift.updateOutputs();
+            }
+
+            @Override
+            public void reset() {
+                driveFwd.reset();
+                toteLift.reset();
+            }
+
+        });
+        commands.add(new AutoDriveForward(-5, 1, 2));
+        commands.add(new AutoTurn(-90, 5));
+        commands.add(new AutoDriveForward(18, 1, 2));
+        commands.add(new AutoWait(250));
+        commands.add(new AutoDriveForward(3, 1, 2));
+        commands.add(new AutoToteLift(1 * 1210, 10));
+        commands.add(new AutoDriveForward(-7 * 12, 1, 2));
+        commands.add(new AutoToteLift(-1 * 1210, 10));
+
     }
     public void autoOneBinOneTote() {
-    	//Pinches the bin, lifts the tote
-    	commands.add(new AutoClaw(false, false, true)); //rotation, extension, pinch
-    	commands.add(new AutoDriveForward(.5 *12, 1, 2));
-    	commands.add(new AutoTurn(90, 1));
-    	commands.add(new AutoDriveForward(2.0 *12, 3, 2));
-    	commands.add(new AutoTurn(90, 1));
-    	commands.add(new AutoDriveForward(3.5 *12, 1, 2));
-    	commands.add(new AutoToteLift(1210, 10));
-    	commands.add(new AutoDriveForward(-6 * 12, 1, 2));
-    	commands.add(new AutoToteLift(-1210, 10));
-//    	commands.add(new AutoTurn(180, 1));
+        //Pinches the bin, lifts the tote
+        commands.add(new AutoClaw(false, false, true)); //rotation, extension, pinch
+        commands.add(new AutoDriveForward(.5 *12, 1, 2));
+        commands.add(new AutoTurn(90, 1));
+        commands.add(new AutoDriveForward(2.0 *12, 3, 2));
+        commands.add(new AutoTurn(90, 1));
+        commands.add(new AutoDriveForward(3.5 *12, 1, 2));
+        commands.add(new AutoToteLift(1210, 10));
+        commands.add(new AutoDriveForward(-6 * 12, 1, 2));
+        commands.add(new AutoToteLift(-1210, 10));
+        //    	commands.add(new AutoTurn(180, 1));
     }
     public void autoOneBinThreeTotes() {
-    	//
-    	commands.add(new AutoToteLift(2 * 1210, 10));
-    	commands.add(new AutoDriveForward(1 * 12, 1, 2));
-    	commands.add(new AutoTurn(-60, 1));
-    	commands.add(new AutoDriveForward(.5 * 12, 1, 2)); 
-    	commands.add(new AutoToteLift(1 * 1210, 10));
-    	commands.add(new AutoDriveForward(6 * 12, 1, 2));
-    	commands.add(new AutoToteLift(1 * 1210, 10));
-    	commands.add(new AutoDriveForward(6 * 12, 1, 2));
-    	commands.add(new AutoToteLift(1 * 1210, 10));
-    	commands.add(new AutoTurn(-90, 1));
-    	commands.add(new AutoDriveForward(5 * 12, 1, 2));
+        //
+        commands.add(new AutoToteLift(2 * 1210, 10));
+        commands.add(new AutoDriveForward(1 * 12, 1, 2));
+        commands.add(new AutoTurn(-60, 1));
+        commands.add(new AutoDriveForward(.5 * 12, 1, 2)); 
+        commands.add(new AutoToteLift(1 * 1210, 10));
+        commands.add(new AutoDriveForward(6 * 12, 1, 2));
+        commands.add(new AutoToteLift(1 * 1210, 10));
+        commands.add(new AutoDriveForward(6 * 12, 1, 2));
+        commands.add(new AutoToteLift(1 * 1210, 10));
+        commands.add(new AutoTurn(-90, 1));
+        commands.add(new AutoDriveForward(5 * 12, 1, 2));
     }
     public void autoSimple() {
         commands.add(new AutoToteLift(3 * 1210, 10));
         commands.add(new AutoDriveForward(1.5 * 12, 1, 2));
         commands.add(new AutoTurn(-55, 1));
         commands.add(new AutoDriveForward(.5 * 12, 1, 2));
-//        commands.add(new AutoToteLift(-1 * 1210, 10));
+        //        commands.add(new AutoToteLift(-1 * 1210, 10));
         commands.add(new AutoToteLift(1 * 1210, 10));
         commands.add(new AutoTurn(-90, 1));
         commands.add(new AutoDriveForward(5 * 12, 1, 2));
