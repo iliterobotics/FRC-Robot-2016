@@ -2,11 +2,12 @@ package org.usfirst.frc.team1885.robot.manipulator;
 
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControl;
+import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
-public class ClawControl 
+public class ClawControl implements Module
 {
 	private static ClawControl instance;
 	private boolean rotationState;
@@ -76,4 +77,9 @@ public class ClawControl
 		RobotControl.getInstance().updateGrabberPneumatics(pinchState);
 
     }
+	@Override
+	public void update() {
+		updateClaw();
+		
+	}
 }

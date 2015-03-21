@@ -38,6 +38,7 @@ import edu.wpi.first.wpilibj.Timer;
  * be much more difficult under this system. Use IterativeRobot or Command-Based
  * instead if you're new.
  */
+
 public class Robot extends SampleRobot {
 	private final double diameter;
 	private final double maxSpeed;
@@ -269,5 +270,4 @@ public class Robot extends SampleRobot {
 		commands.add(new AutoDriveForward(5 * 12, 1, 2));
 		commands.add(new AutoToteLift(-1 * 1210, 10));
 	}
-
 }
