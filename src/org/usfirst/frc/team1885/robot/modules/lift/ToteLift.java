@@ -87,7 +87,11 @@ public class ToteLift implements Module{
 		this.liftSpeed = 0;
 		
 		if ((DriverInputControl.getInstance().getButton(
-				RobotButtonType.TOTE_LIFT_INCREMENT) //|| 
+				RobotButtonType.TOTE_LIFT_INCREMENT) &&
+				!SensorInputControl.getInstance().isActive(
+		                SensorType.TOUCH_SENSOR_TOTE_RIGHT) &&
+                !SensorInputControl.getInstance().isActive(
+                        SensorType.TOUCH_SENSOR_TOTE_LEFT)
 //				DriverInputControl
 //				.getInstance().getButton(RobotButtonType.TOTE_LIFT_NUDGE_UP)
 				)

@@ -50,8 +50,23 @@ public class AutoTemplate extends AutoCommand{
 		RobotControl.getInstance().updateDriveSpeed(0, 0);
 	}
 	
+	public static AutoTemplate automate2Totes() {
+		AutoTemplate template = new AutoTemplate();
+		template.init();
+		template.reset();
+		template.add(new AutoNudge());
+		template.add(new AutoToteLift(1 * 1210, 10));
+		template.add(new AutoNudge());
+		template.add(new AutoToteLift(1 * 1210, 10));
+//		template.add(new AutoDriveForward(3 * -12, 1, 2));
+		
+		return template;
+	}
+	
 	public static AutoTemplate autoFourTote() {
 		AutoTemplate template = new AutoTemplate();
+		template.init();
+		template.reset();
 		template.add(new AutoDriveForward(.25 * 12, 1, 2));
 		template.add(new AutoToteLift(1 * 1210, 10));
 		template.add(new AutoDriveForward(1.5 * 12, 1, 2));

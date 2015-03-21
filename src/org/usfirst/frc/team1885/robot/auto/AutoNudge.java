@@ -10,14 +10,27 @@ public class AutoNudge extends AutoCommand {
 	private final double MAX_SPEED = .25;
 
 	public boolean execute() {
-		while(SensorInputControl.getInstance().isActive(SensorType.TOUCH_SENSOR_TOTE_LEFT)) {
+		
+		boolean bDriveLeft = SensorInputControl.getInstance().isActive(SensorType.TOUCH_SENSOR_TOTE_LEFT);
+		boolean bDriveRight = SensorInputControl.getInstance().isActive(SensorType.TOUCH_SENSOR_TOTE_RIGHT);
+				
+		if(bDriveLeft) {
 			DrivetrainControl.getInstance().setLeftDriveSpeed(-MAX_SPEED);
 		}
+		else
+		{
+			DrivetrainControl.getInstance().setLeftDriveSpeed(0);
+		}
 		
-		if(SensorInputControl.getInstance().isActive(SensorType.TOUCH_SENSOR_TOTE_RIGHT)) {
+		if(bDriveRight) {
 			DrivetrainControl.getInstance().setRightDriveSpeed(-MAX_SPEED);
 		}
-		return true;
+		else
+		{
+			DrivetrainControl.getInstance().setRightDriveSpeed(0);
+		}
+		
+		return !bDriveLeft && !bDriveRight;
 	}
 
 	public boolean updateOutputs() {

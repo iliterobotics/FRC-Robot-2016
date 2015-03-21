@@ -25,7 +25,7 @@ public class RecycleBinLift implements Module{
         liftSpeed = 0;
         
         // TODO fix me
-        SensorInputControl.getInstance().getEncoder(SensorType.RECYCLE_BIN_ENCODER).setDistancePerPulse(1/360);
+//        SensorInputControl.getInstance().getEncoder(SensorType.RECYCLE_BIN_ENCODER).setDistancePerPulse(1/360);
     }
     public static RecycleBinLift getInstance() {
         if (instance == null) {

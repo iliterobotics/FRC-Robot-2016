@@ -6,13 +6,16 @@ import org.usfirst.frc.team1885.robot.auto.AutoCanGrabber;
 import org.usfirst.frc.team1885.robot.auto.AutoClaw;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
+import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutoToteLift;
 import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.auto.AutoWait;
+import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
 import org.usfirst.frc.team1885.robot.comms.RobotStatusService;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
+import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.Alignment;
@@ -49,6 +52,8 @@ public class Robot extends SampleRobot {
 	private LinkedList<AutoCommand> commands;
 	private long timeTracker = 0;
 	private double delayTime = 1;// Input time in seconds
+	
+	private AutoTemplate activeTemplate;
 
 	public Robot() {
 		try {
@@ -98,23 +103,44 @@ public class Robot extends SampleRobot {
 //				System.out.println(SensorInputControl.getInstance().getNAVX()
 //						.getYaw360());
 			}
-
-			DrivetrainControl.getInstance().update();
-			ClawControl.getInstance().updateClaw();
-			toteLift.updateLift();
-			recycleBinLift.updateLift();
-			Alignment.getInstance().update();
-			// System.out.println("Robot::tele - lidar: " +
-			// SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance());
-			// BackupRoutine.getInstance().update();
-
-			// robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(),
-			// DrivetrainControl.getInstance().getRightDriveSpeed());
-			recycleBinLift.updateOutputs();
-			toteLift.updateOutputs();
-			DrivetrainControl.getInstance().updateOutputs();
-			ClawControl.getInstance().updateOutputs();
-			Alignment.getInstance().updateOutputs();
+			
+			if((DriverInputControl.getInstance().getButton(
+				RobotButtonType.CANCEL_AUTOMATION))) {
+				this.activeTemplate = null;
+			}
+			
+			if((DriverInputControl.getInstance().getButton(
+				RobotButtonType.AUTOMATE_2_TOTES)) || this.activeTemplate != null) {
+				
+				if(this.activeTemplate == null) {
+					this.activeTemplate = AutoTemplate.automate2Totes();
+				}
+				
+				if(this.activeTemplate.execute()) {
+					this.activeTemplate = null;
+				}
+				
+			}
+			else
+			{
+				this.activeTemplate = null;
+				DrivetrainControl.getInstance().update();
+				ClawControl.getInstance().updateClaw();
+				toteLift.updateLift();
+				recycleBinLift.updateLift();
+				Alignment.getInstance().update();
+				// System.out.println("Robot::tele - lidar: " +
+				// SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance());
+				// BackupRoutine.getInstance().update();
+	
+				// robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(),
+				// DrivetrainControl.getInstance().getRightDriveSpeed());
+				recycleBinLift.updateOutputs();
+				toteLift.updateOutputs();
+				DrivetrainControl.getInstance().updateOutputs();
+				ClawControl.getInstance().updateOutputs();
+				Alignment.getInstance().updateOutputs();
+			}
 			Timer.delay(.005); // wait for a motor update time
 		}
 	}

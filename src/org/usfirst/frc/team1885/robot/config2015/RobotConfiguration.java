@@ -49,6 +49,8 @@ public class RobotConfiguration {
 //        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_NUDGE_DOWN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 7 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_RESET, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.GEAR_SHIFT, new JoystickButtonMatch( RobotJoystickType.RIGHT_DRIVE, 2 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.AUTOMATE_2_TOTES, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 2 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.CANCEL_AUTOMATION, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 3 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RIGHT_DRIFT, new JoystickButtonMatch( RobotJoystickType.RIGHT_DRIVE, 1 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.LEFT_DRIFT, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 1 ) );
 
@@ -56,15 +58,15 @@ public class RobotConfiguration {
         SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_LEFT_ENCODER, 0, 1 );
         SensorInputControl.getInstance().addSensor( SensorType.DRIVE_TRAIN_RIGHT_ENCODER, 2, 3 );
         SensorInputControl.getInstance().addSensor( SensorType.TOTE_ENCODER, 4, 5 );
-        SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_ENCODER, 6, 7 );
+//        SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_ENCODER, 6, 7 );
         SensorInputControl.getInstance().addSensor( SensorType.TOTE_UPPER_LIMIT_SWITCH, 8 );
 //        SensorInputControl.getInstance().addSensor( SensorType.TOTE_LOWER_LIMIT_SWITCH, 9 );
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_UPPER_LIMIT, 10 );
         SensorInputControl.getInstance().addSensor( SensorType.RECYCLE_BIN_LOWER_LIMIT, 11 );
         SensorInputControl.getInstance().addSensor( SensorType.LINE_SENSOR, 12 );
         SensorInputControl.getInstance().addSensor( SensorType.MAGNET_SENSOR, 13 );
-        SensorInputControl.getInstance().addSensor( SensorType.TOUCH_SENSOR_TOTE_LEFT, 14 );
-        SensorInputControl.getInstance().addSensor( SensorType.TOUCH_SENSOR_TOTE_RIGHT, 9 );
+        SensorInputControl.getInstance().addSensor( SensorType.TOUCH_SENSOR_TOTE_LEFT, 6 );
+        SensorInputControl.getInstance().addSensor( SensorType.TOUCH_SENSOR_TOTE_RIGHT, 7 );
         SensorInputControl.getInstance().setUpNAVX( (byte)(100), SerialPort.Port.kMXP );
         SensorInputControl.getInstance().addLidarSensor( I2C.Port.kMXP );
         SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).start();
