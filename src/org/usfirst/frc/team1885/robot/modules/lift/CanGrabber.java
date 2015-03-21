@@ -18,16 +18,17 @@ public class CanGrabber implements Module {
         return instance;
     }
 
-    @Override
     public void update() {
         
     }
     
+    public void reset() {
+    	grabberState = false;
+    }
     public void update( boolean state ) {
         grabberState = state;
     }
 
-    @Override
     public void updateOutputs() {
         RobotControl.getInstance().updateGrabberPneumatics( grabberState );
     }

@@ -2,6 +2,7 @@ package org.usfirst.frc.team1885.robot;
 
 import java.util.LinkedList;
 
+import org.usfirst.frc.team1885.robot.auto.AutoCanGrabber;
 import org.usfirst.frc.team1885.robot.auto.AutoClaw;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
@@ -144,7 +145,16 @@ public class Robot extends SampleRobot {
 		DrivetrainControl.getInstance().update(0, 0);
 		DrivetrainControl.getInstance().updateOutputs();
 	}
-
+	
+	public void autoCanGrabber() {
+		//Moves forward and grabs the cans moves backwards
+		commands.add(new AutoDriveForward(.75*12, 1, 2));
+		commands.add(new AutoCanGrabber(true));
+		commands.add(new AutoDriveForward(-7*12, 1, 2));
+		commands.add(new AutoCanGrabber(false));
+		
+	}
+	
 	public void autoOneTote() {
 		// Picks up one tote, drives backwards to autozone, drops tote
 		commands.add(new AutoToteLift(1210, 10));
