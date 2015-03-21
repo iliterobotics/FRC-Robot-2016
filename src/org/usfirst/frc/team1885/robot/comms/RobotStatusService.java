@@ -2,6 +2,7 @@ package org.usfirst.frc.team1885.robot.comms;
 
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
@@ -11,7 +12,8 @@ public class RobotStatusService
 	private ToteLift tl = ToteLift.getInstance();
 	private RecycleBinLift rb = RecycleBinLift.getInstance();
 	private DrivetrainControl dt = DrivetrainControl.getInstance();
-	private SensorInputControl sic = SensorInputControl.getInstance();	
+	private SensorInputControl sic = SensorInputControl.getInstance();
+	private ClawControl ccInstance = ClawControl.getInstance();
 
 	private RobotInfoMessage robotInfoMessage = new RobotInfoMessage();
 	
@@ -35,6 +37,13 @@ public class RobotStatusService
 		setRightTouchSensor();
 		setLineSensor();
 		setMagnetSensor();
+		updateClaw();
+	}
+	
+	public void updateClaw() {
+		this.robotInfoMessage.setRotationState(ccInstance.clawWristRotationState());
+		this.robotInfoMessage.setExtensionState(ccInstance.clawWristExtentionState());
+		this.robotInfoMessage.setPinchState(ccInstance.clawPinchState());
 	}
 	
 	public void setToteLiftSpeed()

@@ -30,9 +30,38 @@ public class RobotInfoMessage extends Message {
 	private boolean rightTouchSensor;
 	private boolean lineSensor;
 	private boolean magnetSensor;
-
+	// Claw
+	private boolean rotationState;
+	private boolean extensionState;
+	private boolean pinchState;
+	
+	
 	public RobotInfoMessage() {
 		super(ServerMessageType.ROBOTINFO_MSG);
+	}
+	
+	public boolean isRotationState() {
+		return rotationState;
+	}
+
+	public void setRotationState(boolean rotationState) {
+		this.rotationState = rotationState;
+	}
+
+	public boolean isExtensionState() {
+		return extensionState;
+	}
+
+	public void setExtensionState(boolean extensionState) {
+		this.extensionState = extensionState;
+	}
+
+	public boolean isPinchState() {
+		return pinchState;
+	}
+
+	public void setPinchState(boolean pinchState) {
+		this.pinchState = pinchState;
 	}
 
 	public double getToteLiftSpeed() {
