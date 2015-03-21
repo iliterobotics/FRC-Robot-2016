@@ -144,8 +144,6 @@ public class Robot extends SampleRobot
     }
 
 
-
-
     public void autoOneTote() {
         //Picks up one tote, drives backwards to autozone, drops tote
         commands.add(new AutoToteLift(1210, 10));
