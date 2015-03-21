@@ -13,7 +13,7 @@ public class RobotStatusService
 	private DrivetrainControl dt = DrivetrainControl.getInstance();
 	private SensorInputControl sic = SensorInputControl.getInstance();	
 
-	private TelemetryMessage tm = new TelemetryMessage();
+	private RobotInfoMessage robotInfoMessage = new RobotInfoMessage();
 	
 	public void update() {
 		setToteLiftSpeed();
@@ -39,90 +39,90 @@ public class RobotStatusService
 	
 	public void setToteLiftSpeed()
 	{
-		tm.setToteLiftSpeed(tl.getSpeed());
+		robotInfoMessage.setToteLiftSpeed(tl.getSpeed());
 	}
 	public void setToteReset()
 	{
-		tm.setToteResetting(tl.getIsResetting());
+		robotInfoMessage.setToteResetting(tl.getIsResetting());
 	}
 	public void setToteState()
 	{
-		tm.setToteState(tl.getMotorState());
+		robotInfoMessage.setToteState(tl.getMotorState());
 	}
 	public void setToteBrake()
 	{
-		tm.setToteBrake(tl.getIsBraked());
+		robotInfoMessage.setToteBrake(tl.getIsBraked());
 	}
 	
 	public void setRecycleBinHasBin()
 	{
-		tm.setHasBin(rb.hasBin());
+		robotInfoMessage.setHasBin(rb.hasBin());
 	}
 	public void setRecycleBinSpeed()
 	{
-		tm.setRecycleBinLiftSpeed(rb.getSpeed());
+		robotInfoMessage.setRecycleBinLiftSpeed(rb.getSpeed());
 	}
 	public void setRecycleBinState()
 	{
-		tm.setRecycleBinState(rb.getMotorState());
+		robotInfoMessage.setRecycleBinState(rb.getMotorState());
 	}
 	
 	public void setLeftDriveSpeed()
 	{
-		tm.setLeftDriveSpeed(dt.getLeftDriveSpeed());
+		robotInfoMessage.setLeftDriveSpeed(dt.getLeftDriveSpeed());
 	}
 	public void setRightDriveSpeed()
 	{
-		tm.setRightDriveSpeed(dt.getRightDriveSpeed());
+		robotInfoMessage.setRightDriveSpeed(dt.getRightDriveSpeed());
 	}
 	public void setDriveMode()
 	{
-		tm.setGearState(dt.getGearState());
+		robotInfoMessage.setGearState(dt.getGearState());
 	}
 	public void setIsTurning()
 	{
-		tm.setTurning(dt.getIsTurning());
+		robotInfoMessage.setTurning(dt.getIsTurning());
 	}
 	
 	public void setUpperRecycleLimitSensor()
 	{
-		tm.setUpperRecycleLimitSwitch(sic.getLimitSwitch(SensorType.RECYCLE_BIN_UPPER_LIMIT).get());
+		robotInfoMessage.setUpperRecycleLimitSwitch(sic.getLimitSwitch(SensorType.RECYCLE_BIN_UPPER_LIMIT).get());
 	}
 	public void setLowerRecycleLimitSensor()
 	{
-		tm.setLowerRecycleLimitSwitch(sic.getLimitSwitch(SensorType.RECYCLE_BIN_LOWER_LIMIT).get());
+		robotInfoMessage.setLowerRecycleLimitSwitch(sic.getLimitSwitch(SensorType.RECYCLE_BIN_LOWER_LIMIT).get());
 	}
 	public void setUpperToteLimitSwitch()
 	{
-		tm.setUpperToteLimitSwitch(sic.getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get());
+		robotInfoMessage.setUpperToteLimitSwitch(sic.getLimitSwitch(SensorType.TOTE_UPPER_LIMIT_SWITCH).get());
 	}
 	public void setLowerToteLimitSwitch()
 	{
-		tm.setLowerToteLimitSwitch(false);
+		robotInfoMessage.setLowerToteLimitSwitch(false);
 	}
 	public void setLeftTouchSensor()
 	{
-		tm.setLeftTouchSensor(sic.getLimitSwitch(SensorType.TOUCH_SENSOR_TOTE_LEFT).get());
+		robotInfoMessage.setLeftTouchSensor(sic.getLimitSwitch(SensorType.TOUCH_SENSOR_TOTE_LEFT).get());
 	}
 	public void setRightTouchSensor()
 	{
-		tm.setRightTouchSensor(sic.getLimitSwitch(SensorType.TOUCH_SENSOR_TOTE_RIGHT).get());
+		robotInfoMessage.setRightTouchSensor(sic.getLimitSwitch(SensorType.TOUCH_SENSOR_TOTE_RIGHT).get());
 	}
 	public void setLineSensor()
 	{
-		tm.setLineSensor(sic.getLimitSwitch(SensorType.LINE_SENSOR).get());
+		robotInfoMessage.setLineSensor(sic.getLimitSwitch(SensorType.LINE_SENSOR).get());
 	}
 	public void setMagnetSensor()
 	{
-		tm.setMagnetSensor(sic.getLimitSwitch(SensorType.MAGNET_SENSOR).get());
+		robotInfoMessage.setMagnetSensor(sic.getLimitSwitch(SensorType.MAGNET_SENSOR).get());
 	}
 
-	public TelemetryMessage getTm() {
-		return tm;
+	public RobotInfoMessage getTm() {
+		return robotInfoMessage;
 	}
 
-	public void setTm(TelemetryMessage tm) {
-		this.tm = tm;
+	public void setTm(RobotInfoMessage rIM) {
+		this.robotInfoMessage = rIM;
 	}
 	
 	
