@@ -95,8 +95,8 @@ public class Robot extends SampleRobot {
 					e.printStackTrace();
 				}
 
-				System.out.println(SensorInputControl.getInstance().getNAVX()
-						.getYaw360());
+//				System.out.println(SensorInputControl.getInstance().getNAVX()
+//						.getYaw360());
 			}
 
 			DrivetrainControl.getInstance().update();

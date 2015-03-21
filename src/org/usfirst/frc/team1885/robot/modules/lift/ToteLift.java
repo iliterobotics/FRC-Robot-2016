@@ -14,8 +14,8 @@ public class ToteLift implements Module{
 	public static final double DEFAULT_LIFT_SPEED = -.5;
 //	public static final double DEFAULT_LIFT_SPEED_DOWN = .25;
 	public static final double MAX_LIFT_SPEED_ENC = 4000;
-	public static final double MAX_LIFT_SPEED_UP_ENC = -2000;
-	public static final double MAX_LIFT_SPEED_DOWN_ENC = 1000;
+	public static final double MAX_LIFT_SPEED_UP_ENC = -3000;
+	public static final double MAX_LIFT_SPEED_DOWN_ENC = 2000;
 	
 	private static ToteLift instance;
 	private double liftSpeed;
@@ -37,6 +37,8 @@ public class ToteLift implements Module{
 	private boolean isDecrementing;
 	
 	private boolean prevSupportState = false;
+	
+	private double relativeEncoder;
 
 	protected ToteLift() {
 		this.state = MotorState.OFF;
@@ -47,6 +49,7 @@ public class ToteLift implements Module{
 		liftSpeed = 0;
 		isIncrementing = false;
 		isDecrementing = false;
+		relativeEncoder = 0;
 	}
 
 	public static ToteLift getInstance() {
@@ -134,9 +137,13 @@ public class ToteLift implements Module{
 
 			if (!isResetting) {
 				isResetting = true;
+				liftIncrementHeight = -this.relativeEncoder;
+				this.distanceControlLoop.setScalingValue(liftIncrementHeight);
 			}
 			
-			liftSpeed = DEFAULT_LIFT_SPEED;
+			this.isResetting = !incrementLift(liftIncrementHeight, 10);
+			
+//			liftSpeed = DEFAULT_LIFT_SPEED;
 			if (!SensorInputControl.getInstance().isActive(
 					SensorType.MAGNET_SENSOR)) {
 				isResetting = false;
@@ -232,22 +239,26 @@ public class ToteLift implements Module{
 	public boolean incrementLift(double distance, double error) {
 
         distanceTraveled = -SensorInputControl.getInstance()
-                .getEncoder(SensorType.TOTE_ENCODER).getDistance();
+                .getEncoder(SensorType.TOTE_ENCODER).getDistance() - relativeEncoder;
 
+        
         double difference = Math.abs(distanceTraveled - distance);
         boolean isDone = difference <= error;
-//        System.out
-//                .println("incrementLift - [encoder distance, wanted distance, error, difference, isDone]"
-//                        + distanceTraveled
-//                        + ", "
-//                        + distance
-//                        + ", "
-//                        + error
-//                        + ", " + difference + ", " + isDone);
+        System.out
+                .println("incrementLift - [encoder distance, wanted distance, error, difference, isDone]"
+                        + distanceTraveled
+                        + ", "
+                        + distance
+                        + ", "
+                        + relativeEncoder
+                        + ", "
+                        + error
+                        + ", " + difference + ", " + isDone);
 
         if (isDone) {
             this.reset();
             this.stop();
+            relativeEncoder += distanceTraveled;
             return true;
         } else {
             liftSpeed = distanceControlLoop.getPID(distance, distanceTraveled);
@@ -259,8 +270,8 @@ public class ToteLift implements Module{
 
 	public void reset() {
 		distanceControlLoop.reset();
-		SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER)
-				.reset();
+//		SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER)
+//				.reset();
 	}
 
 	public void stop() {
