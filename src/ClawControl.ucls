@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.8" icons="true" always-add-relationships="false" generalizations="false" realizations="true" 
+  associations="false" dependencies="false" nesting-relationships="false">  
+  <class id="1" language="java" name="org.usfirst.frc.team1885.robot.manipulator.ClawControl" project="FRC 2015" 
+    file="/FRC 2015/src/org/usfirst/frc/team1885/robot/manipulator/ClawControl.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="39" width="108" x="324" y="270"/>    
+    <display autosize="true" stereotype="true" package="false" initial-value="false" signature="true" 
+      sort-features="false" accessors="true" visibility="true">      
+      <attributes public="false" package="false" protected="false" private="false" static="true"/>      
+      <operations public="false" package="false" protected="false" private="false" static="true"/>    
+    </display>  
+  </class>  
+  <association id="2">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="3" name="instance"/>      
+      <multiplicity id="4" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="false" initial-value="false" signature="true" 
+    sort-features="false" accessors="true" visibility="true">    
+    <attributes public="false" package="false" protected="false" private="false" static="true"/>    
+    <operations public="false" package="false" protected="false" private="false" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>
