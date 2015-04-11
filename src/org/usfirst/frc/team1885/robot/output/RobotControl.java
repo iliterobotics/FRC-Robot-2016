@@ -157,7 +157,12 @@ public class RobotControl {
 		outputTalons.get(RobotMotorType.ACTIVE_INTAKE_MOTOR_LEFT).set(-speed);
 	}
 
-	public void updateToteSupport(boolean isSupported) {
-		solenoid.get(RobotPneumaticType.LIFT_SUPPORT).set(isSupported);
+	public void updateCanBurglarPneumatics(boolean grabberState) {
+		solenoid.get(RobotPneumaticType.CAN_BURGLAR).set(grabberState);
+		
 	}
+
+//	public void updateToteSupport(boolean isSupported) {
+//		solenoid.get(RobotPneumaticType.LIFT_SUPPORT).set(isSupported);
+//	}
 }

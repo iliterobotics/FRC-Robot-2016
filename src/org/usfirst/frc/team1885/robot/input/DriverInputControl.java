@@ -64,12 +64,12 @@ public class DriverInputControl {
     public double getLeftDrive() {
         double axis = joystickMap.get(RobotJoystickType.LEFT_DRIVE).getAxis(
                 Joystick.AxisType.kY);
-        return (DrivetrainControl.getInstance().getGearState() == GearState.LOW_GEAR ? deadzone(axis) : deadzone(axis) );
+        return (DrivetrainControl.getInstance().getGearState() == GearState.LOW_GEAR ? deadzone(axis) : deadzone(axis) * .85 );
     }
     public double getRightDrive() {
         double axis = joystickMap.get(RobotJoystickType.RIGHT_DRIVE).getAxis(
                 Joystick.AxisType.kY);
-        return (DrivetrainControl.getInstance().getGearState() == GearState.LOW_GEAR ? deadzone(axis) : deadzone(axis) );
+        return (DrivetrainControl.getInstance().getGearState() == GearState.LOW_GEAR ? deadzone(axis) : deadzone(axis) * .85 );
     }
     public Joystick getJoystick(RobotJoystickType joystickType) {
         return joystickMap.get(joystickType);

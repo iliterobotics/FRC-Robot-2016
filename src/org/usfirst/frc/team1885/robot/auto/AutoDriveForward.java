@@ -17,6 +17,10 @@ public class AutoDriveForward extends AutoCommand{
 	private double rightDriveOutput; 
 	private double leftDistanceTraveled;
 	private double rightDistanceTraveled;
+	private double prevErrorLeft = 0;
+	private double prevErrorRight = 0;
+	private double timeout = 250;
+	private double stallStartTime = 0;
 	
 	private static double MIN_SPEED = 0.0;
 	
@@ -31,7 +35,8 @@ public class AutoDriveForward extends AutoCommand{
 		reset();
 	}
 	public boolean execute() {
-		System.out.println("AutoDriveFwd::[left dist, right dist] " + leftDistanceTraveled + ", " + rightDistanceTraveled);
+//		System.out.println("AutoDriveFwd::[left dist, right dist] " + leftDistanceTraveled + ", " + rightDistanceTraveled);
+				
 		if( numberOfEncoders == 1) {
 			if (Math.abs(rightDistanceTraveled  - distance) <= error || Math.abs(leftDistanceTraveled  - distance) <= error) {
 				this.reset();
@@ -43,7 +48,18 @@ public class AutoDriveForward extends AutoCommand{
 				this.reset();
 				return true;
 			}
+			
+//			if(Math.abs(prevErrorLeft - leftDistanceTraveled) <= 3 && Math.abs(prevErrorRight - rightDistanceTraveled) <= 3 && stallStartTime == 0) {
+//				stallStartTime = System.currentTimeMillis();
+//			} else {
+//				stallStartTime = 0;
+//			}
 		}
+//		System.out.println(stallStartTime + " " + Math.abs(prevErrorLeft - leftDistanceTraveled));
+//		if(stallStartTime + timeout > System.currentTimeMillis()) {
+//			this.reset();
+//			return true;
+//		}
 		
 		if(Math.abs(leftDistanceTraveled  - distance) > error) {
 			leftDistanceTraveled = SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).getDistance();
@@ -77,6 +93,10 @@ public class AutoDriveForward extends AutoCommand{
 		
 		DrivetrainControl.getInstance().setLeftDriveSpeed(-leftDriveOutput);
 		DrivetrainControl.getInstance().setRightDriveSpeed(-rightDriveOutput);
+		
+		prevErrorLeft = leftDistanceTraveled - distance;
+		prevErrorRight = rightDistanceTraveled - distance;
+
 		
 		return false;
 		

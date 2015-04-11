@@ -12,10 +12,12 @@ import org.usfirst.frc.team1885.robot.output.RobotControl;
 public class ToteLift implements Module{
 
 	public static final double DEFAULT_LIFT_SPEED = -.5;
+	public static final double indexHeight = 1210;
+	public static final double toteOffset = 1210 * .25;
 //	public static final double DEFAULT_LIFT_SPEED_DOWN = .25;
 	public static final double MAX_LIFT_SPEED_ENC = 4000;
-	public static final double MAX_LIFT_SPEED_UP_ENC = -3000;
-	public static final double MAX_LIFT_SPEED_DOWN_ENC = 2000;
+	public static final double MAX_LIFT_SPEED_UP_ENC = -2500;
+	public static final double MAX_LIFT_SPEED_DOWN_ENC = 1500;
 	
 	private static ToteLift instance;
 	private double liftSpeed;
@@ -87,11 +89,12 @@ public class ToteLift implements Module{
 		this.liftSpeed = 0;
 		
 		if ((DriverInputControl.getInstance().getButton(
-				RobotButtonType.TOTE_LIFT_INCREMENT) &&
-				!SensorInputControl.getInstance().isActive(
-		                SensorType.TOUCH_SENSOR_TOTE_RIGHT) &&
-                !SensorInputControl.getInstance().isActive(
-                        SensorType.TOUCH_SENSOR_TOTE_LEFT)
+				RobotButtonType.TOTE_LIFT_INCREMENT)
+//				&&
+//				!SensorInputControl.getInstance().isActive(
+//		                SensorType.TOUCH_SENSOR_TOTE_RIGHT) &&
+//                !SensorInputControl.getInstance().isActive(
+//                        SensorType.TOUCH_SENSOR_TOTE_LEFT)
 //				DriverInputControl
 //				.getInstance().getButton(RobotButtonType.TOTE_LIFT_NUDGE_UP)
 				)
@@ -100,7 +103,7 @@ public class ToteLift implements Module{
 			if (!isIncrementing) {
 				this.reset();
 
-				liftIncrementHeight = 1210;
+				liftIncrementHeight = ToteLift.indexHeight + ToteLift.toteOffset;
 				this.distanceControlLoop.setScalingValue(liftIncrementHeight);
 //				if (DriverInputControl.getInstance().getButton(
 //						RobotButtonType.TOTE_LIFT_NUDGE_UP)) {
@@ -121,7 +124,7 @@ public class ToteLift implements Module{
 			if (!isDecrementing) {
 				this.reset();
 
-				liftIncrementHeight = -1210;
+				liftIncrementHeight = -ToteLift.toteOffset;
 				this.distanceControlLoop.setScalingValue(liftIncrementHeight);
 //				if (DriverInputControl.getInstance().getButton(
 //						RobotButtonType.TOTE_LIFT_NUDGE_DOWN)) {
@@ -140,6 +143,7 @@ public class ToteLift implements Module{
 				&& !isResetting || isResetting) {
 
 			if (!isResetting) {
+				this.reset();
 				isResetting = true;
 				liftIncrementHeight = -this.relativeEncoder;
 				this.distanceControlLoop.setScalingValue(liftIncrementHeight);
@@ -248,16 +252,16 @@ public class ToteLift implements Module{
         
         double difference = Math.abs(distanceTraveled - distance);
         boolean isDone = difference <= error;
-        System.out
-                .println("incrementLift - [encoder distance, wanted distance, error, difference, isDone]"
-                        + distanceTraveled
-                        + ", "
-                        + distance
-                        + ", "
-                        + relativeEncoder
-                        + ", "
-                        + error
-                        + ", " + difference + ", " + isDone);
+//        System.out
+//                .println("incrementLift - [encoder distance, wanted distance, error, difference, isDone]"
+//                        + distanceTraveled
+//                        + ", "
+//                        + distance
+//                        + ", "
+//                        + relativeEncoder
+//                        + ", "
+//                        + error
+//                        + ", " + difference + ", " + isDone);
 
         if (isDone) {
             this.reset();
@@ -274,6 +278,7 @@ public class ToteLift implements Module{
 
 	public void reset() {
 		distanceControlLoop.reset();
+		this.motorPowerControlLoop.reset();
 //		SensorInputControl.getInstance().getEncoder(SensorType.TOTE_ENCODER)
 //				.reset();
 	}
@@ -290,7 +295,7 @@ public class ToteLift implements Module{
 		//FIXME: do not commit, was -liftSpeed for non-testbed
 		RobotControl.getInstance().updateToteMotor(motorSpeed);
 		RobotControl.getInstance().updateToteStop(isBraked);
-		RobotControl.getInstance().updateToteSupport(isSupported);
+//		RobotControl.getInstance().updateToteSupport(isSupported);
 	}
 
 	@Override

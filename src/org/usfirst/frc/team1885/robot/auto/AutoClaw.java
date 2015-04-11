@@ -22,9 +22,9 @@ public class AutoClaw extends AutoCommand{
 		return true;
 	}
 	public void reset() {
-		rotationState = false;
-		extensionState = false;
-		pinchState = false;
+//		rotationState = false;
+//		extensionState = false;
+//		pinchState = false;
 		
 	}
 

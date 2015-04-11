@@ -20,6 +20,7 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.Alignment;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
+import org.usfirst.frc.team1885.robot.modules.lift.CanGrabber;
 import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
@@ -86,41 +87,50 @@ public class Robot extends SampleRobot {
 		SensorInputControl.getInstance()
 				.getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
 
+				
+		
+		
 		boolean magnetState = false;
 
 		RobotStatusService robotStatusService = new RobotStatusService();
 
 		while (isOperatorControl() && isEnabled()) {
-			if (System.currentTimeMillis() - timeTracker >= (delayTime * 1000)) {
-				timeTracker = System.currentTimeMillis();
-				try {
-					robotStatusService.update();
-					RobotServer.getInstance().send(robotStatusService.getTm());
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
-//				System.out.println(SensorInputControl.getInstance().getNAVX()
-//						.getYaw360());
-			}
+			
+//			System.out.println(SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER) + " " 
+//					 + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + " " +
+//					SensorInputControl.getInstance().getEncoderTicks(SensorType.TOTE_ENCODER) + " " + 
+//					SensorInputControl.getInstance().isActive(SensorType.RECYCLE_BIN_LOWER_LIMIT) + " " +
+//					SensorInputControl.getInstance().isActive(SensorType.RECYCLE_BIN_UPPER_LIMIT));
+//			if (System.currentTimeMillis() - timeTracker >= (delayTime * 1000)) {
+//				timeTracker = System.currentTimeMillis();
+//				try {
+//					robotStatusService.update();
+//					RobotServer.getInstance().send(robotStatusService.getTm());
+//				} catch (Exception e) {
+//					e.printStackTrace();
+//				}
+//
+////				System.out.println(SensorInputControl.getInstance().getNAVX()
+////						.getYaw360());
+//			}
 			
 			if((DriverInputControl.getInstance().getButton(
 				RobotButtonType.CANCEL_AUTOMATION))) {
 				this.activeTemplate = null;
 			}
 			
-			if((DriverInputControl.getInstance().getButton(
-				RobotButtonType.AUTOMATE_2_TOTES)) || this.activeTemplate != null) {
-				
-				if(this.activeTemplate == null) {
-					this.activeTemplate = AutoTemplate.automate2Totes();
-				}
-				
-				if(this.activeTemplate.execute()) {
-					this.activeTemplate = null;
-				}
-				
-			}
+//			if((DriverInputControl.getInstance().getButton(
+//				RobotButtonType.AUTOMATE_2_TOTES)) || this.activeTemplate != null) {
+//				
+//				if(this.activeTemplate == null) {
+//					this.activeTemplate = AutoTemplate.automate2Totes();
+//				}
+//				
+//				if(this.activeTemplate.execute()) {
+//					this.activeTemplate = null;
+//				}
+//				
+//			}
 			else
 			{
 				this.activeTemplate = null;
@@ -129,6 +139,7 @@ public class Robot extends SampleRobot {
 				toteLift.updateLift();
 				recycleBinLift.updateLift();
 				Alignment.getInstance().update();
+				CanGrabber.getInstance().update();
 				// System.out.println("Robot::tele - lidar: " +
 				// SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance());
 				// BackupRoutine.getInstance().update();
@@ -140,6 +151,7 @@ public class Robot extends SampleRobot {
 				DrivetrainControl.getInstance().updateOutputs();
 				ClawControl.getInstance().updateOutputs();
 				Alignment.getInstance().updateOutputs();
+				CanGrabber.getInstance().updateOutputs();
 			}
 			Timer.delay(.005); // wait for a motor update time
 		}
@@ -149,7 +161,7 @@ public class Robot extends SampleRobot {
 		commands = new LinkedList<AutoCommand>();
 
 		autoOneTote();
-
+//		autoCanGrabber();
 		while (!commands.isEmpty() && isEnabled() && isAutonomous()) {
 
 			AutoCommand currCommand = commands.peek();
@@ -174,17 +186,28 @@ public class Robot extends SampleRobot {
 	
 	public void autoCanGrabber() {
 		//Moves forward and grabs the cans moves backwards
-		commands.add(new AutoDriveForward(.75*12, 1, 2));
 		commands.add(new AutoCanGrabber(true));
-		commands.add(new AutoDriveForward(-7*12, 1, 2));
-		commands.add(new AutoCanGrabber(false));
+		commands.add(new AutoDriveForward(.75*12, 1, 2));
+		commands.add(new AutoWait(1000));
+		commands.add(new AutoDriveForward(-6*12, 1, 2));
+//		commands.add(new AutoCanGrabber(false));
 		
 	}
 	
 	public void autoOneTote() {
 		// Picks up one tote, drives backwards to autozone, drops tote
+		commands.add(new AutoClaw(false, false, true));
 		commands.add(new AutoToteLift(1210, 10));
-		commands.add(new AutoDriveForward(-7 * 12, 1, 2));
+		commands.add(new AutoToteLift(1210, 10));
+		commands.add(new AutoToteLift(1210, 10));
+		commands.add(new AutoDriveForward(-86, 1, 2));
+		// commands.add(new AutoToteLift(-1210, 10));
+	}
+	
+	public void autoOneCan() {
+		// Picks up one tote, drives backwards to autozone, drops tote
+		commands.add(new AutoClaw(false, false, true));
+		commands.add(new AutoDriveForward(3 * 12, 1, 2));
 		// commands.add(new AutoToteLift(-1210, 10));
 	}
 

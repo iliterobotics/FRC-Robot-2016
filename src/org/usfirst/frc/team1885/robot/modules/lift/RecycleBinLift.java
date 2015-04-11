@@ -75,11 +75,11 @@ public class RecycleBinLift implements Module{
         }
         
         if (state == MotorState.FORWARD) {
-            if (SensorInputControl.getInstance()
-                    .getLimitSwitch(SensorType.RECYCLE_BIN_UPPER_LIMIT).get()) {
-                hasBin = true;
-                stop();
-            }
+//            if (SensorInputControl.getInstance()
+//                    .getLimitSwitch(SensorType.RECYCLE_BIN_UPPER_LIMIT).get()) {
+//                hasBin = true;
+//                stop();
+//            }
         }
         
         if (state == MotorState.REVERSE) {
