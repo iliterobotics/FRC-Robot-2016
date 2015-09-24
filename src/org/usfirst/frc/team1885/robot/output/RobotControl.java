@@ -156,4 +156,8 @@ public class RobotControl {
 	public void updateToteSupport(boolean isSupported) {
 		solenoid.get(RobotPneumaticType.LIFT_SUPPORT).set(isSupported);
 	}
+	
+	public void updateIntakeMotors(double speed) {
+	    outputTalons.get(RobotMotorType.ACTIVE_INTAKE_MOTOR).set(speed);
+	}
 }
