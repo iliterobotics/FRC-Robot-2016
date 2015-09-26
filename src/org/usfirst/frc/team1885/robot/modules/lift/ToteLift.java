@@ -11,7 +11,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 public class ToteLift implements Module{
 
-	public static final double DEFAULT_LIFT_SPEED = -.5;
+	public static final double DEFAULT_LIFT_SPEED = -2;
 	public static final double indexHeight = 1210;
 	public static final double toteOffset = 1210 * .25;
 //	public static final double DEFAULT_LIFT_SPEED_DOWN = .25;
@@ -151,12 +151,12 @@ public class ToteLift implements Module{
 			
 			this.isResetting = !incrementLift(liftIncrementHeight, 10);
 			
-//			liftSpeed = DEFAULT_LIFT_SPEED;
-			if (!SensorInputControl.getInstance().isActive(
-					SensorType.MAGNET_SENSOR)) {
-				isResetting = false;
-				liftSpeed = 0;
-			}
+			liftSpeed = DEFAULT_LIFT_SPEED;
+//			if (!SensorInputControl.getInstance().isActive(
+//					SensorType.MAGNET_SENSOR)) {
+//				isResetting = false;
+//				liftSpeed = 0;
+//			}
 		}
 
 //		System.out.println(toString());
@@ -239,7 +239,7 @@ public class ToteLift implements Module{
 			double currEncRate = -SensorInputControl.getInstance()
 					.getEncoder(SensorType.TOTE_ENCODER).getRate();
 
-			this.motorSpeed = -motorPowerControlLoop.getPID(this.desiredLiftSpeedTicks, -currEncRate);
+			this.motorSpeed = (-motorPowerControlLoop.getPID(this.desiredLiftSpeedTicks, -currEncRate))*3;
 			
 		}
 	}
