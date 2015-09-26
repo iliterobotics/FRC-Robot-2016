@@ -27,6 +27,8 @@ public class RobotConfiguration {
 //	public static final double FRAME_LENGTH = 25;
     
     public static void configureRobot(){
+        System.out.println("CHRIS-CONFIGURE ROBOT");
+        System.err.println("CHRIS-CONFIGURE ROBOT ERROR");
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, 0 );
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, 1 );
         DriverInputControl.getInstance().addJoystick( RobotJoystickType.CONTROLLER, 2 );
@@ -47,13 +49,8 @@ public class RobotConfiguration {
 //        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_NUDGE_DOWN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 7 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_RESET, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
 
-        try {
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_IN, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 3 ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_OUT, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 2 ) );
-        } catch(Exception e) {
-            System.out.println("OMG-Exception!");
-            e.printStackTrace();
-        }
+//        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_IN, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 3 ) );
+//        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_OUT, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.GEAR_SHIFT, new JoystickButtonMatch( RobotJoystickType.RIGHT_DRIVE, 2 ) );
         //JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.CAN_BURGLAR, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.CANCEL_AUTOMATION, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 3 ) );
