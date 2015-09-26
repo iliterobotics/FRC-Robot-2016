@@ -11,7 +11,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 public class ToteLift implements Module{
 
-	public static final double DEFAULT_LIFT_SPEED = -.5;
+	public static final double DEFAULT_LIFT_SPEED = -1.5;
 	public static final double indexHeight = 1210;
 	public static final double toteOffset = 1210 * .25;
 //	public static final double DEFAULT_LIFT_SPEED_DOWN = .25;
