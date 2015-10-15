@@ -49,8 +49,8 @@ public class RobotConfiguration {
 //        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_NUDGE_DOWN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 7 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.TOTE_LIFT_RESET, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
 
-//        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_IN, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 3 ) );
-//        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_OUT, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 2 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_IN, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 3 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_OUT, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.GEAR_SHIFT, new JoystickButtonMatch( RobotJoystickType.RIGHT_DRIVE, 2 ) );
         //JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.CAN_BURGLAR, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.CANCEL_AUTOMATION, new JoystickButtonMatch( RobotJoystickType.LEFT_DRIVE, 3 ) );
