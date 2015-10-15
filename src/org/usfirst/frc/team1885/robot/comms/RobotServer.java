@@ -15,13 +15,15 @@ import org.usfirst.frc.team1885.robot.common.type.ServerMessageType;
 
 public class RobotServer implements Runnable {
 	private static RobotServer instance = null;
+	private boolean isRunning;
 	ServerSocket server;
 	RobotClientConnection robo;
-	String line;
 	List<RobotServerListener> robotModules = new ArrayList<RobotServerListener>();
 	ObjectInputStream inStream;
 	ObjectOutputStream outStream;
 
+	String line; /* Not utilized */
+	
 	protected RobotServer() {
 	}
 
@@ -30,8 +32,6 @@ public class RobotServer implements Runnable {
 			instance = new RobotServer();
 		return instance;
 	}
-
-	private boolean isRunning;
 
 	public boolean startServer() {
 		if (!this.isRunning) {
@@ -77,11 +77,27 @@ public class RobotServer implements Runnable {
 
 	}
 
-	public void setup(int port) {
+	 public void receive() {
 		try {
-			server = new ServerSocket(port);
-		} catch (IOException e) {
-			System.out.println("Could not listen on port " + port);
+			Object dataObject = inStream.readObject();
+
+			if (dataObject instanceof Message) {
+				RobotServerEvent e = new RobotServerEvent(
+						(Message) (dataObject));
+				notifyListeners(e);
+			}
+		} catch (Exception e) {
+			System.out.println("Error : " + e);
+		}
+	}
+	
+	public void addListener(RobotServerListener listener) {
+		robotModules.add(listener);
+	}
+	
+	public void notifyListeners(RobotServerEvent event) {
+		for (RobotServerListener listener : robotModules) {
+			listener.receivedServerEvent(event);
 		}
 	}
 
@@ -91,6 +107,10 @@ public class RobotServer implements Runnable {
 		private PrintWriter out;
 
 		public RobotClientConnection() {
+		}
+		
+		RobotClientConnection(Socket socket) {
+			client = socket;
 		}
 
 		public void run() {
@@ -124,10 +144,6 @@ public class RobotServer implements Runnable {
 				e.printStackTrace();
 			}
 		}
-
-		RobotClientConnection(Socket socket) {
-			client = socket;
-		}
 	}
 
 	private class RobotClientDecryption {
@@ -136,27 +152,11 @@ public class RobotServer implements Runnable {
 		}
 	}
 
-	public void addListener(RobotServerListener listener) {
-		robotModules.add(listener);
-	}
-
-	public void notifyListeners(RobotServerEvent event) {
-		for (RobotServerListener listener : robotModules) {
-			listener.receivedServerEvent(event);
-		}
-	}
-
-	public void receive() {
+	public void setup(int port) {
 		try {
-			Object dataObject = inStream.readObject();
-
-			if (dataObject instanceof Message) {
-				RobotServerEvent e = new RobotServerEvent(
-						(Message) (dataObject));
-				notifyListeners(e);
-			}
-		} catch (Exception e) {
-			System.out.println("Error : " + e);
+			server = new ServerSocket(port);
+		} catch (IOException e) {
+			System.out.println("Could not listen on port " + port);
 		}
 	}
 
