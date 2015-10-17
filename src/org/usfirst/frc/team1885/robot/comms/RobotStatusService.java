@@ -4,6 +4,7 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
+import org.usfirst.frc.team1885.robot.modules.lift.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
 
@@ -14,6 +15,7 @@ public class RobotStatusService
 	private DrivetrainControl dt = DrivetrainControl.getInstance();
 	private SensorInputControl sic = SensorInputControl.getInstance();
 	private ClawControl ccInstance = ClawControl.getInstance();
+	private ActiveIntake aiInstance = ActiveIntake.getInstance();
 
 	private RobotInfoMessage robotInfoMessage = new RobotInfoMessage();
 	
@@ -38,6 +40,11 @@ public class RobotStatusService
 		setLineSensor();
 		setMagnetSensor();
 		updateClaw();
+		updateActiveIntake();
+	}
+	
+	public void updateActiveIntake(){
+	    this.robotInfoMessage.setActiveMotorState(aiInstance.getMotorState());
 	}
 	
 	public void updateClaw() {
