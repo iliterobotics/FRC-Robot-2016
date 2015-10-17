@@ -20,6 +20,7 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.Alignment;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
+import org.usfirst.frc.team1885.robot.modules.lift.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.lift.CanGrabber;
 import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
@@ -140,6 +141,7 @@ public class Robot extends SampleRobot {
 				recycleBinLift.updateLift();
 				Alignment.getInstance().update();
 				CanGrabber.getInstance().update();
+				ActiveIntake.getInstance().update();
 				// System.out.println("Robot::tele - lidar: " +
 				// SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance());
 				// BackupRoutine.getInstance().update();
@@ -150,6 +152,7 @@ public class Robot extends SampleRobot {
 				toteLift.updateOutputs();
 				DrivetrainControl.getInstance().updateOutputs();
 				ClawControl.getInstance().updateOutputs();
+				ActiveIntake.getInstance().updateOutputs();
 				Alignment.getInstance().updateOutputs();
 				CanGrabber.getInstance().updateOutputs();
 			}

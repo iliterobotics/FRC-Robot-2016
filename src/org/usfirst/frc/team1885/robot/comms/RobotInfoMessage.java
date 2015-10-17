@@ -34,6 +34,9 @@ public class RobotInfoMessage extends Message {
 	private boolean rotationState;
 	private boolean extensionState;
 	private boolean pinchState;
+	// Active Intake
+	private double activeMotorIntake;
+	private MotorState activeMotorState;
 	
 	
 	public RobotInfoMessage() {
@@ -222,6 +225,22 @@ public class RobotInfoMessage extends Message {
 
 	public void setMagnetSensor(boolean magnetSensor) {
 		this.magnetSensor = magnetSensor;
+	}
+	
+	public void setActiveIntake(double activeIntake ){
+	    this.activeMotorIntake = activeIntake;
+	}
+	
+	public double getActiveIntake(){
+	    return this.activeMotorIntake;
+	}
+	
+	public MotorState getActiveMotorState(){
+	    return this.activeMotorState;
+	}
+	
+	public void setActiveMotorState(MotorState ms){
+	    this.activeMotorState = ms;
 	}
 
 }
