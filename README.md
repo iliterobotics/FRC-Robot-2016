@@ -1,7 +1,7 @@
 # THIS IS THE 2015 ROBOT CODE DEVELOPMENT BRANCH
 #
 
-#How to setup the enviroment to push to RoboRIO
+#How to setup the environment to push to RoboRIO
 
 1. First install the FRC Update suite, located at:
 http://www.ni.com/download/first-robotics-software-2015/5112/en/
