@@ -80,7 +80,8 @@ public class RobotConfiguration {
         RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 3 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.TOTE_LIFT, 4 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.RECYCLE_LIFT, 5 );
-        RobotControl.getInstance().addTalonOutput( RobotMotorType.ACTIVE_INTAKE_MOTOR, 6 );
+        RobotControl.getInstance().addTalonOutput( RobotMotorType.ACTIVE_INTAKE_LEFT, 6 );
+        RobotControl.getInstance().addTalonOutput( RobotMotorType.ACTIVE_INTAKE_RIGHT, 7 );
 
         RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC, 2);
         RobotControl.getInstance().addPneumaticOutput(RobotPneumaticType.TOTE_LIFT_STOP, 3);

@@ -28,7 +28,8 @@ public class RobotInfoService {
 	private boolean stabilizer, firstHookAtBottom, lowPressure;
 	private String gearState;
 	private double powerLevel, toteDistance; // Remember to add the >9000 easter egg thing :D
-	private MotorState activeState;
+	private MotorState activeStateLeft;
+	private MotorState activeStateRight;
 
 	public static RobotInfoService getInstance() {
 		if (instance == null)
@@ -37,7 +38,8 @@ public class RobotInfoService {
 	}
 
 	public void updateActiveIntake(){
-	    activeState = aiInstance.getMotorState();
+	    activeStateLeft = aiInstance.getLeftMotorState();
+	    activeStateRight = aiInstance.getRightMotorState();
 	}
 	
 	public void updatePowerLevel() {
@@ -74,9 +76,13 @@ public class RobotInfoService {
 		stabilizer = rcInstance.getSolenoids(RobotPneumaticType.TOTE_LIFT_STOP); // Confirm
 	}
 	
-	public MotorState getActiveIntakeMotorState(){
-	    return activeState;
+	public MotorState getActiveIntakeMotorStateLeft(){
+	    return activeStateLeft;
 	}
+	
+	public MotorState getActiveIntakeMotorStateRight(){
+        return activeStateRight;
+    }
 
 	public int getLiftEncoderTicks() {
 		return liftEncoderTicks;
