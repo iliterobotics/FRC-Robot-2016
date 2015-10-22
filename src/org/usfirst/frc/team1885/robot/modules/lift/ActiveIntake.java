@@ -21,7 +21,7 @@ public class ActiveIntake implements Module{
     protected ActiveIntake() {
         this.leftState = MotorState.OFF;
         this.rightState = MotorState.OFF;
-        intakeLeftSpeed = 0;
+        intakeLeftSpeed = 0; 
         intakeRightSpeed = 0;
     }
     public static ActiveIntake getInstance() {
@@ -92,8 +92,7 @@ public class ActiveIntake implements Module{
     }
     
     public void updateOutputs() {
-        RobotControl.getInstance().updateIntakeMotors(intakeLeftSpeed);
-        RobotControl.getInstance().updateIntakeMotors(intakeRightSpeed);
+        RobotControl.getInstance().updateIntakeMotors(intakeLeftSpeed, intakeRightSpeed);
     }
     @Override
     public void update() {

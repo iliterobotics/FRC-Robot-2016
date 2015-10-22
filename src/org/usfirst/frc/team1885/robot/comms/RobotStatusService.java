@@ -44,8 +44,7 @@ public class RobotStatusService
 	}
 	
 	public void updateActiveIntake(){
-	    this.robotInfoMessage.setActiveMotorStateLeft(aiInstance.getLeftMotorState());
-	    this.robotInfoMessage.setActiveMotorStateRight(aiInstance.getRightMotorState());
+	    this.robotInfoMessage.setActiveMotorState(aiInstance.getLeftMotorState(),aiInstance.getRightMotorState());
 	}
 	
 	public void updateClaw() {
