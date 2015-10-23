@@ -24,7 +24,6 @@ public class CanGrabber implements Module {
 
     public void update() {
     	if (DriverInputControl.getInstance().getButton(RobotButtonType.CAN_BURGLAR) && !prevGrabberButtonState) {
-    	    System.out.println( "grabberState :: " + grabberState );
     		grabberState = !grabberState;
     	}
     	
