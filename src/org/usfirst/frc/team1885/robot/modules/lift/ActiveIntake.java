@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class ActiveIntake implements Module{
 
+    public static final int INTAKE_SPEED = 1;
     private static ActiveIntake instance;
     private double intakeLeftSpeed;
     private double intakeRightSpeed;
@@ -47,21 +48,23 @@ public class ActiveIntake implements Module{
         return intakeRightSpeed;
     }
     public void updateIntake() {
+        intakeLeftSpeed = 0;
+        intakeRightSpeed = 0;
         
         if ((DriverInputControl.getInstance().getButton(
                 RobotButtonType.INTAKE_IN))) {
                 leftState = MotorState.REVERSE;
                 rightState = MotorState.FORWARD;
-                intakeLeftSpeed = -.5;
-                intakeRightSpeed = .5;
+                intakeLeftSpeed = -INTAKE_SPEED;
+                intakeRightSpeed = INTAKE_SPEED;
             }
     
         if ((DriverInputControl.getInstance().getButton(
                 RobotButtonType.INTAKE_OUT))) {
                 leftState = MotorState.FORWARD;
                 rightState = MotorState.REVERSE;
-                intakeLeftSpeed = .5;
-                intakeRightSpeed = -.5;
+                intakeLeftSpeed = INTAKE_SPEED;
+                intakeRightSpeed = -INTAKE_SPEED;
             }
         updateIntake(intakeLeftSpeed, intakeRightSpeed);
     }

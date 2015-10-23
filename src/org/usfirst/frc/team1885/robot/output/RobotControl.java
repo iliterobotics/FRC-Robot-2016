@@ -153,10 +153,10 @@ public class RobotControl {
 		outputTalons.get(RobotMotorType.RECYCLE_LIFT).set(speed);
 	}
 
-//	public void updateCanBurglarPneumatics(boolean grabberState) {
-//		solenoid.get(RobotPneumaticType.CAN_BURGLAR).set(grabberState);
-//		
-//	}
+	public void updateCanBurglarPneumatics(boolean grabberState) {
+		solenoid.get(RobotPneumaticType.CAN_BURGLAR).set(grabberState);
+		
+	}
 	
 	public void updateIntakeMotors(double speedLeft, double speedRight) {
 	    outputTalons.get(RobotMotorType.ACTIVE_INTAKE_LEFT).set(speedLeft);
