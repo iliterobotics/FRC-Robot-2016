@@ -55,16 +55,16 @@ public class ActiveIntake implements Module{
                 RobotButtonType.INTAKE_IN))) {
                 leftState = MotorState.REVERSE;
                 rightState = MotorState.FORWARD;
-                intakeLeftSpeed = -INTAKE_SPEED;
-                intakeRightSpeed = INTAKE_SPEED;
+                intakeLeftSpeed = INTAKE_SPEED;
+                intakeRightSpeed = -INTAKE_SPEED;
             }
     
         if ((DriverInputControl.getInstance().getButton(
                 RobotButtonType.INTAKE_OUT))) {
                 leftState = MotorState.FORWARD;
                 rightState = MotorState.REVERSE;
-                intakeLeftSpeed = INTAKE_SPEED;
-                intakeRightSpeed = -INTAKE_SPEED;
+                intakeLeftSpeed = -INTAKE_SPEED;
+                intakeRightSpeed = INTAKE_SPEED;
             }
         updateIntake(intakeLeftSpeed, intakeRightSpeed);
     }
