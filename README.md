@@ -25,3 +25,6 @@ To connect to the webview, use: http://roborio-1885.local This has to be run on 
 because of Microsoft Silverlight
 
 After installing open the build.properties located at: user.dir/wpilib/java/current/ant
+
+#Things to keep in mind
+Always pull before you push.

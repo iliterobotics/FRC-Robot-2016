@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
+import org.usfirst.frc.team1885.robot.modules.lift.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
@@ -21,6 +22,7 @@ public class DataTelemetryService {
 	private DrivetrainControl dt = DrivetrainControl.getInstance();
 	private SensorInputControl sic = SensorInputControl.getInstance();
 	private RobotControl rc = RobotControl.getInstance();
+	private ActiveIntake ac = ActiveIntake.getInstance();
 
 	private TelemetryMessage tm = new TelemetryMessage();
 

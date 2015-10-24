@@ -38,7 +38,7 @@ public class CanGrabber implements Module {
     }
 
    public void updateOutputs() {
-//        RobotControl.getInstance().updateCanBurglarPneumatics( grabberState );
+        RobotControl.getInstance().updateCanBurglarPneumatics( grabberState );
     }
 
 }

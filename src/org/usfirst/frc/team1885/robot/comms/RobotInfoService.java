@@ -1,11 +1,13 @@
 package org.usfirst.frc.team1885.robot.comms;
 
 import org.usfirst.frc.team1885.robot.common.type.GearState;
+import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
+import org.usfirst.frc.team1885.robot.modules.lift.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
 
@@ -20,12 +22,14 @@ public class RobotInfoService {
 	private RobotControl rcInstance = RobotControl.getInstance();
 	private ToteLift tlInstance = ToteLift.getInstance();
 	private ClawControl ccInstance = ClawControl.getInstance();
+	private ActiveIntake aiInstance = ActiveIntake.getInstance();
 
 	private int liftEncoderTicks;
 	private boolean stabilizer, firstHookAtBottom, lowPressure;
 	private String gearState;
-	private double powerLevel, toteDistance; // Remember to add the >9000 easter
-												// egg thing :D
+	private double powerLevel, toteDistance; // Remember to add the >9000 easter egg thing :D
+	private MotorState activeStateLeft;
+	private MotorState activeStateRight;
 
 	public static RobotInfoService getInstance() {
 		if (instance == null)
@@ -33,6 +37,11 @@ public class RobotInfoService {
 		return instance;
 	}
 
+	public void updateActiveIntake(){
+	    activeStateLeft = aiInstance.getLeftMotorState();
+	    activeStateRight = aiInstance.getRightMotorState();
+	}
+	
 	public void updatePowerLevel() {
 		PowerDistributionPanel pdp = new PowerDistributionPanel();
 		powerLevel = pdp.getTotalPower();
@@ -66,6 +75,14 @@ public class RobotInfoService {
 	private void updateStabilizer() {
 		stabilizer = rcInstance.getSolenoids(RobotPneumaticType.TOTE_LIFT_STOP); // Confirm
 	}
+	
+	public MotorState getActiveIntakeMotorStateLeft(){
+	    return activeStateLeft;
+	}
+	
+	public MotorState getActiveIntakeMotorStateRight(){
+        return activeStateRight;
+    }
 
 	public int getLiftEncoderTicks() {
 		return liftEncoderTicks;
