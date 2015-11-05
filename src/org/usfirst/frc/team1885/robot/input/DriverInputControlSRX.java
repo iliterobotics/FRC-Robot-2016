@@ -7,6 +7,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Joystick.AxisType;
 
 public class DriverInputControlSRX {
 	private HashMap<RobotJoystickType, Joystick> joystickMap;
@@ -43,6 +44,10 @@ public class DriverInputControlSRX {
     {
     	joystickMap.put(joystickType, joystick);
     	return true;
+    }
+    public void update()
+    {
+        this.update(this.getJoystick(RobotJoystickType.LEFT_DRIVE).getAxis(AxisType.kY), this.getJoystick(RobotJoystickType.RIGHT_DRIVE).getAxis(AxisType.kY));
     }
     public void update(double leftJoystick, double rightJoystick)
     {    
