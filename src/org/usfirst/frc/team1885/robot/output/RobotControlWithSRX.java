@@ -2,6 +2,7 @@ package org.usfirst.frc.team1885.robot.output;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 
@@ -13,6 +14,7 @@ public class RobotControlWithSRX
 	public static RobotControlWithSRX instance;
 	private List<CANTalon> leftDrive;
 	private List<CANTalon> rightDrive;
+	private Map<RobotMotorType, CANTalon> talons;
 	public static synchronized RobotControlWithSRX getInstance() {
 		if (instance == null) {
 			instance = new RobotControlWithSRX();
@@ -32,6 +34,10 @@ public class RobotControlWithSRX
 			// add to right motor
 			rightDrive.add(new CANTalon(port));
 		}
+		else
+		{
+		    talons.put(type, new CANTalon(port));
+		}
 	}
 	public void updateDriveSpeed(double leftspeed, double rightspeed) {
 		for (CANTalon leftMotor : leftDrive) {
@@ -41,5 +47,17 @@ public class RobotControlWithSRX
 		for (CANTalon rightMotor : rightDrive) {
 			rightMotor.set(-rightspeed);
 		}
+	}
+	public List<CANTalon> getLeftDrive()
+	{
+	    return leftDrive;
+	}
+	public List<CANTalon> getRightDrive()
+	{
+	    return rightDrive;
+	}
+	public Map<RobotMotorType, CANTalon> getTalons()
+	{
+	    return this.talons;
 	}
 }

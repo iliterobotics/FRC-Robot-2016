@@ -25,7 +25,7 @@ public class Robot extends SampleRobot
         while(isOperatorControl() && isEnabled())
         {
             drx.update();
-            
+            sensorrx.update();
             Timer.delay(.005);
             //can't update faster than this for motors
         }
