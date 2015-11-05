@@ -42,7 +42,7 @@ public class RobotControlWithSRX
 	public void updateDriveSpeed(double leftspeed, double rightspeed) {
 		for (CANTalon leftMotor : leftDrive) {
 			leftMotor.set(leftspeed);
-			System.out.println(leftMotor.getOutputVoltage() + "Voltage");
+			//System.out.println(leftMotor.getOutputVoltage() + "Voltage");
 		}
 		for (CANTalon rightMotor : rightDrive) {
 			rightMotor.set(-rightspeed);

@@ -21,7 +21,7 @@ public class SensorInputControlSRX {
     }
     public void update()
     {
-        //Talon Current
+        /*//Talon Current
         for(CANTalon ct : rsrx.getLeftDrive())
         {
             System.out.println(getCurrent(ct.getDeviceID()) + "This is current for talon ID : " + ct.getDeviceID());
@@ -59,7 +59,8 @@ public class SensorInputControlSRX {
         for(RobotMotorType ct : rsrx.getTalons().keySet())
         {
             System.out.println(getEncoderVelocity(rsrx.getTalons().get(ct).getDeviceID()) + "This is encoder velocity for talon ID : " + rsrx.getTalons().get(ct).getDeviceID());
-        }
+        }*/
+        System.out.println(getCurrent(2) + " Current");
     }
     public double getCurrent(int channel)
     {
