@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot;
 
+import org.usfirst.frc.team1885.robot.auto.AutoRoutine;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfigSRX;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
@@ -30,6 +31,11 @@ public class Robot extends SampleRobot
             //can't update faster than this for motors
         }
             
+    }
+    public void autonomous()
+    {
+        AutoRoutine ar = new AutoRoutine(this);
+        ar.execute();
     }
 }
 
