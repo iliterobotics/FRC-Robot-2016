@@ -50,16 +50,20 @@ public class SensorInputControlSRX {
         //Encoder Velocity
         for(CANTalon ct : rsrx.getLeftDrive())
         {
-            System.out.println("Velocity Talon " + ct.getDeviceID() + ":: " + getEncoderVelocity(ct.getDeviceID()));
+            //System.out.println("Velocity Talon " + ct.getDeviceID() + ":: " + getEncoderVelocity(ct.getDeviceID()));
+            //System.out.println("Limit Switch " + ct.getDeviceID() + ":: " + limitSwitch(ct.getDeviceID()));
+            System.out.println("Limit Switch " + ct.getDeviceID() + ":: " + this.analogLimitSwitch(ct.getDeviceID()));
+            
         }
-        for(CANTalon ct : rsrx.getRightDrive())
+        
+        /*for(CANTalon ct : rsrx.getRightDrive())
         {
             System.out.println("Velocity Talon " + ct.getDeviceID() + ":: " + getEncoderVelocity(ct.getDeviceID()));
         }
         for(RobotMotorType ct : rsrx.getTalons().keySet())
         {
             System.out.println("Talon " + rsrx.getTalons().get(ct).getDeviceID() + ":: " + getEncoderVelocity(rsrx.getTalons().get(ct).getDeviceID()));
-        }
+        }*/
 //        System.out.println(getCurrent(2) + " Current");
     }
     public double getCurrent(int channel)
@@ -69,7 +73,59 @@ public class SensorInputControlSRX {
     public double getPDPTemperature()
     {
         return PDP.getTemperature();
-    }    
+    }
+    public int analogLimitSwitch(int talonport)
+    {
+        List<CANTalon> leftDrive = rsrx.getLeftDrive();
+        for(CANTalon  ct: leftDrive)
+        {
+            if(ct.getDeviceID() == talonport)
+            {
+                return ct.getAnalogInPosition();
+            }
+        }
+        for(CANTalon  ct: rsrx.getRightDrive())
+        {
+            if(ct.getDeviceID() == talonport)
+            {
+                return ct.getAnalogInPosition();
+            }
+        }
+        for(RobotMotorType ct: rsrx.getTalons().keySet())
+        {
+            if(rsrx.getTalons().get(ct).getDeviceID() == talonport)
+            {
+                return rsrx.getTalons().get(ct).getAnalogInPosition();
+            }
+        }
+        return -1;
+    }
+    public boolean digitalLimitSwitch(int talonport)
+    {
+        List<CANTalon> leftDrive = rsrx.getLeftDrive();
+        for(CANTalon  ct: leftDrive)
+        {
+            if(ct.getDeviceID() == talonport)
+            {
+                return ct.isFwdLimitSwitchClosed();
+            }
+        }
+        for(CANTalon  ct: rsrx.getRightDrive())
+        {
+            if(ct.getDeviceID() == talonport)
+            {
+                return ct.isFwdLimitSwitchClosed();
+            }
+        }
+        for(RobotMotorType ct: rsrx.getTalons().keySet())
+        {
+            if(rsrx.getTalons().get(ct).getDeviceID() == talonport)
+            {
+                return rsrx.getTalons().get(ct).isFwdLimitSwitchClosed();
+            }
+        }
+        return false;
+    }
     public int getEncoderPos(int talonport)
     {
         List<CANTalon> leftDrive = rsrx.getLeftDrive();

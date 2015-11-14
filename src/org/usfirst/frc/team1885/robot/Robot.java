@@ -32,10 +32,10 @@ public class Robot extends SampleRobot
         }
             
     }
-    public void autonomous()
-    {
-        AutoRoutine ar = new AutoRoutine(this);
-        ar.execute();
-    }
+//    public void autonomous()
+//    {
+//        AutoRoutine ar = new AutoRoutine(this);
+//        ar.execute();
+//    }
 }
 
