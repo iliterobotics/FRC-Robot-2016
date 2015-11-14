@@ -21,46 +21,46 @@ public class SensorInputControlSRX {
     }
     public void update()
     {
-        /*//Talon Current
-        for(CANTalon ct : rsrx.getLeftDrive())
-        {
-            System.out.println(getCurrent(ct.getDeviceID()) + "This is current for talon ID : " + ct.getDeviceID());
-        }
-        for(CANTalon ct : rsrx.getRightDrive())
-        {
-            System.out.println(getCurrent(ct.getDeviceID()) + "This is current for talon ID : " + ct.getDeviceID());
-        }
-        for(RobotMotorType ct : rsrx.getTalons().keySet())
-        {
-            System.out.println(getCurrent(rsrx.getTalons().get(ct).getDeviceID()) + "This is current for talon ID : " + rsrx.getTalons().get(ct).getDeviceID());
-        }
-        //Encoder Position
-        for(CANTalon ct : rsrx.getLeftDrive())
-        {
-            System.out.println(getEncoderPos(ct.getDeviceID()) + "This is encoder position for talon ID : " + ct.getDeviceID());
-        }
-        for(CANTalon ct : rsrx.getRightDrive())
-        {
-            System.out.println(getEncoderPos(ct.getDeviceID()) + "This is encoder position for talon ID : " + ct.getDeviceID());
-        }
-        for(RobotMotorType ct : rsrx.getTalons().keySet())
-        {
-            System.out.println(getEncoderPos(rsrx.getTalons().get(ct).getDeviceID()) + "This is encoder position for talon ID : " + rsrx.getTalons().get(ct).getDeviceID());
-        }
+//        //Talon Current
+//        for(CANTalon ct : rsrx.getLeftDrive())
+//        {
+//            System.out.println(getCurrent(ct.getDeviceID()) + "This is current for talon ID : " + ct.getDeviceID());
+//        }
+//        for(CANTalon ct : rsrx.getRightDrive())
+//        {
+//            System.out.println(getCurrent(ct.getDeviceID()) + "This is current for talon ID : " + ct.getDeviceID());
+//        }
+//        for(RobotMotorType ct : rsrx.getTalons().keySet())
+//        {
+//            System.out.println(getCurrent(rsrx.getTalons().get(ct).getDeviceID()) + "This is current for talon ID : " + rsrx.getTalons().get(ct).getDeviceID());
+//        }
+//        //Encoder Position
+//        for(CANTalon ct : rsrx.getLeftDrive())
+//        {
+//            System.out.println(getEncoderPos(ct.getDeviceID()) + "This is encoder position for talon ID : " + ct.getDeviceID());
+//        }
+//        for(CANTalon ct : rsrx.getRightDrive())
+//        {
+//            System.out.println(getEncoderPos(ct.getDeviceID()) + "This is encoder position for talon ID : " + ct.getDeviceID());
+//        }
+//        for(RobotMotorType ct : rsrx.getTalons().keySet())
+//        {
+//            System.out.println(getEncoderPos(rsrx.getTalons().get(ct).getDeviceID()) + "This is encoder position for talon ID : " + rsrx.getTalons().get(ct).getDeviceID());
+//        }
         //Encoder Velocity
         for(CANTalon ct : rsrx.getLeftDrive())
         {
-            System.out.println(getEncoderVelocity(ct.getDeviceID()) + "This is encoder velocity for talon ID : " + ct.getDeviceID());
+            System.out.println("Velocity Talon " + ct.getDeviceID() + ":: " + getEncoderVelocity(ct.getDeviceID()));
         }
         for(CANTalon ct : rsrx.getRightDrive())
         {
-            System.out.println(getEncoderVelocity(ct.getDeviceID()) + "This is encoder velocity for talon ID : " + ct.getDeviceID());
+            System.out.println("Velocity Talon " + ct.getDeviceID() + ":: " + getEncoderVelocity(ct.getDeviceID()));
         }
         for(RobotMotorType ct : rsrx.getTalons().keySet())
         {
-            System.out.println(getEncoderVelocity(rsrx.getTalons().get(ct).getDeviceID()) + "This is encoder velocity for talon ID : " + rsrx.getTalons().get(ct).getDeviceID());
-        }*/
-        System.out.println(getCurrent(2) + " Current");
+            System.out.println("Talon " + rsrx.getTalons().get(ct).getDeviceID() + ":: " + getEncoderVelocity(rsrx.getTalons().get(ct).getDeviceID()));
+        }
+//        System.out.println(getCurrent(2) + " Current");
     }
     public double getCurrent(int channel)
     {
