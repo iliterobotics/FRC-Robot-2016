@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.input;
 import java.util.List;
 
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.CANTalon;
@@ -21,50 +22,7 @@ public class SensorInputControlSRX {
     }
     public void update()
     {
-//        //Talon Current
-//        for(CANTalon ct : rsrx.getLeftDrive())
-//        {
-//            System.out.println(getCurrent(ct.getDeviceID()) + "This is current for talon ID : " + ct.getDeviceID());
-//        }
-//        for(CANTalon ct : rsrx.getRightDrive())
-//        {
-//            System.out.println(getCurrent(ct.getDeviceID()) + "This is current for talon ID : " + ct.getDeviceID());
-//        }
-//        for(RobotMotorType ct : rsrx.getTalons().keySet())
-//        {
-//            System.out.println(getCurrent(rsrx.getTalons().get(ct).getDeviceID()) + "This is current for talon ID : " + rsrx.getTalons().get(ct).getDeviceID());
-//        }
-//        //Encoder Position
-//        for(CANTalon ct : rsrx.getLeftDrive())
-//        {
-//            System.out.println(getEncoderPos(ct.getDeviceID()) + "This is encoder position for talon ID : " + ct.getDeviceID());
-//        }
-//        for(CANTalon ct : rsrx.getRightDrive())
-//        {
-//            System.out.println(getEncoderPos(ct.getDeviceID()) + "This is encoder position for talon ID : " + ct.getDeviceID());
-//        }
-//        for(RobotMotorType ct : rsrx.getTalons().keySet())
-//        {
-//            System.out.println(getEncoderPos(rsrx.getTalons().get(ct).getDeviceID()) + "This is encoder position for talon ID : " + rsrx.getTalons().get(ct).getDeviceID());
-//        }
-        //Encoder Velocity
-        for(CANTalon ct : rsrx.getLeftDrive())
-        {
-            //System.out.println("Velocity Talon " + ct.getDeviceID() + ":: " + getEncoderVelocity(ct.getDeviceID()));
-            //System.out.println("Limit Switch " + ct.getDeviceID() + ":: " + limitSwitch(ct.getDeviceID()));
-            System.out.println("Limit Switch " + ct.getDeviceID() + ":: " + this.analogLimitSwitch(ct.getDeviceID()));
-            
-        }
-        
-        /*for(CANTalon ct : rsrx.getRightDrive())
-        {
-            System.out.println("Velocity Talon " + ct.getDeviceID() + ":: " + getEncoderVelocity(ct.getDeviceID()));
-        }
-        for(RobotMotorType ct : rsrx.getTalons().keySet())
-        {
-            System.out.println("Talon " + rsrx.getTalons().get(ct).getDeviceID() + ":: " + getEncoderVelocity(rsrx.getTalons().get(ct).getDeviceID()));
-        }*/
-//        System.out.println(getCurrent(2) + " Current");
+        System.out.println(this.getEncoderPos(SensorType.DRIVE_TRAIN_ENCODER));
     }
     public double getCurrent(int channel)
     {
@@ -74,108 +32,20 @@ public class SensorInputControlSRX {
     {
         return PDP.getTemperature();
     }
-    public int analogLimitSwitch(int talonport)
+    public int analogLimitSwitch(SensorType type)
     {
-        List<CANTalon> leftDrive = rsrx.getLeftDrive();
-        for(CANTalon  ct: leftDrive)
-        {
-            if(ct.getDeviceID() == talonport)
-            {
-                return ct.getAnalogInPosition();
-            }
-        }
-        for(CANTalon  ct: rsrx.getRightDrive())
-        {
-            if(ct.getDeviceID() == talonport)
-            {
-                return ct.getAnalogInPosition();
-            }
-        }
-        for(RobotMotorType ct: rsrx.getTalons().keySet())
-        {
-            if(rsrx.getTalons().get(ct).getDeviceID() == talonport)
-            {
-                return rsrx.getTalons().get(ct).getAnalogInPosition();
-            }
-        }
-        return -1;
+        return rsrx.getSensor().get(type).getAnalogInPosition();
     }
-    public boolean digitalLimitSwitch(int talonport)
+    public boolean digitalLimitSwitch(SensorType type)
     {
-        List<CANTalon> leftDrive = rsrx.getLeftDrive();
-        for(CANTalon  ct: leftDrive)
-        {
-            if(ct.getDeviceID() == talonport)
-            {
-                return ct.isFwdLimitSwitchClosed();
-            }
-        }
-        for(CANTalon  ct: rsrx.getRightDrive())
-        {
-            if(ct.getDeviceID() == talonport)
-            {
-                return ct.isFwdLimitSwitchClosed();
-            }
-        }
-        for(RobotMotorType ct: rsrx.getTalons().keySet())
-        {
-            if(rsrx.getTalons().get(ct).getDeviceID() == talonport)
-            {
-                return rsrx.getTalons().get(ct).isFwdLimitSwitchClosed();
-            }
-        }
-        return false;
+        return rsrx.getSensor().get(type).isFwdLimitSwitchClosed();
     }
-    public int getEncoderPos(int talonport)
+    public int getEncoderPos(SensorType type)
     {
-        List<CANTalon> leftDrive = rsrx.getLeftDrive();
-        for(CANTalon  ct: leftDrive)
-        {
-            if(ct.getDeviceID() == talonport)
-            {
-                return ct.getEncPosition();
-            }
-        }
-        for(CANTalon  ct: rsrx.getRightDrive())
-        {
-            if(ct.getDeviceID() == talonport)
-            {
-                return ct.getEncPosition();
-            }
-        }
-        for(RobotMotorType ct: rsrx.getTalons().keySet())
-        {
-            if(rsrx.getTalons().get(ct).getDeviceID() == talonport)
-            {
-                return rsrx.getTalons().get(ct).getEncPosition();
-            }
-        }
-        return -1;
+        return rsrx.getSensor().get(type).getEncPosition();
     }
-    public int getEncoderVelocity(int talonport)
+    public int getEncoderVelocity(SensorType type)
     {
-        List<CANTalon> leftDrive = rsrx.getLeftDrive();
-        for(CANTalon  ct: leftDrive)
-        {
-            if(ct.getDeviceID() == talonport)
-            {
-                return ct.getEncVelocity();
-            }
-        }
-        for(CANTalon  ct: rsrx.getRightDrive())
-        {
-            if(ct.getDeviceID() == talonport)
-            {
-                return ct.getEncVelocity();
-            }
-        }
-        for(RobotMotorType  ct: rsrx.getTalons().keySet())
-        {
-            if(rsrx.getTalons().get(ct).getDeviceID() == talonport)
-            {
-                return rsrx.getTalons().get(ct).getEncVelocity();
-            }
-        }
-        return -1;
+        return rsrx.getSensor().get(type).getEncVelocity();
     }
 }
