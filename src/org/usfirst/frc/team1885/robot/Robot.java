@@ -9,9 +9,12 @@ import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
 import org.usfirst.frc.team1885.robot.comms.RobotStatusService;
+import org.usfirst.frc.team1885.robot.config2015.RobotConfigSRX;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControl;
+import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.Alignment;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
@@ -20,6 +23,7 @@ import org.usfirst.frc.team1885.robot.modules.lift.CanGrabber;
 import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
 import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
 import org.usfirst.frc.team1885.robot.output.RobotControl;
+import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -50,9 +54,18 @@ public class Robot extends SampleRobot {
 	private long timeTracker = 0;
 	private double delayTime = 1;// Input time in seconds
 	
+    private RobotControlWithSRX srx;
+    private DriverInputControlSRX drx;
+    private SensorInputControlSRX sensorrx;
+	
 	private AutoTemplate activeTemplate;
 
 	public Robot() {
+	    
+	    RobotConfigSRX.configureRobot();
+        srx = RobotControlWithSRX.getInstance();
+        drx = DriverInputControlSRX.getInstance();
+        this.sensorrx = new SensorInputControlSRX();
 		try {
 			RobotConfiguration.configureRobot();
 			SensorInputControl.getInstance().getNAVX().zeroYaw();
@@ -91,6 +104,11 @@ public class Robot extends SampleRobot {
 		RobotStatusService robotStatusService = new RobotStatusService();
 
 		while (isOperatorControl() && isEnabled()) {
+		    
+		    //New canbust code
+		    drx.update();
+            sensorrx.update();
+            Timer.delay(.005);
 			
 //			System.out.println(SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER) + " " 
 //					 + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + " " +
@@ -162,3 +180,4 @@ public class Robot extends SampleRobot {
 //		autoCanGrabber();		
 	}
 }
+
