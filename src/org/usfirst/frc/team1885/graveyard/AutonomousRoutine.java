@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.robot.auto;
+package org.usfirst.frc.team1885.graveyard;
 
 import java.util.LinkedList;
 import java.util.List;

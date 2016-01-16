@@ -1,13 +1,13 @@
 package org.usfirst.frc.team1885.robot.test;
 
 
+import org.usfirst.frc.team1885.graveyard.DriverInputControl;
+import org.usfirst.frc.team1885.graveyard.RobotControl;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
 import org.usfirst.frc.team1885.robot.comms.RobotServerEvent;
 import org.usfirst.frc.team1885.robot.comms.RobotServerListener;
-import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
-import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;

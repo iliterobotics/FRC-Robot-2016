@@ -2,12 +2,12 @@ package org.usfirst.frc.team1885.robot.comms;
 
 import java.util.ArrayList;
 
-import org.usfirst.frc.team1885.robot.input.SensorInputControl;
+import org.usfirst.frc.team1885.graveyard.ActiveIntake;
+import org.usfirst.frc.team1885.graveyard.RecycleBinLift;
+import org.usfirst.frc.team1885.graveyard.RobotControl;
+import org.usfirst.frc.team1885.graveyard.SensorInputControl;
+import org.usfirst.frc.team1885.graveyard.ToteLift;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
-import org.usfirst.frc.team1885.robot.modules.lift.ActiveIntake;
-import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
-import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
-import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;

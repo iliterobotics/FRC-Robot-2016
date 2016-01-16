@@ -1,7 +1,4 @@
-package org.usfirst.frc.team1885.robot.auto;
-
-import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
-import org.usfirst.frc.team1885.robot.output.RobotControl;
+package org.usfirst.frc.team1885.graveyard;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 

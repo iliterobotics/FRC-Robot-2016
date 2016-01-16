@@ -1,15 +1,15 @@
 package org.usfirst.frc.team1885.robot.comms;
 
+import org.usfirst.frc.team1885.graveyard.ActiveIntake;
+import org.usfirst.frc.team1885.graveyard.ClawControl;
+import org.usfirst.frc.team1885.graveyard.RobotControl;
+import org.usfirst.frc.team1885.graveyard.SensorInputControl;
+import org.usfirst.frc.team1885.graveyard.ToteLift;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.input.SensorInputControl;
-import org.usfirst.frc.team1885.robot.manipulator.ClawControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
-import org.usfirst.frc.team1885.robot.modules.lift.ActiveIntake;
-import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
-import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 

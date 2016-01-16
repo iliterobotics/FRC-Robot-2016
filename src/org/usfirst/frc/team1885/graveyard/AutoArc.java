@@ -1,7 +1,6 @@
-package org.usfirst.frc.team1885.robot.auto;
+package org.usfirst.frc.team1885.graveyard;
 
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
-import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 public class AutoArc extends AutoCommand{
 	

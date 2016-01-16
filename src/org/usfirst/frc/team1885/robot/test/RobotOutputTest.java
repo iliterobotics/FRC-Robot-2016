@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1885.robot.test;
 
+import org.usfirst.frc.team1885.graveyard.RobotControl;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
-import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 

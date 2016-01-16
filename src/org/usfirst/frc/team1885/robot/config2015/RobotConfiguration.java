@@ -1,5 +1,11 @@
 package org.usfirst.frc.team1885.robot.config2015;
 
+import org.usfirst.frc.team1885.graveyard.ActiveIntake;
+import org.usfirst.frc.team1885.graveyard.DriverInputControl;
+import org.usfirst.frc.team1885.graveyard.RecycleBinLift;
+import org.usfirst.frc.team1885.graveyard.RobotControl;
+import org.usfirst.frc.team1885.graveyard.SensorInputControl;
+import org.usfirst.frc.team1885.graveyard.ToteLift;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
 import org.usfirst.frc.team1885.robot.common.type.ModuleType;
@@ -8,14 +14,8 @@ import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.input.DriverInputControl;
-import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.modules.ModuleControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
-import org.usfirst.frc.team1885.robot.modules.lift.ActiveIntake;
-import org.usfirst.frc.team1885.robot.modules.lift.RecycleBinLift;
-import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
-import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.Joystick;

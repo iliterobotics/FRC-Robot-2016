@@ -1,6 +1,4 @@
-package org.usfirst.frc.team1885.robot.auto;
-
-import org.usfirst.frc.team1885.robot.modules.lift.CanGrabber;
+package org.usfirst.frc.team1885.graveyard;
 
 public class AutoCanGrabber extends AutoCommand{
 	private boolean grabberState;

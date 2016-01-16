@@ -7,7 +7,6 @@ import java.util.Map;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.hal.CanTalonSRX;
 
 public class RobotControlWithSRX 
 {

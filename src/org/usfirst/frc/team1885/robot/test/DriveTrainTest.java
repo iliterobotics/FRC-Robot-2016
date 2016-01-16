@@ -1,12 +1,12 @@
 package org.usfirst.
 frc.team1885.robot.test;
 
-import org.usfirst.frc.team1885.robot.auto.AutoDriveForward;
-import org.usfirst.frc.team1885.robot.auto.AutoTurn;
-import org.usfirst.frc.team1885.robot.auto.AutoWait;
+import org.usfirst.frc.team1885.graveyard.AutoDriveForward;
+import org.usfirst.frc.team1885.graveyard.AutoTurn;
+import org.usfirst.frc.team1885.graveyard.AutoWait;
+import org.usfirst.frc.team1885.graveyard.DriverInputControl;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
-import org.usfirst.frc.team1885.robot.input.DriverInputControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 
 public class DriveTrainTest {

@@ -1,8 +1,6 @@
-package org.usfirst.frc.team1885.robot.auto;
+package org.usfirst.frc.team1885.graveyard;
 
 import java.util.LinkedList;
-
-import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.Timer;
 

@@ -2,8 +2,8 @@ package org.usfirst.frc.team1885.robot.input;
 
 import java.util.HashMap;
 
+import org.usfirst.frc.team1885.graveyard.RobotControl;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
-import org.usfirst.frc.team1885.robot.output.RobotControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.Joystick;

@@ -1,10 +1,8 @@
-package org.usfirst.frc.team1885.robot.auto;
+package org.usfirst.frc.team1885.graveyard;
 
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
-import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 public class AutoDriveForward extends AutoCommand{
 	

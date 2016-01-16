@@ -1,6 +1,4 @@
-package org.usfirst.frc.team1885.robot.auto;
-
-import org.usfirst.frc.team1885.robot.modules.lift.ToteLift;
+package org.usfirst.frc.team1885.graveyard;
 
 public class AutoToteLift extends AutoCommand{
 	private double height;

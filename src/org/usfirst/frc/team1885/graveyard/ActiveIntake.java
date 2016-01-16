@@ -1,12 +1,9 @@
-package org.usfirst.frc.team1885.robot.modules.lift;
+package org.usfirst.frc.team1885.graveyard;
 
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.input.DriverInputControl;
-import org.usfirst.frc.team1885.robot.input.SensorInputControl;
 import org.usfirst.frc.team1885.robot.modules.Module;
-import org.usfirst.frc.team1885.robot.output.RobotControl;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
