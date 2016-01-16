@@ -31,7 +31,6 @@ public class RobotControlWithSRX
 			leftDrive.add(new CANTalon(port));
 		} 
 		else if (type == RobotMotorType.RIGHT_DRIVE) {
-			// add to right motor
 			rightDrive.add(new CANTalon(port));
 		}
 		else
