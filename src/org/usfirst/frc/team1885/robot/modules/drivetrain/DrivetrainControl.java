@@ -40,8 +40,8 @@ public class DrivetrainControl implements Module{
 		diameter = d;
 		circumference = Math.PI * (diameter);
 
-		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).setDistancePerPulse(circumference/256);
-		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).setDistancePerPulse(circumference/256);
+//		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).setDistancePerPulse(circumference/256);
+//		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).setDistancePerPulse(circumference/256);
 		driveMode = DriveMode.TANK;
 		setGearState(GearState.HIGH_GEAR);
 		driverInput = DriverInputControl.getInstance();

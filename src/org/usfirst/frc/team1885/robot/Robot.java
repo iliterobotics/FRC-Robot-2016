@@ -90,10 +90,11 @@ public class Robot extends SampleRobot {
 	 */
 	public void operatorControl() {
 
-		SensorInputControl.getInstance()
-				.getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
-		SensorInputControl.getInstance()
-				.getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
+	    //TODO: FIX THIS NPE.
+//		SensorInputControl.getInstance()
+//				.getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
+//		SensorInputControl.getInstance()
+//				.getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
 
 				
 		
@@ -108,6 +109,7 @@ public class Robot extends SampleRobot {
 		    drx.update();
             sensorrx.update();
             Timer.delay(.005);
+		}
 			
 //			System.out.println(SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER) + " " 
 //					 + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + " " +
@@ -126,7 +128,7 @@ public class Robot extends SampleRobot {
 ////				System.out.println(SensorInputControl.getInstance().getNAVX()
 ////						.getYaw360());
 //			}
-			
+/*			
 			if((DriverInputControl.getInstance().getButton(
 				RobotButtonType.CANCEL_AUTOMATION))) {
 				this.activeTemplate = null;
@@ -170,6 +172,7 @@ public class Robot extends SampleRobot {
 			}
 			Timer.delay(.005); // wait for a motor update time
 		}
+		*/
 	}
 
 	public void autonomous() {

@@ -51,6 +51,7 @@ public class DriverInputControlSRX {
     }
     public void update(double leftJoystick, double rightJoystick)
     {    
+        System.err.println("OMG LEFT= " + leftJoystick +", RIGHT= " + rightJoystick);
         this.rightDriveSpeed = deadzone(rightJoystick);
         this.leftDriveSpeed = deadzone(leftJoystick);
         RobotControlWithSRX.getInstance().updateDriveSpeed(rightDriveSpeed, leftDriveSpeed);
