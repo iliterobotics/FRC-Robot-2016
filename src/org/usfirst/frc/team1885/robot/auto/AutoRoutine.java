@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1885.robot.auto;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.usfirst.frc.team1885.robot.Robot;
 
@@ -40,5 +39,3 @@ public class AutoRoutine
         }
     }
 }
-
-
