@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1885.robot;
 
-import org.usfirst.frc.team1885.robot.auto.AutoRoutine;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfigSRX;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
