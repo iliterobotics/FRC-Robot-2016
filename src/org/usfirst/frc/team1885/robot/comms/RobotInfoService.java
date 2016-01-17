@@ -38,8 +38,7 @@ public class RobotInfoService {
 	}
 
 	public void updateActiveIntake(){
-	    activeStateLeft = aiInstance.getLeftMotorState();
-	    activeStateRight = aiInstance.getRightMotorState();
+	    activeStateLeft = aiInstance.getMotorState();
 	}
 	
 	public void updatePowerLevel() {

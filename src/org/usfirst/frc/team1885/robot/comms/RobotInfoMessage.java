@@ -35,10 +35,8 @@ public class RobotInfoMessage extends Message {
 	private boolean extensionState;
 	private boolean pinchState;
 	// Active Intake
-	private double activeMotorIntakeLeft;
-	private double activeMotorIntakeRight;
-	private MotorState activeMotorStateLeft;
-	private MotorState activeMotorStateRight;
+	private double activeMotorIntake;
+	private MotorState activeMotorState;
 	
 	
 	public RobotInfoMessage() {
@@ -229,30 +227,20 @@ public class RobotInfoMessage extends Message {
 		this.magnetSensor = magnetSensor;
 	}
 	
-	public void setActiveIntake(double activeIntakeLeft, double activeIntakeRight ){
-	    this.activeMotorIntakeLeft = activeIntakeLeft;
-	    this.activeMotorIntakeRight = activeIntakeRight;
+	public void setActiveIntake(double activeIntake){
+	    this.activeMotorIntake = activeIntake;
 	}
 	
-	public double getActiveIntakeLeft(){
-	    return this.activeMotorIntakeLeft;
+	public double getActiveIntake(){
+	    return this.activeMotorIntake;
 	}
 	
-	public double getActiveIntakeRight(){
-        return this.activeMotorIntakeRight;
-    }
-	
-	public MotorState getActiveMotorStateLeft(){
-	    return this.activeMotorStateLeft;
+	public MotorState getActiveMotorState(){
+	    return this.activeMotorState;
 	}
 	
-	public MotorState getActiveMotorStateRight(){
-        return this.activeMotorStateRight;
-    }
-	
-	public void setActiveMotorState(MotorState left, MotorState right){
-	    this.activeMotorStateLeft = left;
-	    this.activeMotorStateRight = right;
+	public void setActiveMotorState(MotorState state){
+	    this.activeMotorState = state;
 	}
 
 }
