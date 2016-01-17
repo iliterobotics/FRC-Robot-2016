@@ -129,8 +129,8 @@ public class Robot extends SampleRobot {
 			{
 				this.activeTemplate = null;
 				DrivetrainControl.getInstance().update();
-				Alignment.getInstance().update();
 				ActiveIntake.getInstance().update();
+				System.out.println( "Updated active intake" );
 				// System.out.println("Robot::tele - lidar: " +
 				// SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance());
 				// BackupRoutine.getInstance().update();
@@ -139,7 +139,7 @@ public class Robot extends SampleRobot {
 				// DrivetrainControl.getInstance().getRightDriveSpeed());
 				DrivetrainControl.getInstance().updateOutputs();
 				ActiveIntake.getInstance().updateOutputs();
-				Alignment.getInstance().updateOutputs();
+				System.out.println( "Updated active intake outputs" );
 			}
 			Timer.delay(.005); // wait for a motor update time
 		}
