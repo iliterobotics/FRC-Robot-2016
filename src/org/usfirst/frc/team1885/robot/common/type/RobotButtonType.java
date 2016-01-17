@@ -2,6 +2,9 @@ package org.usfirst.frc.team1885.robot.common.type;
 
 public enum RobotButtonType {
     CANCEL_AUTOMATION,
+    INTAKE_IN,
+    INTAKE_OUT,
+    
     
     
     
@@ -18,7 +21,5 @@ public enum RobotButtonType {
 	CLAW,
 	TOTE_LIFT_TEST,
 	DRIVE_TRAIN_TEST,
-	INTAKE_IN,
-	INTAKE_OUT,
 	NUDGE, TOTE_LIFT_NUDGE_UP, TOTE_LIFT_NUDGE_DOWN, TOTE_LIFT_RESET, RIGHT_DRIFT, LEFT_DRIFT, CAN_BURGLAR
 }

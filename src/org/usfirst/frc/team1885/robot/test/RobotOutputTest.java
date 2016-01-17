@@ -14,19 +14,10 @@ public class RobotOutputTest
 		robotControl.addTalonOutput(RobotMotorType.LEFT_DRIVE, 0);
 		robotControl.addTalonOutput(RobotMotorType.LEFT_DRIVE, 1);
 		robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
-		robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 3);		
-		robotControl.addPneumaticOutput(RobotPneumaticType.GRABBER_PNEUMATIC, 0, 1);
-		robotControl.addPneumaticOutput(RobotPneumaticType.GEAR_SHIFTER_PNEUMATIC, 2, 3);
-		robotControl.addTalonOutput(RobotMotorType.TOTE_LIFT, 4);
-		robotControl.addTalonOutput(RobotMotorType.RECYCLE_LIFT, 4);
+		robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 3);	
 	}
 	public void outputTest()
 	{
-		robotControl.updateDriveSpeed(.25, .25);
-		robotControl.updateGrabberPneumatics(true);
-		robotControl.updateGearShifter(true);
-		robotControl.updateRecycleMotor(.25);
-		robotControl.updateToteMotor(.25);
 	}
 	
 }

@@ -1,8 +1,5 @@
-package org.usfirst.frc.team1885.robot.test;
+package org.usfirst.frc.team1885.graveyard;
 
-import org.usfirst.frc.team1885.graveyard.AutoWait;
-import org.usfirst.frc.team1885.graveyard.DriverInputControl;
-import org.usfirst.frc.team1885.graveyard.ToteLift;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 
 public class ToteLiftTest {

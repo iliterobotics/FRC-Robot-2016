@@ -9,7 +9,6 @@ import org.usfirst.frc.team1885.graveyard.DriverInputControl;
 import org.usfirst.frc.team1885.graveyard.RobotControl;
 import org.usfirst.frc.team1885.graveyard.SensorInputControl;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
 import org.usfirst.frc.team1885.robot.comms.RobotStatusService;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
@@ -86,7 +85,7 @@ public class Robot extends SampleRobot {
 
 		while (isOperatorControl() && isEnabled()) {
 		    
-		    //New canbust code
+		    //New canbus code
 		    drx.update();
             sensorrx.update();
             Timer.delay(.005);
