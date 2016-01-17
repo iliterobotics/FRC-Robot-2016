@@ -4,6 +4,5 @@
 	<classpathentry kind="var" path="wpilib"/>
 	<classpathentry kind="var" path="networktables"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="dist/FRCUserProgram.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

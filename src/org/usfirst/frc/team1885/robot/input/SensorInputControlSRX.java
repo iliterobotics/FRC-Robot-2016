@@ -63,7 +63,7 @@ public class SensorInputControlSRX {
     {
         bia = new BuiltInAccelerometer();
     }
-    public void getAccelerometer()
+    public BuiltInAccelerometer getAccelerometer()
     {
         return bia;
     }
