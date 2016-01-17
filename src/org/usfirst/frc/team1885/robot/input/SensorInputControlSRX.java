@@ -1,18 +1,19 @@
 package org.usfirst.frc.team1885.robot.input;
 
-import java.util.List;
-
-import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
+import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 
-import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
 public class SensorInputControlSRX {
     private static SensorInputControlSRX instance = null;
     private static RobotControlWithSRX rsrx = RobotControlWithSRX.getInstance();
     private PowerDistributionPanel PDP = new PowerDistributionPanel();
+    private LidarSensor ls;
+    private BuiltInAccelerometer bia;
     
     public static SensorInputControlSRX getInstance() {
         if (instance == null) {
@@ -22,7 +23,9 @@ public class SensorInputControlSRX {
     }
     public void update()
     {
-        System.out.println(this.getEncoderPos(SensorType.DRIVE_TRAIN_ENCODER));
+        System.out.println(this.getLidarSensor().getDistance());
+        System.out.println(this.analogLimitSwitch(SensorType.LIMIT_SWITCH));
+        System.out.println(this.bia.getX() +" x " + bia.getY() + " y " + bia.getZ() + " z ");
     }
     public double getCurrent(int channel)
     {
@@ -48,4 +51,21 @@ public class SensorInputControlSRX {
     {
         return rsrx.getSensor().get(type).getEncVelocity();
     }
+    public void addLidarSensor(Port port)
+    {
+        ls = new LidarSensor(port);
+    }
+    public LidarSensor getLidarSensor()
+    {
+        return this.ls;
+    }
+    public void createAccelerometer()
+    {
+        bia = new BuiltInAccelerometer();
+    }
+    public void getAccelerometer()
+    {
+        return bia;
+    }
+    
 }
