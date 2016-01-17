@@ -1,15 +1,17 @@
-package org.usfirst.frc.team1885.graveyard;
+package org.usfirst.frc.team1885.robot.modules;
 
+import org.usfirst.frc.team1885.graveyard.DriverInputControl;
+import org.usfirst.frc.team1885.graveyard.RobotControl;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.modules.Module;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 
 public class ActiveIntake implements Module{
 
     public static final int INTAKE_SPEED = 1;
+    public static final int OUTTAKE_SPEED = 1; // just in case we need to vary outtake sped
     private static ActiveIntake instance;
     private double intakeLeftSpeed;
     private double intakeRightSpeed;
