@@ -5,6 +5,8 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 
@@ -23,9 +25,12 @@ public class SensorInputControlSRX {
     }
     public void update()
     {
-        System.out.println(this.getLidarSensor().getDistance());
-        System.out.println(this.analogLimitSwitch(SensorType.LIMIT_SWITCH));
-        System.out.println(this.bia.getX() +" x " + bia.getY() + " y " + bia.getZ() + " z ");
+        StringBuilder output = new StringBuilder();
+        output.append("\n-LIDAR SENSOR DISTANCE= " + this.getLidarSensor().getDistance());
+        output.append("\n-ULTRASONIC: " + ((double)this.analogLimitSwitch(SensorType.ULTRASONIC))/2.54d);
+        DriverStation.reportError(output.toString(), false);
+        Timer.delay(1);
+//        System.out.println(this.bia.getX() +" x " + bia.getY() + " y " + bia.getZ() + " z ");
     }
     public double getCurrent(int channel)
     {
@@ -66,6 +71,13 @@ public class SensorInputControlSRX {
     public BuiltInAccelerometer getAccelerometer()
     {
         return bia;
+    }
+    
+    /**
+     * Private constructor because this is a singleton!!
+     */
+    private SensorInputControlSRX() {
+        
     }
     
 }

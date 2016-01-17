@@ -15,13 +15,15 @@ public class Robot extends SampleRobot
     private SensorInputControlSRX sensorrx;
     public Robot()
     {
+        System.err.println("I am ROBOT!!");
         RobotConfigSRX.configureRobot();
         srx = RobotControlWithSRX.getInstance();
         drx = DriverInputControlSRX.getInstance();
-        this.sensorrx = new SensorInputControlSRX();
+        this.sensorrx = SensorInputControlSRX.getInstance();
     }
     public void operatorControl()
     {
+        System.err.println("HAS OPERATOR CONTROL");
         while(isOperatorControl() && isEnabled())
         {
             drx.update();
