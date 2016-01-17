@@ -23,6 +23,9 @@ public class RobotConfiguration {
         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.LEFT_DRIVE, 3);
         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
         
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ACTIVE_INTAKE_RIGHT, 5);
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ACTIVE_INTAKE_LEFT, 6);
+        
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_IN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_OUT, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 4 ) );
         
