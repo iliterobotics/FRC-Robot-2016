@@ -11,18 +11,13 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 public class ActiveIntake implements Module{
 
     public static final int INTAKE_SPEED = 1;
-    public static final int OUTTAKE_SPEED = 1; // just in case we need to vary outtake sped
     private static ActiveIntake instance;
-    private double intakeLeftSpeed;
-    private double intakeRightSpeed;
-    private MotorState leftState;
-    private MotorState rightState;
+    private double intakeSpeed;
+    private MotorState state;
 
     protected ActiveIntake() {
-        this.leftState = MotorState.OFF;
-        this.rightState = MotorState.OFF;
-        intakeLeftSpeed = 0; 
-        intakeRightSpeed = 0;
+        this.state = MotorState.OFF;
+        intakeSpeed = 0;
     }
     public static ActiveIntake getInstance() {
         if (instance == null) {
@@ -30,71 +25,43 @@ public class ActiveIntake implements Module{
         }
         return instance;
     }
-    public void setMotorState(MotorState leftState, MotorState rightState) {
-        this.leftState = leftState;
-        this.rightState = rightState;
+    public void setMotorState(MotorState motorState) {
+        this.state = motorState;
     }
-    public MotorState getLeftMotorState() {
-        return leftState;
+    public MotorState getMotorState() {
+        return state;
     }
-    public MotorState getRightMotorState(){
-        return rightState;
-    }
-    public double getLeftSpeed() {
-        return intakeLeftSpeed;
-    }
-    public double getRightSpeed(){
-        return intakeRightSpeed;
+    public double getSpeed(){
+        return intakeSpeed;
     }
     public void updateIntake() {
-        intakeLeftSpeed = 0;
-        intakeRightSpeed = 0;
+        intakeSpeed = 0;
         
         if ((DriverInputControl.getInstance().getButton(
                 RobotButtonType.INTAKE_IN))) {
-                leftState = MotorState.REVERSE;
-                rightState = MotorState.FORWARD;
-                intakeLeftSpeed = INTAKE_SPEED;
-                intakeRightSpeed = -INTAKE_SPEED;
+                state = MotorState.REVERSE;
+                intakeSpeed = INTAKE_SPEED;
             }
-    
-        if ((DriverInputControl.getInstance().getButton(
-                RobotButtonType.INTAKE_OUT))) {
-                leftState = MotorState.FORWARD;
-                rightState = MotorState.REVERSE;
-                intakeLeftSpeed = -INTAKE_SPEED;
-                intakeRightSpeed = INTAKE_SPEED;
-            }
-        updateIntake(intakeLeftSpeed, intakeRightSpeed);
+        updateIntake(intakeSpeed);
     }
-    public void updateIntake(double leftSpeed, double rightSpeed) {
-        intakeLeftSpeed = leftSpeed;
-        intakeRightSpeed = rightSpeed;
-        if (leftSpeed > 0) {
-            leftState = MotorState.REVERSE;
-        } else if (leftSpeed < 0) {
-            leftState = MotorState.FORWARD;
+    public void updateIntake(double speed) {
+        intakeSpeed = speed;
+        if (speed > 0) {
+            state = MotorState.REVERSE;
+        } else if (speed < 0) {
+            state = MotorState.FORWARD;
         } else {
-            leftState = MotorState.OFF;
-        }
-        if (rightSpeed > 0) {
-            rightState = MotorState.REVERSE;
-        } else if (rightSpeed < 0) {
-            rightState = MotorState.FORWARD;
-        } else {
-            rightState = MotorState.OFF;
+            state = MotorState.OFF;
         }
      }
     
     public void stop() {
-        leftState = MotorState.OFF;
-        intakeLeftSpeed = 0;
-        rightState = MotorState.OFF;
-        intakeRightSpeed = 0;
+        state = MotorState.OFF;
+        intakeSpeed = 0;
     }
     
     public void updateOutputs() {
-        RobotControl.getInstance().updateIntakeMotors(intakeLeftSpeed, intakeRightSpeed);
+        RobotControl.getInstance().updateIntakeMotors(intakeSpeed);
     }
     @Override
     public void update() {

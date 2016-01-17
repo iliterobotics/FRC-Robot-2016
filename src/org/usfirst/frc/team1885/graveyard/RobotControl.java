@@ -158,8 +158,7 @@ public class RobotControl {
 		
 	}
 	
-	public void updateIntakeMotors(double speedLeft, double speedRight) {
-	    outputTalons.get(RobotMotorType.ACTIVE_INTAKE_LEFT).set(speedLeft);
-	    outputTalons.get(RobotMotorType.ACTIVE_INTAKE_RIGHT).set(speedRight);
+	public void updateIntakeMotors(double speedLeft) {
+	    outputTalons.get(RobotMotorType.ACTIVE_INTAKE).set(speedLeft);
 	}
 }
