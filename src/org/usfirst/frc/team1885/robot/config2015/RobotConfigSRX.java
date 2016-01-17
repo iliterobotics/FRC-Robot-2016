@@ -13,12 +13,12 @@ import edu.wpi.first.wpilibj.Joystick;
 public class RobotConfigSRX {
 	public static void configureRobot()
 	{
-		DriverInputControlSRX.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, new Joystick(0) );
-		DriverInputControlSRX.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, new Joystick(1) );
-		RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.LEFT_DRIVE, 1);
-		RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
+//		DriverInputControlSRX.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, new Joystick(0) );
+//		DriverInputControlSRX.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, new Joystick(1) );
+//		RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.LEFT_DRIVE, 1);
+//		RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
 		//RobotControlWithSRX.getInstance().addTalonSensor(SensorType.DRIVE_TRAIN_ENCODER, 1);
-		RobotControlWithSRX.getInstance().addTalonSensor(SensorType.LIMIT_SWITCH, 1);
+		RobotControlWithSRX.getInstance().addTalonSensor(SensorType.ULTRASONIC, 1);
 		SensorInputControlSRX.getInstance().addLidarSensor( I2C.Port.kMXP );
         SensorInputControlSRX.getInstance().getLidarSensor().start();
 	}
