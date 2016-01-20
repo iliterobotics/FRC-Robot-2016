@@ -3,9 +3,10 @@ package org.usfirst.frc.team1885.robot.common.type;
 public enum RobotButtonType {
     CANCEL_AUTOMATION,
     INTAKE_IN,
-    
-    
     INTAKE_OUT,
+    SHOOTER_OUT,
+    
+    
 	TOTE_LIFT,
 	RECYCLE_BIN_LIFT,
 	TOTE_LIFT_PICKUP,

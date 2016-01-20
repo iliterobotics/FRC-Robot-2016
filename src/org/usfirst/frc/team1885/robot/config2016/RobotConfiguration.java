@@ -23,7 +23,10 @@ public class RobotConfiguration {
         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.LEFT_DRIVE, 3);
         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
         
-        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 5);//change to match actual input
+        //TODO change to match actual input
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 5);
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.SHOOTER_LEFT, 6);
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.SHOOTER_RIGHT, 7);
         
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INTAKE_IN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );        
 	}

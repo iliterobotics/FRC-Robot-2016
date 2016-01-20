@@ -1,12 +1,9 @@
 package org.usfirst.frc.team1885.robot.modules;
 
 import org.usfirst.frc.team1885.graveyard.DriverInputControl;
-import org.usfirst.frc.team1885.graveyard.RobotControl;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 public class ActiveIntake implements Module{
 
@@ -40,6 +37,11 @@ public class ActiveIntake implements Module{
         if ((DriverInputControl.getInstance().getButton(
                 RobotButtonType.INTAKE_IN))) {
                 state = MotorState.REVERSE;
+                intakeSpeed = -INTAKE_SPEED;
+            }
+        if ((DriverInputControl.getInstance().getButton(
+                RobotButtonType.INTAKE_OUT))) {
+                state = MotorState.FORWARD;
                 intakeSpeed = INTAKE_SPEED;
             }
         updateIntake(intakeSpeed);
@@ -61,7 +63,7 @@ public class ActiveIntake implements Module{
     }
     
     public void updateOutputs() {
-        RobotControl.getInstance().updateIntakeMotors(intakeSpeed);
+        RobotControlWithSRX.getInstance().updateIntakeMotors(intakeSpeed);
     }
     @Override
     public void update() {

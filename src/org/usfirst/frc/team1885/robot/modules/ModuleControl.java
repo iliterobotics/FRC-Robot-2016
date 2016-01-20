@@ -34,12 +34,8 @@ public class ModuleControl{
 		return modules.get(module_type);
 	}
 	
-	public ToteLift getToteLift() {
-		return (ToteLift)modules.get(ModuleType.TOTE_LIFT);
-	}
-	
-	public RecycleBinLift getRecycleBinLift() {
-		return (RecycleBinLift)modules.get(ModuleType.RECYCLE_BIN_LIFT);
+	public Shooter getShooter() {
+		return (Shooter)modules.get(ModuleType.SHOOTER);
 	}
 	
 	public DrivetrainControl getDriveTrain() {
