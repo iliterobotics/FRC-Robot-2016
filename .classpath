@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="var" path="wpilib"/>
-	<classpathentry kind="var" path="networktables"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Christopher/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilib.networktables.java/NetworkTables/3.0.0-SNAPSHOT/b2e92e4a56d7f55f3e50ab5f15b3b896ec818bb4/NetworkTables-3.0.0-SNAPSHOT-desktop.jar" sourcepath="C:/Users/Christopher/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilib.networktables.java/NetworkTables/3.0.0-SNAPSHOT/ddf868d6a9e6d055ba8e51e1d8879819bb9a0201/NetworkTables-3.0.0-SNAPSHOT-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Christopher/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilib.networktables.java/NetworkTables/3.0.0-SNAPSHOT/ad998392a9dc38afac291173e5d861fed3f693dd/NetworkTables-3.0.0-SNAPSHOT-arm.jar" sourcepath="C:/Users/Christopher/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilib.networktables.java/NetworkTables/3.0.0-SNAPSHOT/ddf868d6a9e6d055ba8e51e1d8879819bb9a0201/NetworkTables-3.0.0-SNAPSHOT-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="C:/Users/Christopher/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibJavaFinal/0.1.0-SNAPSHOT/22a2b65dc558b44247cbd5a92a2d4419dc93b003/wpilibJavaFinal-0.1.0-SNAPSHOT.jar" sourcepath="C:/Users/Christopher/.gradle/caches/modules-2/files-2.1/edu.wpi.first.wpilibj/wpilibJavaFinal/0.1.0-SNAPSHOT/2868d0e67abe58bef6f47adfc7dada3945aa1e63/wpilibJavaFinal-0.1.0-SNAPSHOT-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
