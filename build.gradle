@@ -15,11 +15,25 @@ buildscript {
     classpath group: 'jaci.openrio.gradle', name: 'GradleRIO-pre', version: '+'			//Change this line if you wish to Update GradleRIO
   }
 }
-
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'GradleRIO'                                 //Apply the GradleRIO plugin
+repositories {
+	mavenCentral()
+	maven {
+		name = "GradleRIO"
+		url = "http://dev.imjac.in/maven"
+	}
+	jcenter()
+
+}
+dependencies {
+	testCompile 'junit:junit:4.12'
+	testCompile "org.mockito:mockito-core:1.+" 
+}
+
+
 
 gradlerio.robotClass = "org.usfirst.frc.team1885.Robot"   //The class for the main Robot Class. Used in manifest
 gradlerio.team = "1885"                                   //Your FRC team number (e.g. 5333 for team 'Can't C#', or 47 for Chief Delphi)
