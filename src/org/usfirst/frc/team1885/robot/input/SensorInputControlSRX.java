@@ -16,68 +16,69 @@ public class SensorInputControlSRX {
     private PowerDistributionPanel PDP = new PowerDistributionPanel();
     private LidarSensor ls;
     private BuiltInAccelerometer bia;
-    
+
     public static SensorInputControlSRX getInstance() {
         if (instance == null) {
             instance = new SensorInputControlSRX();
         }
         return instance;
     }
-    public void update()
-    {
+    public void update() {
         StringBuilder output = new StringBuilder();
-        output.append("\n-LIDAR SENSOR DISTANCE= " + this.getLidarSensor().getDistance());
-        output.append("\n-ULTRASONIC: " + ((double)this.analogLimitSwitch(SensorType.ULTRASONIC))/2.54d);
+//        output.append("\n-LIDAR SENSOR DISTANCE= "
+//                + this.getLidarSensor().getDistance());
+        this.getLidarSensor().update();
+        output.append("\n-Potentiometer In Position: "
+                + ((this.getAnalogInPosition(SensorType.ULTRASONIC) / 1024.0) * 360 ));
+        output.append("\n-Potentiometer Generic: "
+                + (this.getAnalogGeneric(SensorType.ULTRASONIC)));
+        output.append("\n-Lidar value:"
+                + (this.getLidarSensor().getDistance()));
         DriverStation.reportError(output.toString(), false);
         Timer.delay(1);
-//        System.out.println(this.bia.getX() +" x " + bia.getY() + " y " + bia.getZ() + " z ");
+        // System.out.println(this.bia.getX() +" x " + bia.getY() + " y " +
+        // bia.getZ() + " z ");
     }
-    public double getCurrent(int channel)
-    {
+    public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
     }
-    public double getPDPTemperature()
-    {
+    public double getPDPTemperature() {
         return PDP.getTemperature();
     }
-    public int analogLimitSwitch(SensorType type)
-    {
+    public double getAnalogInPosition(SensorType type) {
         return rsrx.getSensor().get(type).getAnalogInPosition();
     }
-    public boolean digitalLimitSwitch(SensorType type)
-    {
+
+    public double getAnalogGeneric(SensorType type) {
+        return rsrx.getSensor().get(type).getAnalogInRaw();
+    }
+    public boolean digitalLimitSwitch(SensorType type) {
         return rsrx.getSensor().get(type).isFwdLimitSwitchClosed();
     }
-    public int getEncoderPos(SensorType type)
-    {
+    public int getEncoderPos(SensorType type) {
         return rsrx.getSensor().get(type).getEncPosition();
     }
-    public int getEncoderVelocity(SensorType type)
-    {
+    public int getEncoderVelocity(SensorType type) {
         return rsrx.getSensor().get(type).getEncVelocity();
     }
-    public void addLidarSensor(Port port)
-    {
+    public void addLidarSensor(Port port) {
         ls = new LidarSensor(port);
     }
-    public LidarSensor getLidarSensor()
-    {
+    public LidarSensor getLidarSensor() {
         return this.ls;
     }
-    public void createAccelerometer()
-    {
+    public void createAccelerometer() {
         bia = new BuiltInAccelerometer();
     }
-    public BuiltInAccelerometer getAccelerometer()
-    {
+    public BuiltInAccelerometer getAccelerometer() {
         return bia;
     }
-    
+
     /**
      * Private constructor because this is a singleton!!
      */
     private SensorInputControlSRX() {
-        
+
     }
-    
+
 }

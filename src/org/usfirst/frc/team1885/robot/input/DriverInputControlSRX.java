@@ -47,7 +47,7 @@ public class DriverInputControlSRX {
     }
     public void update()
     {
-        this.update(this.getJoystick(RobotJoystickType.LEFT_DRIVE).getAxis(AxisType.kY), this.getJoystick(RobotJoystickType.RIGHT_DRIVE).getAxis(AxisType.kY));
+        //this.update(this.getJoystick(RobotJoystickType.LEFT_DRIVE).getAxis(AxisType.kY), this.getJoystick(RobotJoystickType.RIGHT_DRIVE).getAxis(AxisType.kY));
     }
     public void update(double leftJoystick, double rightJoystick)
     {    

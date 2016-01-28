@@ -16,13 +16,13 @@ public class RobotConfigSRX {
 	public static void configureRobot()
 	{
 	    try {
-		DriverInputControlSRX.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, new Joystick(0) );
-		DriverInputControlSRX.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, new Joystick(1) );
+//		DriverInputControlSRX.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, new Joystick(0) );
+//		DriverInputControlSRX.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, new Joystick(1) );
 		RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.LEFT_DRIVE, 1);
 		RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
 		//RobotControlWithSRX.getInstance().addTalonSensor(SensorType.DRIVE_TRAIN_ENCODER, 1);
 		RobotControlWithSRX.getInstance().addTalonSensor(SensorType.ULTRASONIC, 1);
-		SensorInputControlSRX.getInstance().addLidarSensor( I2C.Port.kMXP );
+		SensorInputControlSRX.getInstance().addLidarSensor( I2C.Port.kOnboard );
         SensorInputControlSRX.getInstance().getLidarSensor().start();
 	    } catch(Throwable e) {
 	        System.err.println("OMG!!");

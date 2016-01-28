@@ -11,7 +11,7 @@ public class LidarSensor implements PIDSource{
 	private byte[] distance;
 	private java.util.Timer updater;
 	
-	private final int LIDAR_ADDR = 0x62;
+	private final int LIDAR_ADDR = 0x7F;
 	private final int LIDAR_CONFIG_REGISTER = 0x00;
 	private final int LIDAR_DISTANCE_REGISTER = 0x8f;
 		
