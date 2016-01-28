@@ -1,14 +1,25 @@
 package org.usfirst.frc.team1885.robot.input;
 
+<<<<<<< HEAD
+=======
+import java.util.HashMap;
+
+>>>>>>> e564e861e983092e3053af199afa0b897170ece3
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 
+<<<<<<< HEAD
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+=======
+import com.kauailabs.nav6.frc.IMU;
+
+>>>>>>> e564e861e983092e3053af199afa0b897170ece3
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.SerialPort;
 
 public class SensorInputControlSRX {
     private static SensorInputControlSRX instance = null;
@@ -66,6 +77,7 @@ public class SensorInputControlSRX {
     }
     public LidarSensor getLidarSensor() {
         return this.ls;
+
     }
     public void createAccelerometer() {
         bia = new BuiltInAccelerometer();
