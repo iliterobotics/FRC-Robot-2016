@@ -73,7 +73,7 @@ public class RobotConfiguration {
         SensorInputControl.getInstance().addSensor( SensorType.TOUCH_SENSOR_TOTE_RIGHT, 10 );
         SensorInputControl.getInstance().setUpNAVX( (byte)(100), SerialPort.Port.kMXP );
         SensorInputControl.getInstance().addLidarSensor( I2C.Port.kMXP );
-        SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).start();
+//        SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).start();
         RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 0 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.LEFT_DRIVE, 2 );
         RobotControl.getInstance().addTalonOutput( RobotMotorType.RIGHT_DRIVE, 1 );

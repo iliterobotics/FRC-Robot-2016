@@ -61,7 +61,14 @@ public class LidarSensor implements PIDSource{
 	// Timer task to keep distance updated
 	private class LIDARUpdater extends TimerTask {
 		public void run() {
-			update();
+		    while(true) {
+		        update();
+		        try {
+		            Thread.sleep(10);
+		        } catch (InterruptedException e) {
+		            e.printStackTrace();
+		        }
+		    }
 		}
 	}
 
