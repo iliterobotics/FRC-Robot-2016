@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.graveyard;
+package org.usfirst.frc.team1885.robot.auto;
 
 public class AutoWait extends AutoCommand{
 	private double miliseconds;

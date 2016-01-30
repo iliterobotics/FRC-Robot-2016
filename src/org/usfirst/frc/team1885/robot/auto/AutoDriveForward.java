@@ -1,8 +1,9 @@
-package org.usfirst.frc.team1885.graveyard;
+package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
+import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 public class AutoDriveForward extends AutoCommand{
 	
@@ -60,7 +61,6 @@ public class AutoDriveForward extends AutoCommand{
 //		}
 		
 		if(Math.abs(leftDistanceTraveled  - distance) > error) {
-			leftDistanceTraveled = SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).getDistance();
 			leftDriveOutput = leftDistanceControlLoop.getPID(distance, leftDistanceTraveled);
 			
 			if(leftDriveOutput > 0) {
@@ -74,7 +74,6 @@ public class AutoDriveForward extends AutoCommand{
 		}
 		
 		if(Math.abs(rightDistanceTraveled  - distance) > error) {
-			rightDistanceTraveled = -SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).getDistance();
 			rightDriveOutput = rightDistanceControlLoop.getPID(distance, rightDistanceTraveled);
 			
 			if(rightDriveOutput > 0) {
@@ -102,14 +101,12 @@ public class AutoDriveForward extends AutoCommand{
 	public void reset() {
 		rightDistanceControlLoop.reset();
 		leftDistanceControlLoop.reset();
-		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
-		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
 		DrivetrainControl.getInstance().setLeftDriveSpeed(0);
 		DrivetrainControl.getInstance().setRightDriveSpeed(0);
 	}
 	
 	public boolean updateOutputs() {
-		RobotControl.getInstance().updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
+		RobotControlWithSRX.getInstance().updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
 		return true;
 	}
 	

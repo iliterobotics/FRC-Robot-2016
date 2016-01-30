@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1885.robot.output;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,7 +14,7 @@ public class RobotControlWithSRX
 	public static RobotControlWithSRX instance;
 	private List<CANTalon> leftDrive;
 	private List<CANTalon> rightDrive;
-	private Map<RobotMotorType, CANTalon> talons;
+	private Map<RobotMotorType, CANTalon> talons = new HashMap<RobotMotorType, CANTalon>();
 	public static synchronized RobotControlWithSRX getInstance() {
 		if (instance == null) {
 			instance = new RobotControlWithSRX();
@@ -40,11 +41,11 @@ public class RobotControlWithSRX
 	}
 	public void updateDriveSpeed(double leftspeed, double rightspeed) {
 		for (CANTalon leftMotor : leftDrive) {
-			leftMotor.set(leftspeed);
+			leftMotor.set(-leftspeed);
 			//System.out.println(leftMotor.getOutputVoltage() + "Voltage");
 		}
 		for (CANTalon rightMotor : rightDrive) {
-			rightMotor.set(-rightspeed);
+			rightMotor.set(rightspeed);
 		}
 	}
 	public void updateIntakeMotors(double intakeSpeed) {
@@ -68,4 +69,8 @@ public class RobotControlWithSRX
 	{
 	    return this.talons;
 	}
+    public void updateIntakeMotors(double intakeLeftSpeed, double intakeRightSpeed) {
+        // TODO Auto-generated method stub
+        
+    }
 }

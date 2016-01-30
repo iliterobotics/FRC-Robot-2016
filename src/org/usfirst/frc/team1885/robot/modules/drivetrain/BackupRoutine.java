@@ -1,9 +1,8 @@
 package org.usfirst.frc.team1885.robot.modules.drivetrain;
 
-import org.usfirst.frc.team1885.graveyard.RobotControl;
-import org.usfirst.frc.team1885.graveyard.SensorInputControl;
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 
 public class BackupRoutine implements Module{
@@ -26,7 +25,7 @@ public class BackupRoutine implements Module{
         return instance;
     }
     public void update() {
-    	distanceFromTarget = SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance();
+    	distanceFromTarget = SensorInputControlSRX.getInstance().getLidarSensor(SensorType.LIDAR).getDistance();
     	
     	
     	double driveOutput = distanceControlLoop.getPID(minDistance, distanceFromTarget);
