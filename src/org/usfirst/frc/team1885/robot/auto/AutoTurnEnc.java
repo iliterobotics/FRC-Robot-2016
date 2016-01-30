@@ -1,10 +1,8 @@
 package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.PID;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
-import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
+import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 public class AutoTurnEnc extends AutoCommand{
 	
@@ -66,11 +64,11 @@ public class AutoTurnEnc extends AutoCommand{
 
 	public void reset() {
 		angleControlLoop.reset();
-		RobotControl.getInstance().updateDriveSpeed(0, 0);
+		RobotControlWithSRX.getInstance().updateDriveSpeed(0, 0);
 	}
 	
 	public boolean updateOutputs() {
-		RobotControl.getInstance().updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
+		RobotControlWithSRX.getInstance().updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
 		return true;
 	}
 	

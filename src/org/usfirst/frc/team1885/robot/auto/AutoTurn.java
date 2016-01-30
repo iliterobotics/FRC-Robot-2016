@@ -2,6 +2,7 @@ package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
+import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 public class AutoTurn extends AutoCommand{
 	
@@ -87,16 +88,16 @@ public class AutoTurn extends AutoCommand{
 
 	public void reset() {
 		angleControlLoop.reset();
-		RobotControl.getInstance().updateDriveSpeed(0, 0);
+		RobotControlWithSRX.getInstance().updateDriveSpeed(0, 0);
 	}
 	
 	public boolean updateOutputs() {
-		RobotControl.getInstance().updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
+		RobotControlWithSRX.getInstance().updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
 		return true;
 	}
 	
 	public boolean init() {
-		relativeAngle = (angle + SensorInputControl.getInstance().getNAVX().getYaw360());
+//		relativeAngle = (angle + SensorInputControl.getInstance().getNAVX().getYaw360());
 		
 		relativeAngle = (relativeAngle < 0 ? 360 + relativeAngle : relativeAngle % 360);
 		
