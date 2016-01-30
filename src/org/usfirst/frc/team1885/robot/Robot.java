@@ -2,25 +2,14 @@ package org.usfirst.frc.team1885.robot;
 
 import java.util.LinkedList;
 
-import org.usfirst.frc.team1885.graveyard.ActiveIntake;
-import org.usfirst.frc.team1885.graveyard.AutoCommand;
-import org.usfirst.frc.team1885.graveyard.AutoTemplate;
-import org.usfirst.frc.team1885.graveyard.AutonomousRoutine;
-import org.usfirst.frc.team1885.graveyard.CanGrabber;
-import org.usfirst.frc.team1885.graveyard.ClawControl;
-import org.usfirst.frc.team1885.graveyard.DriverInputControl;
-import org.usfirst.frc.team1885.graveyard.RecycleBinLift;
-import org.usfirst.frc.team1885.graveyard.RobotControl;
-import org.usfirst.frc.team1885.graveyard.SensorInputControl;
-import org.usfirst.frc.team1885.graveyard.ToteLift;
-import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.auto.AutoCommand;
+import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
+import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.comms.RobotServer;
 import org.usfirst.frc.team1885.robot.comms.RobotStatusService;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
-import org.usfirst.frc.team1885.robot.modules.drivetrain.Alignment;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 

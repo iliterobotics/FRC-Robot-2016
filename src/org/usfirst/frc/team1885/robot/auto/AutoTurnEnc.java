@@ -1,9 +1,8 @@
-package org.usfirst.frc.team1885.graveyard;
+package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.PID;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
+import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 public class AutoTurnEnc extends AutoCommand{
 	
@@ -32,9 +31,9 @@ public class AutoTurnEnc extends AutoCommand{
 		steadyStateStartTime = 0;
 	}
 	public boolean execute() {
-		
-		leftAngleTraveled = 360 * SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).getDistance() / RobotConfiguration.FRAME_LENGTH;
-		rightAngleTraveled = 360 * SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).getDistance() / RobotConfiguration.FRAME_LENGTH;
+		//TODO adjust to match current setup and physical dimensions
+//		leftAngleTraveled = 360 * SensorInputControlSRX.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).getDistance() / RobotConfiguration.FRAME_LENGTH;
+//		rightAngleTraveled = 360 * SensorInputControlSRX.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).getDistance() / RobotConfiguration.FRAME_LENGTH;
 		
 		if (Math.abs(leftAngleTraveled  - angle) <= error && Math.abs(rightAngleTraveled  - angle) <= error ) {
 			this.reset();
@@ -65,11 +64,11 @@ public class AutoTurnEnc extends AutoCommand{
 
 	public void reset() {
 		angleControlLoop.reset();
-		RobotControl.getInstance().updateDriveSpeed(0, 0);
+		RobotControlWithSRX.getInstance().updateDriveSpeed(0, 0);
 	}
 	
 	public boolean updateOutputs() {
-		RobotControl.getInstance().updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
+		RobotControlWithSRX.getInstance().updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(), DrivetrainControl.getInstance().getRightDriveSpeed());
 		return true;
 	}
 	
