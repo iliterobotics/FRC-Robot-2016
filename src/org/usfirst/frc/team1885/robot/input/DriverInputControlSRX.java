@@ -6,6 +6,7 @@ import org.usfirst.frc.team1885.graveyard.RobotControl;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.AxisType;
 
@@ -51,9 +52,12 @@ public class DriverInputControlSRX {
     }
     public void update(double leftJoystick, double rightJoystick)
     {    
-        System.err.println("OMG LEFT= " + leftJoystick +", RIGHT= " + rightJoystick);
+        System.err.println("LEFT= " + leftJoystick +", RIGHT= " + rightJoystick);
         this.rightDriveSpeed = deadzone(rightJoystick);
         this.leftDriveSpeed = deadzone(leftJoystick);
-        RobotControlWithSRX.getInstance().updateDriveSpeed(rightDriveSpeed, leftDriveSpeed);
+        if(rightDriveSpeed != 0 && leftDriveSpeed != 0 ) {
+            DriverStation.reportError( "\nLEFT = " + this.leftDriveSpeed + "\nRIGHT = " + this.rightDriveSpeed + "\n", false);
+        }
+        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
     }
 }

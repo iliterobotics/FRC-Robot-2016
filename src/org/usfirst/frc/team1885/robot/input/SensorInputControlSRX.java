@@ -68,10 +68,10 @@ public class SensorInputControlSRX {
     }
 
     public void update() {
-        // Lidar Sensor Test
-        StringBuilder output = new StringBuilder();
-        output.append("\n-Lidar Sensor Distance = " + this.getLidarSensor(SensorType.LIDAR).getDistance());
-        DriverStation.reportError(output.toString(), false);
-        Timer.delay(1.0);
+//        // Lidar Sensor Test
+//        StringBuilder output = new StringBuilder();
+//        output.append("\n-Lidar Sensor Distance = " + this.getLidarSensor(SensorType.LIDAR).getDistance());
+//        DriverStation.reportError(output.toString(), false);
+//        Timer.delay(1.0);
     }
 }
