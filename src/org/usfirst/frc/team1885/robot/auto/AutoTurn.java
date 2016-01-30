@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.graveyard;
+package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
@@ -30,7 +30,8 @@ public class AutoTurn extends AutoCommand{
 		steadyStateStartTime = 0;
 	}
 	public boolean execute() {
-		rightAngleTraveled = SensorInputControl.getInstance().getNAVX().getYaw360();
+	    //TODO adjust to match current set up
+//		rightAngleTraveled = SensorInputControl.getInstance().getNAVX().getYaw360();
 		
 		
 		double difference = (rightAngleTraveled - relativeAngle);

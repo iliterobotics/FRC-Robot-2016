@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1885.robot.config2015;
 
-import org.usfirst.frc.team1885.graveyard.ActiveIntake;
 import org.usfirst.frc.team1885.graveyard.DriverInputControl;
 import org.usfirst.frc.team1885.graveyard.RecycleBinLift;
 import org.usfirst.frc.team1885.graveyard.RobotControl;
@@ -14,6 +13,7 @@ import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.ModuleControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 

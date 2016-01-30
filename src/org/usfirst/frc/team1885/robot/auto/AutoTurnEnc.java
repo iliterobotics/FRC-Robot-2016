@@ -1,8 +1,9 @@
-package org.usfirst.frc.team1885.graveyard;
+package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2015.RobotConfiguration;
+import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 
 public class AutoTurnEnc extends AutoCommand{
@@ -32,9 +33,9 @@ public class AutoTurnEnc extends AutoCommand{
 		steadyStateStartTime = 0;
 	}
 	public boolean execute() {
-		
-		leftAngleTraveled = 360 * SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).getDistance() / RobotConfiguration.FRAME_LENGTH;
-		rightAngleTraveled = 360 * SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).getDistance() / RobotConfiguration.FRAME_LENGTH;
+		//TODO adjust to match current setup and physical dimensions
+//		leftAngleTraveled = 360 * SensorInputControlSRX.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).getDistance() / RobotConfiguration.FRAME_LENGTH;
+//		rightAngleTraveled = 360 * SensorInputControlSRX.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).getDistance() / RobotConfiguration.FRAME_LENGTH;
 		
 		if (Math.abs(leftAngleTraveled  - angle) <= error && Math.abs(rightAngleTraveled  - angle) <= error ) {
 			this.reset();

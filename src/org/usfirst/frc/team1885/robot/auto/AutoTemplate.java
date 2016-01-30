@@ -1,6 +1,10 @@
-package org.usfirst.frc.team1885.graveyard;
+package org.usfirst.frc.team1885.robot.auto;
 
 import java.util.LinkedList;
+
+import org.usfirst.frc.team1885.graveyard.AutoNudge;
+import org.usfirst.frc.team1885.graveyard.AutoToteLift;
+import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.Timer;
 
@@ -45,7 +49,7 @@ public class AutoTemplate extends AutoCommand{
 	
 	public void reset() {
 		commands.clear();
-		RobotControl.getInstance().updateDriveSpeed(0, 0);
+		RobotControlWithSRX.getInstance().updateDriveSpeed(0, 0);
 	}
 	
 	public static AutoTemplate automate2Totes() {
