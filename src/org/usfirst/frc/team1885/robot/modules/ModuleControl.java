@@ -2,11 +2,6 @@ package org.usfirst.frc.team1885.robot.modules;
 
 import java.util.HashMap;
 
-<<<<<<< HEAD
-import org.usfirst.frc.team1885.graveyard.RecycleBinLift;
-import org.usfirst.frc.team1885.graveyard.ToteLift;
-=======
->>>>>>> development
 import org.usfirst.frc.team1885.robot.common.type.ModuleType;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 

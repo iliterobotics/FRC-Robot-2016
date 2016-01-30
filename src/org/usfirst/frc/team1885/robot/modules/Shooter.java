@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1885.robot.modules;
 
-import org.usfirst.frc.team1885.graveyard.DriverInputControl;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
+import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 public class Shooter implements Module {
@@ -48,7 +48,7 @@ public class Shooter implements Module {
         shooterSpeedLeft = 0;
         shooterSpeedRight = 0;
         //TODO modify values after testing for direction
-        if ((DriverInputControl.getInstance().getButton(
+        if ((DriverInputControlSRX.getInstance().getButton(
                 RobotButtonType.SHOOTER_OUT))) {
                 leftState = MotorState.REVERSE;
                 rightState = MotorState.FORWARD;
