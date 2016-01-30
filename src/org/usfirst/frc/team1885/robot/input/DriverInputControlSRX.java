@@ -55,9 +55,6 @@ public class DriverInputControlSRX {
         System.err.println("LEFT= " + leftJoystick +", RIGHT= " + rightJoystick);
         this.rightDriveSpeed = deadzone(rightJoystick);
         this.leftDriveSpeed = deadzone(leftJoystick);
-        if(rightDriveSpeed != 0 && leftDriveSpeed != 0 ) {
-            DriverStation.reportError( "\nLEFT = " + this.leftDriveSpeed + "\nRIGHT = " + this.rightDriveSpeed + "\n", false);
-        }
         RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
     }
 }

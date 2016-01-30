@@ -24,6 +24,7 @@ import org.usfirst.frc.team1885.robot.modules.drivetrain.Alignment;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -177,7 +178,7 @@ public class Robot extends SampleRobot {
 
 	public void autonomous() {
 	    AutonomousRoutine ar = new AutonomousRoutine(this);
-	    ar.autoOneTote();
+//	    ar.autoOneTote();
 	    ar.execute();
 //		autoCanGrabber();		
 	}

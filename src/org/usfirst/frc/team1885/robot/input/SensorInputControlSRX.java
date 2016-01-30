@@ -9,6 +9,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 
 import com.kauailabs.nav6.frc.IMU;
+import com.sun.javafx.binding.Logging;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -16,6 +17,7 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.networktables.NetworkTablesJNI.LoggerFunction;
 
 public class SensorInputControlSRX {
     private static SensorInputControlSRX instance = null;
@@ -73,5 +75,11 @@ public class SensorInputControlSRX {
 //        output.append("\n-Lidar Sensor Distance = " + this.getLidarSensor(SensorType.LIDAR).getDistance());
 //        DriverStation.reportError(output.toString(), false);
 //        Timer.delay(1.0);
+        
+ //       while(rsrx.getLeftDrive().get(0).)
+        if(rsrx.getLeftDrive().get(0).getOutputVoltage() <= 1.0 &&  rsrx.getLeftDrive().get(0).getSpeed() > 0){
+            DriverStation.reportError("\nVoltage:: " + rsrx.getLeftDrive().get(0).getOutputVoltage(),false);
+        }
+            
     }
 }

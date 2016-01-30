@@ -62,25 +62,25 @@ public class AutoTemplate extends AutoCommand{
 	}
 	
 	public static AutoTemplate autoFourTote() {
-		AutoTemplate template = new AutoTemplate();
-		template.init();
-		template.reset();
-		template.add(new AutoNudge());
-		template.add(new AutoToteLift(1 * 1210, 10));
-		template.add(new AutoNudge());
-		template.add(new AutoToteLift(1 * 1210, 10));
-		template.add(new AutoDriveForward(-2 * 12, 1, 2));
-		template.add(new AutoTurn(-90, 5));
-		template.add(new AutoDriveForward(3 * 12, 1, 2));
-		template.add(new AutoTurn(90, 5));
-		template.add(new AutoNudge());
-		template.add(new AutoToteLift(1 * 1210, 10));
-		template.add(new AutoDriveForward(-2.5 * 12, 1, 2));
-		template.add(new AutoTurn (90, 5));
-		template.add(new AutoDriveForward(3 * 12, 1, 2));
-	    template.add(new AutoTurn(-90, 5));
-	    template.add(new AutoNudge());
-	    template.add(new AutoToteLift(1 * 1210, 10));
+	    AutoTemplate template = new AutoTemplate();
+//		template.init();
+//		template.reset();
+//		template.add(new AutoNudge());
+//		template.add(new AutoToteLift(1 * 1210, 10));
+//		template.add(new AutoNudge());
+//		template.add(new AutoToteLift(1 * 1210, 10));
+//		template.add(new AutoDriveForward(-2 * 12, 1, 2));
+//		template.add(new AutoTurn(-90, 5));
+//		template.add(new AutoDriveForward(3 * 12, 1, 2));
+//		template.add(new AutoTurn(90, 5));
+//		template.add(new AutoNudge());
+//		template.add(new AutoToteLift(1 * 1210, 10));
+//		template.add(new AutoDriveForward(-2.5 * 12, 1, 2));
+//		template.add(new AutoTurn (90, 5));
+//		template.add(new AutoDriveForward(3 * 12, 1, 2));
+//	    template.add(new AutoTurn(-90, 5));
+//	    template.add(new AutoNudge());
+//	    template.add(new AutoToteLift(1 * 1210, 10));
 	    return template;
 	}
 

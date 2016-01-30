@@ -19,7 +19,7 @@ public class DriveTrainTest {
 	//private boolean toggle;
 	public DriveTrainTest()
 	{
-		driveFward = new AutoDriveForward(inches, error, 2);
+		driveFward = new AutoDriveForward(inches, error);
 		turner = new AutoTurn(45, 1);
 		waitForIt = new AutoWait(5000);
 	}
@@ -30,7 +30,7 @@ public class DriveTrainTest {
 				RobotButtonType.DRIVE_TRAIN_TEST))
 				{
 		driveOn();
-		driveFward = new AutoDriveForward(-inches, error, 2);
+		driveFward = new AutoDriveForward(-inches, error);
 		driveOn();
 		turnIt();
 		turner = new AutoTurn(-45, 5);
