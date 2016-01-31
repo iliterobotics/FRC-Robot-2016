@@ -77,6 +77,7 @@ public class SensorInputControlSRX {
 //        Timer.delay(1.0);
         
  //       while(rsrx.getLeftDrive().get(0).)
+        
         if(rsrx.getLeftDrive().get(0).getOutputVoltage() <= 1.0 &&  rsrx.getLeftDrive().get(0).getSpeed() > 0){
             DriverStation.reportError("\nVoltage:: " + rsrx.getLeftDrive().get(0).getOutputVoltage(),false);
         }
