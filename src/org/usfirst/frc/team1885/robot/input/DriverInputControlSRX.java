@@ -3,11 +3,9 @@ package org.usfirst.frc.team1885.robot.input;
 import java.util.HashMap;
 
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
-import org.usfirst.frc.team1885.robot.output.RobotControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Joystick.AxisType;
 
 public class DriverInputControlSRX {
     private static DriverInputControlSRX instance = null;

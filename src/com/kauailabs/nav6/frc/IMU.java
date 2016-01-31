@@ -15,6 +15,7 @@ import java.util.Arrays;
 import com.kauailabs.nav6.IMUProtocol;
 
 import edu.wpi.first.wpilibj.PIDSource;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.SensorBase;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
@@ -459,5 +460,17 @@ public class IMU extends SensorBase implements PIDSource, LiveWindowSendable, Ru
                 ex.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public void setPIDSourceType(PIDSourceType pidSource) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public PIDSourceType getPIDSourceType() {
+        // TODO Auto-generated method stub
+        return null;
     }
 }

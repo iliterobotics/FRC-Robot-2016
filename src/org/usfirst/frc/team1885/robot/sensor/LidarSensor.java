@@ -1,7 +1,9 @@
 package org.usfirst.frc.team1885.robot.sensor;
 
 import java.util.TimerTask;
+
 import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PIDSource;
@@ -61,4 +63,16 @@ public class LidarSensor implements PIDSource{
 			update();
 		}
 	}
+
+    @Override
+    public void setPIDSourceType(PIDSourceType pidSource) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public PIDSourceType getPIDSourceType() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

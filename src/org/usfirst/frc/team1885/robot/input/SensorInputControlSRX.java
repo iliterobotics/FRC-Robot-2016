@@ -1,25 +1,14 @@
 package org.usfirst.frc.team1885.robot.input;
 
-<<<<<<< HEAD
-=======
-import java.util.HashMap;
-
->>>>>>> e564e861e983092e3053af199afa0b897170ece3
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 
-<<<<<<< HEAD
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
-=======
-import com.kauailabs.nav6.frc.IMU;
-
->>>>>>> e564e861e983092e3053af199afa0b897170ece3
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
-import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.Timer;
 
 public class SensorInputControlSRX {
     private static SensorInputControlSRX instance = null;
@@ -41,10 +30,11 @@ public class SensorInputControlSRX {
         this.getLidarSensor().update();
         output.append("\n-Potentiometer In Position: "
                 + ((this.getAnalogInPosition(SensorType.ULTRASONIC) / 1024.0) * 360 ));
-        output.append("\n-Potentiometer Generic: "
+        output.append("sd\n-Potentiometer Generic: "
                 + (this.getAnalogGeneric(SensorType.ULTRASONIC)));
         output.append("\n-Lidar value:"
                 + (this.getLidarSensor().getDistance()));
+        
         DriverStation.reportError(output.toString(), false);
         Timer.delay(1);
         // System.out.println(this.bia.getX() +" x " + bia.getY() + " y " +

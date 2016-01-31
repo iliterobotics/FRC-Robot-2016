@@ -1,8 +1,9 @@
 package org.usfirst.frc.team1885.robot.test;
 
+import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+
 import com.kauailabs.nav6.frc.IMUAdvanced;
 
-import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
@@ -17,7 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * directory.
  */
 public class NavXSensorTest extends SampleRobot {
-    
+    SensorInputControlSRX sensorx;
     SerialPort serial_port;
     //IMU imu;  // Alternatively, use IMUAdvanced for advanced features
     IMUAdvanced imu;
