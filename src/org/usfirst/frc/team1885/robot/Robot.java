@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot;
 import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
+import org.usfirst.frc.team1885.robot.auto.AutoMoat;
 import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
@@ -11,7 +12,6 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -155,6 +155,7 @@ public class Robot extends SampleRobot {
 
 	public void autonomous() {
 	    AutonomousRoutine ar = new AutonomousRoutine(this);
+	    ar.driveForward();
 	    ar.execute();
 	}
 }

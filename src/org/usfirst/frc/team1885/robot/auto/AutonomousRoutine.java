@@ -38,4 +38,7 @@ public class AutonomousRoutine
             Timer.delay(delay);
         }
     }
+    public void AutoMoatRoughTerrainRockWall() {
+        commands.add(new AutoMoat());
+    }
 }
