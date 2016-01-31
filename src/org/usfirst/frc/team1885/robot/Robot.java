@@ -2,25 +2,12 @@ package org.usfirst.frc.team1885.robot;
 
 import java.util.LinkedList;
 
-import org.usfirst.frc.team1885.graveyard.ActiveIntake;
-import org.usfirst.frc.team1885.graveyard.AutoCommand;
-import org.usfirst.frc.team1885.graveyard.AutoTemplate;
-import org.usfirst.frc.team1885.graveyard.AutonomousRoutine;
-import org.usfirst.frc.team1885.graveyard.CanGrabber;
-import org.usfirst.frc.team1885.graveyard.ClawControl;
-import org.usfirst.frc.team1885.graveyard.DriverInputControl;
-import org.usfirst.frc.team1885.graveyard.RecycleBinLift;
-import org.usfirst.frc.team1885.graveyard.RobotControl;
-import org.usfirst.frc.team1885.graveyard.SensorInputControl;
-import org.usfirst.frc.team1885.graveyard.ToteLift;
-import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.comms.RobotServer;
-import org.usfirst.frc.team1885.robot.comms.RobotStatusService;
+import org.usfirst.frc.team1885.robot.auto.AutoCommand;
+import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
+import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
-import org.usfirst.frc.team1885.robot.modules.drivetrain.Alignment;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -47,9 +34,6 @@ import edu.wpi.first.wpilibj.Timer;
 public class Robot extends SampleRobot {
 	private final double diameter;
 	private final double maxSpeed;
-	private RobotControl robotControl;
-	private RecycleBinLift recycleBinLift;
-	private ToteLift toteLift;
 	private LinkedList<AutoCommand> commands;
 	private long timeTracker = 0;
 	private double delayTime = 1;// Input time in seconds
@@ -68,7 +52,7 @@ public class Robot extends SampleRobot {
         this.sensorrx = SensorInputControlSRX.getInstance();
 		try {
 			RobotConfiguration.configureRobot();
-			SensorInputControl.getInstance().getNAVX().zeroYaw();
+			SensorInputControlSRX.getInstance().getNAVX().zeroYaw();
 		} catch (Exception e) {
 			System.out.println("Robot - Error configuring Robot");
 			e.printStackTrace();
@@ -77,12 +61,7 @@ public class Robot extends SampleRobot {
 		maxSpeed = 15.0;
 
 		DrivetrainControl.getInstance().addSpeed(1, 15.0);
-		this.robotControl = RobotControl.getInstance();
-		this.recycleBinLift = RecycleBinLift.getInstance();
-		this.toteLift = ToteLift.getInstance();
-
-		RobotServer.getInstance().setup(4444);
-		RobotServer.getInstance().startServer();
+		this.srx = RobotControlWithSRX.getInstance();
 
 	}
 
@@ -101,8 +80,6 @@ public class Robot extends SampleRobot {
 		
 		
 		boolean magnetState = false;
-
-		RobotStatusService robotStatusService = new RobotStatusService();
 
 		while (isOperatorControl() && isEnabled()) {
 		    
@@ -178,9 +155,7 @@ public class Robot extends SampleRobot {
 
 	public void autonomous() {
 	    AutonomousRoutine ar = new AutonomousRoutine(this);
-//	    ar.autoOneTote();
 	    ar.execute();
-//		autoCanGrabber();		
 	}
 }
 

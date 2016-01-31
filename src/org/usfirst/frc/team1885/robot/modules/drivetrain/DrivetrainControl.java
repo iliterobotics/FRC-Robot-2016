@@ -2,17 +2,13 @@ package org.usfirst.frc.team1885.robot.modules.drivetrain;
 
 import java.util.HashMap;
 
-import org.usfirst.frc.team1885.graveyard.AutoTurn;
-import org.usfirst.frc.team1885.graveyard.DriverInputControl;
-import org.usfirst.frc.team1885.graveyard.RobotControl;
-import org.usfirst.frc.team1885.graveyard.SensorInputControl;
+import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
-
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 
 public class DrivetrainControl implements Module{
@@ -27,7 +23,7 @@ public class DrivetrainControl implements Module{
 	private final double diameter;
 	private final double circumference;
 	private  HashMap<Integer, Double> speeds;
-	private DriverInputControl driverInput;
+	private DriverInputControlSRX driverInput;
 	private boolean isTurning;
 	private AutoTurn turn;
 	public static final double NUDGE_POWER = 0.15;
@@ -44,7 +40,7 @@ public class DrivetrainControl implements Module{
 //		SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).setDistancePerPulse(circumference/256);
 		driveMode = DriveMode.TANK;
 		setGearState(GearState.HIGH_GEAR);
-		driverInput = DriverInputControl.getInstance();
+		driverInput = DriverInputControlSRX.getInstance();
 	}
 	public static DrivetrainControl getInstance(){
 	    if(instance == null){
@@ -62,7 +58,7 @@ public class DrivetrainControl implements Module{
 		return speed * circumference; 
 	}
 	public double getDistance () {
-		return SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) * circumference;
+	    return 1.0;
 	}
 	public boolean getIsTurning()
 	{
@@ -70,21 +66,15 @@ public class DrivetrainControl implements Module{
 	}
 	public void update()
 	{
-		if (driverInput.getButton(RobotButtonType.GEAR_SHIFT)){
-			setGearState(GearState.LOW_GEAR);
-		}
-		else{
-			setGearState(GearState.HIGH_GEAR);
-		}
 				
 		//FIXME: add slow straight drive state + button
-		if ( (DriverInputControl.getInstance().getButton(
-                RobotButtonType.LEFT_DRIFT) || DriverInputControl.getInstance().getButton(
+		if ( (DriverInputControlSRX.getInstance().getButton(
+                RobotButtonType.LEFT_DRIFT) || DriverInputControlSRX.getInstance().getButton(
                         RobotButtonType.RIGHT_DRIFT)) && !isTurning) {
 			
 			if(!isTurning) {
 				
-				double angle = (DriverInputControl.getInstance().getButton(
+				double angle = (DriverInputControlSRX.getInstance().getButton(
                 RobotButtonType.LEFT_DRIFT) ? 90 : -90);
 				
 				turn = new AutoTurn(angle, 5);
@@ -93,16 +83,16 @@ public class DrivetrainControl implements Module{
 			
 			isTurning = turn.execute();
 			
-        } else if(DriverInputControl.getInstance().getPOVButton(
+        } else if(DriverInputControlSRX.getInstance().getPOVButton(
         		RobotButtonType.NUDGE) == 90) {
         	update(-NUDGE_POWER_TURN , NUDGE_POWER_TURN);
-        } else if(DriverInputControl.getInstance().getPOVButton(
+        } else if(DriverInputControlSRX.getInstance().getPOVButton(
         		RobotButtonType.NUDGE) == 270) {
         	update(NUDGE_POWER_TURN, -NUDGE_POWER_TURN);
-        } else if(DriverInputControl.getInstance().getPOVButton(
+        } else if(DriverInputControlSRX.getInstance().getPOVButton(
         		RobotButtonType.NUDGE) == 0) {
         	update(-NUDGE_POWER, -NUDGE_POWER);
-        } else if(DriverInputControl.getInstance().getPOVButton(
+        } else if(DriverInputControlSRX.getInstance().getPOVButton(
         		RobotButtonType.NUDGE) == 180) {
         	update(NUDGE_POWER, NUDGE_POWER);
         } else {
@@ -118,12 +108,12 @@ public class DrivetrainControl implements Module{
 			leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
 			rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
 			
-			if(Math.abs(leftJoystick - rightJoystick) < DriverInputControl.DEADZONE) {
+			if(Math.abs(leftJoystick - rightJoystick) < DriverInputControlSRX.DEADZONE) {
 				leftDriveSpeed = rightDriveSpeed = (leftDriveSpeed + rightDriveSpeed) / 2;
 			}
 			 
-			leftDriveSpeed = DriverInputControl.expScale(leftDriveSpeed);
-			rightDriveSpeed = DriverInputControl.expScale(rightDriveSpeed);
+			leftDriveSpeed = DriverInputControlSRX.expScale(leftDriveSpeed);
+			rightDriveSpeed = DriverInputControlSRX.expScale(rightDriveSpeed);
 		} else if(isTurning) {
 			leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
 			rightDriveSpeed = rightJoystick * (speeds.get(getTotes()) / maxSpeed);
@@ -195,7 +185,6 @@ public class DrivetrainControl implements Module{
 	
 	public void updateOutputs() {
 		//udicious - 3/6 hard coding low gear with 2 speeds.
-		RobotControl.getInstance().updateGearShifter(getGearValue());
-		RobotControl.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
+		RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
 	}
 }

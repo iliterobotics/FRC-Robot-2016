@@ -2,9 +2,6 @@ package org.usfirst.frc.team1885.robot.modules;
 
 import java.util.HashMap;
 
-import org.usfirst.frc.team1885.graveyard.ActiveIntake;
-import org.usfirst.frc.team1885.graveyard.RecycleBinLift;
-import org.usfirst.frc.team1885.graveyard.ToteLift;
 import org.usfirst.frc.team1885.robot.common.type.ModuleType;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 
@@ -33,14 +30,6 @@ public class ModuleControl{
 	
 	public Module get(ModuleType module_type) {
 		return modules.get(module_type);
-	}
-	
-	public ToteLift getToteLift() {
-		return (ToteLift)modules.get(ModuleType.TOTE_LIFT);
-	}
-	
-	public RecycleBinLift getRecycleBinLift() {
-		return (RecycleBinLift)modules.get(ModuleType.RECYCLE_BIN_LIFT);
 	}
 	
 	public DrivetrainControl getDriveTrain() {

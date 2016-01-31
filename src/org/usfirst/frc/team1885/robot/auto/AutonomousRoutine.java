@@ -1,4 +1,4 @@
-package org.usfirst.frc.team1885.graveyard;
+package org.usfirst.frc.team1885.robot.auto;
 
 import java.util.LinkedList;
 
@@ -6,12 +6,12 @@ import org.usfirst.frc.team1885.robot.Robot;
 
 import edu.wpi.first.wpilibj.Timer;
 
-public class AutoRoutine
+public class AutonomousRoutine
 {
     private Robot robot;
     private LinkedList<AutoCommand> commands;
     private static final double delay = 0.05;
-    public AutoRoutine(Robot r)
+    public AutonomousRoutine(Robot r)
     {
         commands = new LinkedList<AutoCommand>();
         robot = r;

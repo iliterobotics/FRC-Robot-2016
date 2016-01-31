@@ -1,9 +1,5 @@
 package org.usfirst.frc.team1885.robot.modules.drivetrain;
 
-import org.usfirst.frc.team1885.graveyard.RobotControl;
-import org.usfirst.frc.team1885.graveyard.SensorInputControl;
-import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.modules.Module;
 
 import edu.wpi.first.wpilibj.Relay.Value;
@@ -28,26 +24,22 @@ public class Alignment implements Module {
 
     @Override
     public void update() {
-        if (SensorInputControl.getInstance().isActive(
-                SensorType.TOUCH_SENSOR_TOTE_LEFT)) {
-            left = Value.kOn;
-        } else {
-            left = Value.kOff;
-        }
-        if (SensorInputControl.getInstance().isActive(
-                SensorType.TOUCH_SENSOR_TOTE_RIGHT)) {
-            right = Value.kOn;
-        } else {
-            right = Value.kOff;
-        }
+//        if (SensorInputControl.getInstance().isActive(
+//                SensorType.TOUCH_SENSOR_TOTE_LEFT)) {
+//            left = Value.kOn;
+//        } else {
+//            left = Value.kOff;
+//        }
+//        if (SensorInputControl.getInstance().isActive(
+//                SensorType.TOUCH_SENSOR_TOTE_RIGHT)) {
+//            right = Value.kOn;
+//        } else {
+//            right = Value.kOff;
+//        }
     }
 
     @Override
     public void updateOutputs() {
-        RobotControl.getInstance().updateRelay(RobotMotorType.ALIGNMENT_LEFT,
-                left);
-        RobotControl.getInstance().updateRelay(RobotMotorType.ALIGNMENT_RIGHT,
-                right);
     }
 
 }

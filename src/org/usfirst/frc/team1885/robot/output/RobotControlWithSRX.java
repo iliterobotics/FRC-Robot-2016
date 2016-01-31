@@ -60,4 +60,8 @@ public class RobotControlWithSRX
 	{
 	    return this.talons;
 	}
+    public void updateIntakeMotors(double intakeLeftSpeed, double intakeRightSpeed) {
+        // TODO Auto-generated method stub
+        
+    }
 }
