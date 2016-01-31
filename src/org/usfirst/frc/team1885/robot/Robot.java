@@ -32,122 +32,111 @@ import edu.wpi.first.wpilibj.Timer;
  */
 
 public class Robot extends SampleRobot {
-	private final double diameter;
-	private final double maxSpeed;
-	private LinkedList<AutoCommand> commands;
-	private long timeTracker = 0;
-	private double delayTime = 1;// Input time in seconds
-	
+    private final double diameter;
+    private final double maxSpeed;
+    private LinkedList<AutoCommand> commands;
+    private long timeTracker = 0;
+    private double delayTime = 1;// Input time in seconds
+
     private RobotControlWithSRX srx;
     private DriverInputControlSRX drx;
     private SensorInputControlSRX sensorrx;
-	
-	private AutoTemplate activeTemplate;
 
-	public Robot() {
-	    
-	    RobotConfiguration.configureRobot();
+    private AutoTemplate activeTemplate;
+
+    public Robot() {
+
+        RobotConfiguration.configureRobot();
         srx = RobotControlWithSRX.getInstance();
         drx = DriverInputControlSRX.getInstance();
         this.sensorrx = SensorInputControlSRX.getInstance();
-		try {
-			RobotConfiguration.configureRobot();
-		} catch (Exception e) {
-			System.out.println("Robot - Error configuring Robot");
-			e.printStackTrace();
-		}
-		diameter = 4.0;
-		maxSpeed = 15.0;
+        try {
+            RobotConfiguration.configureRobot();
+        } catch (Exception e) {
+            System.out.println("Robot - Error configuring Robot");
+            e.printStackTrace();
+        }
+        diameter = 4.0;
+        maxSpeed = 15.0;
 
-		DrivetrainControl.getInstance().addSpeed(1, 15.0);
-		this.srx = RobotControlWithSRX.getInstance();
+        DrivetrainControl.getInstance().addSpeed(1, 15.0);
+        this.srx = RobotControlWithSRX.getInstance();
 
-	}
+    }
 
-	/**
-	 * Runs the motors with tank steering.
-	 */
-	public void operatorControl() {
+    /**
+     * Runs the motors with tank steering.
+     */
+    public void operatorControl() {
 
-	    //TODO: FIX THIS NPE.
-//		SensorInputControl.getInstance()
-//				.getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
-//		SensorInputControl.getInstance()
-//				.getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
+        // TODO: FIX THIS NPE.
+        // SensorInputControl.getInstance()
+        // .getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
+        // SensorInputControl.getInstance()
+        // .getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
 
-				
-		
-		
-		boolean magnetState = false;
+        boolean magnetState = false;
 
-		while (isOperatorControl() && isEnabled()) {
-		    
-		    //New canbus code
-		    drx.update();
-		    AuxArm.getInstance().update();
+        while (isOperatorControl() && isEnabled()) {
+
+            // New canbus code
+            drx.update();
+            AuxArm.getInstance().update();
             sensorrx.update();
             Timer.delay(.005);
-		}
-			
-//			System.out.println(SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER) + " " 
-//					 + SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER) + " " +
-//					SensorInputControl.getInstance().getEncoderTicks(SensorType.TOTE_ENCODER) + " " + 
-//					SensorInputControl.getInstance().isActive(SensorType.RECYCLE_BIN_LOWER_LIMIT) + " " +
-//					SensorInputControl.getInstance().isActive(SensorType.RECYCLE_BIN_UPPER_LIMIT));
-//			if (System.currentTimeMillis() - timeTracker >= (delayTime * 1000)) {
-//				timeTracker = System.currentTimeMillis();
-//				try {
-//					robotStatusService.update();
-//					RobotServer.getInstance().send(robotStatusService.getTm());
-//				} catch (Exception e) {
-//					e.printStackTrace();
-//				}
-//
-////				System.out.println(SensorInputControl.getInstance().getNAVX()
-////						.getYaw360());
-//			}
-/*			
-			if((DriverInputControl.getInstance().getButton(
-				RobotButtonType.CANCEL_AUTOMATION))) {
-				this.activeTemplate = null;
-			}
-			
-//			if((DriverInputControl.getInstance().getButton(
-//				RobotButtonType.AUTOMATE_2_TOTES)) || this.activeTemplate != null) {
-//				
-//				if(this.activeTemplate == null) {
-//					this.activeTemplate = AutoTemplate.automate2Totes();
-//				}
-//				
-//				if(this.activeTemplate.execute()) {
-//					this.activeTemplate = null;
-//				}
-//				
-//			}
-			else
-			{
-				this.activeTemplate = null;
-				DrivetrainControl.getInstance().update();
-				ActiveIntake.getInstance().update();
-				System.out.println( "Updated active intake" );
-				// System.out.println("Robot::tele - lidar: " +
-				// SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance());
-				// BackupRoutine.getInstance().update();
-	
-				// robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(),
-				// DrivetrainControl.getInstance().getRightDriveSpeed());
-				DrivetrainControl.getInstance().updateOutputs();
-				ActiveIntake.getInstance().updateOutputs();
-				System.out.println( "Updated active intake outputs" );
-			}
-			Timer.delay(.005); // wait for a motor update time
-		}
-		*/
-	}
+        }
 
-	public void autonomous() {
-	    AutonomousRoutine ar = new AutonomousRoutine(this);
-	    ar.execute();
-	}
+        // System.out.println(SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER)
+        // + " "
+        // +
+        // SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER)
+        // + " " +
+        // SensorInputControl.getInstance().getEncoderTicks(SensorType.TOTE_ENCODER)
+        // + " " +
+        // SensorInputControl.getInstance().isActive(SensorType.RECYCLE_BIN_LOWER_LIMIT)
+        // + " " +
+        // SensorInputControl.getInstance().isActive(SensorType.RECYCLE_BIN_UPPER_LIMIT));
+        // if (System.currentTimeMillis() - timeTracker >= (delayTime * 1000)) {
+        // timeTracker = System.currentTimeMillis();
+        // try {
+        // robotStatusService.update();
+        // RobotServer.getInstance().send(robotStatusService.getTm());
+        // } catch (Exception e) {
+        // e.printStackTrace();
+        // }
+        //
+        //// System.out.println(SensorInputControl.getInstance().getNAVX()
+        //// .getYaw360());
+        // }
+        /*
+         * if((DriverInputControl.getInstance().getButton(
+         * RobotButtonType.CANCEL_AUTOMATION))) { this.activeTemplate = null; }
+         * 
+         * // if((DriverInputControl.getInstance().getButton( //
+         * RobotButtonType.AUTOMATE_2_TOTES)) || this.activeTemplate != null) {
+         * // // if(this.activeTemplate == null) { // this.activeTemplate =
+         * AutoTemplate.automate2Totes(); // } // //
+         * if(this.activeTemplate.execute()) { // this.activeTemplate = null; //
+         * } // // } else { this.activeTemplate = null;
+         * DrivetrainControl.getInstance().update();
+         * ActiveIntake.getInstance().update(); System.out.println(
+         * "Updated active intake" ); // System.out.println(
+         * "Robot::tele - lidar: " + //
+         * SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).
+         * getDistance()); // BackupRoutine.getInstance().update();
+         * 
+         * // robotControl.updateDriveSpeed(DrivetrainControl.getInstance().
+         * getLeftDriveSpeed(), //
+         * DrivetrainControl.getInstance().getRightDriveSpeed());
+         * DrivetrainControl.getInstance().updateOutputs();
+         * ActiveIntake.getInstance().updateOutputs(); System.out.println(
+         * "Updated active intake outputs" ); } Timer.delay(.005); // wait for a
+         * motor update time }
+         */
+    }
+
+    public void autonomous() {
+        AutonomousRoutine ar = new AutonomousRoutine(this);
+        ar.execute();
+    }
 }
-

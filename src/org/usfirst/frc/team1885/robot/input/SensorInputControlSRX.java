@@ -59,10 +59,10 @@ public class SensorInputControlSRX {
     public int getEncoderVelocity(SensorType type) {
         return rsrx.getSensor().get(type).getEncVelocity();
     }
-    
-    public double getEncoderDistance(SensorType type)
-    {
-        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * getEncoderPos(type) * 360.0/1440.0;
+
+    public double getEncoderDistance(SensorType type) {
+        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * getEncoderPos(type)
+                * 360.0 / 1440.0;
     }
     public void addLidarSensor(Port port) {
         ls = new LidarSensor(port);
@@ -83,7 +83,7 @@ public class SensorInputControlSRX {
     public AHRS getNavX() {
         return navx;
     }
-    public void calibrateGyro(){
+    public void calibrateGyro() {
         navx.zeroYaw();
     }
 
