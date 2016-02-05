@@ -23,10 +23,10 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_B_CLOCK, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 4 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_B_COUNTER, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 3 ) );
 
-		RobotControlWithSRX.getInstance().addTalonSensor(SensorType.JOINT_B_POTENTIOMETER, 2);
-        
         //TODO change to match actual input
         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ARM_JOINT_A, 1);
         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ARM_JOINT_B, 2);
+        
+		RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.ARM_JOINT_B, SensorType.JOINT_B_POTENTIOMETER, 2);
 	}
 }

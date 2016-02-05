@@ -38,18 +38,18 @@ public class Robot extends SampleRobot {
 	private long timeTracker = 0;
 	private double delayTime = 1;// Input time in seconds
 	
-    private RobotControlWithSRX srx;
-    private DriverInputControlSRX drx;
-    private SensorInputControlSRX sensorrx;
+    private RobotControlWithSRX robotControlWithSRX;
+    private DriverInputControlSRX driverInputControl;
+    private SensorInputControlSRX sensorInputControl;
 	
 	private AutoTemplate activeTemplate;
 
 	public Robot() {
 	    
 	    RobotConfiguration.configureRobot();
-        srx = RobotControlWithSRX.getInstance();
-        drx = DriverInputControlSRX.getInstance();
-        this.sensorrx = SensorInputControlSRX.getInstance();
+        this.robotControlWithSRX = RobotControlWithSRX.getInstance();
+        this.driverInputControl = DriverInputControlSRX.getInstance();
+        this.sensorInputControl = SensorInputControlSRX.getInstance();
 		try {
 			RobotConfiguration.configureRobot();
 		} catch (Exception e) {
@@ -60,7 +60,6 @@ public class Robot extends SampleRobot {
 		maxSpeed = 15.0;
 
 		DrivetrainControl.getInstance().addSpeed(1, 15.0);
-		this.srx = RobotControlWithSRX.getInstance();
 
 	}
 
@@ -83,9 +82,9 @@ public class Robot extends SampleRobot {
 		while (isOperatorControl() && isEnabled()) {
 		    
 		    //New canbus code
-		    drx.update();
+		    driverInputControl.update();
 		    AuxArm.getInstance().update();
-            sensorrx.update();
+            sensorInputControl.update();
             Timer.delay(.005);
 		}
 			

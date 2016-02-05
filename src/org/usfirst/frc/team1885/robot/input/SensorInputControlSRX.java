@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class SensorInputControlSRX {
     private static SensorInputControlSRX instance = null;
-    private static RobotControlWithSRX rsrx = RobotControlWithSRX.getInstance();
-    private PowerDistributionPanel PDP = new PowerDistributionPanel();
+    private static RobotControlWithSRX rsrx;
+    private PowerDistributionPanel PDP;
     private LidarSensor ls;
     private BuiltInAccelerometer bia;
 
@@ -26,6 +26,8 @@ public class SensorInputControlSRX {
         return instance;
     }
     protected SensorInputControlSRX() {
+        rsrx = RobotControlWithSRX.getInstance();
+        PDP = new PowerDistributionPanel();
     }
     public void update() {
         StringBuilder output = new StringBuilder();
@@ -37,8 +39,7 @@ public class SensorInputControlSRX {
         output.append("\n-Potentiometer B In Position: "
                 + ((this.getAnalogInPosition(SensorType.JOINT_B_POTENTIOMETER) / 1024.0) * 360 ));
         
-//        DriverStation.reportError(output.toString(), false);
-        Timer.delay(1);
+        DriverStation.reportError(output.toString(), false);
         // System.out.println(this.bia.getX() +" x " + bia.getY() + " y " +
         // bia.getZ() + " z ");
     }

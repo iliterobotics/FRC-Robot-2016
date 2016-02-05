@@ -15,7 +15,7 @@ public class RobotControlWithSRX
 	public static RobotControlWithSRX instance;
 	private List<CANTalon> leftDrive;
 	private List<CANTalon> rightDrive;
-	private Map<RobotMotorType, CANTalon> talons = new HashMap<RobotMotorType, CANTalon>();
+	private Map<RobotMotorType, CANTalon> talons;
 	private Map<SensorType, CANTalon> sensors;
 	
 	public static synchronized RobotControlWithSRX getInstance() {
@@ -28,6 +28,8 @@ public class RobotControlWithSRX
 	{
 		leftDrive = new ArrayList<CANTalon>();
 		rightDrive = new ArrayList<CANTalon>();
+		talons = new HashMap<RobotMotorType, CANTalon>();
+		sensors = new HashMap<SensorType, CANTalon>();
 	}
 	public void addTalonOutput(RobotMotorType type, int port) {
 		if (type == RobotMotorType.LEFT_DRIVE) {
@@ -42,15 +44,16 @@ public class RobotControlWithSRX
 		    talons.put(type, new CANTalon(port));
 		}
 	}
-	public void addTalonSensor(SensorType sensorType, int port) {
-        if(talons.containsKey(port))
+	public void addTalonSensor(RobotMotorType talonType, SensorType sensorType, int port) {
+        if(talons.containsKey(talonType))
         {
-            sensors.put(sensorType, talons.get(port));
+            sensors.put(sensorType, talons.get(talonType));
         }
         else
         {
             CANTalon ct = new CANTalon(port);
             sensors.put(sensorType, ct);
+            talons.put(talonType, ct);
         }
     }
 	public void updateDriveSpeed(double leftspeed, double rightspeed) {
