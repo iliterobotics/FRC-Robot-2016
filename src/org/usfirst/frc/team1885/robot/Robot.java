@@ -3,7 +3,6 @@ package org.usfirst.frc.team1885.robot;
 import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
-import org.usfirst.frc.team1885.robot.auto.AutoMoat;
 import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
@@ -155,7 +154,6 @@ public class Robot extends SampleRobot {
 
 	public void autonomous() {
 	    AutonomousRoutine ar = new AutonomousRoutine(this);
-	    ar.driveForward();
 	    ar.execute();
 	}
 }
