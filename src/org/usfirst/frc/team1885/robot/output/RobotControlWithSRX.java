@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 
 import edu.wpi.first.wpilibj.CANTalon;
 
@@ -15,6 +16,8 @@ public class RobotControlWithSRX
 	private List<CANTalon> leftDrive;
 	private List<CANTalon> rightDrive;
 	private Map<RobotMotorType, CANTalon> talons = new HashMap<RobotMotorType, CANTalon>();
+	private Map<SensorType, CANTalon> sensors;
+	
 	public static synchronized RobotControlWithSRX getInstance() {
 		if (instance == null) {
 			instance = new RobotControlWithSRX();
@@ -39,6 +42,17 @@ public class RobotControlWithSRX
 		    talons.put(type, new CANTalon(port));
 		}
 	}
+	public void addTalonSensor(SensorType sensorType, int port) {
+        if(talons.containsKey(port))
+        {
+            sensors.put(sensorType, talons.get(port));
+        }
+        else
+        {
+            CANTalon ct = new CANTalon(port);
+            sensors.put(sensorType, ct);
+        }
+    }
 	public void updateDriveSpeed(double leftspeed, double rightspeed) {
 		for (CANTalon leftMotor : leftDrive) {
 			leftMotor.set(-leftspeed);
@@ -76,5 +90,10 @@ public class RobotControlWithSRX
     public void updateArmMotors(double jointASpeed, double jointBSpeed) {
         talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
         talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
+    }
+    
+    public Map<SensorType, CANTalon> getSensor()
+    {
+        return this.sensors;
     }
 }

@@ -52,7 +52,6 @@ public class Robot extends SampleRobot {
         this.sensorrx = SensorInputControlSRX.getInstance();
 		try {
 			RobotConfiguration.configureRobot();
-			SensorInputControlSRX.getInstance().getNAVX().zeroYaw();
 		} catch (Exception e) {
 			System.out.println("Robot - Error configuring Robot");
 			e.printStackTrace();
