@@ -35,19 +35,24 @@ public class AuxArm implements Module{
         jointBSpeed = 0;
         
         if ((DriverInputControlSRX.getInstance().getButton(
-                RobotButtonType.INTAKE_IN))) {
-                jointAState = MotorState.REVERSE;
-                jointBState = MotorState.FORWARD;
-                jointASpeed = ARM_SPEED;
-                jointBSpeed = -ARM_SPEED;
-            }
-    
-        if ((DriverInputControlSRX.getInstance().getButton(
-                RobotButtonType.INTAKE_OUT))) {
+                RobotButtonType.ARM_JOINT_A_CLOCK))) {
                 jointAState = MotorState.FORWARD;
-                jointBState = MotorState.REVERSE;
+                jointASpeed = ARM_SPEED;
+            }
+        if ((DriverInputControlSRX.getInstance().getButton(
+                RobotButtonType.ARM_JOINT_A_COUNTER))) {
+                jointAState = MotorState.REVERSE;
                 jointASpeed = -ARM_SPEED;
-                jointBSpeed = ARM_SPEED;
+            }
+        if ((DriverInputControlSRX.getInstance().getButton(
+                RobotButtonType.ARM_JOINT_B_CLOCK))) {
+                jointAState = MotorState.FORWARD;
+                jointASpeed = ARM_SPEED;
+            }
+        if ((DriverInputControlSRX.getInstance().getButton(
+                RobotButtonType.ARM_JOINT_B_COUNTER))) {
+                jointAState = MotorState.REVERSE;
+                jointASpeed = -ARM_SPEED;
             }
         updateArm(jointASpeed, jointBSpeed);
     }
