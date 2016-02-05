@@ -73,4 +73,8 @@ public class RobotControlWithSRX
         // TODO Auto-generated method stub
         
     }
+    public void updateArmMotors(double jointASpeed, double jointBSpeed) {
+        talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
+        talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
+    }
 }
