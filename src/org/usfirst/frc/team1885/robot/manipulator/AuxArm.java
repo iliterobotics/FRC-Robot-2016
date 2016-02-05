@@ -9,6 +9,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 public class AuxArm implements Module{
 
     public static final double ARM_SPEED = 0.5;
+    public static final double STOP_POWER = 0.06;
     private static AuxArm instance;
     // joint A is the motor powering the joint directly connected to the base
     // joint B is the motor power the moving joint 
@@ -31,8 +32,8 @@ public class AuxArm implements Module{
     }    
     
     public void updateArm() {
-        jointASpeed = 0;
-        jointBSpeed = 0;
+        jointASpeed = STOP_POWER;
+        jointBSpeed = STOP_POWER;
         
         if ((DriverInputControlSRX.getInstance().getButton(
                 RobotButtonType.ARM_JOINT_A_CLOCK))) {
@@ -46,29 +47,29 @@ public class AuxArm implements Module{
             }
         if ((DriverInputControlSRX.getInstance().getButton(
                 RobotButtonType.ARM_JOINT_B_CLOCK))) {
-                jointAState = MotorState.FORWARD;
-                jointASpeed = ARM_SPEED;
+                jointBState = MotorState.FORWARD;
+                jointBSpeed = ARM_SPEED;
             }
         if ((DriverInputControlSRX.getInstance().getButton(
                 RobotButtonType.ARM_JOINT_B_COUNTER))) {
-                jointAState = MotorState.REVERSE;
-                jointASpeed = -ARM_SPEED;
+                jointBState = MotorState.REVERSE;
+                jointBSpeed = -ARM_SPEED;
             }
         updateArm(jointASpeed, jointBSpeed);
     }
     public void updateArm(double aSpeed, double bSpeed) {
         jointASpeed = aSpeed;
         jointBSpeed = bSpeed;
-        if (aSpeed > 0) {
+        if (aSpeed > STOP_POWER) {
             jointAState = MotorState.REVERSE;
-        } else if (aSpeed < 0) {
+        } else if (aSpeed < STOP_POWER) {
             jointAState = MotorState.FORWARD;
         } else {
             jointAState = MotorState.OFF;
         }
-        if (bSpeed > 0) {
+        if (bSpeed > STOP_POWER) {
             jointBState = MotorState.REVERSE;
-        } else if (bSpeed < 0) {
+        } else if (bSpeed < STOP_POWER) {
             jointBState = MotorState.FORWARD;
         } else {
             jointBState = MotorState.OFF;
@@ -76,7 +77,8 @@ public class AuxArm implements Module{
      }
     @Override
     public void update() {
-        updateArm();        
+        updateArm();
+        updateOutputs();
     }
 
     @Override

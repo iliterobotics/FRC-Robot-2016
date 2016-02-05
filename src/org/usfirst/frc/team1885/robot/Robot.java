@@ -8,6 +8,7 @@ import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.manipulator.AuxArm;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -84,6 +85,7 @@ public class Robot extends SampleRobot {
 		    
 		    //New canbus code
 		    drx.update();
+		    AuxArm.getInstance().update();
             sensorrx.update();
             Timer.delay(.005);
 		}

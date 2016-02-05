@@ -17,14 +17,14 @@ public class RobotConfiguration {
 		DriverInputControlSRX.getInstance().addJoystick( RobotJoystickType.RIGHT_DRIVE, new Joystick(1) );
 		DriverInputControlSRX.getInstance().addJoystick( RobotJoystickType.CONTROLLER, new Joystick(2) );
 		
-		JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_A_CLOCK, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 3 ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_A_COUNTER, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 5 ) );
+		JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_A_CLOCK, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_A_COUNTER, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_B_CLOCK, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 4 ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_B_COUNTER, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 6 ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_B_COUNTER, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 3 ) );
 
 		
         //TODO change to match actual input
-        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ARM_JOINT_A, 5);
-        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ARM_JOINT_B, 6);
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ARM_JOINT_A, 1);
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ARM_JOINT_B, 2);
 	}
 }
