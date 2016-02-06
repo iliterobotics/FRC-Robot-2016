@@ -34,8 +34,8 @@ public class SensorInputControlSRX {
         PDP = new PowerDistributionPanel();
     }
     public void init(){
-        INITIAL_POT_A_POSITION = rsrx.getSensor().get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInPosition() * AuxArm.CONVERSION_FACTOR;
-        INITIAL_POT_B_POSITION = rsrx.getSensor().get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInPosition() * AuxArm.CONVERSION_FACTOR;
+        INITIAL_POT_A_POSITION = rsrx.getSensor().get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw() * AuxArm.CONVERSION_FACTOR;
+        INITIAL_POT_B_POSITION = rsrx.getSensor().get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw() * AuxArm.CONVERSION_FACTOR;
     }
     public void update() {
         StringBuilder output = new StringBuilder();
@@ -43,9 +43,9 @@ public class SensorInputControlSRX {
 //                + this.getLidarSensor().getDistance());
 //        this.getLidarSensor().update();
         output.append("\n-Potentiometer A In Position: "
-                + ((this.getAnalogInPosition(SensorType.JOINT_A_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR) ));
+                + ((this.getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR) ));
         output.append("\n-Potentiometer B In Position: "
-                + ((this.getAnalogInPosition(SensorType.JOINT_B_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR) ));
+                + ((this.getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR) ));
         
         
         DriverStation.reportError(output.toString(), false);

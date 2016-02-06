@@ -3,7 +3,9 @@ package org.usfirst.frc.team1885.robot.auto;
 import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.Robot;
+import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine
@@ -27,7 +29,7 @@ public class AutonomousRoutine
                 currCommand.updateOutputs();
                 if(commandState)
                 {
-                    System.out.println("finished command " + commands.size());
+                    DriverStation.reportError("finished command " + commands.size(), false);
                     commands.poll();
                 }
             }
@@ -39,6 +41,10 @@ public class AutonomousRoutine
         }
     }
     public void testArm() {
-        commands.add(new AutoArm(0, .25, 0, 90));
+        double jointAPosition = 90.0;
+        double jointBPosition = (180.0 - 9.866);
+        commands.add(new AutoArm(.25, .50, jointAPosition, jointBPosition));
+        jointBPosition -= 62;
+        commands.add(new AutoArm(.25, -.25, jointAPosition, jointBPosition));
     }
 }

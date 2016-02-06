@@ -11,10 +11,10 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 public class AuxArm implements Module {
 
     public static final double ARM_SPEED = 0.3;
-    public static final double STOP_POWER = 0.0;
+    public static final double STOP_POWER = 0.05;
     public static final double CONVERSION_FACTOR = 360.0 / 1024;
-    public static final double JOINT_A_CLOCK_BOUND = 13.0;
-    public static final double JOINT_A_COUNTER_BOUND = 20.0;
+    public static final double JOINT_A_CLOCK_BOUND = 155.0;
+    public static final double JOINT_A_COUNTER_BOUND = 235.0;
     private static final double JOINT_B_BOUND = 0;
     private static AuxArm instance;
     // joint A is the motor powering the joint directly connected to the base
@@ -43,9 +43,9 @@ public class AuxArm implements Module {
         return this.jointBSpeed;
     }
     public void updateArm() {
-        double aPosition = (SensorInputControlSRX.getInstance().getAnalogInPosition(
+        double aPosition = (SensorInputControlSRX.getInstance().getAnalogGeneric(
                 SensorType.JOINT_A_POTENTIOMETER) * CONVERSION_FACTOR);
-        double bPosition = (SensorInputControlSRX.getInstance().getAnalogInPosition(
+        double bPosition = (SensorInputControlSRX.getInstance().getAnalogGeneric(
                 SensorType.JOINT_B_POTENTIOMETER) * CONVERSION_FACTOR);
         if (aPosition < JOINT_A_CLOCK_BOUND) {
             jointASpeed = STOP_POWER;

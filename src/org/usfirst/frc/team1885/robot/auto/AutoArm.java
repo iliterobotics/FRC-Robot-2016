@@ -9,14 +9,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoArm extends AutoCommand {
     
-    private final double CONVERSION_FACTOR = 30;
     private double jointSpeedA, jointSpeedB;
     private double potentiometerA, potentiometerB;
     public AutoArm( double speedA, double speedB, double potA, double potB ) {
         jointSpeedA = speedA;
         jointSpeedB = speedB;
-        potentiometerA = potA;
-        potentiometerB = potB + SensorInputControlSRX.getInstance().getInitialPotBPostition();
+        potentiometerA = (potA + SensorInputControlSRX.getInstance().getInitialPotAPostition());
+        potentiometerB = (potB + SensorInputControlSRX.getInstance().getInitialPotBPostition());
+        DriverStation.reportError("\n" + potentiometerB + " :: " + speedB, false);
     }
 
 
@@ -28,17 +28,34 @@ public class AutoArm extends AutoCommand {
 
     @Override
     public boolean execute() {
-        DriverStation.reportError("\nAngle: " + SensorInputControlSRX.getInstance().getAnalogInPosition(SensorType.JOINT_B_POTENTIOMETER) / 1024.0 * 360 + "\nJointB Power: " + AuxArm.getInstance().getJointBSpeed(), false);
-        boolean isJointAInPlace = true;
+//        DriverStation.reportError("\nAngle: " + SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR + "\nJointB Power: " + AuxArm.getInstance().getJointBSpeed(), false);
+//        DriverStation.reportError("\nAngle: " + SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR + "\nJointB Power: " + AuxArm.getInstance().getJointASpeed(), false);
+        boolean isJointAInPlace = false;
         boolean isJointBInPlace = false;
-//        if ( SensorInputControlSRX.getInstance().getAnalogInPosition(SensorType.JOINT_A_POTENTIOMETER) / 1024.0 * 360 >= potentiometerA ) {
-//            isJointAInPlace = true;
-//            jointSpeedA = 0;
-//        }
-        if ( SensorInputControlSRX.getInstance().getAnalogInPosition(SensorType.JOINT_B_POTENTIOMETER) / CONVERSION_FACTOR >= potentiometerB ) {
-            isJointBInPlace = true;
-            jointSpeedB = 0;
+        if( jointSpeedA >= 0 ){
+            if ( SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR >= potentiometerA ) {
+                isJointAInPlace = true;
+                jointSpeedA = 0;
+            }
+        } else{
+            if ( SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR <= potentiometerA ) {
+                isJointAInPlace = true;
+                jointSpeedA = 0;
+            }
         }
+        
+        if( jointSpeedB >= 0 ){
+            if ( SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR >= potentiometerB ) {
+                isJointBInPlace = true;
+                jointSpeedB = 0;
+            }
+        } else{
+            if ( SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR <= potentiometerB ) {
+                isJointBInPlace = true;
+                jointSpeedB = 0;
+            }
+        }
+        
         if ( isJointAInPlace && isJointBInPlace ) {
             this.reset();
             return true;
