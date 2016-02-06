@@ -11,7 +11,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 public class AuxArm implements Module{
 
     public static final double ARM_SPEED = 0.3;
-    public static final double STOP_POWER = 0.05;
+    public static final double STOP_POWER = 0.00;
     private static AuxArm instance;
     // joint A is the motor powering the joint directly connected to the base
     // joint B is the motor power the moving joint 

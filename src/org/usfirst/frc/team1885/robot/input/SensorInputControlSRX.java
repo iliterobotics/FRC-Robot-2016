@@ -34,10 +34,11 @@ public class SensorInputControlSRX {
 //        output.append("\n-LIDAR SENSOR DISTANCE= "
 //                + this.getLidarSensor().getDistance());
 //        this.getLidarSensor().update();
-//        output.append("\n-Potentiometer A In Position: "
-//                + ((this.getAnalogInPosition(SensorType.JOINT_A_POTENTIOMETER) / 1024.0) * 360 ));
+        output.append("\n-Potentiometer A In Position: "
+                + ((this.getAnalogInPosition(SensorType.JOINT_A_POTENTIOMETER) / 1024.0) * 360 ));
         output.append("\n-Potentiometer B In Position: "
                 + ((this.getAnalogInPosition(SensorType.JOINT_B_POTENTIOMETER) / 1024.0) * 360 ));
+        
         
         DriverStation.reportError(output.toString(), false);
         // System.out.println(this.bia.getX() +" x " + bia.getY() + " y " +
