@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
@@ -32,6 +33,8 @@ import edu.wpi.first.wpilibj.Timer;
  */
 
 public class Robot extends SampleRobot {
+    public static final double INITIAL_JOINT_B_POSITION = SensorInputControlSRX.getInstance().getAnalogInPosition(SensorType.JOINT_B_POTENTIOMETER) / 1024.0 * 360;
+    
 	private final double diameter;
 	private final double maxSpeed;
 	private LinkedList<AutoCommand> commands;
@@ -146,6 +149,8 @@ public class Robot extends SampleRobot {
 
 	public void autonomous() {
 	    AutonomousRoutine ar = new AutonomousRoutine(this);
+	    ar.testArm();
+	    ar.execute();
 	}
 }
 

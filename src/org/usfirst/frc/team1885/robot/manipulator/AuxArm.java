@@ -32,7 +32,12 @@ public class AuxArm implements Module{
         }
         return instance;
     }    
-    
+    public double getJointASpeed() {
+        return this.jointASpeed;
+    }
+    public double getJointBSpeed() {
+        return this.jointBSpeed;
+    }
     public void updateArm() {
         jointASpeed = STOP_POWER;
         jointBSpeed = -STOP_POWER;

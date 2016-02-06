@@ -38,4 +38,7 @@ public class AutonomousRoutine
             Timer.delay(delay);
         }
     }
+    public void testArm() {
+        commands.add(new AutoArm(0, .25, 0, 90));
+    }
 }
