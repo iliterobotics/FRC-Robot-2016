@@ -8,6 +8,8 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class AuxArm implements Module {
 
     public static final double ARM_SPEED = 0.3;
@@ -15,7 +17,9 @@ public class AuxArm implements Module {
     public static final double CONVERSION_FACTOR = 360.0 / 1024;
     public static final double JOINT_A_CLOCK_BOUND = 155.0;
     public static final double JOINT_A_COUNTER_BOUND = 235.0;
-    private static final double JOINT_B_BOUND = 0;
+    private static final double LENGTH_A = 17.5;
+    private static final double LENGTH_B = 19.5;
+    private static final double PERIMETER_LENGTH = 18.0;
     private static AuxArm instance;
     // joint A is the motor powering the joint directly connected to the base
     // joint B is the motor power the moving joint
@@ -43,19 +47,18 @@ public class AuxArm implements Module {
         return this.jointBSpeed;
     }
     public void updateArm() {
-        double aPosition = (SensorInputControlSRX.getInstance().getAnalogGeneric(
-                SensorType.JOINT_A_POTENTIOMETER) * CONVERSION_FACTOR);
-        double bPosition = (SensorInputControlSRX.getInstance().getAnalogGeneric(
-                SensorType.JOINT_B_POTENTIOMETER) * CONVERSION_FACTOR);
+        double aPosition = (SensorInputControlSRX.getInstance()
+                .getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER)
+                * CONVERSION_FACTOR);
         if (aPosition < JOINT_A_CLOCK_BOUND) {
             jointASpeed = STOP_POWER;
-        } else if(aPosition > JOINT_A_COUNTER_BOUND){
+        } else if (aPosition > JOINT_A_COUNTER_BOUND) {
             jointASpeed = -STOP_POWER;
-        } else{
+        } else {
             jointASpeed = 0;
         }
         jointBSpeed = 0;
-            
+
         if ((DriverInputControlSRX.getInstance()
                 .getButton(RobotButtonType.ARM_JOINT_A_CLOCK))) {
             jointAState = MotorState.FORWARD;
@@ -95,6 +98,16 @@ public class AuxArm implements Module {
         } else {
             jointBState = MotorState.OFF;
         }
+    }
+    public boolean checkRange(double angleJointA, double angleJointB) {
+        SensorInputControlSRX sensorInputControl = SensorInputControlSRX
+                .getInstance();
+        double zeroedA = angleJointA
+                - sensorInputControl.getInitialPotAPostition();
+        return ((LENGTH_B * (Math.cos(Math.toRadians(
+                angleJointB - sensorInputControl.getInitialPotBPostition()
+                        - zeroedA))))
+                - (LENGTH_A * (Math.cos(Math.toRadians(zeroedA))))) > PERIMETER_LENGTH;
     }
     @Override
     public void update() {

@@ -6,6 +6,7 @@ import org.usfirst.frc.team1885.robot.manipulator.AuxArm;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 
 public class AutoArm extends AutoCommand {
     
@@ -16,7 +17,6 @@ public class AutoArm extends AutoCommand {
         jointSpeedB = speedB;
         potentiometerA = (potA + SensorInputControlSRX.getInstance().getInitialPotAPostition());
         potentiometerB = (potB + SensorInputControlSRX.getInstance().getInitialPotBPostition());
-        DriverStation.reportError("\n" + potentiometerB + " :: " + speedB, false);
     }
 
 
@@ -28,8 +28,6 @@ public class AutoArm extends AutoCommand {
 
     @Override
     public boolean execute() {
-//        DriverStation.reportError("\nAngle: " + SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR + "\nJointB Power: " + AuxArm.getInstance().getJointBSpeed(), false);
-//        DriverStation.reportError("\nAngle: " + SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR + "\nJointB Power: " + AuxArm.getInstance().getJointASpeed(), false);
         boolean isJointAInPlace = false;
         boolean isJointBInPlace = false;
         if( jointSpeedA >= 0 ){
