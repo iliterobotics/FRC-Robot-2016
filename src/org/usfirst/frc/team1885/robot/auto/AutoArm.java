@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.manipulator.AuxArm;
@@ -10,13 +9,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoArm extends AutoCommand {
     
+    private final double CONVERSION_FACTOR = 30;
     private double jointSpeedA, jointSpeedB;
     private double potentiometerA, potentiometerB;
     public AutoArm( double speedA, double speedB, double potA, double potB ) {
         jointSpeedA = speedA;
         jointSpeedB = speedB;
         potentiometerA = potA;
-        potentiometerB = potB + Robot.INITIAL_JOINT_B_POSITION;
+        potentiometerB = potB + SensorInputControlSRX.getInstance().getInitialPotBPostition();
     }
 
 
@@ -35,7 +35,7 @@ public class AutoArm extends AutoCommand {
 //            isJointAInPlace = true;
 //            jointSpeedA = 0;
 //        }
-        if ( SensorInputControlSRX.getInstance().getAnalogInPosition(SensorType.JOINT_B_POTENTIOMETER) / 1024.0 * 360 >= potentiometerB ) {
+        if ( SensorInputControlSRX.getInstance().getAnalogInPosition(SensorType.JOINT_B_POTENTIOMETER) / CONVERSION_FACTOR >= potentiometerB ) {
             isJointBInPlace = true;
             jointSpeedB = 0;
         }

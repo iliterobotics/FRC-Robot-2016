@@ -33,7 +33,6 @@ import edu.wpi.first.wpilibj.Timer;
  */
 
 public class Robot extends SampleRobot {
-    public static final double INITIAL_JOINT_B_POSITION = SensorInputControlSRX.getInstance().getAnalogInPosition(SensorType.JOINT_B_POTENTIOMETER) / 1024.0 * 360;
     
 	private final double diameter;
 	private final double maxSpeed;
@@ -48,13 +47,12 @@ public class Robot extends SampleRobot {
 	private AutoTemplate activeTemplate;
 
 	public Robot() {
-	    
-	    RobotConfiguration.configureRobot();
-        this.robotControlWithSRX = RobotControlWithSRX.getInstance();
+	    this.robotControlWithSRX = RobotControlWithSRX.getInstance();
         this.driverInputControl = DriverInputControlSRX.getInstance();
         this.sensorInputControl = SensorInputControlSRX.getInstance();
 		try {
-			RobotConfiguration.configureRobot();
+		    RobotConfiguration.configureRobot();
+		    sensorInputControl.init();
 		} catch (Exception e) {
 			System.out.println("Robot - Error configuring Robot");
 			e.printStackTrace();
@@ -76,11 +74,6 @@ public class Robot extends SampleRobot {
 //				.getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
 //		SensorInputControl.getInstance()
 //				.getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
-
-				
-		
-		
-		boolean magnetState = false;
 
 		while (isOperatorControl() && isEnabled()) {
 		    
