@@ -48,7 +48,7 @@ public class SensorInputControlSRX {
                 + ((this.getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR) ));
         
         
-        DriverStation.reportError(output.toString(), false);
+//        DriverStation.reportError(output.toString(), false);
         // System.out.println(this.bia.getX() +" x " + bia.getY() + " y " +
         // bia.getZ() + " z ");
     }
