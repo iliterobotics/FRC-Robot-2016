@@ -4,10 +4,13 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SensorInputControlSRX {
@@ -16,8 +19,7 @@ public class SensorInputControlSRX {
     private PowerDistributionPanel PDP = new PowerDistributionPanel();
     private LidarSensor ls;
     private BuiltInAccelerometer bia;
-
-    public static final double DEADZONE = 0.1;
+    private AHRS navx;
 
     public static SensorInputControlSRX getInstance() {
         if (instance == null) {
@@ -25,10 +27,16 @@ public class SensorInputControlSRX {
         }
         return instance;
     }
-    protected SensorInputControlSRX() {
-    }
     public void update() {
-        
+    }
+    public double getPitch() {
+        return navx.getPitch();
+    }
+    public double getYaw() {
+        return navx.getYaw();
+    }
+    public double getRoll() {
+        return navx.getRoll();
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
@@ -57,6 +65,7 @@ public class SensorInputControlSRX {
     }
     public LidarSensor getLidarSensor() {
         return this.ls;
+
     }
     public void createAccelerometer() {
         bia = new BuiltInAccelerometer();
@@ -64,4 +73,21 @@ public class SensorInputControlSRX {
     public BuiltInAccelerometer getAccelerometer() {
         return bia;
     }
+    public void createNavX(SerialPort.Port port) {
+        navx = new AHRS(port);
+    }
+    public AHRS getNavX() {
+        return navx;
+    }
+    public void calibrateGyro(){
+        navx.zeroYaw();
+    }
+
+    /**
+     * Private constructor because this is a singleton!!
+     */
+    protected SensorInputControlSRX() {
+
+    }
+
 }

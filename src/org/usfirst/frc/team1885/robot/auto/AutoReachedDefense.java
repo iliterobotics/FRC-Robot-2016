@@ -1,10 +1,13 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-public class AutoReachedDefense extends AutoCommand{
-    //autonomous checkpoint used to check anything before we reach a defense
-    
-    
-    
+import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+
+public class AutoReachedDefense extends AutoCommand {
+    // autonomous checkpoint used to check anything before we reach a defense
+
+    private SensorInputControlSRX sensorInputControl = SensorInputControlSRX
+            .getInstance();
+
     @Override
     public boolean init() {
         return true;
@@ -12,9 +15,9 @@ public class AutoReachedDefense extends AutoCommand{
 
     @Override
     public boolean execute() {
-//        if(){
-//           return true; 
-//        }
+        if(sensorInputControl.getNavX().getRoll() >= AutonomousRoutine.PITCH_CHANGE){
+            return true;
+        }
         return false;
     }
 

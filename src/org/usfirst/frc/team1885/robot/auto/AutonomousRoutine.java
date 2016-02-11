@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine
 {
-    public static final double PITCH_CHANGE = 10.0;
+    public static final double PITCH_CHANGE = 4.5;
     
     private Robot robot;
     private LinkedList<AutoCommand> commands;
@@ -41,6 +41,11 @@ public class AutonomousRoutine
             Timer.delay(delay);
         }
     }
+    //STANDARD CONFIGURATION
+    //startDrive
+    //reachedDefense
+    //in between
+    //crossedDefense
     public void AutoMoatRoughTerrainRockWall() {
         commands.add(new AutoMoat());
     }

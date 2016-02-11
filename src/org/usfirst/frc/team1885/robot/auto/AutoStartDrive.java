@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.PID;
+import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -9,19 +10,9 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class AutoStartDrive extends AutoCommand {
 
-    private PID rightDistanceControlLoop;
-    private PID leftDistanceControlLoop;
     private double time;
-    private double error;
-    private int numberOfEncoders;
     private double leftDriveOutput;
     private double rightDriveOutput;
-    private double leftDistanceTraveled;
-    private double rightDistanceTraveled;
-    private double prevErrorLeft = 0;
-    private double prevErrorRight = 0;
-    private double timeout = 250;
-    private double stallStartTime = 0;
 
     private static double MIN_SPEED = 0.0;
 
@@ -35,6 +26,7 @@ public class AutoStartDrive extends AutoCommand {
     }
 
     public AutoStartDrive(double pow) {
+        SensorInputControlSRX.getInstance().calibrateGyro();
         rightDriveOutput = leftDriveOutput = -pow;
         time = 0;
         init();
@@ -52,10 +44,6 @@ public class AutoStartDrive extends AutoCommand {
         return true;
     }
     public void reset() {
-        // rightDistanceControlLoop.reset();
-        // leftDistanceControlLoop.reset();
-        // SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
-        // SensorInputControl.getInstance().getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
         DrivetrainControl.getInstance().setLeftDriveSpeed(0);
         DrivetrainControl.getInstance().setRightDriveSpeed(0);
     }
