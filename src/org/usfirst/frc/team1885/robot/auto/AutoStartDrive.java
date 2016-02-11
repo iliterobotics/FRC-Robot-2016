@@ -29,13 +29,14 @@ public class AutoStartDrive extends AutoCommand {
         rightDriveOutput = leftDriveOutput = -pow;
 
         time = sec;
-        DriverStation.reportError("Drive with " + pow + " power for " + sec
-                + " seconds", false);
+        DriverStation.reportError(
+                "Drive with " + pow + " power for " + sec + " seconds", false);
         init();
     }
 
     public AutoStartDrive(double pow) {
         rightDriveOutput = leftDriveOutput = -pow;
+        time = 0;
         init();
     }
 
@@ -43,9 +44,11 @@ public class AutoStartDrive extends AutoCommand {
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveOutput);
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveOutput);
         updateOutputs();
-        Timer.delay(time);
-        reset();
-        updateOutputs();
+        if (time != 0) {
+            Timer.delay(time);
+            reset();
+            updateOutputs();
+        }
         return true;
     }
     public void reset() {
