@@ -1,6 +1,8 @@
 package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.PID;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -59,6 +61,7 @@ public class AutoPIDStop extends AutoCommand{
 //      }
         
         if(Math.abs(leftDistanceTraveled  - distance) > error) {
+            leftDistanceTraveled = -SensorInputControlSRX.getInstance().getEncoderPos(SensorType.LEFT_ENCODER);
             leftDriveOutput = leftDistanceControlLoop.getPID(distance, leftDistanceTraveled);
             
             if(leftDriveOutput > 0) {
@@ -72,6 +75,7 @@ public class AutoPIDStop extends AutoCommand{
         }
         
         if(Math.abs(rightDistanceTraveled  - distance) > error) {
+            rightDistanceTraveled = -SensorInputControlSRX.getInstance().getEncoderPos(SensorType.RIGHT_ENCODER);
             rightDriveOutput = rightDistanceControlLoop.getPID(distance, rightDistanceTraveled);
             
             if(rightDriveOutput > 0) {
