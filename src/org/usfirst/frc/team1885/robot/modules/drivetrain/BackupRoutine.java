@@ -25,7 +25,6 @@ public class BackupRoutine implements Module{
         return instance;
     }
     public void update() {
-    	distanceFromTarget = SensorInputControlSRX.getInstance().getLidarSensor(SensorType.LIDAR).getDistance();
     	
     	
     	double driveOutput = distanceControlLoop.getPID(minDistance, distanceFromTarget);

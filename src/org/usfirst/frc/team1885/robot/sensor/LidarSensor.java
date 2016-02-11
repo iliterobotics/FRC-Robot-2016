@@ -3,20 +3,19 @@ package org.usfirst.frc.team1885.robot.sensor;
 import java.util.TimerTask;
 
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.I2C.Port;
-import edu.wpi.first.wpilibj.PIDSource;
 import edu.wpi.first.wpilibj.PIDSourceType;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.I2C.Port;
+import edu.wpi.first.wpilibj.PIDSource;
  
 public class LidarSensor implements PIDSource{
 	private I2C i2c;
 	private byte[] distance;
 	private java.util.Timer updater;
 	
-	private final int LIDAR_ADDR = 0x62;
+	private final int LIDAR_ADDR = 0x7F;
 	private final int LIDAR_CONFIG_REGISTER = 0x00;
 	private final int LIDAR_DISTANCE_REGISTER = 0x8f;
-	private final int LIDAR_MEASURE_INITIATE = 0x04;
 		
 	public LidarSensor(Port port) {
 		i2c = new I2C(port, LIDAR_ADDR);
@@ -52,7 +51,7 @@ public class LidarSensor implements PIDSource{
 	
 	// Update distance variable
 	public void update() {
-		i2c.write(LIDAR_CONFIG_REGISTER, LIDAR_MEASURE_INITIATE); // Initiate measurement
+		i2c.write(LIDAR_CONFIG_REGISTER, 0x04); // Initiate measurement
 		Timer.delay(0.04); // Delay for measurement to be taken
 		i2c.read(LIDAR_DISTANCE_REGISTER, 2, distance); // Read in measurement
 		Timer.delay(0.005); // Delay to prevent over polling
@@ -61,14 +60,7 @@ public class LidarSensor implements PIDSource{
 	// Timer task to keep distance updated
 	private class LIDARUpdater extends TimerTask {
 		public void run() {
-		    while(true) {
-		        update();
-		        try {
-		            Thread.sleep(10);
-		        } catch (InterruptedException e) {
-		            e.printStackTrace();
-		        }
-		    }
+			update();
 		}
 	}
 

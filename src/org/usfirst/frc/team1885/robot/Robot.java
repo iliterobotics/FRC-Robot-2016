@@ -8,6 +8,7 @@ import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.manipulator.AuxArm;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -51,7 +52,6 @@ public class Robot extends SampleRobot {
         this.sensorrx = SensorInputControlSRX.getInstance();
 		try {
 			RobotConfiguration.configureRobot();
-			SensorInputControlSRX.getInstance().getNAVX().zeroYaw();
 		} catch (Exception e) {
 			System.out.println("Robot - Error configuring Robot");
 			e.printStackTrace();
@@ -82,8 +82,9 @@ public class Robot extends SampleRobot {
 
 		while (isOperatorControl() && isEnabled()) {
 		    
-		    //New canbust code
+		    //New canbus code
 		    drx.update();
+		    AuxArm.getInstance().update();
             sensorrx.update();
             Timer.delay(.005);
 		}
@@ -127,25 +128,17 @@ public class Robot extends SampleRobot {
 			{
 				this.activeTemplate = null;
 				DrivetrainControl.getInstance().update();
-				ClawControl.getInstance().updateClaw();
-				toteLift.updateLift();
-				recycleBinLift.updateLift();
-				Alignment.getInstance().update();
-				CanGrabber.getInstance().update();
 				ActiveIntake.getInstance().update();
+				System.out.println( "Updated active intake" );
 				// System.out.println("Robot::tele - lidar: " +
 				// SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).getDistance());
 				// BackupRoutine.getInstance().update();
 	
 				// robotControl.updateDriveSpeed(DrivetrainControl.getInstance().getLeftDriveSpeed(),
 				// DrivetrainControl.getInstance().getRightDriveSpeed());
-				recycleBinLift.updateOutputs();
-				toteLift.updateOutputs();
 				DrivetrainControl.getInstance().updateOutputs();
-				ClawControl.getInstance().updateOutputs();
 				ActiveIntake.getInstance().updateOutputs();
-				Alignment.getInstance().updateOutputs();
-				CanGrabber.getInstance().updateOutputs();
+				System.out.println( "Updated active intake outputs" );
 			}
 			Timer.delay(.005); // wait for a motor update time
 		}

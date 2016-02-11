@@ -6,8 +6,11 @@ import org.usfirst.frc.team1885.robot.Robot;
 
 import edu.wpi.first.wpilibj.Timer;
 
+
 public class AutonomousRoutine
 {
+    public static final double PITCH_CHANGE = 10.0;
+    
     private Robot robot;
     private LinkedList<AutoCommand> commands;
     private static final double delay = 0.05;
