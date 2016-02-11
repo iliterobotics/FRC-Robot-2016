@@ -17,10 +17,10 @@ public class Robot extends SampleRobot {
     private RobotControlWithSRX srx;
     private DriverInputControlSRX drx;
     private SensorInputControlSRX sensorrx;
-    private AHRS pengisbad;
+    private AHRS navx;
 
     public Robot() {
-        pengisbad = new AHRS(SerialPort.Port.kMXP);
+        navx = new AHRS(SerialPort.Port.kMXP);
         System.err.println("I am ROBOT!!");
         RobotConfigSRX.configureRobot();
         srx = RobotControlWithSRX.getInstance();
@@ -42,13 +42,13 @@ public class Robot extends SampleRobot {
             // output.append( "\nIMU_IsCalibrating" +
             // pengisbad.isCalibrating());
 
-            output.append("\nIMU_Yaw" + pengisbad.getYaw());
-            output.append("\nIMU_Pitch" + pengisbad.getPitch());
-            output.append("\nIMU_Roll" + pengisbad.getRoll());
+            output.append("\nIMU_Yaw" + navx.getYaw());
+            output.append("\nIMU_Pitch" + navx.getPitch());
+            output.append("\nIMU_Roll" + navx.getRoll());
 
-            output.append("\nRawGyro_X" + pengisbad.getRawGyroX());
-            output.append("\nRawGyro_Y" + pengisbad.getRawGyroY());
-            output.append("\nRawGyro_Z" + pengisbad.getRawGyroZ());
+            output.append("\nRawGyro_X" + navx.getRawGyroX());
+            output.append("\nRawGyro_Y" + navx.getRawGyroY());
+            output.append("\nRawGyro_Z" + navx.getRawGyroZ());
             /*
              * output.append( "\nRawAccel_X"+ pengisbad.getRawAccelX());
              * output.append( "\nRawAccel_Y"+ pengisbad.getRawAccelY());

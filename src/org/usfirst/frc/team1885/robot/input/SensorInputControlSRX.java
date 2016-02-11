@@ -4,10 +4,13 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SensorInputControlSRX {
@@ -16,6 +19,7 @@ public class SensorInputControlSRX {
     private PowerDistributionPanel PDP = new PowerDistributionPanel();
     private LidarSensor ls;
     private BuiltInAccelerometer bia;
+    private AHRS navx;
 
     public static SensorInputControlSRX getInstance() {
         if (instance == null) {
@@ -39,6 +43,15 @@ public class SensorInputControlSRX {
         Timer.delay(1);
         // System.out.println(this.bia.getX() +" x " + bia.getY() + " y " +
         // bia.getZ() + " z ");
+    }
+    public double getPitch() {
+        return navx.getPitch();
+    }
+    public double getYaw() {
+        return navx.getYaw();
+    }
+    public double getRoll() {
+        return navx.getRoll();
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
@@ -75,11 +88,17 @@ public class SensorInputControlSRX {
     public BuiltInAccelerometer getAccelerometer() {
         return bia;
     }
+    public void createNavX(SerialPort.Port port) {
+        navx = new AHRS(port);
+    }
+    public AHRS getNavX() {
+        return navx;
+    }
 
     /**
      * Private constructor because this is a singleton!!
      */
-    private SensorInputControlSRX() {
+    protected SensorInputControlSRX() {
 
     }
 
