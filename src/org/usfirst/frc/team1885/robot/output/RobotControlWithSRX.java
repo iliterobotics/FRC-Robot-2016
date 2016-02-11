@@ -9,12 +9,13 @@ import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 
 public class RobotControlWithSRX {
     public static RobotControlWithSRX instance;
     private List<CANTalon> leftDrive;
     private List<CANTalon> rightDrive;
-    private Map<Integer, CANTalon> talons;
+    private Map<RobotMotorType, CANTalon> talons;
     private Map<SensorType, CANTalon> sensor;
 
     public static synchronized RobotControlWithSRX getInstance() {
@@ -26,15 +27,15 @@ public class RobotControlWithSRX {
     protected RobotControlWithSRX() {
         leftDrive = new ArrayList<CANTalon>();
         rightDrive = new ArrayList<CANTalon>();
-        talons = new HashMap<Integer, CANTalon>();
+        talons = new HashMap<RobotMotorType, CANTalon>();
         sensor = new HashMap<SensorType, CANTalon>();
     }
     public void addTalonOutput(RobotMotorType type, int port) {
-        if (talons.containsKey(port)) {
+        if (talons.containsKey(type)) {
             if (type == RobotMotorType.LEFT_DRIVE) {
-                leftDrive.add(talons.get(port));
+                leftDrive.add(talons.get(type));
             } else if (type == RobotMotorType.RIGHT_DRIVE) {
-                rightDrive.add(talons.get(port));
+                rightDrive.add(talons.get(type));
             }
         } else {
             CANTalon ct = new CANTalon(port);
@@ -44,10 +45,10 @@ public class RobotControlWithSRX {
                 // add to right motor
                 rightDrive.add(ct);
             }
-            talons.put(port, ct);
+            talons.put(type, ct);
         }
     }
-    public void addTalonSensor(SensorType sensorType, int port) {
+    public void addTalonSensor(RobotMotorType motorType, SensorType sensorType, int port) {
         if(talons.containsKey(port))
         {
             sensor.put(sensorType, talons.get(port));
@@ -56,7 +57,7 @@ public class RobotControlWithSRX {
         {
             CANTalon ct = new CANTalon(port);
             sensor.put(sensorType, ct);
-            talons.put(port, ct);
+            talons.put(motorType, ct);
         }
     }
     public void updateDriveSpeed(double leftspeed, double rightspeed) {
@@ -74,7 +75,7 @@ public class RobotControlWithSRX {
     public List<CANTalon> getRightDrive() {
         return rightDrive;
     }
-    public Map<Integer, CANTalon> getTalons() {
+    public Map<RobotMotorType, CANTalon> getTalons() {
         return this.talons;
     }
     public Map<SensorType, CANTalon> getSensor()
