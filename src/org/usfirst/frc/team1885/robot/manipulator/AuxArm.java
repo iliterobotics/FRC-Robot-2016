@@ -76,26 +76,26 @@ public class AuxArm implements Module {
         }
         jointBSpeed = 0;
 
-        if ((DriverInputControlSRX.getInstance()
-                .getButton(RobotButtonType.ARM_JOINT_A_EXTEND))) {
-            jointAState = MotorState.FORWARD;
-            jointASpeed = MAX_ARM_SPEED;
-        }
-        if ((DriverInputControlSRX.getInstance()
-                .getButton(RobotButtonType.ARM_JOINT_A_RETRACT))) {
-            jointAState = MotorState.REVERSE;
-            jointASpeed = -MAX_ARM_SPEED;
-        }
-        if ((DriverInputControlSRX.getInstance()
-                .getButton(RobotButtonType.ARM_JOINT_B_EXTEND))) {
-            jointBState = MotorState.FORWARD;
-            jointBSpeed = MAX_ARM_SPEED;
-        }
-        if ((DriverInputControlSRX.getInstance()
-                .getButton(RobotButtonType.ARM_JOINT_B_RETRACT))) {
-            jointBState = MotorState.REVERSE;
-            jointBSpeed = -MAX_ARM_SPEED;
-        }
+//        if ((DriverInputControlSRX.getInstance()
+//                .getButton(RobotButtonType.ARM_JOINT_A_EXTEND))) {
+//            jointAState = MotorState.FORWARD;
+//            jointASpeed = MAX_ARM_SPEED;
+//        }
+//        if ((DriverInputControlSRX.getInstance()
+//                .getButton(RobotButtonType.ARM_JOINT_A_RETRACT))) {
+//            jointAState = MotorState.REVERSE;
+//            jointASpeed = -MAX_ARM_SPEED;
+//        }
+//        if ((DriverInputControlSRX.getInstance()
+//                .getButton(RobotButtonType.ARM_JOINT_B_EXTEND))) {
+//            jointBState = MotorState.FORWARD;
+//            jointBSpeed = MAX_ARM_SPEED;
+//        }
+//        if ((DriverInputControlSRX.getInstance()
+//                .getButton(RobotButtonType.ARM_JOINT_B_RETRACT))) {
+//            jointBState = MotorState.REVERSE;
+//            jointBSpeed = -MAX_ARM_SPEED;
+//        }
         updateArm(jointASpeed, jointBSpeed);
     }
     public void updateArm(double aSpeed, double bSpeed) {
