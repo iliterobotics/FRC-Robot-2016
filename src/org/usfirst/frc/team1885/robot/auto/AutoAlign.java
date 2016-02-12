@@ -5,12 +5,15 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class AutoAlign extends AutoCommand {
 
     private final double P = 0.6;
     private final double I = 0.02;
     private final double D = 0;
- 
+    private final double ALIGNMENT_ERROR = 1;
+
     private PID pid;
     private SensorInputControlSRX sensorInputControl;
     private double rightDriveSpeed;
@@ -25,12 +28,17 @@ public class AutoAlign extends AutoCommand {
         rightDriveSpeed = leftDriveSpeed = 0;
         sensorInputControl = SensorInputControlSRX.getInstance();
         initial_yaw = sensorInputControl.getYaw();
+        pid = new PID(.35, .002, 0);
         return true;
     }
 
     @Override
     public boolean execute() {
         double yaw = sensorInputControl.getYaw();
+        DriverStation.reportError(
+                "\nAutoAlign Yaw value: " + yaw
+                        + "\nAutoAlign initial_yaw value: " + initial_yaw,
+                false);
 
         leftDriveSpeed = pid.getPID(0, initial_yaw - yaw);
 
@@ -52,26 +60,32 @@ public class AutoAlign extends AutoCommand {
                     ? -AutoAlign.MIN_SPEED : rightDriveSpeed);
         }
 
-        if (yaw > 0) {
+        if (yaw > ALIGNMENT_ERROR) {
             leftDriveSpeed = -leftDriveSpeed;
             rightDriveSpeed = 0;
-        } else if (yaw < 0) {
+        } else if (yaw < -ALIGNMENT_ERROR) {
             rightDriveSpeed = -rightDriveSpeed;
             leftDriveSpeed = 0;
+        } else {
+            rightDriveSpeed = leftDriveSpeed = 0;
+            return true;
         }
 
         // System.out.println("AutoDriveFwd::[left speed, right speed] " +
         // leftDriveOutput + ", " + rightDriveOutput);
 
-        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
-        DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
+        // DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
+        // DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
+
+        DriverStation.reportError("\nLeft Drive Speed: " + leftDriveSpeed
+                + " ::: Right Drive Speed: " + rightDriveSpeed, false);
         return false;
     }
 
     @Override
     public boolean updateOutputs() {
-        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
-                rightDriveSpeed);
+        // RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
+        // rightDriveSpeed);
         return false;
     }
 
