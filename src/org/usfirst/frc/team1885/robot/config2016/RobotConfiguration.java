@@ -16,8 +16,8 @@ import edu.wpi.first.wpilibj.SerialPort;
 public class RobotConfiguration {
     
     public static final double WHEEL_DIAMETER = 8.0;
-    public static final int ARM_JOINT_A_PORT = 1;
-    public static final int ARM_JOINT_B_PORT = 2;
+    public static final int ARM_JOINT_A_PORT = 5;
+    public static final int ARM_JOINT_B_PORT = 6;
     
 	public static void configureRobot()
 	{
