@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SensorInputControlSRX {
+    private double INITIAL_PITCH; // Shouldn't change
+    private double INITIAL_ROLL; // Shouldn't change
     private static SensorInputControlSRX instance = null;
     private static RobotControlWithSRX rsrx = RobotControlWithSRX.getInstance();
     private PowerDistributionPanel PDP = new PowerDistributionPanel();
@@ -28,6 +30,12 @@ public class SensorInputControlSRX {
         return instance;
     }
     public void update() {
+    }
+    public double getInitPitch() {
+        return INITIAL_PITCH;
+    }
+    public double getInitRoll() {
+        return INITIAL_ROLL;
     }
     public double getPitch() {
         return navx.getPitch();
@@ -87,6 +95,8 @@ public class SensorInputControlSRX {
     public void calibrateGyro() {
         navx.zeroYaw();
         Timer.delay(.3); // Time to calibrate gyro
+        INITIAL_PITCH = navx.getPitch();
+        INITIAL_ROLL = navx.getRoll();
     }
 
     /**
