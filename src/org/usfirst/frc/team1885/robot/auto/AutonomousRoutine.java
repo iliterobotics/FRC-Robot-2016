@@ -42,10 +42,11 @@ public class AutonomousRoutine
         }
     }
     //STANDARD CONFIGURATION
-    //startDrive
-    //reachedDefense
-    //in between
-    //crossedDefense
+    //AutoStartDrive - begins movement
+    //AutoReachedDefense - checks if we have hit the defense
+    //in between checks to cross the defense
+    //AutoCrossedDefense - checks if we have landed and can prepare to shoot
+    //AutoAlign - realigns the robot to move in position to shoot
     public void AutoMoatRoughTerrainRockWall() {
         commands.add(new AutoMoat());
     }

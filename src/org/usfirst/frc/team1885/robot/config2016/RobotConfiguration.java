@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.SerialPort;
 public class RobotConfiguration {
     
     public static final double WHEEL_DIAMETER = 8.0;
+    public static final int ARM_JOINT_A_PORT = 1;
+    public static final int ARM_JOINT_B_PORT = 2;
     
 	public static void configureRobot()
 	{
@@ -30,16 +32,18 @@ public class RobotConfiguration {
 		RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
 		RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.LEFT_DRIVE, 3);
 		RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
+		//TODO change to match actual input
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ARM_JOINT_A, ARM_JOINT_A_PORT);
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ARM_JOINT_B, ARM_JOINT_B_PORT);
+		
+        RobotControlWithSRX.getInstance().addTalonSensor(SensorType.LEFT_ENCODER, 1);
+        RobotControlWithSRX.getInstance().addTalonSensor(SensorType.RIGHT_ENCODER, 2);
+        RobotControlWithSRX.getInstance().addTalonSensor(SensorType.JOINT_A_POTENTIOMETER, ARM_JOINT_A_PORT);
+		RobotControlWithSRX.getInstance().addTalonSensor(SensorType.JOINT_B_POTENTIOMETER, ARM_JOINT_B_PORT);
 		
 		JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_A_CLOCK, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_A_COUNTER, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_B_CLOCK, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 4 ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_JOINT_B_COUNTER, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 3 ) );
-
-		RobotControlWithSRX.getInstance().addTalonSensor(SensorType.JOINT_B_POTENTIOMETER, 2);
-        
-        //TODO change to match actual input
-        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ARM_JOINT_A, 1);
-        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.ARM_JOINT_B, 2);
 	}
 }
