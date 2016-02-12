@@ -28,18 +28,14 @@ public class AutoAlign extends AutoCommand {
         rightDriveSpeed = leftDriveSpeed = 0;
         sensorInputControl = SensorInputControlSRX.getInstance();
         initial_yaw = sensorInputControl.getYaw();
-        pid = new PID(.35, .002, 0);
+        pid = new PID(.35, .002, 0); //Not final values
         return true;
     }
 
     @Override
     public boolean execute() {
         double yaw = sensorInputControl.getYaw();
-        DriverStation.reportError(
-                "\nAutoAlign Yaw value: " + yaw
-                        + "\nAutoAlign initial_yaw value: " + initial_yaw,
-                false);
-
+        
         leftDriveSpeed = pid.getPID(0, initial_yaw - yaw);
 
         if (leftDriveSpeed > 0) {
@@ -67,33 +63,31 @@ public class AutoAlign extends AutoCommand {
             rightDriveSpeed = -rightDriveSpeed;
             leftDriveSpeed = 0;
         } else {
-            rightDriveSpeed = leftDriveSpeed = 0;
+            reset();
             return true;
         }
 
         // System.out.println("AutoDriveFwd::[left speed, right speed] " +
         // leftDriveOutput + ", " + rightDriveOutput);
 
-        // DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
-        // DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
+         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
+         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
 
-        DriverStation.reportError("\nLeft Drive Speed: " + leftDriveSpeed
-                + " ::: Right Drive Speed: " + rightDriveSpeed, false);
         return false;
     }
 
     @Override
     public boolean updateOutputs() {
-        // RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
-        // rightDriveSpeed);
+         RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
+         rightDriveSpeed);
         return false;
     }
 
     @Override
     public void reset() {
-        pid.reset();
         DrivetrainControl.getInstance().setLeftDriveSpeed(0);
         DrivetrainControl.getInstance().setRightDriveSpeed(0);
+        pid.reset();
     }
 
 }

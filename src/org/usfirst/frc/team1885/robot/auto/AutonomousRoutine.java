@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine {
@@ -19,12 +18,8 @@ public class AutonomousRoutine {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
-        Timer.delay(.1);
-        DriverStation.reportError("Initial Yaw:" + SensorInputControlSRX.getInstance().getYaw(), false);
-        commands.add(new AutoAlign());
     }
     public void execute() {
-        Timer.delay(2);
         while (!commands.isEmpty() && robot.isEnabled()
                 && robot.isAutonomous()) {
             AutoCommand currCommand = commands.peek();

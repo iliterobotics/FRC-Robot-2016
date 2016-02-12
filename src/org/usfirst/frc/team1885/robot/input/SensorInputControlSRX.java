@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.Timer;
 
 public class SensorInputControlSRX {
     private static SensorInputControlSRX instance = null;
@@ -85,6 +86,7 @@ public class SensorInputControlSRX {
     }
     public void calibrateGyro() {
         navx.zeroYaw();
+        Timer.delay(.3); // Time to calibrate gyro
     }
 
     /**
