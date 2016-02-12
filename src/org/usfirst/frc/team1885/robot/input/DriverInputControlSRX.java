@@ -8,8 +8,8 @@ import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Joystick.AxisType;
 
 public class DriverInputControlSRX {
     private HashMap<RobotJoystickType, Joystick> joystickMap;
