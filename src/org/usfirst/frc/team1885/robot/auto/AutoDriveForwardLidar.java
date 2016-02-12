@@ -28,7 +28,6 @@ public class AutoDriveForwardLidar extends AutoCommand{
 		}
 		
 		if(Math.abs(distanceFromTarget  - stopDistance) > error) {
-			distanceFromTarget = SensorInputControlSRX.getInstance().getLidarSensor(SensorType.LIDAR).getDistance();
 			driveOutput = distanceControlLoop.getPID(stopDistance, distanceFromTarget);
 		} else {
 			distanceControlLoop.reset();

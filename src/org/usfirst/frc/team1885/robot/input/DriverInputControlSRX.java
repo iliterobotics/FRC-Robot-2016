@@ -116,12 +116,11 @@ public class DriverInputControlSRX {
                 this.getJoystick(RobotJoystickType.RIGHT_DRIVE)
                         .getAxis(AxisType.kY));
     }
-    public void update(double leftJoystick, double rightJoystick) {
-        System.err.println(
-                "OMG LEFT= " + leftJoystick + ", RIGHT= " + rightJoystick);
+    public void update(double leftJoystick, double rightJoystick)
+    {    
+        System.err.println("LEFT= " + leftJoystick +", RIGHT= " + rightJoystick);
         this.rightDriveSpeed = deadzone(rightJoystick);
         this.leftDriveSpeed = deadzone(leftJoystick);
-        RobotControlWithSRX.getInstance().updateDriveSpeed(rightDriveSpeed,
-                leftDriveSpeed);
+        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
     }
 }

@@ -1,14 +1,13 @@
 package org.usfirst.frc.team1885.robot.input;
 
-import java.util.HashMap;
-
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 
-import com.kauailabs.nav6.frc.IMU;
+import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -18,12 +17,9 @@ public class SensorInputControlSRX {
     private static SensorInputControlSRX instance = null;
     private static RobotControlWithSRX rsrx = RobotControlWithSRX.getInstance();
     private PowerDistributionPanel PDP = new PowerDistributionPanel();
-
-    private HashMap<SensorType, LidarSensor> lidar_sensor;
-    private IMU imu;
-    SerialPort serial_port;
-
-    public static final double DEADZONE = 0.1;
+    private LidarSensor ls;
+    private BuiltInAccelerometer bia;
+    private AHRS navx;
 
     public static SensorInputControlSRX getInstance() {
         if (instance == null) {
@@ -31,31 +27,16 @@ public class SensorInputControlSRX {
         }
         return instance;
     }
-    protected SensorInputControlSRX() {
-        lidar_sensor = new HashMap<SensorType, LidarSensor>();
+    public void update() {
     }
-    public void setUpNAVX(byte rate,
-            edu.wpi.first.wpilibj.SerialPort.Port port) {
-
-        serial_port = new SerialPort(57600, port);
-        imu = new IMU(serial_port, rate);
+    public double getPitch() {
+        return navx.getPitch();
     }
-    public IMU getNAVX() {
-        return imu;
+    public double getYaw() {
+        return navx.getYaw();
     }
-    public static double deadzone(double axis) {
-        if (Math.abs(axis) < DEADZONE) {
-            return 0;
-        }
-        return axis;
-    }
-    public boolean addLidarSensor(Port port) {
-        lidar_sensor.put(SensorType.LIDAR, new LidarSensor(port));
-        return true;
-    }
-
-    public LidarSensor getLidarSensor(SensorType sensor_type) {
-        return lidar_sensor.get(sensor_type);
+    public double getRoll() {
+        return navx.getRoll();
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
@@ -63,12 +44,56 @@ public class SensorInputControlSRX {
     public double getPDPTemperature() {
         return PDP.getTemperature();
     }
-
-    public void update() {
-        // Lidar Sensor Test
-        StringBuilder output = new StringBuilder();
-        output.append("\n-Lidar Sensor Distance = " + this.getLidarSensor(SensorType.LIDAR).getDistance());
-        DriverStation.reportError(output.toString(), false);
-        Timer.delay(1.0);
+    public double getAnalogInPosition(SensorType type) {
+        return rsrx.getSensor().get(type).getAnalogInPosition();
     }
+
+    public double getAnalogGeneric(SensorType type) {
+        return rsrx.getSensor().get(type).getAnalogInRaw();
+    }
+    public boolean digitalLimitSwitch(SensorType type) {
+        return rsrx.getSensor().get(type).isFwdLimitSwitchClosed();
+    }
+    public int getEncoderPos(SensorType type) {
+        return rsrx.getSensor().get(type).getEncPosition();
+    }
+    public int getEncoderVelocity(SensorType type) {
+        return rsrx.getSensor().get(type).getEncVelocity();
+    }
+
+    public double getEncoderDistance(SensorType type) {
+        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * getEncoderPos(type)
+                * 360.0 / 1440.0;
+    }
+    public void addLidarSensor(Port port) {
+        ls = new LidarSensor(port);
+    }
+    public LidarSensor getLidarSensor() {
+        return this.ls;
+
+    }
+    public void createAccelerometer() {
+        bia = new BuiltInAccelerometer();
+    }
+    public BuiltInAccelerometer getAccelerometer() {
+        return bia;
+    }
+    public void createNavX(SerialPort.Port port) {
+        navx = new AHRS(port);
+    }
+    public AHRS getNavX() {
+        return navx;
+    }
+    public void calibrateGyro() {
+        navx.zeroYaw();
+        Timer.delay(.3); // Time to calibrate gyro
+    }
+
+    /**
+     * Private constructor because this is a singleton!!
+     */
+    protected SensorInputControlSRX() {
+
+    }
+
 }
