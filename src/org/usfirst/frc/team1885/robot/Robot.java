@@ -46,7 +46,6 @@ public class Robot extends SampleRobot {
 
     public Robot() {
 
-        RobotConfiguration.configureRobot();
         srx = RobotControlWithSRX.getInstance();
         drx = DriverInputControlSRX.getInstance();
         this.sensorrx = SensorInputControlSRX.getInstance();
