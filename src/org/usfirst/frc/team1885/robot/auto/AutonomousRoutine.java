@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine {
@@ -18,6 +19,9 @@ public class AutonomousRoutine {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
+        DriverStation.reportError("Gyro Calibrated", false);
+        Timer.delay(2);
+        commands.add(new AutoCrossedDefense());
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
