@@ -38,14 +38,6 @@ public class AutoCrossedDefense extends AutoCommand {
 
     @Override
     public boolean execute() {
-        DriverStation.reportError(
-                "\nRoll: " + sensorInputControl.getNavX().getRoll()
-                        + " ::: Pitch: "
-                        + sensorInputControl.getNavX().getPitch()
-                        + "\t\t Target Roll: " + FLAT_ROLL + FLAT_STANDARD
-                        + " ::: Target Pitch: " + FLAT_PITCH + FLAT_STANDARD,
-                false);
-
         boolean isAlignedRoll = sensorInputControl.getNavX()
                 .getRoll() <= FLAT_ROLL + FLAT_STANDARD
                 && sensorInputControl.getNavX().getRoll() >= FLAT_ROLL
@@ -59,11 +51,10 @@ public class AutoCrossedDefense extends AutoCommand {
         if (isAlignedPitch && isAlignedRoll) {
             if (System.currentTimeMillis() - startTime > WAIT_TIME) {
                 leftDriveSpeed = rightDriveSpeed = 0;
-                DriverStation.reportError("\n\t\t\t\tAlligned...", false);
-                // DrivetrainControl.getInstance()
-                // .setLeftDriveSpeed(leftDriveSpeed);
-                // DrivetrainControl.getInstance()
-                // .setRightDriveSpeed(rightDriveSpeed);
+                DrivetrainControl.getInstance()
+                        .setLeftDriveSpeed(leftDriveSpeed);
+                DrivetrainControl.getInstance()
+                        .setRightDriveSpeed(rightDriveSpeed);
             }
         }
         return false;
@@ -71,8 +62,8 @@ public class AutoCrossedDefense extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-        // RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
-        // rightDriveSpeed);
+        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
+                rightDriveSpeed);
         return false;
     }
 
