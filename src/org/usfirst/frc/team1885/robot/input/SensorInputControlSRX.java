@@ -1,17 +1,16 @@
 package org.usfirst.frc.team1885.robot.input;
 
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.Timer;
 
 public class SensorInputControlSRX {
     private static SensorInputControlSRX instance = null;
@@ -59,6 +58,11 @@ public class SensorInputControlSRX {
     }
     public int getEncoderVelocity(SensorType type) {
         return rsrx.getSensor().get(type).getEncVelocity();
+    }
+    
+    public double getEncoderDistance(SensorType type)
+    {
+        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * getEncoderPos(type) * 360.0/1440.0;
     }
     public void addLidarSensor(Port port) {
         ls = new LidarSensor(port);

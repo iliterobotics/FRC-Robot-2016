@@ -15,6 +15,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class RobotConfiguration {
+    
+    public static final double WHEEL_DIAMETER = 8.0;
+    
 	public static void configureRobot()
 	{
 		DriverInputControlSRX.getInstance().addJoystick( RobotJoystickType.LEFT_DRIVE, new Joystick(0) );

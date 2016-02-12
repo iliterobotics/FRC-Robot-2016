@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.PID;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -11,13 +10,13 @@ public class AutoAlign extends AutoCommand {
     private final double P = 0.6;
     private final double I = 0.02;
     private final double D = 0;
-
-    private double initial_yaw;
+ 
     private PID pid;
     private SensorInputControlSRX sensorInputControl;
     private double rightDriveSpeed;
     private double leftDriveSpeed;
     private double rightDistanceTraveled;
+    private double initial_yaw;
 
     private static double MIN_SPEED = 0.15;
 
