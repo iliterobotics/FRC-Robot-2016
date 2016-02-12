@@ -42,16 +42,18 @@ public class Robot extends SampleRobot {
             // output.append( "\nIMU_IsCalibrating" +
             // pengisbad.isCalibrating());
 
-//            output.append("\nIMU_Yaw" + navx.getYaw());
-//            output.append("\nIMU_Pitch" + navx.getPitch());
-//            output.append("\nIMU_Roll" + navx.getRoll());
-//
-//            output.append("\nRawGyro_X" + navx.getRawGyroX());
-//            output.append("\nRawGyro_Y" + navx.getRawGyroY());
-//            output.append("\nRawGyro_Z" + navx.getRawGyroZ());
-            
-//              output.append("\nEncoder Position: " + sensorrx.getEncoderPos( SensorType.DRIVE_TRAIN_ENCODER ) );
-              output.append("\nEncoder Velocity: " + sensorrx.getEncoderVelocity( SensorType.DRIVE_TRAIN_ENCODER ) );
+            // output.append("\nIMU_Yaw" + navx.getYaw());
+            // output.append("\nIMU_Pitch" + navx.getPitch());
+            // output.append("\nIMU_Roll" + navx.getRoll());
+            //
+            // output.append("\nRawGyro_X" + navx.getRawGyroX());
+            // output.append("\nRawGyro_Y" + navx.getRawGyroY());
+            // output.append("\nRawGyro_Z" + navx.getRawGyroZ());
+
+            // output.append("\nEncoder Position: " + sensorrx.getEncoderPos(
+            // SensorType.DRIVE_TRAIN_ENCODER ) );
+            output.append("\nEncoder Velocity: " + sensorrx
+                    .getEncoderVelocity(SensorType.DRIVE_TRAIN_ENCODER));
             /*
              * output.append( "\nRawAccel_X"+ pengisbad.getRawAccelX());
              * output.append( "\nRawAccel_Y"+ pengisbad.getRawAccelY());
