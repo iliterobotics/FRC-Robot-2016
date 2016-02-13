@@ -8,7 +8,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
-public class AutoStartDrive extends AutoCommand {
+public class AutoDriveStart extends AutoCommand {
 
     private double time;
     private double leftDriveOutput;
@@ -16,7 +16,7 @@ public class AutoStartDrive extends AutoCommand {
 
     private static double MIN_SPEED = 0.0;
 
-    public AutoStartDrive(double sec, double pow) {
+    public AutoDriveStart(double sec, double pow) {
         rightDriveOutput = leftDriveOutput = -pow;
 
         time = sec;
@@ -25,7 +25,7 @@ public class AutoStartDrive extends AutoCommand {
         init();
     }
 
-    public AutoStartDrive(double pow) {
+    public AutoDriveStart(double pow) {
         SensorInputControlSRX.getInstance().calibrateGyro();
         rightDriveOutput = leftDriveOutput = -pow;
         time = 0;
