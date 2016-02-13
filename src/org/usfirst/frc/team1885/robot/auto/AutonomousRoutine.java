@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine {
     public static final double PITCH_CHANGE = 4.5;
+    public static final double RAMPART_SPEED_MAX = 0.6;
+    public static final double RAMPART_SPEED_MIN = 0.5;
 
     private Robot robot;
     private LinkedList<AutoCommand> commands;
@@ -44,6 +46,15 @@ public class AutonomousRoutine {
     // AutoCrossedDefense - checks if we have landed and can prepare to shoot
     // AutoAlign - realigns the robot to move in position to shoot
     public void AutoMoatRoughTerrainRockWall() {
-        commands.add(new AutoMoat());
+    }
+
+    public void autoLowBar() {
+        double lowBarTravelDistance = 10; // subject to change from testing
+
+        commands.add(new AutoDriveStart(.5, .5));
+        commands.add(new AutoReachedDefense());
+        commands.add(new AutoDriveDistance(lowBarTravelDistance));
+        commands.add(new AutoCrossedDefense());
+        commands.add(new AutoAlign());
     }
 }
