@@ -71,14 +71,6 @@ public class UtilityArm implements Module {
             jointAAngle = 0;
             jointBAngle = 170;
         }
-//        DriverStation.reportError("desired A angle:" + jointAAngle + "\n",
-//                false);
-//        DriverStation.reportError("desired B angle:" + jointBAngle + "\n",
-//                false);
-//        DriverStation.reportError("current A angle:" + getAngleA() + "\n",
-//                false);
-//        DriverStation.reportError("current B angle:" + getAngleB() + "\n",
-//                false);
 
         updateOutputs();
     }
@@ -176,7 +168,7 @@ public class UtilityArm implements Module {
         }
     }
 
-    /*
+    /**
      * Takes the change in x and y movement and converts them to angular change
      */
     public void changeValues() {
@@ -211,8 +203,6 @@ public class UtilityArm implements Module {
                 double cosX = Math.cos(Math.toRadians(origA))
                     - (Math.cos(Math.toRadians(jointBAngle))
                             - Math.cos(Math.toRadians(origB)));
-//            DriverStation.reportError("cos: " + cosX + "\n", false);
-//            DriverStation.reportError("sin: " + sinY + "\n", false);
                 if (cosX >= -1 && cosX <= 1) {
                 // TODO set cosx to the limit that it is passing
                     jointAAngle = Math.toDegrees(Math.acos(cosX));

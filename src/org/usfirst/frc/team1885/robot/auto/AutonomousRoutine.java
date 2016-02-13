@@ -84,11 +84,8 @@ public class AutonomousRoutine {
      * Controls process for lowering and crossing the drawbridge
      */
     public void autoDrawbridge() {
-        double jointAPosition = 90.0;
-        double jointBPosition = (180.0 - 9.866);
-        commands.add(new AutoArm(.25, .50, jointAPosition, jointBPosition));
-        jointBPosition -= 62;
-        commands.add(new AutoArm(.25, -.25, jointAPosition, jointBPosition));
+        commands.add(new AutoArm(.25, .50, 90, 90));
+        commands.add(new AutoArm(.25, -.25, 90, 116));
     }
     /**
      * Reusable method to align robot after crossing a defense
