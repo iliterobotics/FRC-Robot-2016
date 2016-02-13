@@ -13,12 +13,23 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 
+/**
+ * 
+ * @author ILITE Robotics
+ * @version 
+ * This class keeps track of all joy stick mappings and sensor-to-talon mappings for the robot
+ * Also keeps track of ports for motors
+ */
 public class RobotConfiguration {
 
     public static final double WHEEL_DIAMETER = 8.0;
     public static final int ARM_JOINT_A_PORT = 1; // 5 on real robot
     public static final int ARM_JOINT_B_PORT = 2; // 6 on real robot
     public static final double MAX_SPEED = .8;
+    
+    /**
+     * Method adds all joy stick mappings and sensor-to-talon mappings
+     */
     public static void configureRobot() {
         DriverInputControlSRX.getInstance()
                 .addJoystick(RobotJoystickType.LEFT_DRIVE, new Joystick(0));
