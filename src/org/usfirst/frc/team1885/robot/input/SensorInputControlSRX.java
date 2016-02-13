@@ -7,6 +7,7 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
+import org.usfirst.frc.team1885.robot.sensor.PressureSensor;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -28,7 +29,7 @@ public class SensorInputControlSRX {
     private LidarSensor ls;
     private BuiltInAccelerometer bia;
     private AHRS navx;
-    private Map<SensorType, Integer> ticks;
+    private PressureSensor ps;
 
     public static SensorInputControlSRX getInstance() {
         if (instance == null) {
@@ -119,12 +120,20 @@ public class SensorInputControlSRX {
     public void resetEncoder(SensorType type) {
         rsrx.getSensor().get(type).setEncPosition(0);
     }
+    public void addPressureSensor( int channel ) {
+        ps = new PressureSensor(channel);
+    }
+    public double getPressureVoltage() {
+        return ps.getVoltage();
+    }
+    public double getPressureAverageVoltage() {
+        return ps.getAverageVoltage();
+    }
 
     /**
      * Private constructor because this is a singleton!!
      */
     private SensorInputControlSRX() {
-        ticks = new HashMap<SensorType, Integer>();
     }
 
 }

@@ -70,7 +70,6 @@ public class Robot extends SampleRobot {
     public void operatorControl() {
 
         while (isOperatorControl() && isEnabled()) {
-
             // New canbus code
             drx.update();
             // AuxArm.getInstance().update();
