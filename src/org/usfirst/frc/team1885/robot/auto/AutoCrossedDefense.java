@@ -23,7 +23,7 @@ public class AutoCrossedDefense extends AutoCommand {
     public AutoCrossedDefense() {
         sensorInputControl = SensorInputControlSRX.getInstance();
         FLAT_STANDARD = .5;
-        WAIT_TIME = 0.5;
+        WAIT_TIME = 0.25;
         FLAT_ROLL = sensorInputControl.getInitRoll();
         FLAT_PITCH = sensorInputControl.getInitPitch();
     }
@@ -57,7 +57,8 @@ public class AutoCrossedDefense extends AutoCommand {
                         - FLAT_STANDARD;
 
         if (isAlignedPitch && isAlignedRoll) {
-            if (System.currentTimeMillis() - startTime > WAIT_TIME) {
+            if (System.currentTimeMillis() - startTime > WAIT_TIME * 1000) {
+                // WAIT_TIME converted to millis
                 leftDriveSpeed = rightDriveSpeed = 0;
                 DriverStation.reportError("\n\t\t\t\tAlligned...", false);
                 // DrivetrainControl.getInstance()
@@ -65,6 +66,8 @@ public class AutoCrossedDefense extends AutoCommand {
                 // DrivetrainControl.getInstance()
                 // .setRightDriveSpeed(rightDriveSpeed);
             }
+        } else {
+            startTime = System.currentTimeMillis();
         }
         return false;
     }
