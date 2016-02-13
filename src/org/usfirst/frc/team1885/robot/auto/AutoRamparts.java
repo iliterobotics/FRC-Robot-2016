@@ -5,7 +5,7 @@ import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 public class AutoRamparts extends AutoCommand{
-    //Made by Aaron
+    //Fixed By Noah
     private final double YAW_ZONE = 5.0;
     private SensorInputControlSRX sensorControl= SensorInputControlSRX.getInstance();
     private RobotControlWithSRX robotControl = RobotControlWithSRX.getInstance();
