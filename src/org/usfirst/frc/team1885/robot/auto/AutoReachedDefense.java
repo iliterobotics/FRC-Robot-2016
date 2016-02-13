@@ -22,7 +22,7 @@ public class AutoReachedDefense extends AutoCommand {
 
     @Override
     public boolean execute() {
-        if(sensorInputControl.getNavX().getRoll() >= AutonomousRoutine.PITCH_CHANGE){
+        if(sensorInputControl.getNavX().getRoll() >= AutonomousRoutine.PITCH_CHANGE_ON_RAMP){
             return true;
         }
         leftEncoderDistance = sensorInputControl.getEncoderPos(SensorType.LEFT_ENCODER);
