@@ -50,4 +50,14 @@ public class AutonomousRoutine {
     // AutoAlign - realigns the robot to move in position to shoot
     public void AutoMoatRoughTerrainRockWall() {
     }
+
+    public void autoLowBar() {
+        double lowBarTravelDistance = 10; // subject to change from testing
+
+        commands.add(new AutoDriveStart(.5, .5));
+        commands.add(new AutoReachedDefense());
+        commands.add(new AutoDriveDistance(lowBarTravelDistance));
+        commands.add(new AutoCrossedDefense());
+        commands.add(new AutoAlign());
+    }
 }
