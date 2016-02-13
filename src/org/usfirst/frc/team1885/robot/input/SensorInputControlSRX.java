@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1885.robot.input;
 
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 import org.usfirst.frc.team1885.robot.sensor.PressureSensor;
@@ -8,20 +9,21 @@ import org.usfirst.frc.team1885.robot.sensor.PressureSensor;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SensorInputControlSRX {
+    private double INITIAL_PITCH; // Shouldn't change
+    private double INITIAL_ROLL; // Shouldn't change
     private static SensorInputControlSRX instance = null;
     private static RobotControlWithSRX rsrx = RobotControlWithSRX.getInstance();
     private PowerDistributionPanel PDP = new PowerDistributionPanel();
     private LidarSensor ls;
     private BuiltInAccelerometer bia;
     private AHRS navx;
-    private PressureSensor ps;
+    private PressureSensor pressureSensor;
 
     public static SensorInputControlSRX getInstance() {
         if (instance == null) {
@@ -30,22 +32,12 @@ public class SensorInputControlSRX {
         return instance;
     }
     public void update() {
-        StringBuilder output = new StringBuilder();
-        // output.append("\n-LIDAR SENSOR DISTANCE= "
-        // + this.getLidarSensor().getDistance());
-        this.getLidarSensor().update();
-        output.append("\n-Potentiometer In Position: "
-                + ((this.getAnalogInPosition(SensorType.ULTRASONIC) / 1024.0)
-                        * 360));
-        output.append("sd\n-Potentiometer Generic: "
-                + (this.getAnalogGeneric(SensorType.ULTRASONIC)));
-        output.append(
-                "\n-Lidar value:" + (this.getLidarSensor().getDistance()));
-
-        DriverStation.reportError(output.toString(), false);
-        Timer.delay(1);
-        // System.out.println(this.bia.getX() +" x " + bia.getY() + " y " +
-        // bia.getZ() + " z ");
+    }
+    public double getInitPitch() {
+        return INITIAL_PITCH;
+    }
+    public double getInitRoll() {
+        return INITIAL_ROLL;
     }
     public double getPitch() {
         return navx.getPitch();
@@ -78,6 +70,11 @@ public class SensorInputControlSRX {
     public int getEncoderVelocity(SensorType type) {
         return rsrx.getSensor().get(type).getEncVelocity();
     }
+
+    public double getEncoderDistance(SensorType type) {
+        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * getEncoderPos(type)
+                * 360.0 / 1440.0;
+    }
     public void addLidarSensor(Port port) {
         ls = new LidarSensor(port);
     }
@@ -98,13 +95,19 @@ public class SensorInputControlSRX {
         return navx;
     }
     public void addPressureSensor(int channel) {
-        ps = new PressureSensor(channel);
+        pressureSensor = new PressureSensor(channel);
     }
     public double getPressureAverageVoltage() {
-        return ps.getAverageVoltage();
+        return pressureSensor.getAverageVoltage();
     }
     public double getPressureVoltage() {
-        return ps.getVoltage();
+        return pressureSensor.getVoltage();
+    }
+    public void calibrateGyro() {
+        navx.zeroYaw();
+        Timer.delay(.3); // Time to calibrate gyro
+        INITIAL_PITCH = navx.getPitch();
+        INITIAL_ROLL = navx.getRoll();
     }
 
     /**
