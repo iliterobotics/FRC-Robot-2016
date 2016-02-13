@@ -125,9 +125,18 @@ public class DriverInputControlSRX {
                 leftDriveSpeed);
     }
     public double getControllerTwist() {
+        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kThrottle);
+    }
+    
+    public double getControllerThrottle() {
         return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kTwist);
     }
-    public double getControllerThrottle() {
-        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kThrottle);
+    
+    public boolean isResetButtonDown() {
+        return this.getButton(RobotButtonType.RESET_BUTTON);
+    }
+    
+    public boolean isButtonDown(RobotButtonType type){
+        return this.getButton(type);
     }
 }
