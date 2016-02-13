@@ -31,16 +31,17 @@ public class SensorInputControlSRX {
     }
     public void update() {
         StringBuilder output = new StringBuilder();
-//        output.append("\n-LIDAR SENSOR DISTANCE= "
-//                + this.getLidarSensor().getDistance());
+        // output.append("\n-LIDAR SENSOR DISTANCE= "
+        // + this.getLidarSensor().getDistance());
         this.getLidarSensor().update();
         output.append("\n-Potentiometer In Position: "
-                + ((this.getAnalogInPosition(SensorType.ULTRASONIC) / 1024.0) * 360 ));
+                + ((this.getAnalogInPosition(SensorType.ULTRASONIC) / 1024.0)
+                        * 360));
         output.append("sd\n-Potentiometer Generic: "
                 + (this.getAnalogGeneric(SensorType.ULTRASONIC)));
-        output.append("\n-Lidar value:"
-                + (this.getLidarSensor().getDistance()));
-        
+        output.append(
+                "\n-Lidar value:" + (this.getLidarSensor().getDistance()));
+
         DriverStation.reportError(output.toString(), false);
         Timer.delay(1);
         // System.out.println(this.bia.getX() +" x " + bia.getY() + " y " +
@@ -96,14 +97,14 @@ public class SensorInputControlSRX {
     public AHRS getNavX() {
         return navx;
     }
-    public void addPressureSensor( int channel ) {
+    public void addPressureSensor(int channel) {
         ps = new PressureSensor(channel);
     }
     public double getPressureAverageVoltage() {
         return ps.getAverageVoltage();
     }
     public double getPressureVoltage() {
-       return ps.getVoltage();
+        return ps.getVoltage();
     }
 
     /**

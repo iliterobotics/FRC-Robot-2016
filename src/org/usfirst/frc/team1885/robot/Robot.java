@@ -1,7 +1,6 @@
 package org.usfirst.frc.team1885.robot;
 
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.config2015.RobotConfigSRX;
+import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -22,7 +21,7 @@ public class Robot extends SampleRobot {
     public Robot() {
         navx = new AHRS(SerialPort.Port.kMXP);
         System.err.println("I am ROBOT!!");
-        RobotConfigSRX.configureRobot();
+        RobotConfiguration.configureRobot();
         srx = RobotControlWithSRX.getInstance();
         drx = DriverInputControlSRX.getInstance();
         this.sensorrx = SensorInputControlSRX.getInstance();
@@ -52,10 +51,14 @@ public class Robot extends SampleRobot {
 
             // output.append("\nEncoder Position: " + sensorrx.getEncoderPos(
             // SensorType.DRIVE_TRAIN_ENCODER ) );
-         /*   output.append("\nEncoder Velocity: " + sensorrx
-                    .getEncoderVelocity(SensorType.DRIVE_TRAIN_ENCODER));*/
-            output.append("\nPressure Voltage: " + sensorrx.getPressureVoltage() );
-            output.append("\nAverage Pressure Voltage: " + sensorrx.getPressureAverageVoltage() );
+            /*
+             * output.append("\nEncoder Velocity: " + sensorrx
+             * .getEncoderVelocity(SensorType.DRIVE_TRAIN_ENCODER));
+             */
+            output.append(
+                    "\nPressure Voltage: " + sensorrx.getPressureVoltage());
+            output.append("\nAverage Pressure Voltage: "
+                    + sensorrx.getPressureAverageVoltage());
             /*
              * output.append( "\nRawAccel_X"+ pengisbad.getRawAccelX());
              * output.append( "\nRawAccel_Y"+ pengisbad.getRawAccelY());
