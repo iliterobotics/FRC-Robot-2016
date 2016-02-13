@@ -52,8 +52,10 @@ public class Robot extends SampleRobot {
 
             // output.append("\nEncoder Position: " + sensorrx.getEncoderPos(
             // SensorType.DRIVE_TRAIN_ENCODER ) );
-            output.append("\nEncoder Velocity: " + sensorrx
-                    .getEncoderVelocity(SensorType.DRIVE_TRAIN_ENCODER));
+          /*  output.append("\nEncoder Velocity: " + sensorrx
+                    .getEncoderVelocity(SensorType.DRIVE_TRAIN_ENCODER));*/
+            output.append("\nPressure Voltage: " + sensorrx.getPressureVoltage() );
+            output.append("\nPressure Average Voltage: " + sensorrx.getPressureAverageVoltage() );
             /*
              * output.append( "\nRawAccel_X"+ pengisbad.getRawAccelX());
              * output.append( "\nRawAccel_Y"+ pengisbad.getRawAccelY());

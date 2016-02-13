@@ -28,6 +28,7 @@ public class RobotConfigSRX {
 		SensorInputControlSRX.getInstance().addLidarSensor( I2C.Port.kOnboard );
         SensorInputControlSRX.getInstance().getLidarSensor().start();
         SensorInputControlSRX.getInstance().createNavX(SerialPort.Port.kMXP);
+        SensorInputControlSRX.getInstance().addPressureSensor(1);
 	    } catch(Throwable e) {
 	        System.err.println("OMG!!");
 	        e.printStackTrace();
