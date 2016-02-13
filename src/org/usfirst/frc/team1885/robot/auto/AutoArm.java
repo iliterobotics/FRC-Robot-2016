@@ -2,19 +2,16 @@ package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
-import org.usfirst.frc.team1885.robot.manipulator.AuxArm;
+import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
-
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.Timer;
 
 public class AutoArm extends AutoCommand {
     
-    private double jointSpeedA, jointSpeedB;
+    private double jointASpeed, jointBSpeed;
     private double potentiometerA, potentiometerB;
     public AutoArm( double speedA, double speedB, double potA, double potB ) {
-        jointSpeedA = speedA;
-        jointSpeedB = speedB;
+        jointASpeed = speedA;
+        jointBSpeed = speedB;
         potentiometerA = (potA + SensorInputControlSRX.getInstance().getInitialPotAPostition());
         potentiometerB = (potB + SensorInputControlSRX.getInstance().getInitialPotBPostition());
     }
@@ -30,27 +27,27 @@ public class AutoArm extends AutoCommand {
     public boolean execute() {
         boolean isJointAInPlace = false;
         boolean isJointBInPlace = false;
-        if( jointSpeedA >= 0 ){
-            if ( SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR >= potentiometerA ) {
+        if( jointASpeed >= 0 ){
+            if ( SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER) * UtilityArm.CONVERSION_FACTOR >= potentiometerA ) {
                 isJointAInPlace = true;
-                jointSpeedA = 0;
+                jointASpeed = 0;
             }
         } else{
-            if ( SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR <= potentiometerA ) {
+            if ( SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER) * UtilityArm.CONVERSION_FACTOR <= potentiometerA ) {
                 isJointAInPlace = true;
-                jointSpeedA = 0;
+                jointASpeed = 0;
             }
         }
         
-        if( jointSpeedB >= 0 ){
-            if ( SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR >= potentiometerB ) {
+        if( jointBSpeed >= 0 ){
+            if ( SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER) * UtilityArm.CONVERSION_FACTOR >= potentiometerB ) {
                 isJointBInPlace = true;
-                jointSpeedB = 0;
+                jointBSpeed = 0;
             }
         } else{
-            if ( SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER) * AuxArm.CONVERSION_FACTOR <= potentiometerB ) {
+            if ( SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER) * UtilityArm.CONVERSION_FACTOR <= potentiometerB ) {
                 isJointBInPlace = true;
-                jointSpeedB = 0;
+                jointBSpeed = 0;
             }
         }
         
@@ -58,18 +55,18 @@ public class AutoArm extends AutoCommand {
             this.reset();
             return true;
         }
-        AuxArm.getInstance().updateArm( jointSpeedA, jointSpeedB );
+        UtilityArm.getInstance().updateArm( jointASpeed, jointBSpeed );
         return false;
     }
 
     @Override
     public boolean updateOutputs() {
-        RobotControlWithSRX.getInstance().updateArmMotors(AuxArm.getInstance().getJointASpeed(), AuxArm.getInstance().getJointBSpeed());
+        RobotControlWithSRX.getInstance().updateArmMotors(UtilityArm.getInstance().getJointASpeed(), UtilityArm.getInstance().getJointBSpeed());
         return false;
     }
 
     @Override
     public void reset() {
-        AuxArm.getInstance().updateArm(0, 0);        
+        UtilityArm.getInstance().updateArm(0, 0);        
     }
 }

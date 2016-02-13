@@ -2,7 +2,7 @@ package org.usfirst.frc.team1885.robot.input;
 
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
-import org.usfirst.frc.team1885.robot.manipulator.AuxArm;
+import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 import org.usfirst.frc.team1885.robot.sensor.PressureSensor;
@@ -59,8 +59,8 @@ public class SensorInputControlSRX {
         return navx.getRoll();
     }
     public void init(){
-        INITIAL_POT_A_POSITION = rsrx.getSensor().get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw() * AuxArm.CONVERSION_FACTOR;
-        INITIAL_POT_B_POSITION = rsrx.getSensor().get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw() * AuxArm.CONVERSION_FACTOR;
+        INITIAL_POT_A_POSITION = rsrx.getSensor().get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw() * UtilityArm.CONVERSION_FACTOR;
+        INITIAL_POT_B_POSITION = rsrx.getSensor().get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw() * UtilityArm.CONVERSION_FACTOR;
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);

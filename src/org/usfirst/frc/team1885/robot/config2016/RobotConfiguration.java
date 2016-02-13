@@ -55,6 +55,13 @@ public class RobotConfiguration {
 
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_MOVE_Y, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kTwist ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_MOVE_X, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kThrottle ) );
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.RESET_BUTTON, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 9));
+        
+        
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INCREMENT_ARM_LEFT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INCREMENT_ARM_DOWN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INCREMENT_ARM_RIGHT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INCREMENT_ARM_UP, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
 
     }
 }

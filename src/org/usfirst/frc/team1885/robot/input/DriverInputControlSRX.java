@@ -123,4 +123,19 @@ public class DriverInputControlSRX {
         this.leftDriveSpeed = deadzone(leftJoystick);
         RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
     }
+    public double getControllerTwist() {
+        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kThrottle);
+    }
+    
+    public double getControllerThrottle() {
+        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kTwist);
+    }
+    
+    public boolean isResetButtonDown() {
+        return this.getButton(RobotButtonType.RESET_BUTTON);
+    }
+    
+    public boolean isButtonDown(RobotButtonType type){
+        return this.getButton(type);
+    }
 }
