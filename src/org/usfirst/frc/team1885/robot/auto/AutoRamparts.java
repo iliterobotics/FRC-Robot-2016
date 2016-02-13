@@ -1,73 +1,71 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 public class AutoRamparts extends AutoCommand{
     //Made by Aaron
-    private SensorInputControlSRX sensorSRX= SensorInputControlSRX.getInstance();
-    private RobotControlWithSRX rcsrx = RobotControlWithSRX.getInstance();
-    private DrivetrainControl dtc = DrivetrainControl.getInstance();
-    private double leftSpeed;
-    private double rightSpeed;
+    private final double YAW_ZONE = 5.0;
+    private SensorInputControlSRX sensorControl= SensorInputControlSRX.getInstance();
+    private RobotControlWithSRX robotControl = RobotControlWithSRX.getInstance();
+    private DrivetrainControl driveTrainControl = DrivetrainControl.getInstance();
+    private double leftDriveSpeed;
+    private double rightDriveSpeed;
     @Override
     public boolean init() {
         reset();
-        leftSpeed = dtc.getLeftDriveSpeed();
-        rightSpeed = dtc.getRightDriveSpeed();
+        leftDriveSpeed = driveTrainControl.getLeftDriveSpeed();
+        rightDriveSpeed = driveTrainControl.getRightDriveSpeed();
         return true;
     }
 
     @Override
     public boolean execute() {
-        // Drive forward and once BusVoltage dips drop right side power so that it goes over evenly
-        // After we somehow figure out when we are done we stop the robot possibly on a time sensitive gyroscopic readings
-        double yaw = sensorSRX.getYaw();
-        double pitch = sensorSRX.getPitch();
-        double roll = sensorSRX.getRoll();
-        if(inZone(yaw) && inZone(pitch) && inZone(roll))
+        double yaw = sensorControl.getYaw();
+        if((new AutoCrossedDefense()).execute())
         {
             return true;
         }
         if(this.inZone(yaw))
         {
-            leftSpeed = rightSpeed = RobotConfiguration.maxSpeed;
+            leftDriveSpeed = rightDriveSpeed = AutonomousRoutine.RAMPART_SPEED_MAX;
         }
-        else if(yaw > 10)
+        else if(yaw > YAW_ZONE)
         {
-            if(dtc.getLeftDriveSpeed() == RobotConfiguration.maxSpeed)
+            if(driveTrainControl.getLeftDriveSpeed() == AutonomousRoutine.RAMPART_SPEED_MAX)
             {
-                leftSpeed = .6;
-                rightSpeed = RobotConfiguration.maxSpeed;
+                leftDriveSpeed = AutonomousRoutine.RAMPART_SPEED_MIN;
             }
+            rightDriveSpeed = AutonomousRoutine.RAMPART_SPEED_MAX;
         }
-        else if(yaw < -10)
+        else if(yaw < -YAW_ZONE)
         {
-            if(dtc.getRightDriveSpeed() == RobotConfiguration.maxSpeed)
+            if(driveTrainControl.getRightDriveSpeed() == AutonomousRoutine.RAMPART_SPEED_MAX)
             {
-                rightSpeed = .6;
-                leftSpeed = RobotConfiguration.maxSpeed;
+                rightDriveSpeed = AutonomousRoutine.RAMPART_SPEED_MIN;
             }
+            leftDriveSpeed = AutonomousRoutine.RAMPART_SPEED_MAX;
         }
-        rcsrx.updateDriveSpeed(leftSpeed, rightSpeed);
+        driveTrainControl.setLeftDriveSpeed(leftDriveSpeed);
+        driveTrainControl.setRightDriveSpeed(rightDriveSpeed);
         return false;
     }
 
     @Override
     public boolean updateOutputs() {
-
+        robotControl.updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
         return true;
     }
 
     @Override
     public void reset() {
+        robotControl.updateDriveSpeed(0, 0);
     }
 
     public boolean inZone(double input)
     {
-        if(input < 10 && input > -10)
+        if(input < YAW_ZONE && input > -YAW_ZONE)
         {
             return true;
         }

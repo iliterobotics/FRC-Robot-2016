@@ -18,7 +18,7 @@ public class RobotConfiguration {
     public static final double WHEEL_DIAMETER = 8.0;
     public static final int ARM_JOINT_A_PORT = 1; // 5 on real robot
     public static final int ARM_JOINT_B_PORT = 2; // 6 on real robot
-    public static final double maxSpeed = .8;
+    public static final double MAX_SPEED = .8;
     public static void configureRobot() {
         DriverInputControlSRX.getInstance()
                 .addJoystick(RobotJoystickType.LEFT_DRIVE, new Joystick(0));

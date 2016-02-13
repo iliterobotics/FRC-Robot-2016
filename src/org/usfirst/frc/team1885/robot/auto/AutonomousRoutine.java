@@ -10,6 +10,8 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine {
     public static final double PITCH_CHANGE = 4.5;
+    public static final double RAMPART_SPEED_MAX = 0.6;
+    public static final double RAMPART_SPEED_MIN = 0.5;
 
     private Robot robot;
     private LinkedList<AutoCommand> commands;
