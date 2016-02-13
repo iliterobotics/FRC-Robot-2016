@@ -1,5 +1,5 @@
 package org.usfirst.frc.team1885.robot.common.type;
 
 public enum SensorType {
-	LIDAR, JOINT_A_POTENTIOMETER, JOINT_B_POTENTIOMETER, LEFT_ENCODER, RIGHT_ENCODER
+	DRIVE_TRAIN_ENCODER, LIMIT_SWITCH, ULTRASONIC
 }
