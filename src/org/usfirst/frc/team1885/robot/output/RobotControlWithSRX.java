@@ -10,33 +10,41 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 
 import edu.wpi.first.wpilibj.CANTalon;
 
-public class RobotControlWithSRX {
-    public static RobotControlWithSRX instance;
-    private List<CANTalon> leftDrive;
-    private List<CANTalon> rightDrive;
-    private Map<RobotMotorType, CANTalon> talons = new HashMap<RobotMotorType, CANTalon>();
-    private Map<SensorType, CANTalon> sensors;
 
-    public static synchronized RobotControlWithSRX getInstance() {
-        if (instance == null) {
-            instance = new RobotControlWithSRX();
-        }
-        return instance;
-    }
-    protected RobotControlWithSRX() {
-        leftDrive = new ArrayList<CANTalon>();
-        rightDrive = new ArrayList<CANTalon>();
-    }
-    public void addTalonOutput(RobotMotorType type, int port) {
-        if (type == RobotMotorType.LEFT_DRIVE) {
-            leftDrive.add(new CANTalon(port));
-        } else if (type == RobotMotorType.RIGHT_DRIVE) {
-            // add to right motor
-            rightDrive.add(new CANTalon(port));
-        } else {
-            talons.put(type, new CANTalon(port));
-        }
-    }
+public class RobotControlWithSRX 
+{
+	public static RobotControlWithSRX instance;
+	private List<CANTalon> leftDrive;
+	private List<CANTalon> rightDrive;
+	private Map<RobotMotorType, CANTalon> talons;
+	private Map<SensorType, CANTalon> sensors;
+	
+	public static synchronized RobotControlWithSRX getInstance() {
+		if (instance == null) {
+			instance = new RobotControlWithSRX();
+		}
+		return instance;
+	}
+	protected RobotControlWithSRX()
+	{
+		leftDrive = new ArrayList<CANTalon>();
+		rightDrive = new ArrayList<CANTalon>();
+		talons = new HashMap<RobotMotorType, CANTalon>();
+		sensors = new HashMap<SensorType, CANTalon>();
+	}
+	public void addTalonOutput(RobotMotorType type, int port) {
+		if (type == RobotMotorType.LEFT_DRIVE) {
+			leftDrive.add(new CANTalon(port));
+		} 
+		else if (type == RobotMotorType.RIGHT_DRIVE) {
+			// add to right motor
+			rightDrive.add(new CANTalon(port));
+		}
+		else
+		{
+		    talons.put(type, new CANTalon(port));
+		}
+	}
     public void addTalonSensor(RobotMotorType motorType, SensorType sensorType,
             int port) {
         if (talons.containsKey(motorType)) {

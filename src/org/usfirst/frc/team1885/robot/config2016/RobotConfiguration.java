@@ -1,3 +1,4 @@
+
 package org.usfirst.frc.team1885.robot.config2016;
 
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
@@ -52,17 +53,8 @@ public class RobotConfiguration {
                 RobotMotorType.ARM_JOINT_B, SensorType.JOINT_B_POTENTIOMETER,
                 ARM_JOINT_B_PORT);
 
-        JoystickButtonMap.getInstance().addControllerButton(
-                RobotButtonType.ARM_JOINT_A_CLOCK,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
-        JoystickButtonMap.getInstance().addControllerButton(
-                RobotButtonType.ARM_JOINT_A_COUNTER,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
-        JoystickButtonMap.getInstance().addControllerButton(
-                RobotButtonType.ARM_JOINT_B_CLOCK,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
-        JoystickButtonMap.getInstance().addControllerButton(
-                RobotButtonType.ARM_JOINT_B_COUNTER,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_MOVE_Y, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kTwist ) );
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_MOVE_X, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kThrottle ) );
+
     }
 }

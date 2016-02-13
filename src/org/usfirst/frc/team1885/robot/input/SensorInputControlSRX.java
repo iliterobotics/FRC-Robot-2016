@@ -2,6 +2,7 @@ package org.usfirst.frc.team1885.robot.input;
 
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
+import org.usfirst.frc.team1885.robot.manipulator.AuxArm;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 import org.usfirst.frc.team1885.robot.sensor.PressureSensor;
@@ -18,18 +19,27 @@ public class SensorInputControlSRX {
     private double INITIAL_PITCH; // Shouldn't change
     private double INITIAL_ROLL; // Shouldn't change
     private static SensorInputControlSRX instance = null;
-    private static RobotControlWithSRX rsrx = RobotControlWithSRX.getInstance();
-    private PowerDistributionPanel PDP = new PowerDistributionPanel();
+    private static RobotControlWithSRX rsrx;
+    private PowerDistributionPanel PDP;
     private LidarSensor ls;
     private BuiltInAccelerometer bia;
     private AHRS navx;
     private PressureSensor pressureSensor;
+
+    public static final double DEADZONE = 0.1;
+    
+    private double INITIAL_POT_B_POSITION;
+    private double INITIAL_POT_A_POSITION;
 
     public static SensorInputControlSRX getInstance() {
         if (instance == null) {
             instance = new SensorInputControlSRX();
         }
         return instance;
+    }
+    protected SensorInputControlSRX() {
+        rsrx = RobotControlWithSRX.getInstance();
+        PDP = new PowerDistributionPanel();
     }
     public void update() {
     }
@@ -47,6 +57,10 @@ public class SensorInputControlSRX {
     }
     public double getRoll() {
         return navx.getRoll();
+    }
+    public void init(){
+        INITIAL_POT_A_POSITION = rsrx.getSensor().get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw() * AuxArm.CONVERSION_FACTOR;
+        INITIAL_POT_B_POSITION = rsrx.getSensor().get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw() * AuxArm.CONVERSION_FACTOR;
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
@@ -109,12 +123,10 @@ public class SensorInputControlSRX {
         INITIAL_PITCH = navx.getPitch();
         INITIAL_ROLL = navx.getRoll();
     }
-
-    /**
-     * Private constructor because this is a singleton!!
-     */
-    protected SensorInputControlSRX() {
-
+    public double getInitialPotBPostition(){
+        return INITIAL_POT_B_POSITION;
     }
-
+    public double getInitialPotAPostition(){
+        return INITIAL_POT_A_POSITION;
+    }
 }
