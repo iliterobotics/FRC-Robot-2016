@@ -53,8 +53,14 @@ public class RobotConfiguration {
                 RobotMotorType.ARM_JOINT_B, SensorType.JOINT_B_POTENTIOMETER,
                 ARM_JOINT_B_PORT);
 
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_MOVE_Y, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kTwist ) );
-        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_MOVE_X, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kThrottle ) );
+        JoystickButtonMap.getInstance().addControllerButton(
+                RobotButtonType.ARM_MOVE_Y,
+                new JoystickButtonMatch(RobotJoystickType.CONTROLLER,
+                        Joystick.AxisType.kTwist));
+        JoystickButtonMap.getInstance().addControllerButton(
+                RobotButtonType.ARM_MOVE_X,
+                new JoystickButtonMatch(RobotJoystickType.CONTROLLER,
+                        Joystick.AxisType.kThrottle));
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.RESET_BUTTON, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 9));
         
         

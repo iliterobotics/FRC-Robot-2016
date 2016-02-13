@@ -37,6 +37,9 @@ public class UtilityArm implements Module {
     private double jointBAngle; // storage for updating the B angle
     private double xDirection; // what direction the system needs to move in
     private double yDirection; // what direction the system needs to move in
+    
+    private boolean jointAInPosition;
+    private boolean jointBInPosition;
 
     @SuppressWarnings("unused")
     private MotorState jointAState;
@@ -54,6 +57,7 @@ public class UtilityArm implements Module {
         yDirection = 0;
         sensorInputControl = SensorInputControlSRX.getInstance();
         driverInputControl = DriverInputControlSRX.getInstance();
+        jointAInPosition = jointBInPosition = false;
     }
 
     // TODO singletons cause memory leaks
@@ -239,8 +243,9 @@ public class UtilityArm implements Module {
         return jointBSpeed;
     }
 
-    public void updateArm(double jointASpeed, double jointBSpeed) {
-        this.jointASpeed = jointASpeed;
-        this.jointBSpeed = jointBSpeed;
+    public void updateArm(double jointAAngle, double jointBAngle) {
+        this.jointAAngle = jointAAngle;
+        this.jointBAngle = jointBAngle;
+        update();
     }
 }

@@ -27,7 +27,7 @@ public class SensorInputControlSRX {
     private PressureSensor pressureSensor;
 
     public static final double DEADZONE = 0.1;
-    
+
     private double INITIAL_POT_B_POSITION;
     private double INITIAL_POT_A_POSITION;
 
@@ -58,9 +58,13 @@ public class SensorInputControlSRX {
     public double getRoll() {
         return navx.getRoll();
     }
-    public void init(){
-        INITIAL_POT_A_POSITION = rsrx.getSensor().get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw() * UtilityArm.CONVERSION_FACTOR;
-        INITIAL_POT_B_POSITION = rsrx.getSensor().get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw() * UtilityArm.CONVERSION_FACTOR;
+    public void init() {
+        INITIAL_POT_A_POSITION = rsrx.getSensor()
+                .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw()
+                * UtilityArm.CONVERSION_FACTOR;
+        INITIAL_POT_B_POSITION = rsrx.getSensor()
+                .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
+                * UtilityArm.CONVERSION_FACTOR;
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
@@ -123,10 +127,10 @@ public class SensorInputControlSRX {
         INITIAL_PITCH = navx.getPitch();
         INITIAL_ROLL = navx.getRoll();
     }
-    public double getInitialPotBPostition(){
+    public double getInitialPotBPostition() {
         return INITIAL_POT_B_POSITION;
     }
-    public double getInitialPotAPostition(){
+    public double getInitialPotAPostition() {
         return INITIAL_POT_A_POSITION;
     }
 }

@@ -22,9 +22,7 @@ public class AutonomousRoutine {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
-        DriverStation.reportError("Gyro Calibrated", false);
-        Timer.delay(2);
-        commands.add(new AutoCrossedDefense());
+        autoDrawbridge();
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -33,9 +31,9 @@ public class AutonomousRoutine {
             if (currCommand.isInit()) {
                 boolean commandState = currCommand.execute();
                 currCommand.updateOutputs();
-                if(commandState)
-                {
-                    DriverStation.reportError("finished command " + commands.size(), false);
+                if (commandState) {
+                    DriverStation.reportError(
+                            "finished command " + commands.size(), false);
                     commands.poll();
                 }
             } else {
@@ -46,7 +44,8 @@ public class AutonomousRoutine {
     }
     // STANDARD CONFIGURATION
     // AutoStartDrive - begins movement
-    // AutoReachedDefense - checks if we have hit the defense (not necessary in all cases)
+    // AutoReachedDefense - checks if we have hit the defense (not necessary in
+    // all cases)
     // in between checks to cross the defense
     // AutoCrossedDefense - checks if we have landed and can prepare to shoot
     // AutoAlign - realigns the robot to move in position to shoot
@@ -74,7 +73,7 @@ public class AutonomousRoutine {
     /**
      * Controls processes for crossing the ramparts
      */
-    public void autoRamparts(){
+    public void autoRamparts() {
         commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
         commands.add(new AutoReachedDefense());
         commands.add(new AutoRamparts());
@@ -84,19 +83,21 @@ public class AutonomousRoutine {
      * Controls process for lowering and crossing the drawbridge
      */
     public void autoDrawbridge() {
-        commands.add(new AutoArm(.25, .50, 90, 90));
-        commands.add(new AutoArm(.25, -.25, 90, 116));
+        commands.add(new AutoArm(90, 95));
+        commands.add(new AutoWait(3000));
+
+        commands.add(new AutoArm(0, 170));// Resets the arm to default position
     }
     /**
      * Reusable method to align robot after crossing a defense
      */
-    public void autoAlign(){
+    public void autoAlign() {
         commands.add(new AutoAlign());
         autoShootHighGoal();
     }
     /**
      * Controls processes required for locating the high goal and shooting
      */
-    public void autoShootHighGoal(){
+    public void autoShootHighGoal() {
     }
 }

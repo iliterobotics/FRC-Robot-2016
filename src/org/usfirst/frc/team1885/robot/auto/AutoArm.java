@@ -3,19 +3,20 @@ package org.usfirst.frc.team1885.robot.auto;
 import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class AutoArm extends AutoCommand {
-    
-    private double jointASpeed, jointBSpeed;
+    private final double ERROR;
+
     private double potentiometerA, potentiometerB;
     private UtilityArm utilityArm;
-    public AutoArm( double speedA, double speedB, double potA, double potB ) {
+
+    public AutoArm(double potA, double potB) {
         utilityArm = UtilityArm.getInstance();
-        jointASpeed = speedA;
-        jointBSpeed = speedB;
         potentiometerA = potA;
         potentiometerB = potB;
+        ERROR = 7;
     }
-
 
     @Override
     public boolean init() {
@@ -25,48 +26,40 @@ public class AutoArm extends AutoCommand {
 
     @Override
     public boolean execute() {
-        boolean isJointAInPlace = false;
-        boolean isJointBInPlace = false;
-        if( jointASpeed >= 0 ){
-            if (utilityArm.getAngleA() >= potentiometerA ) {
-                isJointAInPlace = true;
-                jointASpeed = 0;
-            }
-        } else{
-            if ( utilityArm.getAngleA() <= potentiometerA ) {
-                isJointAInPlace = true;
-                jointASpeed = 0;
-            }
-        }
-        
-        if( jointBSpeed >= 0 ){
-            if ( utilityArm.getAngleB() >= potentiometerB ) {
-                isJointBInPlace = true;
-                jointBSpeed = 0;
-            }
-        } else{
-            if ( utilityArm.getAngleB() <= potentiometerB ) {
-                isJointBInPlace = true;
-                jointBSpeed = 0;
-            }
-        }
-        
-        if ( isJointAInPlace && isJointBInPlace ) {
-            this.reset();
+        boolean isAngleACorrect = potentiometerA
+                - utilityArm.getAngleA() < ERROR
+                && potentiometerA - utilityArm.getAngleA() > -ERROR;
+        boolean isAngleBCorrect = potentiometerB
+                - utilityArm.getAngleB() < ERROR
+                && potentiometerB - utilityArm.getAngleB() > -ERROR;
+
+        DriverStation.reportError("\nJoint A potentiometer: "
+                + utilityArm.getAngleA() + " ::: Joint B potentiometer: "
+                + utilityArm.getAngleB(), false);
+        DriverStation.reportError("\nJoint A GOAL: " + potentiometerA
+                + " ::: Joint B GOAL: " + potentiometerB
+                + " ::: isAngleACorrect - " + isAngleACorrect
+                + ", isAngleBCorrect - " + isAngleBCorrect, false);
+        utilityArm.updateArm(potentiometerA, potentiometerB);
+
+        if (isAngleACorrect && isAngleBCorrect) {
+            DriverStation
+                    .reportError("\n\nFinal position reacher: Joint A angle - "
+                            + utilityArm.getAngleA() + ", Joint B angle - "
+                            + utilityArm.getAngleB(), false);
             return true;
         }
-        UtilityArm.getInstance().updateArm( jointASpeed, jointBSpeed );
         return false;
     }
 
     @Override
     public boolean updateOutputs() {
-        RobotControlWithSRX.getInstance().updateArmMotors(UtilityArm.getInstance().getJointASpeed(), UtilityArm.getInstance().getJointBSpeed());
+        // methods in UtilityArm update outputs for us
         return false;
     }
 
     @Override
     public void reset() {
-        UtilityArm.getInstance().updateArm(0, 0);        
+        UtilityArm.getInstance().updateArm(0, 0);
     }
 }
