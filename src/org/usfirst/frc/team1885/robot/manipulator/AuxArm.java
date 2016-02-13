@@ -18,7 +18,7 @@ public class AuxArm implements Module{
     private MotorState jointAState;
     private MotorState jointBState;
     
-    protected AuxArm() {
+    private AuxArm() {
         this.jointAState = MotorState.OFF;
         this.jointBState = MotorState.OFF;
         jointASpeed = 0; 

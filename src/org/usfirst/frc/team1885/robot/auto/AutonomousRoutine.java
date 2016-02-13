@@ -9,9 +9,10 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine {
-    public static final double PITCH_CHANGE = 4.5;
+    public static final double PITCH_CHANGE_ON_RAMP = 4.5;
     public static final double RAMPART_SPEED_MAX = 0.6;
     public static final double RAMPART_SPEED_MIN = 0.5;
+    public static final double START_DRIVE_SPEED = 0.5;
 
     private Robot robot;
     private LinkedList<AutoCommand> commands;
@@ -21,6 +22,9 @@ public class AutonomousRoutine {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
+        DriverStation.reportError("Gyro Calibrated", false);
+        Timer.delay(2);
+        commands.add(new AutoCrossedDefense());
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -41,20 +45,50 @@ public class AutonomousRoutine {
     }
     // STANDARD CONFIGURATION
     // AutoStartDrive - begins movement
-    // AutoReachedDefense - checks if we have hit the defense
+    // AutoReachedDefense - checks if we have hit the defense (not necessary in all cases)
     // in between checks to cross the defense
     // AutoCrossedDefense - checks if we have landed and can prepare to shoot
     // AutoAlign - realigns the robot to move in position to shoot
-    public void AutoMoatRoughTerrainRockWall() {
+    /**
+     * Controls processes for passing the Moat, Rough Terrain, and Rock Wall
+     */
+    public void autoBasicDefense() {
+        commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
+        commands.add(new AutoReachedDefense());
+        commands.add(new AutoCrossedDefense());
+        autoAlign();
     }
-
+    /**
+     * Controls processes for passing the low bar
+     */
     public void autoLowBar() {
         double lowBarTravelDistance = 10; // subject to change from testing
 
-        commands.add(new AutoDriveStart(.5, .5));
+        commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
         commands.add(new AutoReachedDefense());
         commands.add(new AutoDriveDistance(lowBarTravelDistance));
         commands.add(new AutoCrossedDefense());
+        autoAlign();
+    }
+    public void autoRamparts(){
+        commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
+        commands.add(new AutoReachedDefense());
+        commands.add(new AutoRamparts());
+        commands.add(new AutoCrossedDefense());
+        autoAlign();
+    }
+    /**
+     * Reusable method to align robot after crossing a defense
+     */
+    public void autoAlign(){
         commands.add(new AutoAlign());
+        autoShootBall(false);
+    }
+    /**
+     * Controls processes required for locating the high and low goal and shooting
+     * @param true = high goal; false = low goal
+     */
+    public void autoShootBall(boolean goal){
+        
     }
 }

@@ -102,7 +102,7 @@ public class SensorInputControlSRX {
     /**
      * Private constructor because this is a singleton!!
      */
-    protected SensorInputControlSRX() {
+    private SensorInputControlSRX() {
 
     }
 

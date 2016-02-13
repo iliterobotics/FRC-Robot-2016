@@ -18,7 +18,7 @@ public class DriverInputControlSRX {
     public static final double MIN_TORQUE_RESPONSE = 0.2;
     private double leftDriveSpeed, rightDriveSpeed;
 
-    protected DriverInputControlSRX() {
+    private DriverInputControlSRX() {
         joystickMap = new HashMap<RobotJoystickType, Joystick>();
         leftDriveSpeed = 0;
         rightDriveSpeed = 0;

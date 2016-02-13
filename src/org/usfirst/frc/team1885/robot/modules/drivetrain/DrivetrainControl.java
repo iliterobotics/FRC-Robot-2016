@@ -30,7 +30,7 @@ public class DrivetrainControl implements Module{
 	public static final double NUDGE_POWER_TURN = 0.75;
 	private static DrivetrainControl instance;
 	
-	protected DrivetrainControl(final double d, final double m) {
+	private DrivetrainControl(final double d, final double m) {
 		maxSpeed = m;
 		speeds = new HashMap<Integer, Double>();
 		diameter = d;
