@@ -74,7 +74,6 @@ public class AutonomousRoutine {
         commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
         commands.add(new AutoReachedDefense());
         commands.add(new AutoRamparts());
-        commands.add(new AutoCrossedDefense());
         autoAlign();
     }
     /**
