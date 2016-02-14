@@ -8,7 +8,11 @@ import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+<<<<<<< HEAD
 import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
+=======
+import org.usfirst.frc.team1885.robot.modules.Shooter;
+>>>>>>> shooterproto
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -80,6 +84,7 @@ public class Robot extends SampleRobot {
             driverInputControl.update();
             UtilityArm.getInstance().update();
             sensorInputControl.update();
+            Shooter.getInstance().update();
             Timer.delay(.005);
         }
 

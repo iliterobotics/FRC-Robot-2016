@@ -138,4 +138,10 @@ public class DriverInputControlSRX {
     public boolean isButtonDown(RobotButtonType type){
         return this.getButton(type);
     }
+    public double getShooterTilt() {
+        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kY);
+    }
+    public double getShooterTwist() {
+        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kX);
+    }
 }

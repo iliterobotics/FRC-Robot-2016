@@ -15,7 +15,6 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 
 public class RobotConfiguration {
-
     public static final double WHEEL_DIAMETER = 8.0;
     public static final int ARM_JOINT_A_PORT = 1; // 5 on real robot
     public static final int ARM_JOINT_B_PORT = 2; // 6 on real robot
@@ -29,6 +28,16 @@ public class RobotConfiguration {
                 .addJoystick(RobotJoystickType.CONTROLLER, new Joystick(2));
 
         SensorInputControlSRX.getInstance().createNavX(SerialPort.Port.kMXP);
+        
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.FLYWHEEL_IN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 5));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.FLYWHEEL_OUT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TILT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kY));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TWIST, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kX));
+        
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.FLYWHEEL_LEFT, 5);
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.FLYWHEEL_RIGHT, 6);
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.SHOOTER_TILT, 7);
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.SHOOTER_TWIST, 8);
 
         // Temp comment because we don't have the actual robot. We just have the
         // test board...

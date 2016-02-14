@@ -75,7 +75,6 @@ public class SensorInputControlSRX {
     public double getAnalogInPosition(SensorType type) {
         return rsrx.getSensor().get(type).getAnalogInPosition();
     }
-
     public double getAnalogGeneric(SensorType type) {
         return rsrx.getSensor().get(type).getAnalogInRaw();
     }
