@@ -12,11 +12,18 @@ public class Shooter implements Module {
     private static Shooter instance;
 
     private final double SHOOTER_SPEED = 1;
+    private final double TWIST_SPEED = -.6;
+    private final double TILT_SPEED = -.3;
+    private final double TILT_BRAKE = -.7;
     private double flywheelSpeedLeft;
     private MotorState leftState;
     private double flywheelSpeedRight;
     private MotorState rightState;
-    private static DriverInputControlSRX driverInputControl;
+    private double twistSpeed;
+    private MotorState twistState;
+    private double tiltSpeed;
+    private MotorState tiltState;
+    private DriverInputControlSRX driverInputControl;
 
     public static Shooter getInstance() {
         if (instance == null) {
@@ -27,8 +34,8 @@ public class Shooter implements Module {
     protected Shooter() {
         this.leftState = MotorState.OFF;
         this.rightState = MotorState.OFF;
-        flywheelSpeedLeft = 0;
-        flywheelSpeedRight = 0;
+        this.twistState = this.tiltState = MotorState.OFF;
+        flywheelSpeedLeft = flywheelSpeedRight = twistSpeed = tiltSpeed = 0;
         driverInputControl = DriverInputControlSRX.getInstance();
     }
     public MotorState getLeftMotorState() {
@@ -42,6 +49,12 @@ public class Shooter implements Module {
     }
     public double getRightSpeed() {
         return flywheelSpeedRight;
+    }
+    public MotorState getTwistState() {
+        return twistState;
+    }
+    public MotorState getTiltState() {
+        return tiltState;
     }
     public void updateShooter() {
         // TODO modify values after testing for direction
@@ -73,6 +86,44 @@ public class Shooter implements Module {
             rightState = MotorState.OFF;
         }
     }
+    public void updateTilt(){
+        tiltSpeed = TILT_BRAKE;
+        double tilt = DriverInputControlSRX.deadzone(driverInputControl.getShooterTilt());
+        if(tilt > 0){
+            tiltSpeed = TILT_SPEED + TILT_BRAKE;
+        } else if( tilt < 0 ){
+            tiltSpeed = -TILT_SPEED + TILT_BRAKE;
+        }
+        updateTilt(tiltSpeed);
+    }
+    public void updateTilt(double speed){
+        if (speed > 0) {
+            tiltState = MotorState.REVERSE;
+        } else if (speed < 0) {
+            tiltState = MotorState.FORWARD;
+        } else {
+            tiltState = MotorState.OFF;
+        }
+    }
+    public void updateTwist(){
+        twistSpeed = 0;
+        double tilt = DriverInputControlSRX.deadzone(driverInputControl.getShooterTwist());
+        if(tilt > 0){
+            twistSpeed = TWIST_SPEED;
+        } else if( tilt < 0 ){
+            twistSpeed = -TWIST_SPEED;
+        }
+        updateTwist(twistSpeed);
+    }
+    public void updateTwist(double speed){
+        if (speed > 0) {
+            twistState = MotorState.REVERSE;
+        } else if (speed < 0) {
+            twistState = MotorState.FORWARD;
+        } else {
+            twistState = MotorState.OFF;
+        }
+    }
     public void reset() {
         rightState = leftState = MotorState.OFF;
         flywheelSpeedRight = flywheelSpeedLeft = 0;
@@ -82,9 +133,9 @@ public class Shooter implements Module {
         RobotControlWithSRX.getInstance()
                 .updateFlywheelShooter(getLeftSpeed(), getRightSpeed());
         RobotControlWithSRX.getInstance()
-                .updateShooterTilt(driverInputControl.getShooterTilt());
+                .updateShooterTilt(tiltSpeed);
         RobotControlWithSRX.getInstance()
-                .updateShooterTwist(driverInputControl.getShooterTwist() * .3);
+                .updateShooterTwist(twistSpeed);
     }
     @Override
     public void update() {
