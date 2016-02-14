@@ -22,8 +22,8 @@ public class UtilityArm implements Module {
 
     private static UtilityArm instance;
 
-    private static final double LENGTH_A = 17.5;
-    private static final double LENGTH_B = 18;
+    public static final double LENGTH_A = 17.5;
+    public static final double LENGTH_B = 18;
     public static final double CONVERSION_FACTOR = 360.0 / 1024;
     private static final double MOTOR_SPEED_A = .3;
     private static final double MOTOR_SPEED_B = .6;
@@ -217,28 +217,29 @@ public class UtilityArm implements Module {
         double y2 = (y * k) / p
                 + (x / p) * Math.sqrt(LENGTH_A * LENGTH_A - k * k);
 
-        double finaly = 0;
-        double finalx = 0;
-        if (y1 < 0) {
-            finaly = y2;
-            finalx = x2;
-        } else {
-            finaly = y1;
+        double finalx;
+        double finaly;
+        
+        double AAngle1 = Math.toDegrees(Math.atan2(x1, y1));
+        double AAngle2 = Math.toDegrees(Math.atan2(x2, y2));
+        
+        if (AAngle1 < AAngle2) {
+            jointAAngle = AAngle1;
+            
             finalx = x1;
+            finaly = y1;
+        } else {
+            jointAAngle = AAngle2;
+   
+            finalx = x2;
+            finaly = y2;
         }
-
-        DriverStation.reportError("\nfinalX:" + finalx, false);
-        DriverStation.reportError("\nfinalY:" + finaly, false);
-
-        DriverStation.reportError("\ntanA:" + finalx / finaly, false);
-        DriverStation.reportError("\ntanB:" + (y - finaly) / (x - finalx),
-                false);
-
-        jointAAngle = Math.toDegrees(Math.atan2(finaly, finalx));
-
+        
         double transformedX = (x - finalx);
         double transformedY = (y - finaly);
         jointBAngle = Math.toDegrees(Math.atan2(transformedY, transformedX));
+
+
         if (jointBAngle < 0) {
             jointBAngle += 360;
         }
@@ -256,8 +257,8 @@ public class UtilityArm implements Module {
             jointBAngle = jointAAngle;
         }
 
-        DriverStation.reportError("\nJointAAngle:" + jointAAngle, false);
-        DriverStation.reportError("\nJointBAngle:" + jointBAngle, false);
+        DriverStation.reportError("\ngoing to angle a:" + jointAAngle, false);
+        DriverStation.reportError("\ngoint to angle b:" + jointBAngle, false);
 
         goingToX = x;
         goingToY = y;

@@ -6,12 +6,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoUtilityArm extends AutoCommand {
 
+    private static final double RESET_X = 0;
+    private static final double RESET_Y = Math.sin(170) * UtilityArm.LENGTH_B;
+    
     private UtilityArm uArm;
     private double xDistance, yDistance;
-    private boolean reset = false;
-
+    
     public AutoUtilityArm(boolean b) {
-        reset = b;
+        this(RESET_X,RESET_Y);
     }
 
     public AutoUtilityArm(double x, double y) {
@@ -22,12 +24,7 @@ public class AutoUtilityArm extends AutoCommand {
 
     @Override
     public boolean init() {
-        if (reset) {
-            xDistance = 0;
-            yDistance = 4;
-        } else {
-            uArm.goTo(xDistance, yDistance);
-        }
+        uArm.goTo(xDistance, yDistance);
         return true;
     }
 
