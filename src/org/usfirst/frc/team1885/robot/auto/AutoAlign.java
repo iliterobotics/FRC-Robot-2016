@@ -65,8 +65,7 @@ public class AutoAlign extends AutoCommand {
             return true;
         }
 
-        // System.out.println("AutoDriveFwd::[left speed, right speed] " +
-        // leftDriveOutput + ", " + rightDriveOutput);
+         DriverStation.reportError("Yaw::" + yaw, false);
 
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
