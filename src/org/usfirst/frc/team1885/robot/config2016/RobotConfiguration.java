@@ -16,9 +16,8 @@ import edu.wpi.first.wpilibj.SerialPort;
 /**
  * 
  * @author ILITE Robotics
- * @version 
- * This class keeps track of all joy stick mappings and sensor-to-talon mappings for the robot
- * Also keeps track of ports for motors
+ * @version This class keeps track of all joy stick mappings and sensor-to-talon
+ *          mappings for the robot Also keeps track of ports for motors
  */
 public class RobotConfiguration {
 
@@ -26,7 +25,7 @@ public class RobotConfiguration {
     public static final int ARM_JOINT_A_PORT = 1; // 5 on real robot
     public static final int ARM_JOINT_B_PORT = 2; // 6 on real robot
     public static final double MAX_SPEED = .8;
-    
+
     /**
      * Method adds all joy stick mappings and sensor-to-talon mappings
      */
@@ -42,38 +41,40 @@ public class RobotConfiguration {
 
         // Temp comment because we don't have the actual robot. We just have the
         // test board...
-         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.LEFT_DRIVE,
-         1);
-         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.RIGHT_DRIVE,
-         2);
-         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.LEFT_DRIVE,
-         3);
-         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.RIGHT_DRIVE,
-         4);
-        // TODO change to match actual input
+        RobotControlWithSRX.getInstance()
+                .addTalonOutput(RobotMotorType.LEFT_DRIVE, 1);
+        RobotControlWithSRX.getInstance()
+                .addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
+        RobotControlWithSRX.getInstance()
+                .addTalonOutput(RobotMotorType.LEFT_DRIVE, 3);
+        RobotControlWithSRX.getInstance()
+                .addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
+        RobotControlWithSRX.getInstance()
+                .addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
+                // TODO change to match actual input
 
         // RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.LEFT_DRIVE,
         // SensorType.LEFT_ENCODER, 1);
         // RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.RIGHT_DRIVE,
         // SensorType.RIGHT_ENCODER, 2);
-//        RobotControlWithSRX.getInstance().addTalonSensor(
-//                RobotMotorType.ARM_JOINT_A, SensorType.JOINT_A_POTENTIOMETER,
-//                ARM_JOINT_A_PORT);
-//        RobotControlWithSRX.getInstance().addTalonSensor(
-//                RobotMotorType.ARM_JOINT_B, SensorType.JOINT_B_POTENTIOMETER,
-//                ARM_JOINT_B_PORT);
-//
-//        JoystickButtonMap.getInstance().addControllerButton(
-//                RobotButtonType.ARM_JOINT_A_CLOCK,
-//                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
-//        JoystickButtonMap.getInstance().addControllerButton(
-//                RobotButtonType.ARM_JOINT_A_COUNTER,
-//                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
-//        JoystickButtonMap.getInstance().addControllerButton(
-//                RobotButtonType.ARM_JOINT_B_CLOCK,
-//                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
-//        JoystickButtonMap.getInstance().addControllerButton(
-//                RobotButtonType.ARM_JOINT_B_COUNTER,
-//                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
+        // RobotControlWithSRX.getInstance().addTalonSensor(
+        // RobotMotorType.ARM_JOINT_A, SensorType.JOINT_A_POTENTIOMETER,
+        // ARM_JOINT_A_PORT);
+        // RobotControlWithSRX.getInstance().addTalonSensor(
+        // RobotMotorType.ARM_JOINT_B, SensorType.JOINT_B_POTENTIOMETER,
+        // ARM_JOINT_B_PORT);
+        //
+        // JoystickButtonMap.getInstance().addControllerButton(
+        // RobotButtonType.ARM_JOINT_A_CLOCK,
+        // new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
+        // JoystickButtonMap.getInstance().addControllerButton(
+        // RobotButtonType.ARM_JOINT_A_COUNTER,
+        // new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
+        // JoystickButtonMap.getInstance().addControllerButton(
+        // RobotButtonType.ARM_JOINT_B_CLOCK,
+        // new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
+        // JoystickButtonMap.getInstance().addControllerButton(
+        // RobotButtonType.ARM_JOINT_B_COUNTER,
+        // new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
     }
 }
