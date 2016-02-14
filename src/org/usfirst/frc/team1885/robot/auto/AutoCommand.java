@@ -1,19 +1,45 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-
+/**
+ * @author ILITE Robotics
+ * @version<2/13/2016>
+ */
 public abstract class AutoCommand {
-	
-	protected boolean isInit = false;
-	
-	public abstract boolean init();
-	public abstract boolean execute();
-	public abstract boolean updateOutputs();
-	public abstract void reset();
-	
-	public boolean isInit() {
-		return isInit;
-	}
-	public void setInit(boolean isInit) {
-		this.isInit = isInit;
-	}
+
+    protected boolean isInit = false;
+
+    /**
+     * @return True.
+     */
+    public abstract boolean init();
+
+    /**
+     * Method that executes bulk of code. Primarily used in conjunction with the
+     * moving of the Drive Train and Manipulators
+     * 
+     * @return True when method determines processes to be complete. False
+     *         otherwise.
+     */
+    public abstract boolean execute();
+
+    /**
+     * Updates the global informative variables. These variables do not
+     * necessarily correlate to the actions of the Drive Train, they are
+     * primarily used as information points.
+     * 
+     * @return False.
+     */
+    public abstract boolean updateOutputs();
+
+    /**
+     * Resets any potential values that may need to be reset.
+     */
+    public abstract void reset();
+
+    public boolean isInit() {
+        return isInit;
+    }
+    public void setInit(boolean isInit) {
+        this.isInit = isInit;
+    }
 }

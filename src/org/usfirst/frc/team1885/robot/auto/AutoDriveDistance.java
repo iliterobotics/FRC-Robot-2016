@@ -5,6 +5,15 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+/**
+ * Waits until the robot has traversed a certain distance. Moving forward 1 in
+ * then backwards 1 equates to traveling 2 in. This is determined by the left
+ * wheel's encoder values and the circumference of the wheels. Generic encoder
+ * to distance math is used.
+ * 
+ * @author ILITE Robotics
+ * @version <2/13/2016>
+ */
 public class AutoDriveDistance extends AutoCommand {
     private SensorInputControlSRX sensorInputControl;
     private double distance;
@@ -15,7 +24,10 @@ public class AutoDriveDistance extends AutoCommand {
     private double leftDriveSpeed;
     private double rightDriveSpeed;
 
-    // Distance should be in inches
+    /**
+     * @param d
+     *            Traverse distance in inches
+     */
     public AutoDriveDistance(double d) {
         sensorInputControl = SensorInputControlSRX.getInstance();
         distance = d;

@@ -3,8 +3,13 @@ package org.usfirst.frc.team1885.robot.auto;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
+/**
+ * 
+ * 
+ * @author ILITE Robotics
+ * @version <2/13/2016>
+ */
 public class AutoReachedDefense extends AutoCommand {
-    // autonomous checkpoint used to check anything before we reach a defense
 
     private final double MAX_DISTANCE = 5;
 
@@ -22,6 +27,10 @@ public class AutoReachedDefense extends AutoCommand {
 
     @Override
     public boolean execute() {
+        /*
+         * Is this suppose to be getRoll()?
+         */
+
         if (sensorInputControl.getNavX()
                 .getRoll() >= AutonomousRoutine.PITCH_CHANGE_ON_RAMP) {
             return true;
