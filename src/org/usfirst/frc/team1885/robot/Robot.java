@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
@@ -82,12 +83,17 @@ public class Robot extends SampleRobot {
 		boolean magnetState = false;
 
 		while (isOperatorControl() && isEnabled()) {
-		    
+		    StringBuilder output = new StringBuilder();
 		    //New canbus code
 		    drx.update();
             sensorrx.update();
             Shooter.getInstance().update();
             Timer.delay(.005);
+            output.append("\nLeft Flywheel Velocity: " + sensorrx.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
+            output.append("\nRight Flywheel Velocity: " + sensorrx.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
+            output.append("\nTilt Potentiometer: " + sensorrx.getAnalogInRaw(SensorType.SHOOTER_TILT_POTENTIOMETER));
+            output.append("\n Twist Position: " + sensorrx.getEncoderAbsolutePosition(SensorType.SHOOTER_TWIST_ENCODER));
+            
 		}
 			
 //			System.out.println(SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER) + " " 

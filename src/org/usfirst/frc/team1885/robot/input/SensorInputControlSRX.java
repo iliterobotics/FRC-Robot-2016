@@ -2,17 +2,17 @@ package org.usfirst.frc.team1885.robot.input;
 
 import java.util.HashMap;
 
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 
 import com.kauailabs.nav6.frc.IMU;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
+import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.Timer;
 
 public class SensorInputControlSRX {
     private static SensorInputControlSRX instance = null;
@@ -63,6 +63,13 @@ public class SensorInputControlSRX {
     public double getPDPTemperature() {
         return PDP.getTemperature();
     }
+    public void addPotentiometer( RobotMotorType motorType, int port ) {
+        rsrx.addTalonSensor( motorType, SensorType.POTENTIOMETER, port );
+    }
+    public void addEncoder( RobotMotorType motorType, int port ) {
+        rsrx.addTalonSensor( motorType, SensorType.ENCODER, port );
+    }
+    
 
     public void update() {
 //        // Lidar Sensor Test
