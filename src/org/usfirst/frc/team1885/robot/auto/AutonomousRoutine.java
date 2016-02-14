@@ -23,11 +23,7 @@ public class AutonomousRoutine {
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Stage 0", false);
-        commands.add(new AutoUtilityArm(-10, 10));
-        DriverStation.reportError("Stage 1", false);
-        commands.add(new AutoWait(5000));
-        DriverStation.reportError("Stage 2", false);
-        commands.add(new AutoUtilityArm(true));
+        commands.add(new AutoPIDStop(5, 0.5, 2));
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
