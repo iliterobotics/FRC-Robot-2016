@@ -6,15 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
+import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class RobotControlWithSRX {
     public static RobotControlWithSRX instance;
     private List<CANTalon> leftDrive;
     private List<CANTalon> rightDrive;
     private Map<RobotMotorType, CANTalon> talons = new HashMap<RobotMotorType, CANTalon>();
+    private Map<RobotPneumaticType, Solenoid> singleSolenoids;
+    private Map<RobotPneumaticType, DoubleSolenoid> doubleSolenoids;
 
     public static synchronized RobotControlWithSRX getInstance() {
         if (instance == null) {
@@ -25,6 +29,8 @@ public class RobotControlWithSRX {
     protected RobotControlWithSRX() {
         leftDrive = new ArrayList<CANTalon>();
         rightDrive = new ArrayList<CANTalon>();
+        singleSolenoids = new HashMap<RobotPneumaticType, Solenoid>();
+        doubleSolenoids = new HashMap<RobotPneumaticType, DoubleSolenoid>();
     }
     public void addTalonOutput(RobotMotorType type, int port) {
         if (type == RobotMotorType.LEFT_DRIVE) {
@@ -35,6 +41,12 @@ public class RobotControlWithSRX {
         } else {
             talons.put(type, new CANTalon(port));
         }
+    }
+    public void addSingleSolenoid(RobotPneumaticType type, int port) {
+        singleSolenoids.put(type, new Solenoid(port));
+    }
+    public void addDoubleSolenoid(RobotPneumaticType type, int port1, int port2) {
+        doubleSolenoids.put(type, new DoubleSolenoid(port1, port2));
     }
     public void updateDriveSpeed(double leftspeed, double rightspeed) {
         for (CANTalon leftMotor : leftDrive) {
@@ -65,6 +77,12 @@ public class RobotControlWithSRX {
     }
     public Map<RobotMotorType, CANTalon> getTalons() {
         return this.talons;
+    }
+    public void updateSingleSolenoid(RobotPneumaticType type, boolean value) {
+        singleSolenoids.get(type).set(value);
+    }
+    public void updateDoubleSolenoid(RobotPneumaticType type, DoubleSolenoid.Value value) {
+        doubleSolenoids.get(type).set(value);
     }
     public void updateIntakeMotors(double intakeLeftSpeed,
             double intakeRightSpeed) {
