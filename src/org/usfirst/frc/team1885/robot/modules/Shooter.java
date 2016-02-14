@@ -12,9 +12,9 @@ public class Shooter implements Module {
     private static Shooter instance;
 
     private final double SHOOTER_SPEED = 1;
-    private final double TWIST_SPEED = -.6;
-    private final double TILT_SPEED = -.3;
-    private final double TILT_BRAKE = -.7;
+    private final double TWIST_SPEED = .6;
+    private final double TILT_SPEED = .3;
+    private final double TILT_BRAKE = .1;
     private double flywheelSpeedLeft;
     private MotorState leftState;
     private double flywheelSpeedRight;
@@ -88,7 +88,8 @@ public class Shooter implements Module {
     }
     public void updateTilt(){
         tiltSpeed = TILT_BRAKE;
-        double tilt = DriverInputControlSRX.deadzone(driverInputControl.getShooterTilt());
+        double tilt = driverInputControl.getShooterTilt();
+        DriverStation.reportError("\nTilt::" + tilt, false);
         if(tilt > 0){
             tiltSpeed = TILT_SPEED + TILT_BRAKE;
         } else if( tilt < 0 ){
@@ -107,10 +108,11 @@ public class Shooter implements Module {
     }
     public void updateTwist(){
         twistSpeed = 0;
-        double tilt = DriverInputControlSRX.deadzone(driverInputControl.getShooterTwist());
-        if(tilt > 0){
+        double twist = driverInputControl.getShooterTwist();
+        DriverStation.reportError("\nTwist::" + twist, false);
+        if(twist > 0){
             twistSpeed = TWIST_SPEED;
-        } else if( tilt < 0 ){
+        } else if( twist < 0 ){
             twistSpeed = -TWIST_SPEED;
         }
         updateTwist(twistSpeed);
@@ -139,6 +141,7 @@ public class Shooter implements Module {
     }
     @Override
     public void update() {
+        DriverStation.reportError("\nUpdating shooter", false);
         updateShooter();
         updateTilt();
         updateTwist();
