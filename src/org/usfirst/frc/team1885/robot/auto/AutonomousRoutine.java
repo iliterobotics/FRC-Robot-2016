@@ -22,9 +22,7 @@ public class AutonomousRoutine {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
-        commands.add(new AutoUtilityArm(true));
-        DriverStation.reportError("Stage 0", false);
-        commands.add(new AutoPIDStop(5, 0.5, 2));
+        autoDrawbridge();
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -35,7 +33,7 @@ public class AutonomousRoutine {
                 currCommand.updateOutputs();
                 if (commandState) {
                     DriverStation.reportError(
-                            "finished command " + commands.size(), false);
+                            "\nfinished command " + commands.size(), false);
                     commands.poll();
                 }
             } else {
@@ -86,7 +84,7 @@ public class AutonomousRoutine {
      */
     public void autoDrawbridge() {
         // Needs to include moving to Drawbridge
-        commands.add(new AutoUtilityArm(-8, 29.5));
+        commands.add(new AutoDrawbridge());
     }
     /**
      * Reusable method to align robot after crossing a defense
