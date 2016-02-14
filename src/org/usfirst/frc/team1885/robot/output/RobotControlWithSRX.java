@@ -56,7 +56,7 @@ public class RobotControlWithSRX {
             rightMotor.set(rightspeed);
         }
     }
-    public void updateIntakeMotors(double intakeSpeed) {
+    public void updateIntakeMotor(double intakeSpeed) {
         talons.get(RobotMotorType.ACTIVE_INTAKE).set(intakeSpeed);
     }
     public void updateShooterMotors(double shooterSpeedLeft,
@@ -73,11 +73,6 @@ public class RobotControlWithSRX {
     }
     public Map<RobotMotorType, CANTalon> getTalons() {
         return this.talons;
-    }
-    public void updateIntakeMotors(double intakeLeftSpeed,
-            double intakeRightSpeed) {
-        // TODO Auto-generated method stub
-
     }
     public void updateArmMotors(double jointASpeed, double jointBSpeed) {
 //        talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);

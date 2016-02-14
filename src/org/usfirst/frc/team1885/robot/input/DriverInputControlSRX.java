@@ -6,6 +6,7 @@ import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
+import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -17,11 +18,13 @@ public class DriverInputControlSRX {
     public static final double DEADZONE = .1;
     public static final double MIN_TORQUE_RESPONSE = 0.2;
     private double leftDriveSpeed, rightDriveSpeed;
+    private ActiveIntake intake;
 
     private DriverInputControlSRX() {
         joystickMap = new HashMap<RobotJoystickType, Joystick>();
         leftDriveSpeed = 0;
         rightDriveSpeed = 0;
+        intake = ActiveIntake.getInstance();
     }
     public static DriverInputControlSRX getInstance() {
         if (instance == null) {
@@ -115,6 +118,7 @@ public class DriverInputControlSRX {
                         .getAxis(AxisType.kY),
                 this.getJoystick(RobotJoystickType.RIGHT_DRIVE)
                         .getAxis(AxisType.kY));
+        intake.update();
     }
     public void update(double leftJoystick, double rightJoystick)
     {    
