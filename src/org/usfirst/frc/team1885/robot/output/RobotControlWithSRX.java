@@ -6,9 +6,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
+import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class RobotControlWithSRX {
     public static RobotControlWithSRX instance;
@@ -16,6 +18,7 @@ public class RobotControlWithSRX {
     private List<CANTalon> rightDrive;
     private Map<RobotMotorType, CANTalon> talons = new HashMap<RobotMotorType, CANTalon>();
     private Map<SensorType, CANTalon> sensors;
+    private Map<RobotPneumaticType, Solenoid> singleSolenoids;
 
     public static synchronized RobotControlWithSRX getInstance() {
         if (instance == null) {
@@ -26,6 +29,7 @@ public class RobotControlWithSRX {
     protected RobotControlWithSRX() {
         leftDrive = new ArrayList<CANTalon>();
         rightDrive = new ArrayList<CANTalon>();
+        singleSolenoids = new HashMap<RobotPneumaticType, Solenoid>();
     }
     public void addTalonOutput(RobotMotorType type, int port) {
         if (type == RobotMotorType.LEFT_DRIVE) {
@@ -78,7 +82,15 @@ public class RobotControlWithSRX {
 //        talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
 //        talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
     }
-
+    public void addSingleSolenoid(RobotPneumaticType type, int port) {
+        singleSolenoids.put(type, new Solenoid(port));
+    }
+    public void updateSingleSolenoid(RobotPneumaticType type, boolean value) {
+        singleSolenoids.get(type).set(value);
+    }
+    public Solenoid getSingleSolenoid(RobotPneumaticType type) {
+        return singleSolenoids.get(type);
+    }
     public Map<SensorType, CANTalon> getSensor() {
         return this.sensors;
     }
