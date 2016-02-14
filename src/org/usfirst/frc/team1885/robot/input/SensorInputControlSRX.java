@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot.input;
 
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
@@ -42,6 +43,11 @@ public class SensorInputControlSRX {
         PDP = new PowerDistributionPanel();
     }
     public void update() {
+        StringBuilder output = new StringBuilder();
+        output.append("\nLeft Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
+        output.append("\nRight Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
+        output.append("\nTilt Potentiometer: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER));
+        output.append("\n Twist Position: " + getEncoderAbsolutePosition(SensorType.SHOOTER_TWIST_ENCODER));
     }
     public double getInitPitch() {
         return INITIAL_PITCH;
@@ -86,6 +92,15 @@ public class SensorInputControlSRX {
     }
     public int getEncoderVelocity(SensorType type) {
         return rsrx.getSensor().get(type).getEncVelocity();
+    }
+    public void addPotentiometer( RobotMotorType motorType, SensorType sensorType, int port ) {
+        rsrx.addTalonSensor( motorType, sensorType, port );
+    }
+    public void addEncoder( RobotMotorType motorType, SensorType sensorType, int port ) {
+        rsrx.addTalonSensor( motorType, sensorType, port );
+    }
+    public double getEncoderAbsolutePosition(SensorType type) {
+        return rsrx.getSensor().get(type).getPulseWidthPosition();
     }
 
     public double getEncoderDistance(SensorType type) {
