@@ -1,17 +1,23 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class AutoDrawbridge extends AutoCommand {
+public class AutoDrawbridge {
 
     private final double DRAW_BRIDGE_HEIGHT = 37;
     private final double DIS_TO_ARM_Y = 9;
     private final double DIS_TO_ARM_X = 6;
     private final double ERROR_ZONE = 2;
     private final double ERROR_X = .5;
+
+    private AutoUtilityArm reachTop, grabBridge, reset;
+    private AutoWait delay;
     private double armAngle;
 
     /**
@@ -34,40 +40,20 @@ public class AutoDrawbridge extends AutoCommand {
         return disToDrawbridge;
     }
 
-    @Override
-    public boolean init() {
-        // TODO Auto-generated method stub
-        return true;
-    }
-
-    @Override
-    public boolean execute() {
+    public Collection<AutoCommand> execute() {
+        DriverStation.reportError("\nAngle: " + armAngle, false);
+        List<AutoCommand> list = new ArrayList<AutoCommand>();
         armAngle = Math.toRadians(
                 Math.abs(SensorInputControlSRX.getInstance().getRoll()));
-        AutoUtilityArm reachTop = new AutoUtilityArm(distanceX() + ERROR_X,
-                distanceY() + ERROR_ZONE);
-        AutoUtilityArm reset = new AutoUtilityArm(true);
-        DriverStation.reportError("Going to (" + distanceX() + ", "
-                + distanceY() + ") ::: Angle is "
-                + SensorInputControlSRX.getInstance().getRoll()
-                + " ::: Abs angle is " + armAngle, false);
-        if (reachTop.execute()) {
-            return true;
-        }
-
-        // TODO Auto-generated method stub
-        return false;
+        reachTop = new AutoUtilityArm(distanceX(), distanceY());
+        grabBridge = new AutoUtilityArm(distanceX(), distanceY() - 6);
+        reset = new AutoUtilityArm();
+        delay = new AutoWait(500);
+        list.add(reachTop);
+        list.add(delay);
+        list.add(grabBridge);
+        list.add(delay);
+        list.add(reset);
+        return list;
     }
-
-    @Override
-    public boolean updateOutputs() {
-        // Done for us by AutoUtilityArm class
-        return false;
-    }
-
-    @Override
-    public void reset() {
-        new AutoUtilityArm(true);
-    }
-
 }

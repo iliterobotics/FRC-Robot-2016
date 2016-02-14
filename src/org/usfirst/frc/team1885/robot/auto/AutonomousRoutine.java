@@ -32,8 +32,8 @@ public class AutonomousRoutine {
                 boolean commandState = currCommand.execute();
                 currCommand.updateOutputs();
                 if (commandState) {
-                    DriverStation.reportError(
-                            "\nfinished command " + commands.size(), false);
+                    // DriverStation.reportError(
+                    // "\nfinished command " + commands.size(), false);
                     commands.poll();
                 }
             } else {
@@ -84,7 +84,7 @@ public class AutonomousRoutine {
      */
     public void autoDrawbridge() {
         // Needs to include moving to Drawbridge
-        commands.add(new AutoDrawbridge());
+        commands.addAll(new AutoDrawbridge().execute());
     }
     /**
      * Reusable method to align robot after crossing a defense

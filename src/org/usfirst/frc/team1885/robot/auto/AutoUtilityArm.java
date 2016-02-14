@@ -12,7 +12,7 @@ public class AutoUtilityArm extends AutoCommand {
     private UtilityArm uArm;
     private double xDistance, yDistance;
 
-    public AutoUtilityArm(boolean b) {
+    public AutoUtilityArm() {
         this(RESET_X, RESET_Y);
     }
 
@@ -24,15 +24,21 @@ public class AutoUtilityArm extends AutoCommand {
 
     @Override
     public boolean init() {
-        uArm.goTo(xDistance, yDistance);
+        if (xDistance == RESET_X && yDistance == RESET_Y) {
+            uArm.resetPos();
+        } else {
+            uArm.goTo(xDistance, yDistance);
+        }
         return true;
     }
 
     @Override
     public boolean execute() {
         uArm.update();
-        DriverStation.reportError(uArm.isFinished() ? "\nFinished!" : "",
-                false);
+        // DriverStation.reportError(
+        // uArm.isFinished() ? "\nFinished!" : "\nNot Finished...", false);
+        // DriverStation.reportError(
+        //       " moving to (" + xDistance + ", " + yDistance + ")", false);
         return uArm.isFinished();
     }
 
