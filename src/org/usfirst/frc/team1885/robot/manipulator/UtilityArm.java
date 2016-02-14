@@ -77,8 +77,6 @@ public class UtilityArm implements Module {
             jointBAngle = 170;
         }
         updateOutputs();
-        DriverStation.reportError("\n\nX Distance = " + getDistanceX(), false);
-        DriverStation.reportError("\nY Distance = " + getDistanceY(), false);
     }
 
     public void resetPos() {
@@ -111,6 +109,9 @@ public class UtilityArm implements Module {
         } else {
             jointBSpeed = 0;
         }
+
+        DriverStation.reportError("\nJointAAngle: " + jointAAngle
+                + " ::: JointBAngle: " + jointBAngle, false);
         RobotControlWithSRX.getInstance().updateArmMotors(jointASpeed,
                 jointBSpeed);
     }
@@ -219,26 +220,25 @@ public class UtilityArm implements Module {
 
         double finalx;
         double finaly;
-        
+
         double AAngle1 = Math.toDegrees(Math.atan2(x1, y1));
         double AAngle2 = Math.toDegrees(Math.atan2(x2, y2));
-        
+
         if (AAngle1 < AAngle2) {
             jointAAngle = AAngle1;
-            
+
             finalx = x1;
             finaly = y1;
         } else {
             jointAAngle = AAngle2;
-   
+
             finalx = x2;
             finaly = y2;
         }
-        
+
         double transformedX = (x - finalx);
         double transformedY = (y - finaly);
         jointBAngle = Math.toDegrees(Math.atan2(transformedY, transformedX));
-
 
         if (jointBAngle < 0) {
             jointBAngle += 360;

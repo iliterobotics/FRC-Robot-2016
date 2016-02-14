@@ -22,8 +22,11 @@ public class AutonomousRoutine {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
-        commands.add(new AutoUtilityArm(-4, 27.5));
+        DriverStation.reportError("Stage 0", false);
+        commands.add(new AutoUtilityArm(-10, 10));
+        DriverStation.reportError("Stage 1", false);
         commands.add(new AutoWait(5000));
+        DriverStation.reportError("Stage 2", false);
         commands.add(new AutoUtilityArm(true));
     }
     public void execute() {

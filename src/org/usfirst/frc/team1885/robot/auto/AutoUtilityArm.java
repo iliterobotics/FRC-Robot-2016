@@ -8,12 +8,12 @@ public class AutoUtilityArm extends AutoCommand {
 
     private static final double RESET_X = 0;
     private static final double RESET_Y = Math.sin(170) * UtilityArm.LENGTH_B;
-    
+
     private UtilityArm uArm;
     private double xDistance, yDistance;
-    
+
     public AutoUtilityArm(boolean b) {
-        this(RESET_X,RESET_Y);
+        this(RESET_X, RESET_Y);
     }
 
     public AutoUtilityArm(double x, double y) {
@@ -30,8 +30,8 @@ public class AutoUtilityArm extends AutoCommand {
 
     @Override
     public boolean execute() {
-        DriverStation.reportError("WOO", false);
-        uArm.goTo(xDistance, yDistance);
+        DriverStation.reportError("\nGoing to (" + xDistance + ", " + yDistance,
+                false);
         uArm.update();
         return uArm.isFinished();
     }
