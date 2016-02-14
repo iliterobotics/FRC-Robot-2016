@@ -4,4 +4,6 @@ public enum RobotMotorType {
 	LEFT_DRIVE,
 	RIGHT_DRIVE,
 	ACTIVE_INTAKE,
+	SHOOTER_LEFT,
+	SHOOTER_RIGHT,
 }
