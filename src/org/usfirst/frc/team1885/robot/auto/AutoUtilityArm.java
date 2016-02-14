@@ -12,7 +12,7 @@ public class AutoUtilityArm extends AutoCommand {
         reset = b;
     }
 
-    public AutoUtilityArm(int x, int y) {
+    public AutoUtilityArm(double x, double y) {
         uArm = UtilityArm.getInstance();
         xDistance = x;
         yDistance = y;

@@ -22,7 +22,9 @@ public class AutonomousRoutine {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
-        autoDrawbridge();
+        commands.add(new AutoUtilityArm(-4, 54.5));
+        commands.add(new AutoWait(5000));
+        commands.add(new AutoUtilityArm(true));
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
