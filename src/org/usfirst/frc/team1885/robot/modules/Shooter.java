@@ -11,7 +11,7 @@ public class Shooter implements Module {
 
     private static Shooter instance;
 
-    private final double SHOOTER_SPEED = .4;
+    private final double SHOOTER_SPEED = 1;
     private double flywheelSpeedLeft;
     private MotorState leftState;
     private double flywheelSpeedRight;
@@ -49,8 +49,8 @@ public class Shooter implements Module {
             flywheelSpeedLeft = -SHOOTER_SPEED;
             flywheelSpeedRight = SHOOTER_SPEED;
         } else if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_IN)) {
-            flywheelSpeedLeft = SHOOTER_SPEED;
-            flywheelSpeedRight = -SHOOTER_SPEED;
+            flywheelSpeedLeft = SHOOTER_SPEED * .5;
+            flywheelSpeedRight = -SHOOTER_SPEED * .5;
         } else {
             flywheelSpeedLeft = 0;
             flywheelSpeedRight = 0;
@@ -82,7 +82,7 @@ public class Shooter implements Module {
         RobotControlWithSRX.getInstance()
                 .updateFlywheelShooter(getLeftSpeed(), getRightSpeed());
         RobotControlWithSRX.getInstance()
-                .updateShooterTilt(driverInputControl.getShooterTilt() * .3);
+                .updateShooterTilt(driverInputControl.getShooterTilt());
         RobotControlWithSRX.getInstance()
                 .updateShooterTwist(driverInputControl.getShooterTwist() * .3);
     }

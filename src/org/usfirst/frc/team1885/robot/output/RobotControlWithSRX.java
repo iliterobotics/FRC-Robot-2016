@@ -50,10 +50,20 @@ public class RobotControlWithSRX
 		}
 	}
 	public void updateShooterTilt(double tiltSpeed) {
-	    talons.get(RobotMotorType.SHOOTER_TILT).set(tiltSpeed);
+	    if (tiltSpeed < .1) {
+	        tiltSpeed = -tiltSpeed;
+	        talons.get(RobotMotorType.SHOOTER_TILT).set(tiltSpeed);
+	    }
+	    else if (tiltSpeed > .1) {
+	        tiltSpeed = -tiltSpeed;
+	        talons.get(RobotMotorType.SHOOTER_TILT).set(tiltSpeed * .3);
+	    }
+	    else {
+	        talons.get(RobotMotorType.SHOOTER_TILT).set(-.7);
+	    }
     }
 	public void updateShooterTwist(double twistSpeed) {
-        talons.get(RobotMotorType.SHOOTER_TWIST).set(twistSpeed);
+        talons.get(RobotMotorType.SHOOTER_TWIST).set(-twistSpeed);
     }
     public void updateFlywheelShooter(double flywheelSpeedLeft,
             double flywheelSpeedRight) {
