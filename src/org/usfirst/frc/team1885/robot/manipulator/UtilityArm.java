@@ -71,8 +71,7 @@ public class UtilityArm implements Module {
     public void update() {
         // changeValues();
         if (driverInputControl.isResetButtonDown()) {
-            jointAAngle = 0;
-            jointBAngle = 170;
+            resetPos();
         }
         if (driverInputControl.isButtonDown(RobotButtonType.INCREMENT_ARM_UP)) {
             goTo(-20, 10);

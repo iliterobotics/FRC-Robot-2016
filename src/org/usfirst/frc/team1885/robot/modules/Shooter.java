@@ -12,10 +12,10 @@ public class Shooter implements Module {
 
     private static Shooter instance;
 
-    private final double SHOOTER_SPEED = 1;
+    private final double SHOOTER_SPEED = .8;
     private final double TWIST_SPEED = .6;
     private final double TILT_SPEED = .3;
-    private final double TILT_BRAKE = .1;
+    private final double TILT_BRAKE = 0;
     private double flywheelSpeedLeft;
     private MotorState leftState;
     private double flywheelSpeedRight;
@@ -91,8 +91,7 @@ public class Shooter implements Module {
     }
     public void updateTilt(){
         tiltSpeed = TILT_BRAKE;
-        double tilt = driverInputControl.getShooterTilt();
-        DriverStation.reportError("\nTilt::" + tilt, false);
+        int tilt = driverInputControl.getShooterTilt();
         if(tilt > 0){
             tiltSpeed = TILT_SPEED + TILT_BRAKE;
         } else if( tilt < 0 ){
@@ -111,8 +110,7 @@ public class Shooter implements Module {
     }
     public void updateTwist(){
         twistSpeed = 0;
-        double twist = driverInputControl.getShooterTwist();
-        DriverStation.reportError("\nTwist::" + twist, false);
+        int twist = driverInputControl.getShooterTwist();
         if(twist > 0){
             twistSpeed = TWIST_SPEED;
         } else if( twist < 0 ){
@@ -158,14 +156,13 @@ public class Shooter implements Module {
                 .updateShooterTilt(tiltSpeed);
         RobotControlWithSRX.getInstance()
                 .updateShooterTwist(twistSpeed);
-        RobotControlWithSRX.getInstance()
-                .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, containerState);
-        RobotControlWithSRX.getInstance()
-                .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER, kickerState);
+//        RobotControlWithSRX.getInstance()
+//                .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, containerState);
+//        RobotControlWithSRX.getInstance()
+//                .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER, kickerState);
     }
     @Override
     public void update() {
-        DriverStation.reportError("\nUpdating shooter", false);
         updateShooter();
         updateTilt();
         updateTwist();
