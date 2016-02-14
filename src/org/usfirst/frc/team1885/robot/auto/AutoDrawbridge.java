@@ -14,10 +14,9 @@ public class AutoDrawbridge {
     private final double DIS_TO_ARM_Y = 9;
     private final double DIS_TO_ARM_X = 6;
     private final double ERROR_ZONE = 2;
-    private final double ERROR_X = .5;
+    private final double CLAMP_DIS = .5;
 
     private AutoUtilityArm reachTop, grabBridge, reset;
-    private AutoWait delay;
     private double armAngle;
 
     /**
@@ -41,18 +40,22 @@ public class AutoDrawbridge {
     }
 
     public Collection<AutoCommand> execute() {
-        DriverStation.reportError("\nAngle: " + armAngle, false);
         List<AutoCommand> list = new ArrayList<AutoCommand>();
-        armAngle = Math.toRadians(
-                Math.abs(SensorInputControlSRX.getInstance().getRoll()));
-        reachTop = new AutoUtilityArm(distanceX(), distanceY());
-        grabBridge = new AutoUtilityArm(distanceX(), distanceY() - 6);
+        DriverStation.reportError(
+                "Gyro values: " + SensorInputControlSRX.getInstance().getRoll(),
+                false);
+        armAngle = Math
+                .toRadians(SensorInputControlSRX.getInstance().getRoll());
+        DriverStation.reportError("\nAngle: " + armAngle, false);
+        reachTop = new AutoUtilityArm(-(distanceX() + ERROR_ZONE),
+                distanceY() + ERROR_ZONE);
+        grabBridge = new AutoUtilityArm(-(distanceX()+ ERROR_ZONE),
+                distanceY() - CLAMP_DIS);
         reset = new AutoUtilityArm();
-        delay = new AutoWait(500);
         list.add(reachTop);
-        list.add(delay);
+        list.add(new AutoWait(2000));
         list.add(grabBridge);
-        list.add(delay);
+        list.add(new AutoWait(2000));
         list.add(reset);
         return list;
     }

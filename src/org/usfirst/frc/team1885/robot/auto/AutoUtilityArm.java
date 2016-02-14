@@ -37,8 +37,8 @@ public class AutoUtilityArm extends AutoCommand {
         uArm.update();
         // DriverStation.reportError(
         // uArm.isFinished() ? "\nFinished!" : "\nNot Finished...", false);
-        // DriverStation.reportError(
-        //       " moving to (" + xDistance + ", " + yDistance + ")", false);
+        DriverStation.reportError(
+                " moving to (" + xDistance + ", " + yDistance + ")", false);
         return uArm.isFinished();
     }
 
