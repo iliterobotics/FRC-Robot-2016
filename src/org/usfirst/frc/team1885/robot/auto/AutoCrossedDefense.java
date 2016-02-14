@@ -63,6 +63,7 @@ public class AutoCrossedDefense extends AutoCommand {
                         .setLeftDriveSpeed(leftDriveSpeed);
                 DrivetrainControl.getInstance()
                         .setRightDriveSpeed(rightDriveSpeed);
+                return true;
             }
         } else {
             startTime = System.currentTimeMillis();
