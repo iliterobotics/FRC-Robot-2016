@@ -5,6 +5,8 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class AutoAlign extends AutoCommand {
 
     private final double P = 0.6;
@@ -65,7 +67,7 @@ public class AutoAlign extends AutoCommand {
             return true;
         }
 
-         DriverStation.reportError("Yaw::" + yaw, false);
+        DriverStation.reportError("Yaw::" + yaw, false);
 
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
