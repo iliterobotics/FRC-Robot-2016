@@ -37,6 +37,9 @@ public class UtilityArm implements Module {
     private double jointBAngle; // storage for updating the B angle
     private double xDirection; // what direction the system needs to move in
     private double yDirection; // what direction the system needs to move in
+    
+    private double goingToX;
+    private double goingToY;
 
     @SuppressWarnings("unused")
     private MotorState jointAState;
@@ -72,7 +75,7 @@ public class UtilityArm implements Module {
             jointBAngle = 170;
         }
         if(driverInputControl.isButtonDown(RobotButtonType.INCREMENT_ARM_UP)){
-            goTo(-10, 10);
+            goTo(-20, 10);
         }
 //        DriverStation.reportError("desired A angle:" + jointAAngle + "\n",
 //                false);
@@ -185,6 +188,12 @@ public class UtilityArm implements Module {
      * @param y the y coordinate of the new end-point
      */
     public void goTo(double x, double y){
+        
+        if(x > LENGTH_A - 2 && y < LENGTH_B - 2 ){
+            x = LENGTH_A - 2;
+            y = LENGTH_B - 2;
+        }
+        
         double p = Math.sqrt((x*x)+(y*y));
         double k = ((p*p) + LENGTH_A*LENGTH_A - LENGTH_B*LENGTH_B)/(2*p);
         
@@ -217,16 +226,29 @@ public class UtilityArm implements Module {
         double transformedX = (x - finalx);
         double transformedY = (y - finaly);
         jointBAngle = Math.toDegrees(Math.atan2(transformedY,transformedX));
-        if(transformedX < 0){
-            jointBAngle += 180;
-        }
-        else if(transformedY < 0){
+        if(jointBAngle < 0){
             jointBAngle += 360;
         }
-        jointBAngle += 180;
+        
+        if(jointAAngle < 0){
+            jointAAngle = 0;
+        }
+        if(jointAAngle > 180){
+            jointAAngle = 180;
+        }
+        if(jointBAngle > (180 + jointAAngle) - 10){
+            jointBAngle = (180 + jointAAngle) - 10;
+        }
+        if(jointBAngle < jointAAngle){
+            jointBAngle = jointAAngle;
+        }
         
         DriverStation.reportError("\nJointAAngle:" + jointAAngle, false);
         DriverStation.reportError("\nJointBAngle:" + jointBAngle, false);
+        
+        
+        goingToX = x;
+        goingToY = y;
         
     }
 
