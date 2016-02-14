@@ -80,8 +80,8 @@ public class RobotControlWithSRX {
 
     }
     public void updateArmMotors(double jointASpeed, double jointBSpeed) {
-        talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
-        talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
+//        talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
+//        talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
     }
 
     public Map<SensorType, CANTalon> getSensor() {

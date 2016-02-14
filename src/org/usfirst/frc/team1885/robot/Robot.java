@@ -78,7 +78,7 @@ public class Robot extends SampleRobot {
 
             // New canbus code
             drx.update();
-            AuxArm.getInstance().update();
+            //AuxArm.getInstance().update();
             sensorrx.update();
             Timer.delay(.005);
         }
