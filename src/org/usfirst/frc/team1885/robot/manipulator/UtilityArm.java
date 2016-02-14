@@ -23,7 +23,7 @@ public class UtilityArm implements Module {
     private static UtilityArm instance;
 
     private static final double LENGTH_A = 17.5;
-    private static final double LENGTH_B = 19.5;
+    private static final double LENGTH_B = 18;
     public static final double CONVERSION_FACTOR = 360.0 / 1024;
     private static final double MOTOR_SPEED_A = .3;
     private static final double MOTOR_SPEED_B = .6;
@@ -66,10 +66,13 @@ public class UtilityArm implements Module {
 
     @Override
     public void update() {
-        changeValues();
+        //changeValues();
         if (driverInputControl.isResetButtonDown()) {
             jointAAngle = 0;
             jointBAngle = 170;
+        }
+        if(driverInputControl.isButtonDown(RobotButtonType.INCREMENT_ARM_UP)){
+            goTo(-10, 10);
         }
 //        DriverStation.reportError("desired A angle:" + jointAAngle + "\n",
 //                false);
@@ -79,8 +82,9 @@ public class UtilityArm implements Module {
 //                false);
 //        DriverStation.reportError("current B angle:" + getAngleB() + "\n",
 //                false);
-
         updateOutputs();
+        DriverStation.reportError("\n\nX Distance = " + getDistanceX(), false);
+        DriverStation.reportError("\nY Distance = " + getDistanceY(), false);
     }
 
     @Override
@@ -174,6 +178,56 @@ public class UtilityArm implements Module {
         } else {
             return yDirection = 0.0;
         }
+    }
+    /**
+     * A simple down to earth equation for calculating the angles required to acieve a point
+     * @param x the x coordinate of the new end-point
+     * @param y the y coordinate of the new end-point
+     */
+    public void goTo(double x, double y){
+        double p = Math.sqrt((x*x)+(y*y));
+        double k = ((p*p) + LENGTH_A*LENGTH_A - LENGTH_B*LENGTH_B)/(2*p);
+        
+        double x1 = (x*k)/p + (y/p)*Math.sqrt(LENGTH_A * LENGTH_A - k*k);
+        double y1 = (y*k)/p - (x/p)*Math.sqrt(LENGTH_A * LENGTH_A - k*k);
+
+        double x2 = (x*k)/p - (y/p)*Math.sqrt(LENGTH_A * LENGTH_A - k*k);
+        double y2 = (y*k)/p + (x/p)*Math.sqrt(LENGTH_A * LENGTH_A - k*k);
+        
+        double finaly = 0;
+        double finalx = 0;
+        if(y1 < 0){
+            finaly = y2;
+            finalx = x2;
+        }else{
+            finaly = y1;
+            finalx = x1;
+        }
+        
+        DriverStation.reportError("\nfinalX:" + finalx, false);
+        DriverStation.reportError("\nfinalY:" + finaly, false); 
+        
+        DriverStation.reportError("\ntanA:" + finalx/finaly, false);
+        DriverStation.reportError("\ntanB:" + (y - finaly)/(x - finalx), false); 
+        
+        
+        jointAAngle = Math.toDegrees(Math.atan2(finaly, finalx));
+        
+        
+        double transformedX = (x - finalx);
+        double transformedY = (y - finaly);
+        jointBAngle = Math.toDegrees(Math.atan2(transformedY,transformedX));
+        if(transformedX < 0){
+            jointBAngle += 180;
+        }
+        else if(transformedY < 0){
+            jointBAngle += 360;
+        }
+        jointBAngle += 180;
+        
+        DriverStation.reportError("\nJointAAngle:" + jointAAngle, false);
+        DriverStation.reportError("\nJointBAngle:" + jointBAngle, false);
+        
     }
 
     /*
