@@ -140,6 +140,8 @@ public class Shooter implements Module {
     @Override
     public void update() {
         updateShooter();
+        updateTilt();
+        updateTwist();
         updateOutputs();
     }
 
