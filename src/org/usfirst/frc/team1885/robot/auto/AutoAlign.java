@@ -5,8 +5,6 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.DriverStation;
-
 public class AutoAlign extends AutoCommand {
 
     private final double P = 0.6;
@@ -28,14 +26,14 @@ public class AutoAlign extends AutoCommand {
         rightDriveSpeed = leftDriveSpeed = 0;
         sensorInputControl = SensorInputControlSRX.getInstance();
         initial_yaw = sensorInputControl.getYaw();
-        pid = new PID(.35, .002, 0); //Not final values
+        pid = new PID(.35, .002, 0); // Not final values
         return true;
     }
 
     @Override
     public boolean execute() {
         double yaw = sensorInputControl.getYaw();
-        
+
         leftDriveSpeed = pid.getPID(0, initial_yaw - yaw);
 
         if (leftDriveSpeed > 0) {
@@ -70,16 +68,16 @@ public class AutoAlign extends AutoCommand {
         // System.out.println("AutoDriveFwd::[left speed, right speed] " +
         // leftDriveOutput + ", " + rightDriveOutput);
 
-         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
-         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
+        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
+        DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
 
         return false;
     }
 
     @Override
     public boolean updateOutputs() {
-         RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
-         rightDriveSpeed);
+        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
+                rightDriveSpeed);
         return false;
     }
 

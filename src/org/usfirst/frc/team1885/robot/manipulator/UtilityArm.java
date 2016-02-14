@@ -37,11 +37,9 @@ public class UtilityArm implements Module {
     private double jointBAngle; // storage for updating the B angle
     private double xDirection; // what direction the system needs to move in
     private double yDirection; // what direction the system needs to move in
+
     private double goingToX;
     private double goingToY;
-
-    private double xPosition; // Negative is extend forward
-    private double yPosition; // Positive is extend forward
 
     @SuppressWarnings("unused")
     private MotorState jointAState;
@@ -76,21 +74,21 @@ public class UtilityArm implements Module {
             jointAAngle = 0;
             jointBAngle = 170;
         }
+        if (driverInputControl.isButtonDown(RobotButtonType.INCREMENT_ARM_UP)) {
+            goTo(-20, 10);
+        }
+        // DriverStation.reportError("desired A angle:" + jointAAngle + "\n",
+        // false);
+        // DriverStation.reportError("desired B angle:" + jointBAngle + "\n",
+        // false);
+        // DriverStation.reportError("current A angle:" + getAngleA() + "\n",
+        // false);
+        // DriverStation.reportError("current B angle:" + getAngleB() + "\n",
+        // false);
         updateOutputs();
-    }
-
-    public void resetPos() {
-        jointAAngle = 0;
-        jointBAngle = 170;
-    }
-
-    public boolean isFinished() {
-        boolean isJointAFinished = jointAAngle - getAngleA() > DEGREE_MARGIN_E
-                && jointAAngle - getAngleA() < -DEGREE_MARGIN_E;
-        boolean isJointBFinished = jointBAngle - getAngleB() > DEGREE_MARGIN_E
-                && jointBAngle - getAngleB() < -DEGREE_MARGIN_E;
-
-        return isJointAFinished && isJointBFinished;
+        // DriverStation.reportError("\n\nX Distance = " + getDistanceX(),
+        // false);
+        // DriverStation.reportError("\nY Distance = " + getDistanceY(), false);
     }
 
     @Override
@@ -109,14 +107,11 @@ public class UtilityArm implements Module {
         } else {
             jointBSpeed = 0;
         }
-
-        DriverStation.reportError("\nJointAAngle: " + jointAAngle
-                + " ::: JointBAngle: " + jointBAngle, false);
         RobotControlWithSRX.getInstance().updateArmMotors(jointASpeed,
                 jointBSpeed);
     }
 
-    /**
+    /*
      * Gets x position for the end-point of the utility arm with respect to the
      * base joint in inches
      */
@@ -126,7 +121,7 @@ public class UtilityArm implements Module {
         return distanceA + distanceB;
     }
 
-    /**
+    /*
      * Gets y position for the end-point of the utility arm with respect to the
      * base joint in inches
      */
@@ -136,7 +131,7 @@ public class UtilityArm implements Module {
         return distanceA + distanceB;
     }
 
-    /**
+    /*
      * Gets angle in degrees for the bottom joint going clockwise from 0
      */
     public double getAngleA() {
@@ -147,7 +142,7 @@ public class UtilityArm implements Module {
         return zeroedA;
     }
 
-    /**
+    /*
      * Gets angle in degrees for the top joint going clockwise from 0
      */
     public double getAngleB() {
@@ -159,7 +154,7 @@ public class UtilityArm implements Module {
         return angleB;
     }
 
-    /**
+    /*
      * Finds the conversion from the joystick throttle value to x movement in
      * inches
      */
@@ -174,7 +169,7 @@ public class UtilityArm implements Module {
         }
     }
 
-    /**
+    /*
      * Finds the conversion from the joystick twist value to y movement in
      * inches
      */
@@ -218,28 +213,28 @@ public class UtilityArm implements Module {
         double y2 = (y * k) / p
                 + (x / p) * Math.sqrt(LENGTH_A * LENGTH_A - k * k);
 
-        double finalx;
-        double finaly;
-
-        double AAngle1 = Math.toDegrees(Math.atan2(x1, y1));
-        double AAngle2 = Math.toDegrees(Math.atan2(x2, y2));
-
-        if (AAngle1 < AAngle2) {
-            jointAAngle = AAngle1;
-
-            finalx = x1;
-            finaly = y1;
-        } else {
-            jointAAngle = AAngle2;
-
-            finalx = x2;
+        double finaly = 0;
+        double finalx = 0;
+        if (y1 < 0) {
             finaly = y2;
+            finalx = x2;
+        } else {
+            finaly = y1;
+            finalx = x1;
         }
+
+        // DriverStation.reportError("\nfinalX:" + finalx, false);
+        // DriverStation.reportError("\nfinalY:" + finaly, false);
+        //
+        // DriverStation.reportError("\ntanA:" + finalx / finaly, false);
+        // DriverStation.reportError("\ntanB:" + (y - finaly) / (x - finalx),
+        // false);
+
+        jointAAngle = Math.toDegrees(Math.atan2(finaly, finalx));
 
         double transformedX = (x - finalx);
         double transformedY = (y - finaly);
         jointBAngle = Math.toDegrees(Math.atan2(transformedY, transformedX));
-
         if (jointBAngle < 0) {
             jointBAngle += 360;
         }
@@ -257,14 +252,15 @@ public class UtilityArm implements Module {
             jointBAngle = jointAAngle;
         }
 
-        DriverStation.reportError("\ngoing to angle a:" + jointAAngle, false);
-        DriverStation.reportError("\ngoint to angle b:" + jointBAngle, false);
+        // DriverStation.reportError("\nJointAAngle:" + jointAAngle, false);
+        // DriverStation.reportError("\nJointBAngle:" + jointBAngle, false);
 
         goingToX = x;
         goingToY = y;
+
     }
 
-    /**
+    /*
      * Takes the change in x and y movement and converts them to angular change
      */
     public void changeValues() {
@@ -299,6 +295,8 @@ public class UtilityArm implements Module {
                 double cosX = Math.cos(Math.toRadians(origA))
                         - (Math.cos(Math.toRadians(jointBAngle))
                                 - Math.cos(Math.toRadians(origB)));
+                // DriverStation.reportError("cos: " + cosX + "\n", false);
+                // DriverStation.reportError("sin: " + sinY + "\n", false);
                 if (cosX >= -1 && cosX <= 1) {
                     // TODO set cosx to the limit that it is passing
                     jointAAngle = Math.toDegrees(Math.acos(cosX));
@@ -325,19 +323,18 @@ public class UtilityArm implements Module {
         if (jointBAngle < jointAAngle) {
             jointBAngle = jointAAngle;
         }
+    }
+    public boolean isFinished() {
+        boolean isJointAFinished = jointAAngle - getAngleA() < DEGREE_MARGIN_E
+                && jointAAngle - getAngleA() > -DEGREE_MARGIN_E;
+        boolean isJointBFinished = jointBAngle - getAngleB() < DEGREE_MARGIN_E
+                && jointBAngle - getAngleB() > -DEGREE_MARGIN_E;
 
+        return isJointAFinished && isJointBFinished;
+    }
+    public void resetPos() {
+        jointAAngle = 0;
+        jointBAngle = 170;
     }
 
-    public double getJointASpeed() {
-        return jointASpeed;
-    }
-    public double getJointBSpeed() {
-        return jointBSpeed;
-    }
-
-    public void updateArm(double jointAAngle, double jointBAngle) {
-        this.jointAAngle = jointAAngle;
-        this.jointBAngle = jointBAngle;
-        update();
-    }
 }

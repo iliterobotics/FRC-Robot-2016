@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class AutoUtilityArm extends AutoCommand {
 
     private static final double RESET_X = 0;
-    private static final double RESET_Y = Math.sin(170) * UtilityArm.LENGTH_B;
+    private static final double RESET_Y = .1;
 
     private UtilityArm uArm;
     private double xDistance, yDistance;
@@ -30,9 +30,9 @@ public class AutoUtilityArm extends AutoCommand {
 
     @Override
     public boolean execute() {
-        DriverStation.reportError("\nGoing to (" + xDistance + ", " + yDistance,
-                false);
         uArm.update();
+        DriverStation.reportError(uArm.isFinished() ? "\nFinished!" : "",
+                false);
         return uArm.isFinished();
     }
 

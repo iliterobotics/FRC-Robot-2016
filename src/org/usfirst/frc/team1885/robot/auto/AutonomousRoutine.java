@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine {
-    public static final double PITCH_CHANGE_ON_RAMP = 4.5;
+    public static final double PITCH_CHANGE_ON_RAMP = 4.5; // NavX is sideways
     public static final double RAMPART_SPEED_MAX = 0.6;
     public static final double RAMPART_SPEED_MIN = 0.5;
     public static final double START_DRIVE_SPEED = 0.5;
@@ -22,11 +22,6 @@ public class AutonomousRoutine {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
-        DriverStation.reportError("Stage 0", false);
-        commands.add(new AutoUtilityArm(-10, 10));
-        DriverStation.reportError("Stage 1", false);
-        commands.add(new AutoWait(5000));
-        DriverStation.reportError("Stage 2", false);
         commands.add(new AutoUtilityArm(true));
     }
     public void execute() {
@@ -88,10 +83,8 @@ public class AutonomousRoutine {
      * Controls process for lowering and crossing the drawbridge
      */
     public void autoDrawbridge() {
-        commands.add(new AutoArm(90, 95));
-        commands.add(new AutoWait(3000));
-
-        commands.add(new AutoArm(0, 170));// Resets the arm to default position
+        // Needs to include moving to Drawbridge
+        commands.add(new AutoUtilityArm(-8, 29.5));
     }
     /**
      * Reusable method to align robot after crossing a defense
