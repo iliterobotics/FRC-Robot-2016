@@ -8,33 +8,30 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
-public class AutonomousRoutine
-{
+public class AutonomousRoutine {
     private Robot robot;
     private LinkedList<AutoCommand> commands;
     private static final double delay = 0.05;
-    public AutonomousRoutine(Robot r)
-    {
+
+    public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
         robot = r;
+        commands.add(new AutoUtilityArm(-10, 10));
+
     }
-    public void execute()
-    {
-        while(!commands.isEmpty() && robot.isEnabled() && robot.isAutonomous())
-        {
+    public void execute() {
+        while (!commands.isEmpty() && robot.isEnabled()
+                && robot.isAutonomous()) {
             AutoCommand currCommand = commands.peek();
-            if(currCommand.isInit())
-            {
+            if (currCommand.isInit()) {
                 boolean commandState = currCommand.execute();
                 currCommand.updateOutputs();
-                if(commandState)
-                {
-                    DriverStation.reportError("finished command " + commands.size(), false);
+                if (commandState) {
+                    DriverStation.reportError(
+                            "finished command " + commands.size(), false);
                     commands.poll();
                 }
-            }
-            else
-            {
+            } else {
                 currCommand.setInit(currCommand.init());
             }
             Timer.delay(delay);
