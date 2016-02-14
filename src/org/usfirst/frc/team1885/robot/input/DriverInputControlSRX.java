@@ -124,4 +124,10 @@ public class DriverInputControlSRX {
         RobotControlWithSRX.getInstance().updateDriveSpeed(rightDriveSpeed,
                 leftDriveSpeed);
     }
+    public double getShooterTilt() {
+        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kY);
+    }
+    public double getShooterTwist() {
+        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kX);
+    }
 }

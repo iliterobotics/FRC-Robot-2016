@@ -48,13 +48,16 @@ public class RobotControlWithSRX
 			rightMotor.set(rightspeed);
 		}
 	}
-	public void updateIntakeMotors(double intakeSpeed) {
-	    talons.get(RobotMotorType.ACTIVE_INTAKE).set(intakeSpeed);
+	public void updateShooterTilt(double tiltSpeed) {
+	    talons.get(RobotMotorType.SHOOTER_TILT).set(tiltSpeed);
     }
-    public void updateShooterMotors(double shooterSpeedLeft,
-            double shooterSpeedRight) {
-            talons.get(RobotMotorType.SHOOTER_LEFT).set(shooterSpeedLeft);
-            talons.get(RobotMotorType.SHOOTER_RIGHT).set(shooterSpeedRight);
+	public void updateShooterTwist(double twistSpeed) {
+        talons.get(RobotMotorType.SHOOTER_TWIST).set(twistSpeed);
+    }
+    public void updateFlywheelShooter(double flywheelSpeedLeft,
+            double flywheelSpeedRight) {
+            talons.get(RobotMotorType.FLYWHEEL_LEFT).set(flywheelSpeedLeft);
+            talons.get(RobotMotorType.FLYWHEEL_RIGHT).set(flywheelSpeedRight);
     }
     
 	public List<CANTalon> getLeftDrive()

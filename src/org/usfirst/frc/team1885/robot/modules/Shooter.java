@@ -9,11 +9,12 @@ public class Shooter implements Module {
 
     private static Shooter instance;
     
-    private final int SHOOTER_SPEED = 1;
-    private double shooterSpeedLeft;
+    private final double SHOOTER_SPEED = .2;
+    private double flywheelSpeedLeft;
     private MotorState leftState;
-    private double shooterSpeedRight;
+    private double flywheelSpeedRight;
     private MotorState rightState;
+    private static DriverInputControlSRX driverInputControl;
     
     public static Shooter getInstance(){
         if( instance == null ){
@@ -24,13 +25,9 @@ public class Shooter implements Module {
     protected Shooter() {
         this.leftState = MotorState.OFF;
         this.rightState = MotorState.OFF;
-        shooterSpeedLeft = 0;
-        shooterSpeedRight = 0;
-    }
-    
-    public void setMotorState(MotorState leftMotorState, MotorState rightMotorState) {
-        this.leftState = leftMotorState;
-        this.rightState = rightMotorState;
+        flywheelSpeedLeft = 0;
+        flywheelSpeedRight = 0;
+        driverInputControl = DriverInputControlSRX.getInstance();
     }
     public MotorState getLeftMotorState() {
         return leftState;
@@ -39,27 +36,30 @@ public class Shooter implements Module {
         return rightState;
     }
     public double getLeftSpeed(){
-        return shooterSpeedLeft;
+        return flywheelSpeedLeft;
     }
     public double getRightSpeed(){
-        return shooterSpeedRight;
+        return flywheelSpeedRight;
     }
     public void updateShooter() {
-        shooterSpeedLeft = 0;
-        shooterSpeedRight = 0;
         //TODO modify values after testing for direction
-        if ((DriverInputControlSRX.getInstance().getButton(
-                RobotButtonType.SHOOTER_OUT))) {
-                leftState = MotorState.REVERSE;
-                rightState = MotorState.FORWARD;
-                shooterSpeedLeft = -SHOOTER_SPEED;
-                shooterSpeedRight = SHOOTER_SPEED;
-            }
-        updateShooter(shooterSpeedLeft, shooterSpeedRight);
+        if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT)) {
+                flywheelSpeedLeft = -SHOOTER_SPEED;
+                flywheelSpeedRight = SHOOTER_SPEED;
+        }
+        else if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_IN)) {
+            flywheelSpeedLeft = SHOOTER_SPEED;
+            flywheelSpeedRight = -SHOOTER_SPEED;    
+        }
+        else {
+            flywheelSpeedLeft = 0;
+            flywheelSpeedRight = 0;
+        }
+        updateShooter(flywheelSpeedLeft, flywheelSpeedRight);
     }
     public void updateShooter(double speedLeft, double speedRight) {
-        shooterSpeedLeft = speedLeft;
-        shooterSpeedRight = speedRight;
+        flywheelSpeedLeft = speedLeft;
+        flywheelSpeedRight = speedRight;
         if (speedLeft > 0) {
             leftState = MotorState.REVERSE;
         } else if (speedLeft < 0) {
@@ -75,14 +75,15 @@ public class Shooter implements Module {
             rightState = MotorState.OFF;
         }
      }
-    
-    public void stop() {
+    public void reset() {
         rightState = leftState = MotorState.OFF;
-        shooterSpeedRight = shooterSpeedLeft = 0;
+        flywheelSpeedRight = flywheelSpeedLeft = 0;
     }
     
     public void updateOutputs() {
-        RobotControlWithSRX.getInstance().updateShooterMotors(shooterSpeedLeft, shooterSpeedRight);
+        RobotControlWithSRX.getInstance().updateFlywheelShooter(flywheelSpeedLeft, flywheelSpeedRight);
+        RobotControlWithSRX.getInstance().updateShooterTilt(driverInputControl.getShooterTilt() * .3);
+        RobotControlWithSRX.getInstance().updateShooterTilt(driverInputControl.getShooterTwist() * .3);
     }
     @Override
     public void update() {
