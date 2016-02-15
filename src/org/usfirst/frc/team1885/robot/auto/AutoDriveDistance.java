@@ -5,6 +5,8 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * Waits until the robot has traversed a certain distance. Moving forward 1 in
  * then backwards 1 equates to traveling 2 in. This is determined by the left
@@ -33,14 +35,22 @@ public class AutoDriveDistance extends AutoCommand {
         distance = d;
         initDisLeft = Math.abs(
                 sensorInputControl.getEncoderDistance(SensorType.LEFT_ENCODER));
+        DriverStation.reportError("Initial distance: " + initDisLeft, false);
     }
 
     @Override
     public boolean execute() {
         disLeft = Math.abs(
                 sensorInputControl.getEncoderDistance(SensorType.LEFT_ENCODER));
-
-        if (disLeft - initDisLeft >= distance) {
+        disRight = Math.abs(
+                sensorInputControl.getEncoderDistance(SensorType.LEFT_ENCODER));
+        DriverStation.reportError("\nDistance of left side traveled: " + disLeft
+                + "\nDistance of right side traveled: " + disRight + "\n",
+                false);
+        if (disLeft >= distance) {
+            DriverStation.reportError("Finished traveling distance!", false);
+            leftDriveSpeed = 0;
+            rightDriveSpeed = 0;
             return true;
         }
         return false;
@@ -55,9 +65,12 @@ public class AutoDriveDistance extends AutoCommand {
 
     @Override
     public boolean init() {
-        leftDriveSpeed = DrivetrainControl.getInstance().getLeftDriveSpeed();
-        rightDriveSpeed = DrivetrainControl.getInstance().getRightDriveSpeed();
-        return false;
+        // leftDriveSpeed = DrivetrainControl.getInstance().getLeftDriveSpeed();
+        // rightDriveSpeed =
+        // DrivetrainControl.getInstance().getRightDriveSpeed();
+        leftDriveSpeed = -.7;
+        rightDriveSpeed = -.7;
+        return true;
     }
 
     @Override

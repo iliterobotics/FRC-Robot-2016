@@ -6,20 +6,27 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class ActiveIntake implements Module {
 
-    public static final double INTAKE_SPEED = .5;
+    public static final double INTAKE_SPEED = 1;
     private static ActiveIntake instance;
     private double intakeSpeed;
+    private boolean isIntaking;
     private MotorState intakeState;
     private DriverInputControlSRX driverInputControl;
     private RobotControlWithSRX robotControl;
+    private double counter;
+    private static final double delay = 1000;
 
     protected ActiveIntake() {
         this.intakeState = MotorState.OFF;
         intakeSpeed = 0;
         driverInputControl = DriverInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
+        isIntaking = true;
+        counter = System.currentTimeMillis();
     }
     public static ActiveIntake getInstance() {
         if (instance == null) {
@@ -27,6 +34,12 @@ public class ActiveIntake implements Module {
         }
         return instance;
     }
+    
+    
+    
+    
+    
+    
     public void setMotorState(MotorState intakeState) {
         this.intakeState = intakeState;
     }
@@ -42,15 +55,17 @@ public class ActiveIntake implements Module {
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_IN))) {
             intakeState = MotorState.REVERSE;
             intakeSpeed = -INTAKE_SPEED;
+            //DriverStation.reportError("Suck It\n", false);
         }
 
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_OUT))) {
             intakeState = MotorState.FORWARD;
             intakeSpeed = INTAKE_SPEED;
+//            DriverStation.reportError("Spit Out\n", false);
         }
-        if ((driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID))) {
-            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER,
-                    !robotControl.getSingleSolenoid(RobotPneumaticType.INTAKE_SETTER).get());
+        if ((driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)&& System.currentTimeMillis() >= counter + delay )) {
+            isIntaking = !isIntaking;
+            counter = System.currentTimeMillis();
         }
         updateIntake(intakeSpeed);
     }
@@ -70,7 +85,8 @@ public class ActiveIntake implements Module {
     }
 
     public void updateOutputs() {
-        RobotControlWithSRX.getInstance().updateIntakeMotor(intakeSpeed);
+        robotControl.updateIntakeMotor(intakeSpeed);
+        robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, isIntaking);
     }
     @Override
     public void update() {

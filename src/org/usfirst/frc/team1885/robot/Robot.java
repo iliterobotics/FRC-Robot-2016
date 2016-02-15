@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
@@ -134,6 +135,9 @@ public class Robot extends SampleRobot {
 
     public void autonomous() {
         AutonomousRoutine ar = new AutonomousRoutine(this);
+        sensorrx.resetEncoder(SensorType.LEFT_ENCODER);
+        sensorrx.resetEncoder(SensorType.RIGHT_ENCODER);
         ar.execute();
     }
+    
 }

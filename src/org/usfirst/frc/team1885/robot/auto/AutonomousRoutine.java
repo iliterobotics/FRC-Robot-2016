@@ -23,8 +23,9 @@ public class AutonomousRoutine {
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
-        Timer.delay(2);
-        commands.add(new AutoCrossedDefense());
+        Timer.delay(3);
+        commands.add(new AutoDriveDistance(4 * 12));
+        //commands.add(new AutoTurnEnc(90, 10));
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -45,7 +46,8 @@ public class AutonomousRoutine {
     }
     // STANDARD CONFIGURATION
     // AutoStartDrive - begins movement
-    // AutoReachedDefense - checks if we have hit the defense (not necessary in all cases)
+    // AutoReachedDefense - checks if we have hit the defense (not necessary in
+    // all cases)
     // in between checks to cross the defense
     // AutoCrossedDefense - checks if we have landed and can prepare to shoot
     // AutoAlign - realigns the robot to move in position to shoot
@@ -70,7 +72,7 @@ public class AutonomousRoutine {
         commands.add(new AutoCrossedDefense());
         autoAlign();
     }
-    public void autoRamparts(){
+    public void autoRamparts() {
         commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
         commands.add(new AutoReachedDefense());
         commands.add(new AutoRamparts());
@@ -80,15 +82,18 @@ public class AutonomousRoutine {
     /**
      * Reusable method to align robot after crossing a defense
      */
-    public void autoAlign(){
+    public void autoAlign() {
         commands.add(new AutoAlign());
         autoShootBall(false);
     }
     /**
-     * Controls processes required for locating the high and low goal and shooting
-     * @param true = high goal; false = low goal
+     * Controls processes required for locating the high and low goal and
+     * shooting
+     * 
+     * @param true
+     *            = high goal; false = low goal
      */
-    public void autoShootBall(boolean goal){
-        
+    public void autoShootBall(boolean goal) {
+
     }
 }
