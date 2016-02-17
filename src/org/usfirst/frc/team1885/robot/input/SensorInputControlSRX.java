@@ -11,6 +11,7 @@ import org.usfirst.frc.team1885.robot.sensor.PressureSensor;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -43,11 +44,13 @@ public class SensorInputControlSRX {
         PDP = new PowerDistributionPanel();
     }
     public void update() {
-        StringBuilder output = new StringBuilder();
-        output.append("\nLeft Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
-        output.append("\nRight Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
-        output.append("\nTilt Potentiometer: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER));
-        output.append("\n Twist Position: " + getEncoderAbsolutePosition(SensorType.SHOOTER_TWIST_ENCODER));
+//        StringBuilder output = new StringBuilder();
+//        output.append("\nLeft Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
+//        output.append("\nRight Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
+//        output.append("\nTilt Potentiometer: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER));
+//        output.append("\n Twist Position: " + getEncoderAbsolutePosition(SensorType.SHOOTER_TWIST_ENCODER));
+//        DriverStation.reportError(output + "\n", false);
+//        Timer.delay(1.0);
     }
     public double getInitPitch() {
         return INITIAL_PITCH;

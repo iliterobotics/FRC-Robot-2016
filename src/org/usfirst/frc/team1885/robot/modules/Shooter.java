@@ -12,10 +12,10 @@ public class Shooter implements Module {
 
     private static Shooter instance;
 
-    private final double SHOOTER_SPEED = .8;
-    private final double TWIST_SPEED = .6;
+    private final double SHOOTER_SPEED = .65;
+    private final double TWIST_SPEED = .3;
     private final double TILT_SPEED = .3;
-    private final double TILT_BRAKE = 0;
+    private final double TILT_BRAKE = .1;
     private double flywheelSpeedLeft;
     private MotorState leftState;
     private double flywheelSpeedRight;
