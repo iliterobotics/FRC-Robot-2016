@@ -3,6 +3,8 @@ package org.usfirst.frc.team1885.robot.auto;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * 
  * 
@@ -27,20 +29,14 @@ public class AutoReachedDefense extends AutoCommand {
 
     @Override
     public boolean execute() {
-        /*
-         * Is this suppose to be getRoll()?
-         */
 
-        if (sensorInputControl.getNavX()
-                .getRoll() >= AutonomousRoutine.PITCH_CHANGE_ON_RAMP) {
-            return true;
-        }
-        leftEncoderDistance = sensorInputControl
-                .getEncoderPos(SensorType.LEFT_ENCODER);
-        rightEncoderDistance = sensorInputControl
-                .getEncoderPos(SensorType.RIGHT_ENCODER);
-        if (leftEncoderDistance >= MAX_DISTANCE
-                && rightEncoderDistance >= MAX_DISTANCE) {
+        DriverStation.reportError("\nCurrent getRoll(): "
+                + sensorInputControl.getNavX().getRoll(), false);
+        if (Math.abs(sensorInputControl.getNavX()
+                .getRoll()) >= AutonomousRoutine.PITCH_CHANGE_ON_RAMP
+                        + Math.abs(sensorInputControl.getInitRoll())) {
+            DriverStation.reportError("\nRobot has reached the defense!",
+                    false);
             return true;
         }
         return false;

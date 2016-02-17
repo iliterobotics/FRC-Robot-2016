@@ -33,7 +33,7 @@ public class AutoDriveStart extends AutoCommand {
      *            Power from [-1, 1], or from -100% to 100%
      */
     public AutoDriveStart(double sec, double pow) {
-        rightDriveOutput = leftDriveOutput = -pow;
+        rightDriveOutput = leftDriveOutput = pow;
 
         time = sec;
         DriverStation.reportError(
@@ -50,7 +50,7 @@ public class AutoDriveStart extends AutoCommand {
      */
     public AutoDriveStart(double pow) {
         SensorInputControlSRX.getInstance().calibrateGyro();
-        rightDriveOutput = leftDriveOutput = -pow;
+        rightDriveOutput = leftDriveOutput = pow;
         time = 0;
         init();
     }

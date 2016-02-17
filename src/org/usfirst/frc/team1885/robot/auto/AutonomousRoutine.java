@@ -26,8 +26,9 @@ public class AutonomousRoutine {
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
         Timer.delay(3);
-        commands.add(new AutoDriveDistance(1 * 12, true));
-        // commands.add(new AutoTurnEnc(90, 10));
+        commands.add(new AutoDriveStart(-.8));
+        commands.add(new AutoWait(1000));
+        commands.add(new AutoDriveDistance(1 * 12, false, -.1, -.1));
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
