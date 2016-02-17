@@ -20,12 +20,12 @@ public class RobotConfiguration {
     public static final int ARM_JOINT_B_PORT = 2; // 6 on real robot
     public static final double MAX_SPEED = .8;
     public static void configureRobot() {
+//        DriverInputControlSRX.getInstance()
+//                .addJoystick(RobotJoystickType.LEFT_DRIVE, new Joystick(0));
+//        DriverInputControlSRX.getInstance()
+//                .addJoystick(RobotJoystickType.RIGHT_DRIVE, new Joystick(1));
         DriverInputControlSRX.getInstance()
-                .addJoystick(RobotJoystickType.LEFT_DRIVE, new Joystick(0));
-        DriverInputControlSRX.getInstance()
-                .addJoystick(RobotJoystickType.RIGHT_DRIVE, new Joystick(1));
-        DriverInputControlSRX.getInstance()
-                .addJoystick(RobotJoystickType.CONTROLLER, new Joystick(2));
+                .addJoystick(RobotJoystickType.CONTROLLER, new Joystick(0));
 
         SensorInputControlSRX.getInstance().createNavX(SerialPort.Port.kMXP);
         

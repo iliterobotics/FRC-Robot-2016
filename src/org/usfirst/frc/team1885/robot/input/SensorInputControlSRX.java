@@ -4,6 +4,7 @@ import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 import org.usfirst.frc.team1885.robot.sensor.PressureSensor;
@@ -32,6 +33,9 @@ public class SensorInputControlSRX {
 
     private double INITIAL_POT_B_POSITION;
     private double INITIAL_POT_A_POSITION;
+    public static double INITIAL_TILT_POSITION;
+    private static final double POTENTIOMETER_CONVERSION_FACTOR = 1024 / 360;
+    
 
     public static SensorInputControlSRX getInstance() {
         if (instance == null) {
@@ -44,12 +48,12 @@ public class SensorInputControlSRX {
         PDP = new PowerDistributionPanel();
     }
     public void update() {
-//        StringBuilder output = new StringBuilder();
-//        output.append("\nLeft Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
-//        output.append("\nRight Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
-//        output.append("\nTilt Potentiometer: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER));
-//        output.append("\n Twist Position: " + getEncoderAbsolutePosition(SensorType.SHOOTER_TWIST_ENCODER));
-//        DriverStation.reportError(output + "\n", false);
+        StringBuilder output = new StringBuilder();
+        output.append("\nLeft Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
+        output.append("\nRight Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
+        output.append("\nTilt Potentiometer: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER));
+        output.append("\n Twist Position: " + getEncoderAbsolutePosition(SensorType.SHOOTER_TWIST_ENCODER));
+        DriverStation.reportError(output + "\n", false);
 //        Timer.delay(1.0);
     }
     public double getInitPitch() {
@@ -74,6 +78,8 @@ public class SensorInputControlSRX {
         INITIAL_POT_B_POSITION = rsrx.getSensor()
                 .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
                 * UtilityArm.CONVERSION_FACTOR;
+        INITIAL_TILT_POSITION = getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER);
+        
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
@@ -85,7 +91,24 @@ public class SensorInputControlSRX {
         return rsrx.getSensor().get(type).getAnalogInPosition();
     }
     public double getAnalogGeneric(SensorType type) {
-        return rsrx.getSensor().get(type).getAnalogInRaw();
+       switch(type){
+       case SHOOTER_TILT_POTENTIOMETER:
+           return rsrx.getSensor().get(type).getAnalogInRaw() / POTENTIOMETER_CONVERSION_FACTOR * Shooter.GEAR_RATIO;
+       default:
+           return rsrx.getSensor().get(type).getAnalogInRaw();
+       }
+    }
+    public double getZeroedPotentiometer(SensorType type) {
+        switch( type ) {
+        case SHOOTER_TILT_POTENTIOMETER:
+            return getAnalogGeneric(type) - INITIAL_TILT_POSITION;
+        case JOINT_A_POTENTIOMETER:
+            return getAnalogGeneric(type) - INITIAL_POT_A_POSITION;
+        case JOINT_B_POTENTIOMETER:
+            return getAnalogGeneric(type) - INITIAL_POT_B_POSITION;
+        default:
+            return getAnalogGeneric(type);
+        }
     }
     public boolean digitalLimitSwitch(SensorType type) {
         return rsrx.getSensor().get(type).isFwdLimitSwitchClosed();

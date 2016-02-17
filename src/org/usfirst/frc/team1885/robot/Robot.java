@@ -78,8 +78,8 @@ public class Robot extends SampleRobot {
         while (isOperatorControl() && isEnabled()) {
 
             // New canbus code
-            driverInputControl.update();
-            UtilityArm.getInstance().update();
+//            driverInputControl.update();
+            //UtilityArm.getInstance().update();
             sensorInputControl.update();
             Shooter.getInstance().update();
             Timer.delay(.005);

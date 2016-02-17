@@ -2,8 +2,9 @@ package org.usfirst.frc.team1885.robot.modules;
 
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
-import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
+import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -12,10 +13,11 @@ public class Shooter implements Module {
 
     private static Shooter instance;
 
-    private final double SHOOTER_SPEED = .65;
+    private final double SHOOTER_SPEED = 1;
     private final double TWIST_SPEED = .3;
-    private final double TILT_SPEED = .3;
+    private final double TILT_SPEED = .2;
     private final double TILT_BRAKE = .1;
+    public static final double GEAR_RATIO = 1.0 / 4;
     private double flywheelSpeedLeft;
     private MotorState leftState;
     private double flywheelSpeedRight;
@@ -26,6 +28,7 @@ public class Shooter implements Module {
     private MotorState tiltState;
     private DriverInputControlSRX driverInputControl;
     private boolean containerState, kickerState;
+    private SensorInputControlSRX sensorControl;
 
     public static Shooter getInstance() {
         if (instance == null) {
@@ -40,6 +43,7 @@ public class Shooter implements Module {
         flywheelSpeedLeft = flywheelSpeedRight = twistSpeed = tiltSpeed = 0;
         driverInputControl = DriverInputControlSRX.getInstance();
         containerState = kickerState = false;
+        sensorControl = SensorInputControlSRX.getInstance();
     }
     public MotorState getLeftMotorState() {
         return leftState;
@@ -65,8 +69,8 @@ public class Shooter implements Module {
             flywheelSpeedLeft = -SHOOTER_SPEED;
             flywheelSpeedRight = SHOOTER_SPEED;
         } else if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_IN)) {
-            flywheelSpeedLeft = SHOOTER_SPEED * .5;
-            flywheelSpeedRight = -SHOOTER_SPEED * .5;
+            flywheelSpeedLeft = SHOOTER_SPEED * .4;
+            flywheelSpeedRight = -SHOOTER_SPEED * .4;
         } else {
             flywheelSpeedLeft = 0;
             flywheelSpeedRight = 0;
@@ -89,17 +93,27 @@ public class Shooter implements Module {
             rightState = MotorState.OFF;
         }
     }
-    public void updateTilt(){
+    public void updateTilt() {
         tiltSpeed = TILT_BRAKE;
         int tilt = driverInputControl.getShooterTilt();
-        if(tilt > 0){
-            tiltSpeed = TILT_SPEED + TILT_BRAKE;
-        } else if( tilt < 0 ){
-            tiltSpeed = -TILT_SPEED + TILT_BRAKE;
+        if (tilt > 0) {
+            if (sensorControl.getZeroedPotentiometer(
+                    SensorType.SHOOTER_TILT_POTENTIOMETER) >= 80) {
+                tiltSpeed = TILT_BRAKE;
+            } else {
+                tiltSpeed = TILT_SPEED + TILT_BRAKE;
+            }
+        } else if (tilt < 0) {
+            if (sensorControl.getZeroedPotentiometer(
+                    SensorType.SHOOTER_TILT_POTENTIOMETER) <= 5) {
+                tiltSpeed = TILT_BRAKE;
+            } else {
+                tiltSpeed = -TILT_SPEED + TILT_BRAKE;
+            }
         }
         updateTilt(tiltSpeed);
     }
-    public void updateTilt(double speed){
+    public void updateTilt(double speed) {
         if (speed > 0) {
             tiltState = MotorState.REVERSE;
         } else if (speed < 0) {
@@ -108,17 +122,17 @@ public class Shooter implements Module {
             tiltState = MotorState.OFF;
         }
     }
-    public void updateTwist(){
+    public void updateTwist() {
         twistSpeed = 0;
         int twist = driverInputControl.getShooterTwist();
-        if(twist > 0){
+        if (twist > 0) {
             twistSpeed = TWIST_SPEED;
-        } else if( twist < 0 ){
+        } else if (twist < 0) {
             twistSpeed = -TWIST_SPEED;
         }
         updateTwist(twistSpeed);
     }
-    public void updateTwist(double speed){
+    public void updateTwist(double speed) {
         if (speed > 0) {
             twistState = MotorState.REVERSE;
         } else if (speed < 0) {
@@ -132,34 +146,35 @@ public class Shooter implements Module {
         flywheelSpeedRight = flywheelSpeedLeft = 0;
     }
     public void updateContainer() {
-        if ( DriverInputControlSRX.getInstance().getButton(RobotButtonType.SHOOTER_CONTAINER_TOGGLE)) {
+        if (DriverInputControlSRX.getInstance()
+                .getButton(RobotButtonType.SHOOTER_CONTAINER_TOGGLE)) {
             containerState = !containerState;
-            DriverStation.reportError("Containing: " + containerState + "\n", false);
+            DriverStation.reportError("Containing: " + containerState + "\n",
+                    false);
         }
     }
     public void updateKicker() {
-        if (DriverInputControlSRX.getInstance().getButton(RobotButtonType.SHOOTER_KICKER_KICK) && 
-                !kickerState) {
+        if (DriverInputControlSRX.getInstance().getButton(
+                RobotButtonType.SHOOTER_KICKER_KICK) && !kickerState) {
             kickerState = true;
             DriverStation.reportError("Kicking", false);
-        }
-        else if (DriverInputControlSRX.getInstance().getButton(RobotButtonType.SHOOTER_KICKER_RETRACT) &&
-                kickerState) {
+        } else if (DriverInputControlSRX.getInstance().getButton(
+                RobotButtonType.SHOOTER_KICKER_RETRACT) && kickerState) {
             kickerState = false;
             DriverStation.reportError("Retracting", false);
         }
     }
     public void updateOutputs() {
-        RobotControlWithSRX.getInstance()
-                .updateFlywheelShooter(getLeftSpeed(), getRightSpeed());
-        RobotControlWithSRX.getInstance()
-                .updateShooterTilt(tiltSpeed);
-        RobotControlWithSRX.getInstance()
-                .updateShooterTwist(twistSpeed);
-//        RobotControlWithSRX.getInstance()
-//                .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, containerState);
-//        RobotControlWithSRX.getInstance()
-//                .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER, kickerState);
+        RobotControlWithSRX.getInstance().updateFlywheelShooter(getLeftSpeed(),
+                getRightSpeed());
+        RobotControlWithSRX.getInstance().updateShooterTilt(tiltSpeed);
+        RobotControlWithSRX.getInstance().updateShooterTwist(twistSpeed);
+        // RobotControlWithSRX.getInstance()
+        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER,
+        // containerState);
+        // RobotControlWithSRX.getInstance()
+        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,
+        // kickerState);
     }
     @Override
     public void update() {
