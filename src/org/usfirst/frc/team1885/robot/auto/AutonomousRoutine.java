@@ -26,7 +26,7 @@ public class AutonomousRoutine {
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
         Timer.delay(3);
-        commands.add(new AutoDriveDistance(1 * 12, false));
+        commands.add(new AutoDriveDistance(1 * 12, true));
         // commands.add(new AutoTurnEnc(90, 10));
     }
     public void execute() {
