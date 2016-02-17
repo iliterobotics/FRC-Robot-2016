@@ -11,14 +11,15 @@ import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SensorInputControlSRX {
-    
-    private static final int TICKS_IN_360 = 1440;
+
+    private static final int TICKS_IN_360 = 1024;
     private double INITIAL_PITCH; // Shouldn't change
     private double INITIAL_ROLL; // Shouldn't change
     private static SensorInputControlSRX instance = null;
@@ -36,9 +37,7 @@ public class SensorInputControlSRX {
         return instance;
     }
     public void update() {
-        for(SensorType type : ticks.keySet()){
-            getTotalEncoderPos(type);
-        }
+
     }
     public double getInitPitch() {
         return INITIAL_PITCH;
@@ -74,32 +73,16 @@ public class SensorInputControlSRX {
     public int getEncoderPos(SensorType type) {
         return rsrx.getSensor().get(type).getEncPosition();
     }
-    
-    public int getTotalEncoderPos(SensorType type){
-        if(!ticks.containsKey(type)){
-            ticks.put(type, getEncoderPos(type));
-        }
-        else{
-            ticks.put(type, ticks.get(type) + getEncoderPos(type));
-        }
-        rsrx.getSensor().get(type).setEncPosition(0);
-        return ticks.get(type);
-        
-    }
-    
+
     public int getEncoderVelocity(SensorType type) {
         return rsrx.getSensor().get(type).getEncVelocity();
     }
-    
-    public double getEncoderDistance(int ticks) {
-        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * ticks
-                * 360.0 / TICKS_IN_360;
+
+    public double getEncoderDistance() {
+        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * rsrx.getSensor()
+                .get(SensorType.RIGHT_ENCODER).getEncPosition() / TICKS_IN_360;
     }
-    
-    public double getEncoderDistance(SensorType type){
-        return getEncoderDistance(getTotalEncoderPos(type));
-    }
-    
+
     public void addLidarSensor(Port port) {
         ls = new LidarSensor(port);
     }
@@ -125,7 +108,7 @@ public class SensorInputControlSRX {
         INITIAL_PITCH = navx.getPitch();
         INITIAL_ROLL = navx.getRoll();
     }
-    public void resetEncoder(SensorType type){
+    public void resetEncoder(SensorType type) {
         rsrx.getSensor().get(type).setEncPosition(0);
     }
 

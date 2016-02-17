@@ -101,8 +101,6 @@ public class RobotControlWithSRX {
         return singleSolenoids.get(type);
     }
     public Map<SensorType, CANTalon> getSensor() {
-        DriverStation.reportError(sensors == null ? "No sensor" : "Sensors!",
-                false);
         return this.sensors;
     }
 }

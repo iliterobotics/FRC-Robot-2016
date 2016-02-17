@@ -17,6 +17,8 @@ public class AutonomousRoutine {
     private Robot robot;
     private LinkedList<AutoCommand> commands;
     private static final double delay = 0.05;
+    private SensorInputControlSRX sensorSRX = SensorInputControlSRX
+            .getInstance();
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
@@ -25,11 +27,12 @@ public class AutonomousRoutine {
         DriverStation.reportError("Gyro Calibrated", false);
         Timer.delay(3);
         commands.add(new AutoDriveDistance(4 * 12));
-        //commands.add(new AutoTurnEnc(90, 10));
+        // commands.add(new AutoTurnEnc(90, 10));
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
                 && robot.isAutonomous()) {
+            sensorSRX.update();
             AutoCommand currCommand = commands.peek();
             if (currCommand.isInit()) {
                 boolean commandState = currCommand.execute();
