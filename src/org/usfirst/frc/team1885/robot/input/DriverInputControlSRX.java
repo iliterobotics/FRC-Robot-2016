@@ -54,8 +54,12 @@ public class DriverInputControlSRX {
         JoystickButtonMatch buttonMatch = (JoystickButtonMatch) JoystickButtonMap
                 .getInstance().getButtonMap().get(buttonType);
         if (buttonMatch != null) {
-            return getJoystick(buttonMatch.getJoystickType())
-                    .getRawButton(buttonMatch.getPort());
+            return getJoystick(
+                    buttonMatch
+                    .getJoystickType())
+                    .getRawButton(
+                            buttonMatch
+                            .getPort());
         }
         return false;
     }

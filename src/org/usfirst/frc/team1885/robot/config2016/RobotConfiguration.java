@@ -38,10 +38,16 @@ public class RobotConfiguration {
                 .addJoystick(RobotJoystickType.RIGHT_DRIVE, new Joystick(1));
         DriverInputControlSRX.getInstance()
                 .addJoystick(RobotJoystickType.CONTROLLER, new Joystick(2));
-        
-        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INTAKE_SOLENOID, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE,4));
-        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
-        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INTAKE_OUT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
+
+        JoystickButtonMap.getInstance().addControllerButton(
+                RobotButtonType.INTAKE_SOLENOID,
+                new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 4));
+        JoystickButtonMap.getInstance().addControllerButton(
+                RobotButtonType.INTAKE_IN,
+                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
+        JoystickButtonMap.getInstance().addControllerButton(
+                RobotButtonType.INTAKE_OUT,
+                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
         SensorInputControlSRX.getInstance().createNavX(SerialPort.Port.kMXP);
 
         // Temp comment because we don't have the actual robot. We just have the
@@ -56,12 +62,15 @@ public class RobotConfiguration {
                 .addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
         RobotControlWithSRX.getInstance()
                 .addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
-        RobotControlWithSRX.getInstance().addSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
-        
-        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
-        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.RIGHT_DRIVE, SensorType.RIGHT_ENCODER, 2);
-        
-                // TODO change to match actual input
+        RobotControlWithSRX.getInstance()
+                .addSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
+
+        RobotControlWithSRX.getInstance().addTalonSensor(
+                RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
+        RobotControlWithSRX.getInstance().addTalonSensor(
+                RobotMotorType.RIGHT_DRIVE, SensorType.RIGHT_ENCODER, 2);
+
+        // TODO change to match actual input
 
         // RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.LEFT_DRIVE,
         // SensorType.LEFT_ENCODER, 1);
