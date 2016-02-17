@@ -54,12 +54,8 @@ public class DriverInputControlSRX {
         JoystickButtonMatch buttonMatch = (JoystickButtonMatch) JoystickButtonMap
                 .getInstance().getButtonMap().get(buttonType);
         if (buttonMatch != null) {
-            return getJoystick(
-                    buttonMatch
-                    .getJoystickType())
-                    .getRawButton(
-                            buttonMatch
-                            .getPort());
+            return getJoystick(buttonMatch.getJoystickType())
+                    .getRawButton(buttonMatch.getPort());
         }
         return false;
     }
@@ -91,26 +87,35 @@ public class DriverInputControlSRX {
         }
         return rawAxis;
     }
-    public static double expScale(double axis){
+    public static double expScale(double axis) {
         double A = 1.85; // X^3 coefficient
 
         double B = -0.7; // X^2 coefficient
 
-        // X coefficient - this correlates to the approximate linear increase during low-inputs (i.e. on the graph, 0.1 < x < 0.4).  This creates a "low power band" that is easy for the driver to find, where the robot responds at its minimum practical power to allow for fine-tuned movements
-        double C = 0.2; 
+        // X coefficient - this correlates to the approximate linear increase
+        // during low-inputs (i.e. on the graph, 0.1 < x < 0.4). This creates a
+        // "low power band" that is easy for the driver to find, where the robot
+        // responds at its minimum practical power to allow for fine-tuned
+        // movements
+        double C = 0.2;
 
         // Assume the variable Y_AXIS is represents the joystick axis input
         double ABS_Y = Math.abs(axis);
         double AXIS_SIGN = 1.0;
-        if(axis < 0) AXIS_SIGN = -1.0;
+        if (axis < 0)
+            AXIS_SIGN = -1.0;
 
-        // Account for the Deadband, Max Power band, and Min Torque band, but exponentially scale it
+        // Account for the Deadband, Max Power band, and Min Torque band, but
+        // exponentially scale it
         double T_D_EXP = 0; // default 0, only check for outside deadband cases
-        if(ABS_Y >= DEADZONE){
-          // Note - T_D_EXP is > 1.0 when ABS_Y > JOYSTICK_FULL_POWER_BAND, so no need to deal with that case specifically
-          T_D_EXP = A*(Math.pow(ABS_Y-DEADZONE, 3)) + B*(Math.pow(ABS_Y-DEADZONE, 2)) + C*(ABS_Y-DEADZONE) + MIN_TORQUE_RESPONSE;
+        if (ABS_Y >= DEADZONE) {
+            // Note - T_D_EXP is > 1.0 when ABS_Y > JOYSTICK_FULL_POWER_BAND, so
+            // no need to deal with that case specifically
+            T_D_EXP = A * (Math.pow(ABS_Y - DEADZONE, 3))
+                    + B * (Math.pow(ABS_Y - DEADZONE, 2))
+                    + C * (ABS_Y - DEADZONE) + MIN_TORQUE_RESPONSE;
         }
-        T_D_EXP = Math.min(T_D_EXP , 1.0) * AXIS_SIGN;
+        T_D_EXP = Math.min(T_D_EXP, 1.0) * AXIS_SIGN;
         return T_D_EXP;
     }
 
@@ -122,11 +127,12 @@ public class DriverInputControlSRX {
                         .getAxis(AxisType.kY));
         ActiveIntake.getInstance().update();
     }
-    public void update(double leftJoystick, double rightJoystick)
-    {    
-        System.err.println("LEFT= " + leftJoystick +", RIGHT= " + rightJoystick);
+    public void update(double leftJoystick, double rightJoystick) {
+        System.err
+                .println("LEFT= " + leftJoystick + ", RIGHT= " + rightJoystick);
         this.rightDriveSpeed = deadzone(rightJoystick);
         this.leftDriveSpeed = deadzone(leftJoystick);
-        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
+        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
+                rightDriveSpeed);
     }
 }
