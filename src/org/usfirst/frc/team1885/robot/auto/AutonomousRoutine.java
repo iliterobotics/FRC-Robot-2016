@@ -92,7 +92,7 @@ public class AutonomousRoutine {
     public void autoLowBar() {
 
         double lowBarTravelDistance = 4.2 * 12; // subject to change from
-                                              // testing
+                                                // testing
         commands.add(
                 new AutoDriveDistance(lowBarTravelDistance, false, -.2, -.2));
     }

@@ -50,9 +50,13 @@ public class AutoDriveDistance extends AutoCommand {
 
     /**
      * @param d
+     *            Distance to travel in inches
      * @param b
+     *            If it should stop at the end of the distance
      * @param lP
+     *            Power of left side of drive train
      * @param rP
+     *            Power of right side of drive train
      */
     public AutoDriveDistance(double d, boolean b, double lP, double rP) {
         sensorInputControl = SensorInputControlSRX.getInstance();
@@ -64,8 +68,8 @@ public class AutoDriveDistance extends AutoCommand {
 
     @Override
     public boolean execute() {
-        // disLeft = sensorInputControl
-        // .getEncoderDistance(SensorType.LEFT_ENCODER);
+        disLeft = sensorInputControl
+                .getEncoderDistance(SensorType.LEFT_ENCODER);
         disRight = sensorInputControl
                 .getEncoderDistance(SensorType.RIGHT_ENCODER);
 
@@ -79,24 +83,20 @@ public class AutoDriveDistance extends AutoCommand {
         // "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
         // false);
 
-        if (!doesStop && isRightFinished /*&& isLeftFinished*/)
-        {
+        if (!doesStop && isRightFinished && isLeftFinished) {
             DriverStation.reportError("\nFinished traveling distance!"
                     + System.currentTimeMillis(), false);
             return true;
-        } else if (isRightFinished /*&& isLeftFinished*/)
-        {
+        } else if (isRightFinished && isLeftFinished) {
             DriverStation.reportError(
                     "\nFinished traveling distance! Stopping.", false);
             leftDriveSpeed = rightDriveSpeed = 0;
             DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
             DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
             return true;
-        }
-        // else if (isLeftFinished) {
-        // leftDriveSpeed = 0;
-        // }
-        else if (isRightFinished) {
+        } else if (isLeftFinished) {
+            leftDriveSpeed = 0;
+        } else if (isRightFinished) {
             rightDriveSpeed = 0;
         }
         return false;
@@ -117,8 +117,8 @@ public class AutoDriveDistance extends AutoCommand {
             rightInputPower = DrivetrainControl.getInstance()
                     .getRightDriveSpeed();
         }
-//        initDisLeft = sensorInputControl
-//                .getEncoderDistance(SensorType.LEFT_ENCODER);
+        initDisLeft = sensorInputControl
+                .getEncoderDistance(SensorType.LEFT_ENCODER);
         initDisRight = sensorInputControl
                 .getEncoderDistance(SensorType.RIGHT_ENCODER);
         leftDriveSpeed = rightInputPower;
