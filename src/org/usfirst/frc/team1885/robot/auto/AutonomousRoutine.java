@@ -90,7 +90,6 @@ public class AutonomousRoutine {
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
-
         double lowBarTravelDistance = 4.2 * 12; // subject to change from
                                                 // testing
         commands.add(
