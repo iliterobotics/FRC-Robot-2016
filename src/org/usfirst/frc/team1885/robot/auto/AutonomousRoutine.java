@@ -61,26 +61,29 @@ public class AutonomousRoutine {
         commands.add(new AutoReachedDefense());
         DefenseType type = DefenseType.LOWBAR; // to be changed to equal the
                                                // analog input
-
+        // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
         switch (type) {
-        case LOWBAR: autoLowBar(); break;
-        case PORTCULLIS: autoPortcullis(); break;
-        case CHEVAL: autoCheval(); break;
-        case SALLYPORT: autoSally(); break;
-        case RAMPARTS: autoRamparts(); break;
-        case DRAWBRIDGE: autoDrawbridge(); break;
-        default: break;
+        case LOWBAR:
+            autoLowBar();
+            break;
+        case PORTCULLIS:
+            autoPortcullis();
+            break;
+        case CHEVAL:
+            autoCheval();
+            break;
+        case SALLYPORT:
+            autoSally();
+            break;
+        case RAMPARTS:
+            autoRamparts();
+            break;
+        case DRAWBRIDGE:
+            autoDrawbridge();
+            break;
+        default:
+            break;
         }
-        commands.add(new AutoCrossedDefense());
-        autoAlign();
-    }
-
-    /**
-     * Controls processes for passing the Moat, Rough Terrain, and Rock Wall
-     */
-    public void autoBasicDefense() {
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
-        commands.add(new AutoReachedDefense());
         commands.add(new AutoCrossedDefense());
         autoAlign();
     }
@@ -88,38 +91,38 @@ public class AutonomousRoutine {
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
-        double lowBarTravelDistance = 10; // subject to change from testing
+        double lowBarTravelDistance = 6 * 12; // subject to change from testing
         commands.add(new AutoDriveDistance(lowBarTravelDistance));
     }
-    
+
     public void autoRamparts() {
         commands.add(new AutoRamparts());
     }
-    
+
     public void autoPortcullis() {
 
     }
-    
+
     public void autoCheval() {
 
     }
-    
+
     public void autoSally() {
 
     }
-    
+
     public void autoDrawbridge() {
 
     }
-    
+
     /**
      * Reusable method to align robot after crossing a defense
      */
     public void autoAlign() {
-        commands.add(new AutoAlign());
-        autoShootBall(false);
+        // commands.add(new AutoAlign());
+        // autoShootBall(false);
     }
-    
+
     /**
      * Controls processes required for locating the high and low goal and
      * shooting
