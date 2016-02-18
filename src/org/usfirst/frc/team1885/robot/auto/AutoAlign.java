@@ -22,13 +22,11 @@ public class AutoAlign extends AutoCommand {
     private SensorInputControlSRX sensorInputControl;
     private double rightDrivePower;
     private double leftDrivePower;
-    private double initial_yaw; // Yaw before we start aligning
 
     @Override
     public boolean init() {
         rightDrivePower = leftDrivePower = 0;
         sensorInputControl = SensorInputControlSRX.getInstance();
-        initial_yaw = sensorInputControl.getYaw();
         return true;
     }
 
