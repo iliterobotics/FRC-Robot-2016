@@ -132,4 +132,15 @@ public class TruePID {
         lastError = error;
         return result;
     }
+    
+    /**
+     * resets the PID
+     */
+    public void reset(){
+        initialTime = -1;
+        firstD = true;
+        
+        integral = 0;
+        totalTime= 0;
+    }
 }
