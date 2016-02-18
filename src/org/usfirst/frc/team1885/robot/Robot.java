@@ -77,14 +77,10 @@ public class Robot extends SampleRobot {
         // .getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
 
         while (isOperatorControl() && isEnabled()) {
-
-            // New canbus code
-//            driverInputControl.update();
-            //UtilityArm.getInstance().update();
             sensorInputControl.update();
+            driverInputControl.update();
             Shooter.getInstance().update();
-            drx.update();
-            sensorrx.update();
+          //UtilityArm.getInstance().update();
             Timer.delay(.005);
         }
 
