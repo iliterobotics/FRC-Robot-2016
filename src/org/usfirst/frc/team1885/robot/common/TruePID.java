@@ -64,7 +64,7 @@ public class TruePID {
         
         double error = Math.min(1.0, Math.max(-1.0, (projectedValue - currentValue) / MAX_ERROR));
         
-        double pid = Math.min(1.0, Math.max(-1.0, getP(error) + getI(error) + getD(error)));
+        double pid = Math.min(1.0, Math.max(-1.0, getP(error) + getI(error, 1000) + getD(error)));
         
         return pid;
     }
@@ -91,9 +91,10 @@ public class TruePID {
      * I = ki * ((error1*time1 + error2*time2 ... errorn*timen)/totalTime)
      * 
      * @param error the percentage of error ranging from -1 to 1
+     * @param timeDelimeter the number of milliseconds to yield full error
      * @return the amount of power to be applied to the system ranging from -1 to 1
      */
-    public double getI(double error){
+    public double getI(double error, int timeDelimeter){
         //Check for if this is the first time i is checked;
         if(initialTime == -1){
             initialTime = System.currentTimeMillis();
@@ -106,7 +107,7 @@ public class TruePID {
         integral  += error*deltaTime;
         totalTime += deltaTime;
         
-        double result =  I * (integral/totalTime);
+        double result =  I * (integral/timeDelimeter);
         
         lastTime = time;
         return result;
