@@ -56,8 +56,8 @@ public class AutonomousRoutine {
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAuto() {
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
-        commands.add(new AutoReachedDefense());
+        // commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+        // commands.add(new AutoReachedDefense());
         DefenseType type = DefenseType.LOWBAR; // to be changed to equal the
                                                // analog input
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
@@ -83,17 +83,19 @@ public class AutonomousRoutine {
         default:
             break;
         }
-        commands.add(new AutoCrossedDefense());
+        // commands.add(new AutoCrossedDefense());
         autoAlign();
     }
     /**
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
-        double lowBarTravelDistance = 4.2 * 12; // subject to change from
-                                                // testing
+        double lowBarTravelDistance = 10 * 12; // subject to change from
+                                               // testing
         commands.add(
-                new AutoDriveDistance(lowBarTravelDistance, false, -.2, -.2));
+                new AutoDriveDistance(lowBarTravelDistance, true, -.5, -.5));
+        commands.add(new AutoWait(2000));
+        commands.add(new AutoDriveDistance(lowBarTravelDistance, true, .5, .5));
     }
 
     public void autoRamparts() {

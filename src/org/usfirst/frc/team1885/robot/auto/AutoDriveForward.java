@@ -2,6 +2,7 @@ package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.TruePID;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
@@ -24,26 +25,20 @@ public class AutoDriveForward {
     private final SensorType LEFT_ENCODER;
     private final SensorType RIGHT_ENCODER;
     
-    private final MotorType LEFT_MOTOR;
-    private final MotorType RIGHT_MOTOR;
-    
     private RobotControlWithSRX srx;
     
     /**generic constructor*/
-    public AutoDriveForward(SensorType leftEncoder, SensorType rightEncoder, MotorType leftMotor, MotorType rightMotor){
+    public AutoDriveForward(SensorType leftEncoder, SensorType rightEncoder){
         LEFT_ENCODER = leftEncoder;
         RIGHT_ENCODER = rightEncoder;
-        
-        LEFT_MOTOR = leftMotor;
-        RIGHT_MOTOR = rightMotor;
-        
+            
         leftPID = new TruePID(P, I, D, FULL_ERROR);
         rightPID = new TruePID(P, I, D, FULL_ERROR);
         
         srx = RobotControlWithSRX.getInstance();
     }
     
-    public void checkDriveForward(double leftMotor, double rightMotor){
+    public void driveForward(double leftMotor, double rightMotor){
         if(Math.abs(leftMotor - rightMotor) < ALLOWABLE_MOTOR_DIFF){
             
             if(initialLeftTicks == -1){
@@ -74,8 +69,8 @@ public class AutoDriveForward {
                     leftMotor += pidAdjustment;
             }
             
-            srx.getTalons().get(LEFT_MOTOR).set(leftMotor);
-            srx.getTalons().get(RIGHT_MOTOR).set(rightMotor);
+            DrivetrainControl.getInstance().setLeftDriveSpeed(leftMotor);
+            DrivetrainControl.getInstance().setRightDriveSpeed(rightMotor);
         }
         else{
             leftPID.reset();

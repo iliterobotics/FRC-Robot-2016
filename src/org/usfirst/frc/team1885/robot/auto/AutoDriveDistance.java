@@ -6,6 +6,7 @@ import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 
 /**
  * Waits until the robot has traversed a certain distance. Moving forward 1 in
@@ -34,6 +35,7 @@ public class AutoDriveDistance extends AutoCommand {
                                     // traversing
     private boolean isRightFinished; // If the right drive train side is
                                      // finished traversing
+    private AutoDriveForward driveForward;
 
     /**
      * @param d
@@ -45,7 +47,8 @@ public class AutoDriveDistance extends AutoCommand {
         sensorInputControl = SensorInputControlSRX.getInstance();
         distance = d;
         doesStop = b;
-
+        driveForward = new AutoDriveForward(SensorType.LEFT_ENCODER,
+                SensorType.RIGHT_ENCODER);
     }
 
     /**
@@ -59,9 +62,7 @@ public class AutoDriveDistance extends AutoCommand {
      *            Power of right side of drive train
      */
     public AutoDriveDistance(double d, boolean b, double lP, double rP) {
-        sensorInputControl = SensorInputControlSRX.getInstance();
-        distance = d;
-        doesStop = b;
+        this(d, b);
         leftInputPower = lP;
         rightInputPower = rP;
     }
@@ -72,6 +73,10 @@ public class AutoDriveDistance extends AutoCommand {
                 .getEncoderDistance(SensorType.LEFT_ENCODER);
         disRight = sensorInputControl
                 .getEncoderDistance(SensorType.RIGHT_ENCODER);
+
+        driveForward.driveForward(leftDriveSpeed, rightDriveSpeed);
+        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
+        DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
 
         isLeftFinished = Math.abs(disLeft - initDisLeft) >= distance;
         isRightFinished = Math.abs(disRight - initDisRight) >= distance;
