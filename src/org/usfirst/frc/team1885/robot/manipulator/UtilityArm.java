@@ -184,7 +184,7 @@ public class UtilityArm implements Module {
     }
     /**
      * A simple down to earth equation for calculating the angles required to
-     * acieve a point
+     * reach a point
      * 
      * @param x
      *            the x coordinate of the new end-point
@@ -197,6 +197,11 @@ public class UtilityArm implements Module {
             x = LENGTH_A - 2;
             y = LENGTH_B - 2;
         }
+        else if (x < -15 + -6) {
+            x = -15 + -6;
+        }
+        //TODO create function of arc of the max distance the arm may go from the hard stop
+                //need to find how we want to limit it inside the circle
 
         double p = Math.sqrt((x * x) + (y * y));
         double k = ((p * p) + LENGTH_A * LENGTH_A - LENGTH_B * LENGTH_B)
@@ -316,10 +321,10 @@ public class UtilityArm implements Module {
                 }
             }
         }
-        if (jointBAngle > 170 - jointAAngle) {
-            jointBAngle = 170 - jointAAngle;
+        if (jointBAngle > 170 + jointAAngle) {
+            jointBAngle = 170 + jointAAngle;
         }
-        if (jointBAngle < jointAAngle) {
+        else if (jointBAngle < jointAAngle) {
             jointBAngle = jointAAngle;
         }
     }
