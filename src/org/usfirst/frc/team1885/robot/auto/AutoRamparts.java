@@ -4,9 +4,17 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+/**
+ * This class crosses the Rampart defense by shimmy-ing up the ramps. The ramps
+ * must be angled toward the ground beforehand.
+ * 
+ * @author ILITE Robotics
+ * @version <2/13/2016>
+ */
 public class AutoRamparts extends AutoCommand {
-    // Fixed By Noah
-    private final double YAW_ZONE = 5.0;
+    // Made by Aaron. Fixed by Noah. Pushed by Teddy.
+    private final double YAW_ZONE = 5.0; // Margin of error to be within in
+                                         // order to be considered straight.
     private SensorInputControlSRX sensorControl = SensorInputControlSRX
             .getInstance();
     private RobotControlWithSRX robotControl = RobotControlWithSRX
@@ -61,6 +69,15 @@ public class AutoRamparts extends AutoCommand {
         robotControl.updateDriveSpeed(0, 0);
     }
 
+    /**
+     * Determines whether or not the Drive Train is 'straight enough' to cross
+     * over the Ramparts.
+     * 
+     * @param input
+     *            Current yaw value.
+     * @return True when input value is within (-YAW_ZONE, YAW_ZONE). False
+     *         otherwise.
+     */
     public boolean inZone(double input) {
         if (input < YAW_ZONE && input > -YAW_ZONE) {
             return true;

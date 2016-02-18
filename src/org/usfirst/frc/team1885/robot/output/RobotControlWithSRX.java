@@ -12,7 +12,7 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Solenoid;
-
+import edu.wpi.first.wpilibj.Compressor;
 
 public class RobotControlWithSRX {
     public static RobotControlWithSRX instance;
@@ -22,6 +22,7 @@ public class RobotControlWithSRX {
     private Map<SensorType, CANTalon> sensors;
     private Map<RobotPneumaticType, Solenoid> singleSolenoids;
     private Map<RobotPneumaticType, DoubleSolenoid> doubleSolenoids;
+    private Compressor c;
 
     public static synchronized RobotControlWithSRX getInstance() {
         if (instance == null) {
@@ -30,6 +31,8 @@ public class RobotControlWithSRX {
         return instance;
     }
     protected RobotControlWithSRX() {
+        c = new Compressor(0);
+        c.start();
         leftDrive = new ArrayList<CANTalon>();
         rightDrive = new ArrayList<CANTalon>();
         talons = new HashMap<RobotMotorType, CANTalon>();
@@ -60,6 +63,9 @@ public class RobotControlWithSRX {
             int port2) {
         doubleSolenoids.put(type, new DoubleSolenoid(port1, port2));
     }
+    public Compressor getCompressor() {
+        return c;
+    }
     public void updateDriveSpeed(double leftspeed, double rightspeed) {
         for (CANTalon leftMotor : leftDrive) {
             leftMotor.set(-leftspeed);
@@ -69,7 +75,7 @@ public class RobotControlWithSRX {
             rightMotor.set(rightspeed);
         }
     }
-    public void updateIntakeMotors(double intakeSpeed) {
+    public void updateIntakeMotor(double intakeSpeed) {
         talons.get(RobotMotorType.ACTIVE_INTAKE).set(intakeSpeed);
     }
     public void updateShooterTilt(double tiltSpeed) {
@@ -105,10 +111,12 @@ public class RobotControlWithSRX {
         // TODO Auto-generated method stub
     }
     public void updateArmMotors(double jointASpeed, double jointBSpeed) {
-        talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
-        talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
+        // talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
+        // talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
     }
-
+    public Solenoid getSingleSolenoid(RobotPneumaticType type) {
+        return singleSolenoids.get(type);
+    }
     public Map<SensorType, CANTalon> getSensor() {
         return this.sensors;
     }

@@ -8,6 +8,12 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
+/**
+ * Drives the Drive Train in a straight direction.
+ * 
+ * @author ILITE Robotics
+ * @version <2/13/2016>
+ */
 public class AutoDriveStart extends AutoCommand {
 
     private double time;
@@ -16,8 +22,18 @@ public class AutoDriveStart extends AutoCommand {
 
     private static double MIN_SPEED = 0.0;
 
+    /**
+     * Sends equal power to both sides of the Drive Train for specified amount
+     * of time, then stops sending power. No other actions can be done during
+     * this time.
+     * 
+     * @param sec
+     *            Time in seconds
+     * @param pow
+     *            Power from [-1, 1], or from -100% to 100%
+     */
     public AutoDriveStart(double sec, double pow) {
-        rightDriveOutput = leftDriveOutput = -pow;
+        rightDriveOutput = leftDriveOutput = pow;
 
         time = sec;
         DriverStation.reportError(
@@ -25,9 +41,16 @@ public class AutoDriveStart extends AutoCommand {
         init();
     }
 
+    /**
+     * Sends equal power to both sides of the Drive Train. Does not stop sending
+     * power.
+     * 
+     * @param pow
+     *            Power from [-1, 1], or from -100% to 100%
+     */
     public AutoDriveStart(double pow) {
         SensorInputControlSRX.getInstance().calibrateGyro();
-        rightDriveOutput = leftDriveOutput = -pow;
+        rightDriveOutput = leftDriveOutput = pow;
         time = 0;
         init();
     }

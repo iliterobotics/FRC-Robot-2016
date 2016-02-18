@@ -3,8 +3,15 @@ package org.usfirst.frc.team1885.robot.auto;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
+/**
+ * 
+ * 
+ * @author ILITE Robotics
+ * @version <2/13/2016>
+ */
 public class AutoReachedDefense extends AutoCommand {
-    // autonomous checkpoint used to check anything before we reach a defense
 
     private final double MAX_DISTANCE = 5;
 
@@ -22,17 +29,9 @@ public class AutoReachedDefense extends AutoCommand {
 
     @Override
     public boolean execute() {
-        if (sensorInputControl.getNavX()
-                .getRoll() >= AutonomousRoutine.PITCH_CHANGE_ON_RAMP
-                        + SensorInputControlSRX.getInstance().getInitRoll()) {
-            return true;
-        }
-        leftEncoderDistance = sensorInputControl
-                .getEncoderPos(SensorType.LEFT_ENCODER);
-        rightEncoderDistance = sensorInputControl
-                .getEncoderPos(SensorType.RIGHT_ENCODER);
-        if (leftEncoderDistance >= MAX_DISTANCE
-                && rightEncoderDistance >= MAX_DISTANCE) {
+        if (Math.abs(sensorInputControl.getNavX()
+                .getRoll()) >= AutonomousRoutine.PITCH_CHANGE_ON_RAMP
+                        + Math.abs(sensorInputControl.getInitRoll())) {
             return true;
         }
         return false;

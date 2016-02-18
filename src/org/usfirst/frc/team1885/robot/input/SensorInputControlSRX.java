@@ -1,6 +1,8 @@
 package org.usfirst.frc.team1885.robot.input;
 
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
+import java.util.HashMap;
+import java.util.Map;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
@@ -19,6 +21,8 @@ import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SensorInputControlSRX {
+
+    private static final int TICKS_IN_360 = 1024;
     private double INITIAL_PITCH; // Shouldn't change
     private double INITIAL_ROLL; // Shouldn't change
     private static SensorInputControlSRX instance = null;
@@ -35,7 +39,7 @@ public class SensorInputControlSRX {
     private double INITIAL_POT_A_POSITION;
     public static double INITIAL_TILT_POSITION;
     private static final double POTENTIOMETER_CONVERSION_FACTOR = 1024 / 360;
-    
+    private Map<SensorType, Integer> ticks;
 
     public static SensorInputControlSRX getInstance() {
         if (instance == null) {
@@ -43,9 +47,10 @@ public class SensorInputControlSRX {
         }
         return instance;
     }
-    protected SensorInputControlSRX() {
+    private SensorInputControlSRX() {
         rsrx = RobotControlWithSRX.getInstance();
         PDP = new PowerDistributionPanel();
+        ticks = new HashMap<SensorType, Integer>();
     }
     public void update() {
         StringBuilder output = new StringBuilder();
@@ -54,7 +59,6 @@ public class SensorInputControlSRX {
         output.append("\nTilt Potentiometer: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER));
         output.append("\n Twist Position: " + getEncoderAbsolutePosition(SensorType.SHOOTER_TWIST_ENCODER));
         DriverStation.reportError(output + "\n", false);
-//        Timer.delay(1.0);
     }
     public double getInitPitch() {
         return INITIAL_PITCH;
@@ -116,6 +120,7 @@ public class SensorInputControlSRX {
     public int getEncoderPos(SensorType type) {
         return rsrx.getSensor().get(type).getEncPosition();
     }
+
     public int getEncoderVelocity(SensorType type) {
         return rsrx.getSensor().get(type).getEncVelocity();
     }
@@ -129,10 +134,11 @@ public class SensorInputControlSRX {
         return rsrx.getSensor().get(type).getPulseWidthPosition();
     }
 
-    public double getEncoderDistance(SensorType type) {
-        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * getEncoderPos(type)
-                * 360.0 / 1440.0;
+    public double getEncoderDistance() {
+        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * rsrx.getSensor()
+                .get(SensorType.RIGHT_ENCODER).getEncPosition() / TICKS_IN_360;
     }
+
     public void addLidarSensor(Port port) {
         ls = new LidarSensor(port);
     }
@@ -167,10 +173,13 @@ public class SensorInputControlSRX {
         INITIAL_PITCH = navx.getPitch();
         INITIAL_ROLL = navx.getRoll();
     }
-    public double getInitialPotBPostition() {
-        return INITIAL_POT_B_POSITION;
-    }
     public double getInitialPotAPostition() {
         return INITIAL_POT_A_POSITION;
+    }
+    public double getInitialPotBPostition() {
+        return INITIAL_POT_B_POSITION;
+}
+    public void resetEncoder(SensorType type) {
+        rsrx.getSensor().get(type).setEncPosition(0);
     }
 }

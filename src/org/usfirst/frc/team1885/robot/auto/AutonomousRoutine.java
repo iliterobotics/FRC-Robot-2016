@@ -17,16 +17,18 @@ public class AutonomousRoutine {
     private Robot robot;
     private LinkedList<AutoCommand> commands;
     private static final double delay = 0.05;
+    private SensorInputControlSRX sensorSRX = SensorInputControlSRX
+            .getInstance();
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
-        autoDrawbridge();
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
                 && robot.isAutonomous()) {
+            sensorSRX.update();
             AutoCommand currCommand = commands.peek();
             if (currCommand.isInit()) {
                 boolean commandState = currCommand.execute();
@@ -66,7 +68,7 @@ public class AutonomousRoutine {
 
         commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
         commands.add(new AutoReachedDefense());
-        commands.add(new AutoDriveDistance(lowBarTravelDistance));
+        commands.add(new AutoDriveDistance(lowBarTravelDistance, false));
         commands.add(new AutoCrossedDefense());
         autoAlign();
     }
@@ -84,7 +86,7 @@ public class AutonomousRoutine {
      */
     public void autoDrawbridge() {
         // Needs to include moving to Drawbridge
-        commands.addAll(new AutoDrawbridge().execute());
+//        commands.add(new AutoDrawbridge());
     }
     /**
      * Reusable method to align robot after crossing a defense
@@ -97,5 +99,15 @@ public class AutonomousRoutine {
      * Controls processes required for locating the high goal and shooting
      */
     public void autoShootHighGoal() {
+        autoShootBall(false);
+    }
+    /**
+     * Controls processes required for locating the high and low goal and
+     * shooting
+     * 
+     * @param true
+     *            = high goal; false = low goal
+     */
+    public void autoShootBall(boolean goal) {
     }
 }
