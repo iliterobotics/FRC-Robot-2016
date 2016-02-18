@@ -39,7 +39,6 @@ public class AutoDriveDistance extends AutoCommand {
     public boolean execute() {
         disLeft = Math.abs(
                 sensorInputControl.getEncoderDistance(SensorType.LEFT_ENCODER));
-
         if (disLeft - initDisLeft >= distance) {
             return true;
         }
