@@ -64,9 +64,11 @@ public class RobotConfiguration {
                 .addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
         RobotControlWithSRX.getInstance()
                 .addSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
+        
+//        RobotControlWithSRX.getInstance().addDoubleSolenoid(RobotPneumaticType.GEAR_SHIFT, 1);
 
-        RobotControlWithSRX.getInstance().addTalonSensor(
-                RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
+//        RobotControlWithSRX.getInstance().addTalonSensor(
+//                RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
         RobotControlWithSRX.getInstance().addTalonSensor(
                 RobotMotorType.RIGHT_DRIVE, SensorType.RIGHT_ENCODER, 2);
 

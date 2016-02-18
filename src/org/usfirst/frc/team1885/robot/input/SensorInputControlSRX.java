@@ -37,7 +37,8 @@ public class SensorInputControlSRX {
         return instance;
     }
     public void update() {
-
+        DriverStation.reportError("\nRight Encoder Value::"
+                + getEncoderDistance(SensorType.RIGHT_ENCODER), false);
     }
     public double getInitPitch() {
         return INITIAL_PITCH;
@@ -78,9 +79,11 @@ public class SensorInputControlSRX {
         return rsrx.getSensor().get(type).getEncVelocity();
     }
 
-    public double getEncoderDistance() {
-        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * rsrx.getSensor()
-                .get(SensorType.RIGHT_ENCODER).getEncPosition() / TICKS_IN_360;
+    public double getEncoderDistance(SensorType type) {
+        return RobotConfiguration.WHEEL_DIAMETER * Math.PI
+                * rsrx.getSensor()
+                .get(type)
+                .getEncPosition() / TICKS_IN_360;
     }
 
     public void addLidarSensor(Port port) {

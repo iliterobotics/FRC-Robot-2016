@@ -13,6 +13,7 @@ import org.usfirst.frc.team1885.robot.manipulator.AuxArm;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -52,8 +53,7 @@ public class Robot extends SampleRobot {
         try {
             RobotConfiguration.configureRobot();
         } catch (Exception e) {
-            System.out.println("Robot - Error configuring Robot");
-            e.printStackTrace();
+            DriverStation.reportError("Robot - Error configuring Robot", false);
         }
         diameter = 4.0;
 
@@ -66,14 +66,6 @@ public class Robot extends SampleRobot {
      * Runs the motors with tank steering.
      */
     public void operatorControl() {
-
-        // TODO: FIX THIS NPE.
-        // SensorInputControl.getInstance()
-        // .getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
-        // SensorInputControl.getInstance()
-        // .getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
-
-        boolean magnetState = false;
 
         while (isOperatorControl() && isEnabled()) {
 

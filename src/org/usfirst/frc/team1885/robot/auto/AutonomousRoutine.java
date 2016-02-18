@@ -12,13 +12,11 @@ public class AutonomousRoutine {
     public static final double PITCH_CHANGE_ON_RAMP = 4.5;
     public static final double RAMPART_SPEED_MAX = 0.6;
     public static final double RAMPART_SPEED_MIN = 0.5;
-    public static final double START_DRIVE_SPEED = 0.5;
+    public static final double START_DRIVE_SPEED = -0.5;
 
     private Robot robot;
     private LinkedList<AutoCommand> commands;
     private static final double delay = 0.05;
-    private SensorInputControlSRX sensorSRX = SensorInputControlSRX
-            .getInstance();
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
@@ -26,12 +24,11 @@ public class AutonomousRoutine {
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
         Timer.delay(3);
-        commands.add(new AutoAlign());
+        initAuto();
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
                 && robot.isAutonomous()) {
-            sensorSRX.update();
             AutoCommand currCommand = commands.peek();
             if (currCommand.isInit()) {
                 boolean commandState = currCommand.execute();
@@ -53,12 +50,39 @@ public class AutonomousRoutine {
     // in between checks to cross the defense
     // AutoCrossedDefense - checks if we have landed and can prepare to shoot
     // AutoAlign - realigns the robot to move in position to shoot
+
     /**
-     * Controls processes for passing the Moat, Rough Terrain, and Rock Wall
+     * Method that initializes all commands for AutonomousRoutine to run
+     * CURRENTLY COMMENTED OUT IN ROBOT
      */
-    public void autoBasicDefense() {
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
+    public void initAuto() {
+        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
         commands.add(new AutoReachedDefense());
+        DefenseType type = DefenseType.LOWBAR; // to be changed to equal the
+                                               // analog input
+        // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
+        switch (type) {
+        case LOWBAR:
+            autoLowBar();
+            break;
+        case PORTCULLIS:
+            autoPortcullis();
+            break;
+        case CHEVAL:
+            autoCheval();
+            break;
+        case SALLYPORT:
+            autoSally();
+            break;
+        case RAMPARTS:
+            autoRamparts();
+            break;
+        case DRAWBRIDGE:
+            autoDrawbridge();
+            break;
+        default:
+            break;
+        }
         commands.add(new AutoCrossedDefense());
         autoAlign();
     }
@@ -66,28 +90,41 @@ public class AutonomousRoutine {
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
-        double lowBarTravelDistance = 10; // subject to change from testing
 
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
-        commands.add(new AutoReachedDefense());
-        commands.add(new AutoDriveDistance(lowBarTravelDistance, false));
-        commands.add(new AutoCrossedDefense());
-        autoAlign();
+        double lowBarTravelDistance = 4.2 * 12; // subject to change from
+                                              // testing
+        commands.add(
+                new AutoDriveDistance(lowBarTravelDistance, false, -.2, -.2));
     }
+
     public void autoRamparts() {
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
-        commands.add(new AutoReachedDefense());
         commands.add(new AutoRamparts());
-        commands.add(new AutoCrossedDefense());
-        autoAlign();
     }
+
+    public void autoPortcullis() {
+
+    }
+
+    public void autoCheval() {
+
+    }
+
+    public void autoSally() {
+
+    }
+
+    public void autoDrawbridge() {
+
+    }
+
     /**
      * Reusable method to align robot after crossing a defense
      */
     public void autoAlign() {
-        commands.add(new AutoAlign());
-        autoShootBall(false);
+        // commands.add(new AutoAlign());
+        // autoShootBall(false);
     }
+
     /**
      * Controls processes required for locating the high and low goal and
      * shooting

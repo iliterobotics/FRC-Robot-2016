@@ -21,6 +21,7 @@ public class RobotControlWithSRX {
     private Map<RobotMotorType, CANTalon> talons = new HashMap<RobotMotorType, CANTalon>();
     private Map<SensorType, CANTalon> sensors;
     private Map<RobotPneumaticType, Solenoid> singleSolenoids;
+    private Map<RobotPneumaticType, Solenoid> doubleSolenoids;
     private Compressor c;
 
     public static synchronized RobotControlWithSRX getInstance() {
@@ -91,8 +92,14 @@ public class RobotControlWithSRX {
         // talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
         // talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
     }
+    public void gearShift(boolean gear){
+        doubleSolenoids.get(RobotPneumaticType.GEAR_SHIFT).set(gear);
+    }
     public void addSingleSolenoid(RobotPneumaticType type, int port) {
         singleSolenoids.put(type, new Solenoid(port));
+    }
+    public void addDoubleSolenoid(RobotPneumaticType type, int port) {
+        doubleSolenoids.put(type, new Solenoid(port));
     }
     public void updateSingleSolenoid(RobotPneumaticType type, boolean value) {
         singleSolenoids.get(type).set(value);

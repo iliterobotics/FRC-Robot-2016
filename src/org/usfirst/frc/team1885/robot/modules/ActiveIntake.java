@@ -25,7 +25,7 @@ public class ActiveIntake implements Module {
         intakeSpeed = 0;
         driverInputControl = DriverInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
-        isIntaking = true;
+        isIntaking = false;
         counter = System.currentTimeMillis();
     }
     public static ActiveIntake getInstance() {
@@ -34,12 +34,7 @@ public class ActiveIntake implements Module {
         }
         return instance;
     }
-    
-    
-    
-    
-    
-    
+
     public void setMotorState(MotorState intakeState) {
         this.intakeState = intakeState;
     }
@@ -55,15 +50,16 @@ public class ActiveIntake implements Module {
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_IN))) {
             intakeState = MotorState.REVERSE;
             intakeSpeed = -INTAKE_SPEED;
-            //DriverStation.reportError("Suck It\n", false);
+            // DriverStation.reportError("Suck It\n", false);
         }
 
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_OUT))) {
             intakeState = MotorState.FORWARD;
             intakeSpeed = INTAKE_SPEED;
-//            DriverStation.reportError("Spit Out\n", false);
+            // DriverStation.reportError("Spit Out\n", false);
         }
-        if ((driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)&& System.currentTimeMillis() >= counter + delay )) {
+        if ((driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)
+                && System.currentTimeMillis() >= counter + delay)) {
             isIntaking = !isIntaking;
             counter = System.currentTimeMillis();
         }
@@ -86,7 +82,8 @@ public class ActiveIntake implements Module {
 
     public void updateOutputs() {
         robotControl.updateIntakeMotor(intakeSpeed);
-        robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, isIntaking);
+        robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER,
+                isIntaking);
     }
     @Override
     public void update() {

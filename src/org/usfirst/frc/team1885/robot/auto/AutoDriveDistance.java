@@ -37,55 +37,67 @@ public class AutoDriveDistance extends AutoCommand {
 
     /**
      * @param d
-     *            Traverse distance in inches
+     *            Distance to travel in inches
+     * @param b
+     *            If it should stop at the end of the distance
      */
     public AutoDriveDistance(double d, boolean b) {
         sensorInputControl = SensorInputControlSRX.getInstance();
         distance = d;
         doesStop = b;
-        initDisRight = sensorInputControl.getEncoderDistance();
-        initDisRight = sensorInputControl.getEncoderDistance();
-        leftInputPower = DrivetrainControl.getInstance().getLeftDriveSpeed();
-        rightInputPower = DrivetrainControl.getInstance().getRightDriveSpeed();
+
     }
 
+    /**
+     * @param d
+     * @param b
+     * @param lP
+     * @param rP
+     */
     public AutoDriveDistance(double d, boolean b, double lP, double rP) {
         sensorInputControl = SensorInputControlSRX.getInstance();
         distance = d;
         doesStop = b;
-        initDisLeft = sensorInputControl.getEncoderDistance();
-        initDisRight = sensorInputControl.getEncoderDistance();
         leftInputPower = lP;
         rightInputPower = rP;
     }
 
     @Override
     public boolean execute() {
-        disRight = sensorInputControl.getEncoderDistance();
-        disLeft = sensorInputControl.getEncoderDistance();
+        // disLeft = sensorInputControl
+        // .getEncoderDistance(SensorType.LEFT_ENCODER);
+        disRight = sensorInputControl
+                .getEncoderDistance(SensorType.RIGHT_ENCODER);
 
         isLeftFinished = Math.abs(disLeft - initDisLeft) >= distance;
         isRightFinished = Math.abs(disRight - initDisRight) >= distance;
 
-        DriverStation.reportError(
-                "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
-                false);
-        DriverStation.reportError(
-                "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
-                false);
+        // DriverStation.reportError(
+        // "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
+        // false);
+        // DriverStation.reportError(
+        // "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
+        // false);
 
-        if (!doesStop && isLeftFinished && isRightFinished) {
-            DriverStation.reportError("\nFinished traveling distance!", false);
+        if (!doesStop && isRightFinished /*&& isLeftFinished*/)
+        {
+            DriverStation.reportError("\nFinished traveling distance!"
+                    + System.currentTimeMillis(), false);
             return true;
-        } else if (isLeftFinished && isRightFinished) {
-            DriverStation.reportError("\nFinished traveling distance!", false);
-            leftDriveSpeed = 0;
-            rightDriveSpeed = 0;
+        } else if (isRightFinished /*&& isLeftFinished*/)
+        {
+            DriverStation.reportError(
+                    "\nFinished traveling distance! Stopping.", false);
+            leftDriveSpeed = rightDriveSpeed = 0;
+            DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
+            DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
             return true;
-        } else if (isLeftFinished) {
+        }
+        // else if (isLeftFinished) {
+        // leftDriveSpeed = 0;
+        // }
+        else if (isRightFinished) {
             rightDriveSpeed = 0;
-        } else if (isRightFinished) {
-            leftDriveSpeed = 0;
         }
         return false;
     }
@@ -99,6 +111,16 @@ public class AutoDriveDistance extends AutoCommand {
 
     @Override
     public boolean init() {
+        if (leftInputPower == 0 && rightInputPower == 0) {
+            leftInputPower = DrivetrainControl.getInstance()
+                    .getLeftDriveSpeed();
+            rightInputPower = DrivetrainControl.getInstance()
+                    .getRightDriveSpeed();
+        }
+//        initDisLeft = sensorInputControl
+//                .getEncoderDistance(SensorType.LEFT_ENCODER);
+        initDisRight = sensorInputControl
+                .getEncoderDistance(SensorType.RIGHT_ENCODER);
         leftDriveSpeed = rightInputPower;
         rightDriveSpeed = leftInputPower;
         return true;
