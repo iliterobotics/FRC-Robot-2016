@@ -2,7 +2,6 @@ package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
-import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -43,7 +42,7 @@ public class AutoDriveDistance extends AutoCommand {
         disLeft = Math.abs(
                 sensorInputControl.getEncoderDistance(SensorType.LEFT_ENCODER));
         disRight = Math.abs(
-                sensorInputControl.getEncoderDistance(SensorType.LEFT_ENCODER));
+                sensorInputControl.getEncoderDistance(SensorType.RIGHT_ENCODER));
         DriverStation.reportError("\nDistance of left side traveled: " + disLeft
                 + "\nDistance of right side traveled: " + disRight + "\n",
                 false);

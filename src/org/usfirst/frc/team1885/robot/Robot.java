@@ -137,6 +137,7 @@ public class Robot extends SampleRobot {
         AutonomousRoutine ar = new AutonomousRoutine(this);
         sensorrx.resetEncoder(SensorType.LEFT_ENCODER);
         sensorrx.resetEncoder(SensorType.RIGHT_ENCODER);
+        //sar.initAuto();
         ar.execute();
     }
     
