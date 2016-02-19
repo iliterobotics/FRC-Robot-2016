@@ -26,7 +26,7 @@ public class AutonomousRoutine {
         Timer.delay(3);
         initAuto();
     }
-    
+
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
                 && robot.isAutonomous()) {
@@ -51,7 +51,7 @@ public class AutonomousRoutine {
     // in between checks to cross the defense
     // AutoCrossedDefense - checks if we have landed and can prepare to shoot
     // AutoAlign - realigns the robot to move in position to shoot
-    
+
     /**
      * Method that initializes all commands for AutonomousRoutine to run
      * CURRENTLY COMMENTED OUT IN ROBOT

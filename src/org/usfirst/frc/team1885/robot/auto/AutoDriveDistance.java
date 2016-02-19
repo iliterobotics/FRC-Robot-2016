@@ -50,9 +50,13 @@ public class AutoDriveDistance extends AutoCommand {
 
     /**
      * @param d
+     *            Distance to travel in inches
      * @param b
+     *            If it should stop at the end of the distance
      * @param lP
+     *            Power of left side of drive train
      * @param rP
+     *            Power of right side of drive train
      */
     public AutoDriveDistance(double d, boolean b, double lP, double rP) {
         sensorInputControl = SensorInputControlSRX.getInstance();
@@ -72,9 +76,17 @@ public class AutoDriveDistance extends AutoCommand {
         isLeftFinished = Math.abs(disLeft - initDisLeft) >= distance;
         isRightFinished = Math.abs(disRight - initDisRight) >= distance;
 
+        // DriverStation.reportError(
+        // "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
+        // false);
+        // DriverStation.reportError(
+        // "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
+        // false);
+
         if (!doesStop && isRightFinished && isLeftFinished) {
             return true;
         } else if (isRightFinished && isLeftFinished) {
+            leftDriveSpeed = rightDriveSpeed = 0;
             DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
             DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
             return true;
