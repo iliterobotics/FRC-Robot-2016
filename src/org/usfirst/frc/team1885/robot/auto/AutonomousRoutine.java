@@ -25,7 +25,8 @@ public class AutonomousRoutine {
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
         Timer.delay(5);
-        initAuto();
+        initAutoFirst(DefenseType.LOWBAR);   // to be changed to equal the analog input
+        initAutoSecond();
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -57,13 +58,12 @@ public class AutonomousRoutine {
      * Method that initializes all commands for AutonomousRoutine to run
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
-    public void initAuto() {
+    public void initAutoFirst(DefenseType dType) {
         // commands.add(new AutoDriveStart(START_DRIVE_SPEED));
         // commands.add(new AutoReachedDefense());
-        DefenseType type = DefenseType.LOWBAR; // to be changed to equal the
-                                               // analog input
+
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
-        switch (type) {
+        switch (dType) {
         case LOWBAR:
             // autoLowBar();
             break;
@@ -87,7 +87,13 @@ public class AutonomousRoutine {
         }
         // commands.add(new AutoCrossedDefense());
         autoAlign();
+        
     }
+    
+    public void initAutoSecond() {
+        
+    }
+    
     /**
      * Controls processes for passing the low bar
      */
@@ -149,4 +155,5 @@ public class AutonomousRoutine {
      */
     public void autoShootBall(boolean goal) {
     }
+    
 }
