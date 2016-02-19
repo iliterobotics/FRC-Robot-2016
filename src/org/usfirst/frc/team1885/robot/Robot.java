@@ -54,7 +54,7 @@ public class Robot extends SampleRobot {
             RobotConfiguration.configureRobot();
             sensorInputControl.init();
         } catch (Exception e) {
-            DriverStation.reportError("Robot - Error configuring Robot", false);
+            DriverStation.reportError("Robot - Error configuring Robot", true);
         }
         diameter = 4.0;
         maxSpeed = 15.0;
