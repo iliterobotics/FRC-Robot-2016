@@ -26,6 +26,7 @@ public class AutonomousRoutine {
         Timer.delay(3);
         initAuto();
     }
+    
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
                 && robot.isAutonomous()) {
@@ -50,6 +51,7 @@ public class AutonomousRoutine {
     // in between checks to cross the defense
     // AutoCrossedDefense - checks if we have landed and can prepare to shoot
     // AutoAlign - realigns the robot to move in position to shoot
+    
     /**
      * Method that initializes all commands for AutonomousRoutine to run
      * CURRENTLY COMMENTED OUT IN ROBOT
@@ -89,8 +91,7 @@ public class AutonomousRoutine {
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
-        double lowBarTravelDistance = 4.2 * 12; // subject to change from
-                                                // testing
+        double lowBarTravelDistance = 4.2 * 12; // Best distance from testing
         commands.add(
                 new AutoDriveDistance(lowBarTravelDistance, false, -.2, -.2));
 

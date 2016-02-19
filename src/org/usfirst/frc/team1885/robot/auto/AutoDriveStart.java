@@ -35,8 +35,6 @@ public class AutoDriveStart extends AutoCommand {
     public AutoDriveStart(double sec, double pow) {
         rightDriveOutput = leftDriveOutput = pow;
         time = sec;
-        DriverStation.reportError(
-                "Drive with " + pow + " power for " + sec + " seconds", false);
     }
 
     /**
