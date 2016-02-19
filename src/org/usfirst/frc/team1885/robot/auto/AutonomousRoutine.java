@@ -32,9 +32,18 @@ public class AutonomousRoutine {
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
         Timer.delay(5);
-        initAutoBreach(DefenseType.LOW_BAR);   // to be changed to equal the analog input
+        type = DefenseType.LOW_BAR;
+        initAutoBreach();
+        //autoMoveToShoot(needs values)
+        
+        
+        
+        
+        
         //Not finished yet
+        //getConfiguration();
         //initAutoBreach(type);
+        //autoMoveToShoot();
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -75,12 +84,12 @@ public class AutonomousRoutine {
      * Method that initializes all commands for AutonomousRoutine to run
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
-    public void initAutoBreach(DefenseType dType) {
+    public void initAutoBreach() {
         commands.add(new AutoDriveStart(START_DRIVE_SPEED, delay));
         commands.add(new AutoReachedDefense());
 
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
-        switch (dType) {
+        switch (type) {
         case LOW_BAR: autoLowBar(); break;
         case PORTCULLIS: autoPortcullis(); break;
         case CHEVAL_DE_FRISE: autoCheval(); break;
@@ -111,9 +120,8 @@ public class AutonomousRoutine {
      * @param firstTurn yaw value to turn to to aim towards goal shooting point
      * @param secondMove distance in inches to move to goal shooting point
      * @param goalTurn yaw value to turn to to aim at goal
-     * @param isHigh boolean true = high goal :: false = low goal
      */
-    public void autoMoveToShoot(double firstMove, double firstTurn, double secondMove, double goalTurn, boolean isHigh) {
+    public void autoMoveToShoot(double firstMove, double firstTurn, double secondMove, double goalTurn) {
         commands.add(new AutoDriveDistance(firstMove, true));
         commands.add(new AutoTurn(firstTurn, 1));
         commands.add(new AutoDriveDistance(secondMove, true));
