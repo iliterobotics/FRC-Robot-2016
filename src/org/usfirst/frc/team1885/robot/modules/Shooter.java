@@ -17,6 +17,10 @@ public class Shooter implements Module {
     private final double TWIST_SPEED = .3;
     private final double TILT_SPEED = .2;
     private final double TILT_BRAKE = .1;
+    private final double TILT_LIMIT_UPPER;
+    private final double TILT_LIMIT_LOWER;
+    private final double TWIST_BOUND_HIGH;
+    private final double TWIST_BOUND_LOW;
     public static final double GEAR_RATIO_TILT = 1.0 / 4;
     public static final double GEAR_RATIO_TWIST = 3.0 / 7;
     private double flywheelSpeedLeft;
@@ -26,7 +30,9 @@ public class Shooter implements Module {
     private double twistSpeed;
     private MotorState twistState;
     private double tiltSpeed;
+    private final double INITIAL_TWIST;
     private MotorState tiltState;
+    private double totalTilt;
     private DriverInputControlSRX driverInputControl;
     private boolean containerState, kickerState;
     private SensorInputControlSRX sensorControl;
@@ -38,13 +44,20 @@ public class Shooter implements Module {
         return instance;
     }
     protected Shooter() {
+        TILT_LIMIT_UPPER = 80;
+        TILT_LIMIT_LOWER = 5;
+        TWIST_BOUND_HIGH = 400;
+        TWIST_BOUND_LOW = 185;
         this.leftState = MotorState.OFF;
         this.rightState = MotorState.OFF;
         this.twistState = this.tiltState = MotorState.OFF;
         flywheelSpeedLeft = flywheelSpeedRight = twistSpeed = tiltSpeed = 0;
+        totalTilt = 0;
         driverInputControl = DriverInputControlSRX.getInstance();
         containerState = kickerState = false;
         sensorControl = SensorInputControlSRX.getInstance();
+        INITIAL_TWIST = sensorControl.getEncoderPos(
+                SensorType.SHOOTER_TWIST_ENCODER) * GEAR_RATIO_TWIST;
     }
     public MotorState getLeftMotorState() {
         return leftState;
@@ -96,19 +109,15 @@ public class Shooter implements Module {
     }
     public void updateTilt() {
         tiltSpeed = TILT_BRAKE;
-        int tilt = driverInputControl.getShooterTilt();
-        if (tilt > 0) {
-            if (sensorControl.getZeroedPotentiometer(
-                    SensorType.SHOOTER_TILT_POTENTIOMETER) >= 80) {
-                tiltSpeed = TILT_BRAKE;
-            } else {
+        int tiltInput = driverInputControl.getShooterTilt();
+        totalTilt = sensorControl
+                .getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER);
+        if (tiltInput > 0) {
+            if (totalTilt < TILT_LIMIT_UPPER) {
                 tiltSpeed = TILT_SPEED + TILT_BRAKE;
             }
-        } else if (tilt < 0) {
-            if (sensorControl.getZeroedPotentiometer(
-                    SensorType.SHOOTER_TILT_POTENTIOMETER) <= 5) {
-                tiltSpeed = TILT_BRAKE;
-            } else {
+        } else if (tiltInput < 0) {
+            if (totalTilt > TILT_LIMIT_LOWER) {
                 tiltSpeed = -TILT_SPEED + TILT_BRAKE;
             }
         }
@@ -126,20 +135,32 @@ public class Shooter implements Module {
     public void updateTwist() {
         twistSpeed = 0;
         int twist = driverInputControl.getShooterTwist();
+        double encoder = (sensorControl.getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER)
+                * GEAR_RATIO_TWIST);
+        double encoderTwist = encoder - INITIAL_TWIST;
         if (sensorControl.getZeroedPotentiometer(
-                SensorType.SHOOTER_TILT_POTENTIOMETER) >= 20) {
-            if (twist > 0) {
-                //if ( sensorControl.getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER) < 128 ) {
-                    twistSpeed = -TWIST_SPEED;
-                //}
-            } else if (twist < 0) {
-                //if ( sensorControl.getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER) * GEAR_RATIO_TWIST > 896) {
-                    twistSpeed = TWIST_SPEED;
-                //}
-            }
-            updateTwist(twistSpeed);
+                SensorType.SHOOTER_TILT_POTENTIOMETER) >= 15) {
+                if (twist > 0) {
+                    if(encoderTwist > -TWIST_BOUND_HIGH)
+                        twistSpeed = -TWIST_SPEED;
+                } else if (twist < 0) {
+                    if(encoderTwist < TWIST_BOUND_HIGH)
+                        twistSpeed = TWIST_SPEED;
+                }
+        } else {
+            DriverStation.reportError("Below Tilt threshold", false);
+                if (twist > 0) {
+                    if(encoderTwist > -TWIST_BOUND_LOW)
+                        twistSpeed = -TWIST_SPEED;
+                } else if (twist < 0) {
+                    if(encoderTwist < TWIST_BOUND_LOW)
+                        twistSpeed = TWIST_SPEED;
+                }
         }
-        
+        DriverStation.reportError("\n\nTilt:: " + sensorControl
+                .getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
+        DriverStation.reportError("\nTwist Encoder:: " + encoderTwist, false);
+        updateTwist(twistSpeed);
     }
     public void updateTwist(double speed) {
         if (speed > 0) {
