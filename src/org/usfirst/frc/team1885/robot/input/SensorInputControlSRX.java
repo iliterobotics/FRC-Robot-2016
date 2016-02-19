@@ -59,6 +59,14 @@ public class SensorInputControlSRX {
         output.append("\nTilt Potentiometer: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER));
         output.append("\n Twist Position: " + getEncoderAbsolutePosition(SensorType.SHOOTER_TWIST_ENCODER));
         DriverStation.reportError(output + "\n", false);
+        /*
+         * Encoder values testing
+         * 
+         * DriverStation.reportError("\nRight Encoder Value::" +
+         * getEncoderDistance(SensorType.RIGHT_ENCODER) +
+         * " --- Left Encoder Value:: " +
+         * getEncoderDistance(SensorType.LEFT_ENCODER), false);
+         */
     }
     public double getInitPitch() {
         return INITIAL_PITCH;
@@ -134,9 +142,9 @@ public class SensorInputControlSRX {
         return rsrx.getSensor().get(type).getPulseWidthPosition();
     }
 
-    public double getEncoderDistance() {
-        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * rsrx.getSensor()
-                .get(SensorType.RIGHT_ENCODER).getEncPosition() / TICKS_IN_360;
+    public double getEncoderDistance(SensorType type) {
+        return RobotConfiguration.WHEEL_DIAMETER * Math.PI
+                * rsrx.getSensor().get(type).getEncPosition() / TICKS_IN_360;
     }
 
     public void addLidarSensor(Port port) {

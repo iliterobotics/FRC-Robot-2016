@@ -6,6 +6,7 @@ import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 
 /**
  * Waits until the robot has traversed a certain distance. Moving forward 1 in
@@ -34,71 +35,95 @@ public class AutoDriveDistance extends AutoCommand {
                                     // traversing
     private boolean isRightFinished; // If the right drive train side is
                                      // finished traversing
+    private AutoDriveForward driveForward;
 
     /**
      * @param d
-     *            Traverse distance in inches
+     *            Distance to travel in inches
+     * @param b
+     *            If it should stop at the end of the distance
      */
     public AutoDriveDistance(double d, boolean b) {
         sensorInputControl = SensorInputControlSRX.getInstance();
         distance = d;
         doesStop = b;
-        initDisRight = sensorInputControl.getEncoderDistance();
-        initDisRight = sensorInputControl.getEncoderDistance();
-        leftInputPower = DrivetrainControl.getInstance().getLeftDriveSpeed();
-        rightInputPower = DrivetrainControl.getInstance().getRightDriveSpeed();
+        driveForward = new AutoDriveForward(SensorType.LEFT_ENCODER,
+                SensorType.RIGHT_ENCODER);
     }
 
+    /**
+     * @param d
+     *            Distance to travel in inches
+     * @param b
+     *            If it should stop at the end of the distance
+     * @param lP
+     *            Power of left side of drive train
+     * @param rP
+     *            Power of right side of drive train
+     */
     public AutoDriveDistance(double d, boolean b, double lP, double rP) {
-        sensorInputControl = SensorInputControlSRX.getInstance();
-        distance = d;
-        doesStop = b;
-        initDisLeft = sensorInputControl.getEncoderDistance();
-        initDisRight = sensorInputControl.getEncoderDistance();
+        this(d, b);
         leftInputPower = lP;
         rightInputPower = rP;
     }
 
     @Override
     public boolean execute() {
-        disRight = sensorInputControl.getEncoderDistance();
-        disLeft = sensorInputControl.getEncoderDistance();
+        disLeft = sensorInputControl
+                .getEncoderDistance(SensorType.LEFT_ENCODER);
+        disRight = sensorInputControl
+                .getEncoderDistance(SensorType.RIGHT_ENCODER);
+
+//        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
+//        DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
 
         isLeftFinished = Math.abs(disLeft - initDisLeft) >= distance;
         isRightFinished = Math.abs(disRight - initDisRight) >= distance;
 
-        DriverStation.reportError(
-                "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
-                false);
-        DriverStation.reportError(
-                "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
-                false);
+        // DriverStation.reportError(
+        // "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
+        // false);
+        // DriverStation.reportError(
+        // "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
+        // false);
 
-        if (!doesStop && isLeftFinished && isRightFinished) {
-            DriverStation.reportError("\nFinished traveling distance!", false);
+        if (!doesStop && isRightFinished && isLeftFinished) {
+            DriverStation.reportError("\nFinished traveling distance!"
+                    + System.currentTimeMillis(), false);
             return true;
-        } else if (isLeftFinished && isRightFinished) {
-            DriverStation.reportError("\nFinished traveling distance!", false);
-            leftDriveSpeed = 0;
-            rightDriveSpeed = 0;
+        } else if (isRightFinished && isLeftFinished) {
+            DriverStation.reportError(
+                    "\nFinished traveling distance! Stopping.", false);
+            leftDriveSpeed = rightDriveSpeed = 0;
+            DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
+            DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
             return true;
         } else if (isLeftFinished) {
-            rightDriveSpeed = 0;
-        } else if (isRightFinished) {
             leftDriveSpeed = 0;
+        } else if (isRightFinished) {
+            rightDriveSpeed = 0;
         }
         return false;
     }
 
     @Override
     public boolean updateOutputs() {
-        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
-                rightDriveSpeed);
+        driveForward.driveForward(leftDriveSpeed, rightDriveSpeed);
         return false;
     }
 
     @Override
     public boolean init() {
+        if (leftInputPower == 0 && rightInputPower == 0) {
+            leftInputPower = DrivetrainControl.getInstance()
+                    .getLeftDriveSpeed();
+            rightInputPower = DrivetrainControl.getInstance()
+                    .getRightDriveSpeed();
+        }
+        initDisLeft = sensorInputControl
+                .getEncoderDistance(SensorType.LEFT_ENCODER);
+        initDisRight = sensorInputControl
+                .getEncoderDistance(SensorType.RIGHT_ENCODER);
         leftDriveSpeed = rightInputPower;
         rightDriveSpeed = leftInputPower;
         return true;

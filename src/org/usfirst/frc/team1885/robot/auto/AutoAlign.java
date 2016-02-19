@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot.auto;
 
+import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -19,6 +20,9 @@ public class AutoAlign extends AutoCommand {
 
     private final double SPEED = 0.2;
     private final double ALIGNMENT_ERROR = 1;
+    private final double TURN_SPEED = .35; // should be positive
+
+    private PID pid;
     private SensorInputControlSRX sensorInputControl;
     private double rightDrivePower;
     private double leftDrivePower;
@@ -36,12 +40,32 @@ public class AutoAlign extends AutoCommand {
 
         rightDrivePower = leftDrivePower = SPEED;
 
+        // leftDrivePower = pid.getPID(0, -yaw);
+
+        // if (leftDrivePower > 0) {
+        // leftDrivePower = (leftDrivePower < AutoAlign.MIN_SPEED
+        // ? AutoAlign.MIN_SPEED : leftDrivePower);
+        // } else if (leftDrivePower < 0) {
+        // leftDrivePower = (leftDrivePower > -AutoAlign.MIN_SPEED
+        // ? -AutoAlign.MIN_SPEED : leftDrivePower);
+        // }
+
+        // rightDrivePower = pid.getPID(0, -yaw);
+
+        // if (rightDrivePower > 0) {
+        // rightDrivePower = (rightDrivePower < AutoAlign.MIN_SPEED
+        // ? AutoAlign.MIN_SPEED : rightDrivePower);
+        // } else if (rightDrivePower < 0) {
+        // rightDrivePower = (rightDrivePower > -AutoAlign.MIN_SPEED
+        // ? -AutoAlign.MIN_SPEED : rightDrivePower);
+        // }
+
         if (yaw > ALIGNMENT_ERROR) {
-            leftDrivePower = -leftDrivePower;
-            rightDrivePower = 0;
+            leftDrivePower = TURN_SPEED;
+            rightDrivePower = -TURN_SPEED;
         } else if (yaw < -ALIGNMENT_ERROR) {
-            rightDrivePower = -rightDrivePower;
-            leftDrivePower = 0;
+            rightDrivePower = TURN_SPEED;
+            leftDrivePower = -TURN_SPEED;
         } else {
             DriverStation.reportError("Alligned.", false);
             leftDrivePower = 0;
