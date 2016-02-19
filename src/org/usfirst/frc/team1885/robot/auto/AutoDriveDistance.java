@@ -74,9 +74,8 @@ public class AutoDriveDistance extends AutoCommand {
         disRight = sensorInputControl
                 .getEncoderDistance(SensorType.RIGHT_ENCODER);
 
-        driveForward.driveForward(leftDriveSpeed, rightDriveSpeed);
-        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
-        DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
+//        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
+//        DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
 
         isLeftFinished = Math.abs(disLeft - initDisLeft) >= distance;
         isRightFinished = Math.abs(disRight - initDisRight) >= distance;
@@ -109,8 +108,7 @@ public class AutoDriveDistance extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
-                rightDriveSpeed);
+        driveForward.driveForward(leftDriveSpeed, rightDriveSpeed);
         return false;
     }
 

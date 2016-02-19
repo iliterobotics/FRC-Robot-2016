@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.robot.common;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * an Improvement on the PID class, rewritten with better documentation and cleaner code
  * 
@@ -62,9 +64,14 @@ public class TruePID {
      */
     public double getPID(double projectedValue, double currentValue){
         
-        double error = Math.min(1.0, Math.max(-1.0, (projectedValue - currentValue) / MAX_ERROR));
+        double error = (projectedValue - currentValue) / MAX_ERROR;
         
-        double pid = Math.min(1.0, Math.max(-1.0, getP(error) + getI(error, 1000) + getD(error)));
+        DriverStation.reportError("\nerror:" + error, false);
+        DriverStation.reportError("\nP:" + getP(error), false);
+        DriverStation.reportError("\nI:" + getI(error, 1000), false);
+        DriverStation.reportError("\nD:" + getD(error), false);
+        
+        double pid = getP(error) + getI(error, 1000) + getD(error);
         
         return pid;
     }
@@ -95,21 +102,10 @@ public class TruePID {
      * @return the amount of power to be applied to the system ranging from -1 to 1
      */
     public double getI(double error, int timeDelimeter){
-        //Check for if this is the first time i is checked;
-        if(initialTime == -1){
-            initialTime = System.currentTimeMillis();
-            lastTime = initialTime;
-        }
+        integral  += error;
         
-        long time = System.currentTimeMillis() - initialTime;
-        long deltaTime = time - lastTime;
+        double result =  I * (integral);
         
-        integral  += error*deltaTime;
-        totalTime += deltaTime;
-        
-        double result =  I * (integral/timeDelimeter);
-        
-        lastTime = time;
         return result;
     }
     

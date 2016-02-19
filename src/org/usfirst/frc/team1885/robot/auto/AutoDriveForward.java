@@ -5,79 +5,74 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import com.sun.org.glassfish.external.statistics.annotations.Reset;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 
 public class AutoDriveForward {
-    
-    private static final double ALLOWABLE_MOTOR_DIFF = 0.05; //in percentage
-    
+
+    private static final double ALLOWABLE_MOTOR_DIFF = 0.05; // in percentage
+
     private TruePID leftPID;
     private TruePID rightPID;
-    
+
     private int initialLeftTicks;
     private int initialRightTicks;
-    
-    private static final double P = 0.5;
-    private static final double I = 0.5;
-    private static final double D = 0.5;
-    private static final int FULL_ERROR = 50;
-    
+
+    private static final double P = 0.4;
+    private static final double I = 0.1;
+    private static final double D = 0.01;
+    private static final int FULL_ERROR = 500;
+
     private final SensorType LEFT_ENCODER;
     private final SensorType RIGHT_ENCODER;
-    
+
     private RobotControlWithSRX srx;
-    
-    /**generic constructor*/
-    public AutoDriveForward(SensorType leftEncoder, SensorType rightEncoder){
+
+    /** generic constructor */
+    public AutoDriveForward(SensorType leftEncoder, SensorType rightEncoder) {
         LEFT_ENCODER = leftEncoder;
         RIGHT_ENCODER = rightEncoder;
-            
+
+        srx = RobotControlWithSRX.getInstance();
+        
         leftPID = new TruePID(P, I, D, FULL_ERROR);
         rightPID = new TruePID(P, I, D, FULL_ERROR);
-        
-        srx = RobotControlWithSRX.getInstance();
+
+        leftPID.reset();
+        rightPID.reset();
+
+        initialLeftTicks = srx.getSensor().get(LEFT_ENCODER).getEncPosition();
+        initialRightTicks = srx.getSensor().get(RIGHT_ENCODER).getEncPosition();
     }
-    
-    public void driveForward(double leftMotor, double rightMotor){
-        if(Math.abs(leftMotor - rightMotor) < ALLOWABLE_MOTOR_DIFF){
-            
-            if(initialLeftTicks == -1){
-                initialLeftTicks = srx.getSensor().get(LEFT_ENCODER).getEncPosition();
-            }
-            if(initialRightTicks == -1){
-                initialRightTicks = srx.getSensor().get(RIGHT_ENCODER).getEncPosition();
-            }
-            
-            int leftTicks = srx.getSensor().get(LEFT_ENCODER).getEncPosition();
-            int rightTicks = srx.getSensor().get(RIGHT_ENCODER).getEncPosition();
-            
-            
-            if(leftTicks > rightTicks){
-                double pidAdjustment = rightPID.getPID(leftTicks, rightTicks);
-                if(rightMotor + pidAdjustment > 1){
-                    leftMotor += leftPID.getPID(leftTicks, rightTicks);
-                }
-                else
-                    rightMotor += pidAdjustment;
-            }
-            else if(rightTicks > leftTicks){
-                double pidAdjustment = leftPID.getPID(leftTicks, rightTicks);
-                if(leftMotor + pidAdjustment > 1){
-                    rightMotor += rightPID.getPID(leftTicks, rightTicks);
-                }
-                else
-                    leftMotor += pidAdjustment;
-            }
-            
-            DrivetrainControl.getInstance().setLeftDriveSpeed(leftMotor);
-            DrivetrainControl.getInstance().setRightDriveSpeed(rightMotor);
+
+    public void driveForward(double leftMotor, double rightMotor) {
+        
+        DriverStation.reportError("\n\nIleftTicks:" + initialLeftTicks, false);
+        DriverStation.reportError("\nIrightTicks:" + initialRightTicks, false);
+        
+        int leftTicks = srx.getSensor().get(LEFT_ENCODER).getEncPosition() - initialLeftTicks;
+        int rightTicks = srx.getSensor().get(RIGHT_ENCODER).getEncPosition() - initialRightTicks;
+
+        DriverStation.reportError("\nleftTicks:" + leftTicks, false);
+        DriverStation.reportError("\nrightTicks:" + rightTicks, false);
+        
+        if (Math.abs(leftTicks) > Math.abs(rightTicks)) {
+            double pidAdjustment = rightPID.getPID(leftTicks, rightTicks);
+            rightMotor += pidAdjustment;
+            DriverStation.reportError("\nradjustment:" + pidAdjustment, false);
+        } else if (Math.abs(rightTicks) > Math.abs(leftTicks)) {
+            double pidAdjustment = leftPID.getPID(leftTicks, rightTicks);
+            leftMotor += pidAdjustment;
+            DriverStation.reportError("\nladjustment:" + pidAdjustment, false);
         }
-        else{
-            leftPID.reset();
-            rightPID.reset();
-            
-            initialLeftTicks = -1;
-            initialRightTicks= -1;
-        }
+        
+        DriverStation.reportError("\nleftMotor:" + leftMotor, false);
+        DriverStation.reportError("\nrightMotor:" + rightMotor, false);
+        
+        DrivetrainControl.getInstance().setLeftDriveSpeed(leftMotor);
+        DrivetrainControl.getInstance().setRightDriveSpeed(rightMotor);
+        RobotControlWithSRX.getInstance().updateDriveSpeed(leftMotor, rightMotor);
     }
 }
