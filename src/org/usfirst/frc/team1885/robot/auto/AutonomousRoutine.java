@@ -23,7 +23,7 @@ public class AutonomousRoutine {
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
-        Timer.delay(3);
+        Timer.delay(5);
         initAuto();
     }
     public void execute() {
@@ -63,7 +63,7 @@ public class AutonomousRoutine {
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
         switch (type) {
         case LOWBAR:
-            autoLowBar();
+            // autoLowBar();
             break;
         case PORTCULLIS:
             autoPortcullis();
@@ -122,7 +122,7 @@ public class AutonomousRoutine {
      * Reusable method to align robot after crossing a defense
      */
     public void autoAlign() {
-        // commands.add(new AutoAlign());
+        commands.add(new AutoAlign());
         // autoShootBall(false);
     }
 

@@ -24,7 +24,7 @@ public class AutoAlign extends AutoCommand {
     private final double I = 0.05;
     private final double D = 0;
     private final double ALIGNMENT_ERROR = 1;
-    private final double TURN_SPEED = .2; // should be positive
+    private final double TURN_SPEED = .35; // should be positive
 
     private PID pid;
     private SensorInputControlSRX sensorInputControl;
@@ -74,10 +74,10 @@ public class AutoAlign extends AutoCommand {
 
         if (yaw > ALIGNMENT_ERROR) {
             leftDrivePower = TURN_SPEED;
-            rightDrivePower = 0;
+            rightDrivePower = -TURN_SPEED;
         } else if (yaw < -ALIGNMENT_ERROR) {
             rightDrivePower = TURN_SPEED;
-            leftDrivePower = 0;
+            leftDrivePower = -TURN_SPEED;
         } else {
             DriverStation.reportError("Alligned.", false);
             leftDrivePower = 0;
