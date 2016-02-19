@@ -17,7 +17,7 @@ public class AutoDeadReckon extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-        driveForward.driveForward(leftDriveSpeed, rightDriveSpeed);
+//        driveForward.driveForward(leftDriveSpeed, rightDriveSpeed);
         return false;
     }
 

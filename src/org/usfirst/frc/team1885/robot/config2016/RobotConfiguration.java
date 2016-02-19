@@ -37,7 +37,7 @@ public class RobotConfiguration {
 //        DriverInputControlSRX.getInstance()
 //                .addJoystick(RobotJoystickType.RIGHT_DRIVE, new Joystick(1));
         DriverInputControlSRX.getInstance()
-                .addJoystick(RobotJoystickType.CONTROLLER, new Joystick(0));
+                .addJoystick(RobotJoystickType.CONTROLLER, new Joystick(2));
 
         JoystickButtonMap.getInstance().addControllerButton(
                 RobotButtonType.INTAKE_SOLENOID,
