@@ -32,9 +32,9 @@ public class AutonomousRoutine {
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
 
-        Timer.delay(3);
-        type = DefenseType.LOW_BAR;
+        getConfiguration();
         initAutoBreach();
+        autoMoveToShoot(0.0, 90, 11 * 12, 0.0);
         // autoMoveToShoot(needs values)
 
         // Not finished yet
@@ -140,7 +140,7 @@ public class AutonomousRoutine {
     public void autoMoveToShoot(double firstMove, double firstTurn,
             double secondMove, double goalTurn) {
         commands.add(new AutoDriveDistance(firstMove, true));
-        commands.add(new AutoTurn(firstTurn, 1));
+        commands.add(new AutoAlign(SensorInputControlSRX.getInstance().getYaw() + firstTurn));
         commands.add(new AutoDriveDistance(secondMove, true));
         commands.add(new AutoAlign(goalTurn));
         if (isHigh) {

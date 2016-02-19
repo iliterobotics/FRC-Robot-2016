@@ -5,7 +5,7 @@ import dataclient.robotdata.autonomous.AutonomousConfig;
 
 public class RobotAutonomousConfiguration {
     
-    public static final String URL = "http://" + "169.254.96.238" + ":8083";
+    public static final String URL = "http://" + "10.18.85.207" + ":8083";
     
     public static AutonomousConfig pullConfiguration(){
         DataServerWebClient client = new DataServerWebClient(URL);
