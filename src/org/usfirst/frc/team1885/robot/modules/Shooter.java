@@ -17,7 +17,8 @@ public class Shooter implements Module {
     private final double TWIST_SPEED = .3;
     private final double TILT_SPEED = .2;
     private final double TILT_BRAKE = .1;
-    public static final double GEAR_RATIO = 1.0 / 4;
+    public static final double GEAR_RATIO_TILT = 1.0 / 4;
+    public static final double GEAR_RATIO_TWIST = 3.0 / 7;
     private double flywheelSpeedLeft;
     private MotorState leftState;
     private double flywheelSpeedRight;
@@ -125,12 +126,20 @@ public class Shooter implements Module {
     public void updateTwist() {
         twistSpeed = 0;
         int twist = driverInputControl.getShooterTwist();
-        if (twist > 0) {
-            twistSpeed = TWIST_SPEED;
-        } else if (twist < 0) {
-            twistSpeed = -TWIST_SPEED;
+        if (sensorControl.getZeroedPotentiometer(
+                SensorType.SHOOTER_TILT_POTENTIOMETER) >= 20) {
+            if (twist > 0) {
+                //if ( sensorControl.getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER) < 128 ) {
+                    twistSpeed = -TWIST_SPEED;
+                //}
+            } else if (twist < 0) {
+                //if ( sensorControl.getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER) * GEAR_RATIO_TWIST > 896) {
+                    twistSpeed = TWIST_SPEED;
+                //}
+            }
+            updateTwist(twistSpeed);
         }
-        updateTwist(twistSpeed);
+        
     }
     public void updateTwist(double speed) {
         if (speed > 0) {

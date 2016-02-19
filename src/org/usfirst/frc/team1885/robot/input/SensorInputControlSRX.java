@@ -56,8 +56,8 @@ public class SensorInputControlSRX {
         StringBuilder output = new StringBuilder();
         output.append("\nLeft Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
         output.append("\nRight Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
-        output.append("\nTilt Potentiometer: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER));
-        output.append("\n Twist Position: " + getEncoderAbsolutePosition(SensorType.SHOOTER_TWIST_ENCODER));
+        output.append("\nTilt Potentiometer0: " + getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER));
+        output.append("\n Twist Position: " + getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER));
         DriverStation.reportError(output + "\n", false);
     }
     public double getInitPitch() {
@@ -76,6 +76,7 @@ public class SensorInputControlSRX {
         return navx.getRoll();
     }
     public void init() {
+        setEncoderPosition(SensorType.SHOOTER_TWIST_ENCODER,0);
         INITIAL_POT_A_POSITION = rsrx.getSensor()
                 .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw()
                 * UtilityArm.CONVERSION_FACTOR;
@@ -83,7 +84,7 @@ public class SensorInputControlSRX {
                 .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
                 * UtilityArm.CONVERSION_FACTOR;
         INITIAL_TILT_POSITION = getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER);
-        
+        DriverStation.reportError("" + INITIAL_TILT_POSITION, false);
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
@@ -94,10 +95,13 @@ public class SensorInputControlSRX {
     public double getAnalogInPosition(SensorType type) {
         return rsrx.getSensor().get(type).getAnalogInPosition();
     }
+    public void setEncoderPosition(SensorType type, int pos) {
+        rsrx.getSensor().get(type).setEncPosition(pos);
+    }
     public double getAnalogGeneric(SensorType type) {
        switch(type){
        case SHOOTER_TILT_POTENTIOMETER:
-           return rsrx.getSensor().get(type).getAnalogInRaw() / POTENTIOMETER_CONVERSION_FACTOR * Shooter.GEAR_RATIO;
+           return rsrx.getSensor().get(type).getAnalogInRaw() / POTENTIOMETER_CONVERSION_FACTOR * Shooter.GEAR_RATIO_TILT;
        default:
            return rsrx.getSensor().get(type).getAnalogInRaw();
        }
