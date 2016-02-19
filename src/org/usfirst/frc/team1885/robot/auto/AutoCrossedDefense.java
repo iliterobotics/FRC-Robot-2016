@@ -66,10 +66,10 @@ public class AutoCrossedDefense extends AutoCommand {
                         .setLeftDriveSpeed(leftDriveSpeed);
                 DrivetrainControl.getInstance()
                         .setRightDriveSpeed(rightDriveSpeed);
-                DriverStation.reportError(
-                        "\nCrossed the defense, stopping robot now."
-                                + System.currentTimeMillis(),
-                        false);
+                // DriverStation.reportError(
+                // "\nCrossed the defense, stopping robot now."
+                // + System.currentTimeMillis(),
+                //        false);
                 return true;
             }
         } else {

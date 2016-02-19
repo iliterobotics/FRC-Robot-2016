@@ -48,9 +48,10 @@ public class AutoAlign extends AutoCommand {
     public boolean execute() {
         double yaw = sensorInputControl.getYaw();
 
-        DriverStation.reportError("\nInitial yaw: " + initial_yaw + " ::: Yaw: "
-                + yaw + "\nLeft Speed: " + leftDrivePower + " ::: Right Speed: "
-                + rightDrivePower + "\n", false);
+        // DriverStation.reportError("\nInitial yaw: " + initial_yaw + " :::
+        // Yaw: "
+        // + yaw + "\nLeft Speed: " + leftDrivePower + " ::: Right Speed: "
+        // + rightDrivePower + "\n", false);
 
         // leftDrivePower = pid.getPID(0, -yaw);
 

@@ -10,8 +10,6 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine {
     public static final double PITCH_CHANGE_ON_RAMP = 4.5;
-    public static final double RAMPART_SPEED_MAX = 0.6;
-    public static final double RAMPART_SPEED_MIN = 0.5;
     public static final double START_DRIVE_SPEED = -0.5;
 
     private Robot robot;
@@ -23,7 +21,7 @@ public class AutonomousRoutine {
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
-        Timer.delay(5);
+        Timer.delay(3);
         initAuto();
     }
     public void execute() {
@@ -56,8 +54,8 @@ public class AutonomousRoutine {
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAuto() {
-        // commands.add(new AutoDriveStart(START_DRIVE_SPEED));
-        // commands.add(new AutoReachedDefense());
+        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+        commands.add(new AutoReachedDefense());
         DefenseType type = DefenseType.LOWBAR; // to be changed to equal the
                                                // analog input
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
@@ -83,7 +81,7 @@ public class AutonomousRoutine {
         default:
             break;
         }
-        // commands.add(new AutoCrossedDefense());
+        commands.add(new AutoCrossedDefense());
         autoAlign();
     }
     /**
