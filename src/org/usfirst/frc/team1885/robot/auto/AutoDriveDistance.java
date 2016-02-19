@@ -95,6 +95,7 @@ public class AutoDriveDistance extends AutoCommand {
         } else if (isRightFinished) {
             rightDriveSpeed = 0;
         }
+        DriverStation.reportError("\nLeft Status:: " + isLeftFinished + "Right Status:: " + isRightFinished, false);
         return false;
     }
 

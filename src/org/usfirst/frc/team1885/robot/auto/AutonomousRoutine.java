@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -12,7 +13,8 @@ public class AutonomousRoutine {
     public static final double PITCH_CHANGE_ON_RAMP = 4.5;
     public static final double RAMPART_SPEED_MAX = 0.6;
     public static final double RAMPART_SPEED_MIN = 0.5;
-    public static final double START_DRIVE_SPEED = -0.5;
+    public static final double START_DRIVE_SPEED = -0.45;
+    public static final double MOAT_CLEAR_SPEED = -0.75;
 
     private Robot robot;
     private LinkedList<AutoCommand> commands;
@@ -59,7 +61,7 @@ public class AutonomousRoutine {
     public void initAuto() {
         commands.add(new AutoDriveStart(START_DRIVE_SPEED));
         commands.add(new AutoReachedDefense());
-        DefenseType type = DefenseType.LOWBAR; // to be changed to equal the
+        DefenseType type = DefenseType.MOAT; // to be changed to equal the
                                                // analog input
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
         switch (type) {
@@ -81,6 +83,8 @@ public class AutonomousRoutine {
         case DRAWBRIDGE:
             autoDrawbridge();
             break;
+        case MOAT:
+            autoMoat();
         default:
             break;
         }
@@ -88,12 +92,19 @@ public class AutonomousRoutine {
         autoAlign();
     }
     /**
+     * Adds speed to the robot to clear the moat
+     */
+    public void autoMoat(){
+        commands.add(new AutoDriveStart(MOAT_CLEAR_SPEED));
+    }
+    /**
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
         double lowBarTravelDistance = 4.2 * 12; // Best distance from testing
+        ActiveIntake.getInstance().intakeDown();
         commands.add(
-                new AutoDriveDistance(lowBarTravelDistance, false, -.2, -.2));
+                new AutoDriveDistance(lowBarTravelDistance, false, -.3, -.3));
 
     }
 

@@ -21,12 +21,10 @@ public class ActiveIntake implements Module {
     private static final double delay = 1000;
 
     protected ActiveIntake() {
-        this.intakeState = MotorState.OFF;
-        intakeSpeed = 0;
         driverInputControl = DriverInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
-        isIntaking = false;
         counter = System.currentTimeMillis();
+        reset();
     }
     public static ActiveIntake getInstance() {
         if (instance == null) {
@@ -78,6 +76,8 @@ public class ActiveIntake implements Module {
     public void reset() {
         this.intakeState = MotorState.OFF;
         intakeSpeed = 0;
+        isIntaking = true;        
+        updateOutputs();
     }
 
     public void updateOutputs() {
@@ -88,6 +88,14 @@ public class ActiveIntake implements Module {
     @Override
     public void update() {
         updateIntake();
+        updateOutputs();
+    }
+    public void intakeUp(){
+       isIntaking = true;
+       updateOutputs();
+    }
+    public void intakeDown(){
+        isIntaking = false;
         updateOutputs();
     }
 }

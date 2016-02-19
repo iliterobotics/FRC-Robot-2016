@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.robot.auto;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * Stops procedures for given time, in millis.
  * 
@@ -15,6 +17,7 @@ public class AutoWait extends AutoCommand {
     }
     public boolean execute() {
         if (System.currentTimeMillis() >= startTime + miliseconds) {
+            DriverStation.reportError("finished waiting", false);
             return true;
         } else {
             return false;

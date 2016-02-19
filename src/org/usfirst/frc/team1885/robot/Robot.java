@@ -10,6 +10,7 @@ import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.manipulator.AuxArm;
+import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -55,7 +56,8 @@ public class Robot extends SampleRobot {
         } catch (Exception e) {
             DriverStation.reportError("Robot - Error configuring Robot", false);
         }
-        diameter = 4.0;
+        diameter = 9.0;
+        ActiveIntake.getInstance();
 
         DrivetrainControl.getInstance().addSpeed(1, 15.0);
         this.srx = RobotControlWithSRX.getInstance();

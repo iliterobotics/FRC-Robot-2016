@@ -24,7 +24,7 @@ public class AutoAlign extends AutoCommand {
     private final double I = 0.05;
     private final double D = 0;
     private final double ALIGNMENT_ERROR = 1;
-    private final double TURN_SPEED = .2; // should be positive
+    private final double TURN_SPEED = .25; // should be positive
 
     private PID pid;
     private SensorInputControlSRX sensorInputControl;

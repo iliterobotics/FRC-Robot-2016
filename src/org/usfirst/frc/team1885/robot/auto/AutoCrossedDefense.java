@@ -29,7 +29,7 @@ public class AutoCrossedDefense extends AutoCommand {
 
     public AutoCrossedDefense() {
         sensorInputControl = SensorInputControlSRX.getInstance();
-        ERROR = 2;
+        ERROR = 2.5;
         WAIT_TIME = 0.15;
         FLAT_ROLL = sensorInputControl.getInitRoll();
         FLAT_PITCH = sensorInputControl.getInitPitch();
@@ -58,6 +58,7 @@ public class AutoCrossedDefense extends AutoCommand {
             if (System.currentTimeMillis() - startTime > WAIT_TIME * 1000) {
                 // WAIT_TIME converted to millis
                 leftDriveSpeed = rightDriveSpeed = 0;
+                DriverStation.reportError("level", false);
                 return true;
             }
         } else {
