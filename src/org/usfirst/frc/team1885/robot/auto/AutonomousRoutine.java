@@ -17,9 +17,14 @@ public class AutonomousRoutine {
     public static final double RAMPART_SPEED_MIN = 0.5;
     public static final double START_DRIVE_SPEED = -0.5;
 
+    private DefenseType type;
+    private int targetDefense;
+    
     private Robot robot;
     private LinkedList<AutoCommand> commands;
-    private static final double delay = 0.05;
+    private double delay = 0.05;
+    private boolean isHigh;
+    private int goal;
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
@@ -28,6 +33,8 @@ public class AutonomousRoutine {
         DriverStation.reportError("Gyro Calibrated", false);
         Timer.delay(5);
         initAutoBreach(DefenseType.LOW_BAR);   // to be changed to equal the analog input
+        //Not finished yet
+        //initAutoBreach(type);
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -57,11 +64,11 @@ public class AutonomousRoutine {
 
     public void getConfiguration() {
         AutonomousConfig  autoC = RobotAutonomousConfiguration.pullConfiguration();
-        DefenseType type = DefenseType.values()[autoC.getDefense()];
-        int targetDefense = autoC.getPosition();
-        int delay = autoC.getDelay();
-        initAutoBreach(type);
-        
+        type = DefenseType.values()[autoC.getDefense()];
+        targetDefense = autoC.getPosition();
+        delay = autoC.getDelay() / 1000.0; //time in seconds
+        isHigh = autoC.getGoalElevation(); //true = high goal, false = low goal
+        goal = autoC.getGoalPosition();  //-1 = Left, 0 = Center, 1 = Right
     }
     
     /**
