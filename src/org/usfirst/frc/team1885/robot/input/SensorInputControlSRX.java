@@ -53,6 +53,16 @@ public class SensorInputControlSRX {
         ticks = new HashMap<SensorType, Integer>();
     }
     public void update() {
+        // StringBuilder output = new StringBuilder();
+        // output.append("\nLeft Flywheel Velocity: " +
+        // getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
+        // output.append("\nRight Flywheel Velocity: " +
+        // getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
+        // output.append("\nTilt Potentiometer: " +
+        // getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER));
+        // output.append("\n Twist Position: " +
+        // getEncoderAbsolutePosition(SensorType.SHOOTER_TWIST_ENCODER));
+        // DriverStation.reportError(output + "\n", false);
         /*
          * Encoder values testing
          * 

@@ -5,7 +5,9 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
+import dataclient.robotdata.autonomous.AutonomousConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -13,19 +15,32 @@ public class AutonomousRoutine {
     public static final double PITCH_CHANGE_ON_RAMP = 4.5; // NavX is sideways
     public static final double RAMPART_SPEED_MAX = 0.6;
     public static final double RAMPART_SPEED_MIN = 0.5;
-    public static final double START_DRIVE_SPEED = 0.5;
+    public static final double START_DRIVE_SPEED = -0.5;
+
+    private DefenseType type;
+    private int targetDefense;
 
     private Robot robot;
     private LinkedList<AutoCommand> commands;
-    private static final double delay = 0.05;
+    private double delay = 0.05;
+    private boolean isHigh;
+    private int goal;
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
+
         Timer.delay(3);
-        initAuto();
+        type = DefenseType.LOW_BAR;
+        initAutoBreach();
+        // autoMoveToShoot(needs values)
+
+        // Not finished yet
+        // getConfiguration();
+        // initAutoBreach(type);
+        // autoMoveToShoot();
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -53,24 +68,33 @@ public class AutonomousRoutine {
     // AutoCrossedDefense - checks if we have landed and can prepare to shoot
     // AutoAlign - realigns the robot to move in position to shoot
 
+    public void getConfiguration() {
+        AutonomousConfig autoC = RobotAutonomousConfiguration
+                .pullConfiguration();
+        type = DefenseType.values()[autoC.getDefense()];
+        targetDefense = autoC.getPosition();
+        delay = autoC.getDelay() / 1000.0; // time in seconds
+        isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
+        goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
+    }
+
     /**
      * Method that initializes all commands for AutonomousRoutine to run
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
-    public void initAuto() {
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+    public void initAutoBreach() {
+        commands.add(new AutoDriveStart(START_DRIVE_SPEED, delay));
         commands.add(new AutoReachedDefense());
-        DefenseType type = DefenseType.LOWBAR; // to be changed to equal the
-                                               // analog input
+
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
         switch (type) {
-        case LOWBAR:
-            // autoLowBar();
+        case LOW_BAR:
+            autoLowBar();
             break;
         case PORTCULLIS:
             autoPortcullis();
             break;
-        case CHEVAL:
+        case CHEVAL_DE_FRISE:
             autoCheval();
             break;
         case SALLYPORT:
@@ -87,7 +111,50 @@ public class AutonomousRoutine {
         }
         commands.add(new AutoCrossedDefense());
         autoAlign();
+
     }
+
+    public void initAutoShoot() {
+        // TODO Checks for center, left, or right and chooses the right switch
+        // statement to run for
+        // switch statement based off of defense going for
+        // calls individual method inputting values for goal and position
+        // method adds the commands for getting to the correct position
+    }
+
+    public void autoMoveToShoot() {
+        // Huge Switch statement that finds all the parameters for
+        // autoMoveToShoot that adds commands
+    }
+
+    /**
+     * @param firstMove
+     *            distance in inches for moving after breaching
+     * @param firstTurn
+     *            yaw value to turn to to aim towards goal shooting point
+     * @param secondMove
+     *            distance in inches to move to goal shooting point
+     * @param goalTurn
+     *            yaw value to turn to to aim at goal
+     */
+    public void autoMoveToShoot(double firstMove, double firstTurn,
+            double secondMove, double goalTurn) {
+        commands.add(new AutoDriveDistance(firstMove, true));
+        commands.add(new AutoTurn(firstTurn, 1));
+        commands.add(new AutoDriveDistance(secondMove, true));
+        commands.add(new AutoAlign(goalTurn));
+        if (isHigh) {
+            // TODO aim at high goal
+            // shoot
+
+        } else {
+            // TODO go forward to low goal
+            // raise up shooter
+            // shoot
+        }
+
+    }
+
     /**
      * Controls processes for passing the low bar
      */
@@ -150,4 +217,5 @@ public class AutonomousRoutine {
      */
     public void autoShootBall(boolean goal) {
     }
+
 }

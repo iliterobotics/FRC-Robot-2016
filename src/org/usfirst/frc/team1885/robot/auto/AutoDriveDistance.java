@@ -76,7 +76,6 @@ public class AutoDriveDistance extends AutoCommand {
 
         // DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
         // DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
-
         isLeftFinished = Math.abs(disLeft - initDisLeft) >= distance;
         isRightFinished = Math.abs(disRight - initDisRight) >= distance;
 

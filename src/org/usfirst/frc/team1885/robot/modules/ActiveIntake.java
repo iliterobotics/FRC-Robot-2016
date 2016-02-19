@@ -25,7 +25,7 @@ public class ActiveIntake implements Module {
         intakeSpeed = 0;
         driverInputControl = DriverInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
-        isIntaking = true;
+        isIntaking = false;
         counter = System.currentTimeMillis();
     }
     public static ActiveIntake getInstance() {

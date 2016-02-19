@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot.auto;
 
+import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -22,9 +23,19 @@ public class AutoAlign extends AutoCommand {
     private final double SPEED = 0.2;
     private final double ALIGNMENT_ERROR = 1;
     private final double TURN_SPEED = .35; // should be positive
+    private double degreeToTurn;
+    private PID pid;
     private SensorInputControlSRX sensorInputControl;
     private double rightDrivePower;
     private double leftDrivePower;
+
+    public AutoAlign() {
+        degreeToTurn = 0;
+    }
+
+    public AutoAlign(double degree) {
+        degreeToTurn = degree;
+    }
 
     @Override
     public boolean init() {
@@ -38,10 +49,31 @@ public class AutoAlign extends AutoCommand {
         double yaw = sensorInputControl.getYaw();
 
         rightDrivePower = leftDrivePower = SPEED;
-        if (yaw > ALIGNMENT_ERROR) {
+
+        // leftDrivePower = pid.getPID(0, -yaw);
+
+        // if (leftDrivePower > 0) {
+        // leftDrivePower = (leftDrivePower < AutoAlign.MIN_SPEED
+        // ? AutoAlign.MIN_SPEED : leftDrivePower);
+        // } else if (leftDrivePower < 0) {
+        // leftDrivePower = (leftDrivePower > -AutoAlign.MIN_SPEED
+        // ? -AutoAlign.MIN_SPEED : leftDrivePower);
+        // }
+
+        // rightDrivePower = pid.getPID(0, -yaw);
+
+        // if (rightDrivePower > 0) {
+        // rightDrivePower = (rightDrivePower < AutoAlign.MIN_SPEED
+        // ? AutoAlign.MIN_SPEED : rightDrivePower);
+        // } else if (rightDrivePower < 0) {
+        // rightDrivePower = (rightDrivePower > -AutoAlign.MIN_SPEED
+        // ? -AutoAlign.MIN_SPEED : rightDrivePower);
+        // }
+
+        if (yaw > degreeToTurn + ALIGNMENT_ERROR) {
             leftDrivePower = TURN_SPEED;
             rightDrivePower = -TURN_SPEED;
-        } else if (yaw < -ALIGNMENT_ERROR) {
+        } else if (yaw < degreeToTurn - ALIGNMENT_ERROR) {
             rightDrivePower = TURN_SPEED;
             leftDrivePower = -TURN_SPEED;
         } else {

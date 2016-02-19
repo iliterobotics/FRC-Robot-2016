@@ -68,12 +68,6 @@ public class Robot extends SampleRobot {
      */
     public void operatorControl() {
 
-        // TODO: FIX THIS NPE.
-        // SensorInputControl.getInstance()
-        // .getEncoder(SensorType.DRIVE_TRAIN_LEFT_ENCODER).reset();
-        // SensorInputControl.getInstance()
-        // .getEncoder(SensorType.DRIVE_TRAIN_RIGHT_ENCODER).reset();
-
         while (isOperatorControl() && isEnabled()) {
             sensorInputControl.update();
             // driverInputControl.update();
@@ -135,7 +129,6 @@ public class Robot extends SampleRobot {
         AutonomousRoutine ar = new AutonomousRoutine(this);
         // sensorrx.resetEncoder(SensorType.LEFT_ENCODER);
         // sensorrx.resetEncoder(SensorType.RIGHT_ENCODER);
-
         ar.execute();
     }
 
