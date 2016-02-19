@@ -1,5 +1,8 @@
 package org.usfirst.frc.team1885.robot.input;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -8,12 +11,15 @@ import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Timer;
 
 public class SensorInputControlSRX {
+
+    private static final int TICKS_IN_360 = 1024;
     private double INITIAL_PITCH; // Shouldn't change
     private double INITIAL_ROLL; // Shouldn't change
     private static SensorInputControlSRX instance = null;
@@ -22,6 +28,7 @@ public class SensorInputControlSRX {
     private LidarSensor ls;
     private BuiltInAccelerometer bia;
     private AHRS navx;
+    private Map<SensorType, Integer> ticks;
 
     public static SensorInputControlSRX getInstance() {
         if (instance == null) {
@@ -30,6 +37,8 @@ public class SensorInputControlSRX {
         return instance;
     }
     public void update() {
+        DriverStation.reportError("\nRight Encoder Value::"
+                + getEncoderDistance(SensorType.RIGHT_ENCODER), false);
     }
     public double getInitPitch() {
         return INITIAL_PITCH;
@@ -65,14 +74,18 @@ public class SensorInputControlSRX {
     public int getEncoderPos(SensorType type) {
         return rsrx.getSensor().get(type).getEncPosition();
     }
+
     public int getEncoderVelocity(SensorType type) {
         return rsrx.getSensor().get(type).getEncVelocity();
     }
 
     public double getEncoderDistance(SensorType type) {
-        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * getEncoderPos(type)
-                * 360.0 / 1440.0;
+        return RobotConfiguration.WHEEL_DIAMETER * Math.PI
+                * rsrx.getSensor()
+                .get(type)
+                .getEncPosition() / TICKS_IN_360;
     }
+
     public void addLidarSensor(Port port) {
         ls = new LidarSensor(port);
     }
@@ -98,12 +111,15 @@ public class SensorInputControlSRX {
         INITIAL_PITCH = navx.getPitch();
         INITIAL_ROLL = navx.getRoll();
     }
+    public void resetEncoder(SensorType type) {
+        rsrx.getSensor().get(type).setEncPosition(0);
+    }
 
     /**
      * Private constructor because this is a singleton!!
      */
     private SensorInputControlSRX() {
-
+        ticks = new HashMap<SensorType, Integer>();
     }
 
 }

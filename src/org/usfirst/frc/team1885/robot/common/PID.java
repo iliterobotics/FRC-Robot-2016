@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.robot.common;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class PID {
     private final double p;
     private final double i;
@@ -33,6 +35,9 @@ public class PID {
         error = projectedValue - currentValue;
 
         error = error / this.scaleOutput;
+
+        DriverStation.reportError("\nP: " + (p * getP()) + " ::: I: "
+                + (i * getI(1.0)) + " ::: D: " + (d * getD()), false);
 
         double output = (p * getP()) + (i * getI(1.0)) + (d * getD());
 

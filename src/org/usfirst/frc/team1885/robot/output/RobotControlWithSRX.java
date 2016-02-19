@@ -6,9 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
+import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class RobotControlWithSRX {
     public static RobotControlWithSRX instance;
@@ -16,6 +20,9 @@ public class RobotControlWithSRX {
     private List<CANTalon> rightDrive;
     private Map<RobotMotorType, CANTalon> talons = new HashMap<RobotMotorType, CANTalon>();
     private Map<SensorType, CANTalon> sensors;
+    private Map<RobotPneumaticType, Solenoid> singleSolenoids;
+    private Map<RobotPneumaticType, Solenoid> doubleSolenoids;
+    private Compressor c;
 
     public static synchronized RobotControlWithSRX getInstance() {
         if (instance == null) {
@@ -24,8 +31,12 @@ public class RobotControlWithSRX {
         return instance;
     }
     protected RobotControlWithSRX() {
+        c = new Compressor(0);
+        c.start();
         leftDrive = new ArrayList<CANTalon>();
         rightDrive = new ArrayList<CANTalon>();
+        singleSolenoids = new HashMap<RobotPneumaticType, Solenoid>();
+        sensors = new HashMap<SensorType, CANTalon>();
     }
     public void addTalonOutput(RobotMotorType type, int port) {
         if (type == RobotMotorType.LEFT_DRIVE) {
@@ -47,6 +58,9 @@ public class RobotControlWithSRX {
             talons.put(motorType, ct);
         }
     }
+    public Compressor getCompressor() {
+        return c;
+    }
     public void updateDriveSpeed(double leftspeed, double rightspeed) {
         for (CANTalon leftMotor : leftDrive) {
             leftMotor.set(-leftspeed);
@@ -56,7 +70,7 @@ public class RobotControlWithSRX {
             rightMotor.set(rightspeed);
         }
     }
-    public void updateIntakeMotors(double intakeSpeed) {
+    public void updateIntakeMotor(double intakeSpeed) {
         talons.get(RobotMotorType.ACTIVE_INTAKE).set(intakeSpeed);
     }
     public void updateShooterMotors(double shooterSpeedLeft,
@@ -74,16 +88,25 @@ public class RobotControlWithSRX {
     public Map<RobotMotorType, CANTalon> getTalons() {
         return this.talons;
     }
-    public void updateIntakeMotors(double intakeLeftSpeed,
-            double intakeRightSpeed) {
-        // TODO Auto-generated method stub
-
-    }
     public void updateArmMotors(double jointASpeed, double jointBSpeed) {
-//        talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
-//        talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
+        // talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
+        // talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
     }
-
+    public void gearShift(boolean gear){
+        doubleSolenoids.get(RobotPneumaticType.GEAR_SHIFT).set(gear);
+    }
+    public void addSingleSolenoid(RobotPneumaticType type, int port) {
+        singleSolenoids.put(type, new Solenoid(port));
+    }
+    public void addDoubleSolenoid(RobotPneumaticType type, int port) {
+        doubleSolenoids.put(type, new Solenoid(port));
+    }
+    public void updateSingleSolenoid(RobotPneumaticType type, boolean value) {
+        singleSolenoids.get(type).set(value);
+    }
+    public Solenoid getSingleSolenoid(RobotPneumaticType type) {
+        return singleSolenoids.get(type);
+    }
     public Map<SensorType, CANTalon> getSensor() {
         return this.sensors;
     }

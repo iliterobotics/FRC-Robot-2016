@@ -2,23 +2,31 @@ package org.usfirst.frc.team1885.robot.modules;
 
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
+import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-public class ActiveIntake implements Module{
+import edu.wpi.first.wpilibj.DriverStation;
 
-    public static final int INTAKE_SPEED = 1;
+public class ActiveIntake implements Module {
+
+    public static final double INTAKE_SPEED = 1;
     private static ActiveIntake instance;
-    private double intakeLeftSpeed;
-    private double intakeRightSpeed;
-    private MotorState leftState;
-    private MotorState rightState;
+    private double intakeSpeed;
+    private boolean isIntaking;
+    private MotorState intakeState;
+    private DriverInputControlSRX driverInputControl;
+    private RobotControlWithSRX robotControl;
+    private double counter;
+    private static final double delay = 1000;
 
     protected ActiveIntake() {
-        this.leftState = MotorState.OFF;
-        this.rightState = MotorState.OFF;
-        intakeLeftSpeed = 0; 
-        intakeRightSpeed = 0;
+        this.intakeState = MotorState.OFF;
+        intakeSpeed = 0;
+        driverInputControl = DriverInputControlSRX.getInstance();
+        robotControl = RobotControlWithSRX.getInstance();
+        isIntaking = false;
+        counter = System.currentTimeMillis();
     }
     public static ActiveIntake getInstance() {
         if (instance == null) {
@@ -26,74 +34,60 @@ public class ActiveIntake implements Module{
         }
         return instance;
     }
-    public void setMotorState(MotorState leftState, MotorState rightState) {
-        this.leftState = leftState;
-        this.rightState = rightState;
+
+    public void setMotorState(MotorState intakeState) {
+        this.intakeState = intakeState;
     }
-    public MotorState getLeftMotorState() {
-        return leftState;
+    public MotorState getIntakeMotorState() {
+        return intakeState;
     }
-    public MotorState getRightMotorState(){
-        return rightState;
-    }
-    public double getLeftSpeed() {
-        return intakeLeftSpeed;
-    }
-    public double getRightSpeed(){
-        return intakeRightSpeed;
+    public double getIntakeSpeed() {
+        return intakeSpeed;
     }
     public void updateIntake() {
-        intakeLeftSpeed = 0;
-        intakeRightSpeed = 0;
-        
-        if ((DriverInputControlSRX.getInstance().getButton(
-                RobotButtonType.INTAKE_IN))) {
-                leftState = MotorState.REVERSE;
-                rightState = MotorState.FORWARD;
-                intakeLeftSpeed = INTAKE_SPEED;
-                intakeRightSpeed = -INTAKE_SPEED;
-            }
-    
-        if ((DriverInputControlSRX.getInstance().getButton(
-                RobotButtonType.INTAKE_OUT))) {
-                leftState = MotorState.FORWARD;
-                rightState = MotorState.REVERSE;
-                intakeLeftSpeed = -INTAKE_SPEED;
-                intakeRightSpeed = INTAKE_SPEED;
-            }
-        updateIntake(intakeLeftSpeed, intakeRightSpeed);
-    }
-    public void updateIntake(double leftSpeed, double rightSpeed) {
-        intakeLeftSpeed = leftSpeed;
-        intakeRightSpeed = rightSpeed;
-        if (leftSpeed > 0) {
-            leftState = MotorState.REVERSE;
-        } else if (leftSpeed < 0) {
-            leftState = MotorState.FORWARD;
-        } else {
-            leftState = MotorState.OFF;
+        intakeSpeed = 0;
+
+        if ((driverInputControl.getButton(RobotButtonType.INTAKE_IN))) {
+            intakeState = MotorState.REVERSE;
+            intakeSpeed = -INTAKE_SPEED;
+            // DriverStation.reportError("Suck It\n", false);
         }
-        if (rightSpeed > 0) {
-            rightState = MotorState.REVERSE;
-        } else if (rightSpeed < 0) {
-            rightState = MotorState.FORWARD;
-        } else {
-            rightState = MotorState.OFF;
+
+        if ((driverInputControl.getButton(RobotButtonType.INTAKE_OUT))) {
+            intakeState = MotorState.FORWARD;
+            intakeSpeed = INTAKE_SPEED;
+            // DriverStation.reportError("Spit Out\n", false);
         }
-     }
-    
-    public void stop() {
-        leftState = MotorState.OFF;
-        intakeLeftSpeed = 0;
-        rightState = MotorState.OFF;
-        intakeRightSpeed = 0;
+        if ((driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)
+                && System.currentTimeMillis() >= counter + delay)) {
+            isIntaking = !isIntaking;
+            counter = System.currentTimeMillis();
+        }
+        updateIntake(intakeSpeed);
     }
-    
+    public void updateIntake(double intakeSpeed) {
+        if (intakeSpeed > 0) {
+            intakeState = MotorState.FORWARD;
+        } else if (intakeSpeed < 0) {
+            intakeState = MotorState.REVERSE;
+        } else {
+            intakeState = MotorState.OFF;
+        }
+    }
+
+    public void reset() {
+        this.intakeState = MotorState.OFF;
+        intakeSpeed = 0;
+    }
+
     public void updateOutputs() {
-        RobotControlWithSRX.getInstance().updateIntakeMotors(intakeLeftSpeed, intakeRightSpeed);
+        robotControl.updateIntakeMotor(intakeSpeed);
+        robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER,
+                isIntaking);
     }
     @Override
     public void update() {
         updateIntake();
+        updateOutputs();
     }
 }

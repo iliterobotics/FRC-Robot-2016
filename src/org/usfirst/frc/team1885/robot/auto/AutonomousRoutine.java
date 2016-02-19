@@ -12,7 +12,7 @@ public class AutonomousRoutine {
     public static final double PITCH_CHANGE_ON_RAMP = 4.5;
     public static final double RAMPART_SPEED_MAX = 0.6;
     public static final double RAMPART_SPEED_MIN = 0.5;
-    public static final double START_DRIVE_SPEED = 0.5;
+    public static final double START_DRIVE_SPEED = -0.5;
 
     private Robot robot;
     private LinkedList<AutoCommand> commands;
@@ -24,8 +24,7 @@ public class AutonomousRoutine {
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
         Timer.delay(3);
-        commands.add(new AutoDriveDistance(4 * 12));
-        // commands.add(new AutoTurnEnc(90, 10));
+        initAuto();
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -51,17 +50,16 @@ public class AutonomousRoutine {
     // in between checks to cross the defense
     // AutoCrossedDefense - checks if we have landed and can prepare to shoot
     // AutoAlign - realigns the robot to move in position to shoot
-
     /**
      * Method that initializes all commands for AutonomousRoutine to run
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAuto() {
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
+        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
         commands.add(new AutoReachedDefense());
         DefenseType type = DefenseType.LOWBAR; // to be changed to equal the
                                                // analog input
-
+        // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
         switch (type) {
         case LOWBAR:
             autoLowBar();
@@ -87,23 +85,17 @@ public class AutonomousRoutine {
         commands.add(new AutoCrossedDefense());
         autoAlign();
     }
-
-    /**
-     * Controls processes for passing the Moat, Rough Terrain, and Rock Wall
-     */
-    public void autoBasicDefense() {
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED, START_DRIVE_SPEED));
-        commands.add(new AutoReachedDefense());
-        commands.add(new AutoCrossedDefense());
-        autoAlign();
-    }
     /**
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
-        double lowBarTravelDistance = 10; // subject to change from testing
-        commands.add(new AutoDriveDistance(lowBarTravelDistance));
+        double lowBarTravelDistance = 4.2 * 12; // subject to change from
+                                                // testing
+        commands.add(
+                new AutoDriveDistance(lowBarTravelDistance, false, -.2, -.2));
+
     }
+
     public void autoRamparts() {
         commands.add(new AutoRamparts());
     }
@@ -129,7 +121,7 @@ public class AutonomousRoutine {
      */
     public void autoAlign() {
         commands.add(new AutoAlign());
-        autoShootBall(false);
+        // autoShootBall(false);
     }
 
     /**
