@@ -4,6 +4,8 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import com.sun.xml.internal.ws.api.pipe.Tube;
+
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -19,6 +21,7 @@ public class AutoAlign extends AutoCommand {
 
     private final double SPEED = 0.2;
     private final double ALIGNMENT_ERROR = 1;
+    private final double TURN_SPEED = .35; // should be positive
     private SensorInputControlSRX sensorInputControl;
     private double rightDrivePower;
     private double leftDrivePower;
@@ -35,13 +38,12 @@ public class AutoAlign extends AutoCommand {
         double yaw = sensorInputControl.getYaw();
 
         rightDrivePower = leftDrivePower = SPEED;
-
         if (yaw > ALIGNMENT_ERROR) {
-            leftDrivePower = -leftDrivePower;
-            rightDrivePower = 0;
+            leftDrivePower = TURN_SPEED;
+            rightDrivePower = -TURN_SPEED;
         } else if (yaw < -ALIGNMENT_ERROR) {
-            rightDrivePower = -rightDrivePower;
-            leftDrivePower = 0;
+            rightDrivePower = TURN_SPEED;
+            leftDrivePower = -TURN_SPEED;
         } else {
             DriverStation.reportError("Alligned.", false);
             leftDrivePower = 0;

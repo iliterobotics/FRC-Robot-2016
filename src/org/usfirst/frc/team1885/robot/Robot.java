@@ -12,6 +12,7 @@ import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -53,8 +54,7 @@ public class Robot extends SampleRobot {
             RobotConfiguration.configureRobot();
             sensorInputControl.init();
         } catch (Exception e) {
-            System.out.println("Robot - Error configuring Robot");
-            e.printStackTrace();
+            DriverStation.reportError("Robot - Error configuring Robot", false);
         }
         diameter = 4.0;
         maxSpeed = 15.0;
@@ -76,9 +76,9 @@ public class Robot extends SampleRobot {
 
         while (isOperatorControl() && isEnabled()) {
             sensorInputControl.update();
-//            driverInputControl.update();
+            // driverInputControl.update();
             Shooter.getInstance().update();
-          //UtilityArm.getInstance().update();
+            // UtilityArm.getInstance().update();
             Timer.delay(.005);
         }
 
@@ -133,9 +133,10 @@ public class Robot extends SampleRobot {
 
     public void autonomous() {
         AutonomousRoutine ar = new AutonomousRoutine(this);
-//        sensorrx.resetEncoder(SensorType.LEFT_ENCODER);
-//        sensorrx.resetEncoder(SensorType.RIGHT_ENCODER);
+        // sensorrx.resetEncoder(SensorType.LEFT_ENCODER);
+        // sensorrx.resetEncoder(SensorType.RIGHT_ENCODER);
+
         ar.execute();
     }
-    
+
 }

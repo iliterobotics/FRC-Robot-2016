@@ -10,9 +10,10 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.Solenoid;
 
 public class RobotControlWithSRX {
     public static RobotControlWithSRX instance;
@@ -56,9 +57,6 @@ public class RobotControlWithSRX {
             sensors.put(sensorType, talons.get(motorType));
         }
     }
-    public void addSingleSolenoid(RobotPneumaticType type, int port) {
-        singleSolenoids.put(type, new Solenoid(port));
-    }
     public void addDoubleSolenoid(RobotPneumaticType type, int port1,
             int port2) {
         doubleSolenoids.put(type, new DoubleSolenoid(port1, port2));
@@ -99,9 +97,6 @@ public class RobotControlWithSRX {
     public Map<RobotMotorType, CANTalon> getTalons() {
         return this.talons;
     }
-    public void updateSingleSolenoid(RobotPneumaticType type, boolean value) {
-        singleSolenoids.get(type).set(value);
-    }
     public void updateDoubleSolenoid(RobotPneumaticType type,
             DoubleSolenoid.Value value) {
         doubleSolenoids.get(type).set(value);
@@ -113,6 +108,19 @@ public class RobotControlWithSRX {
     public void updateArmMotors(double jointASpeed, double jointBSpeed) {
         // talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
         // talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
+    }
+    public void gearShift(Value gear) {
+        doubleSolenoids.get(RobotPneumaticType.GEAR_SHIFT).set(gear);
+        // May need to be fixed, not sure if it is correct.
+    }
+    public void addSingleSolenoid(RobotPneumaticType type, int port) {
+        singleSolenoids.put(type, new Solenoid(port));
+    }
+    public void addDoubleSolenoid(RobotPneumaticType type, int port) {
+        doubleSolenoids.put(type, new DoubleSolenoid(port, port + 1));
+    }
+    public void updateSingleSolenoid(RobotPneumaticType type, boolean value) {
+        singleSolenoids.get(type).set(value);
     }
     public Solenoid getSingleSolenoid(RobotPneumaticType type) {
         return singleSolenoids.get(type);

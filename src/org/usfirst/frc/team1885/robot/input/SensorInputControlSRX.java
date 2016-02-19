@@ -53,12 +53,14 @@ public class SensorInputControlSRX {
         ticks = new HashMap<SensorType, Integer>();
     }
     public void update() {
-        StringBuilder output = new StringBuilder();
-        output.append("\nLeft Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
-        output.append("\nRight Flywheel Velocity: " + getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
-        output.append("\nTilt Potentiometer0: " + getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER));
-        output.append("\n Twist Position: " + getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER));
-        DriverStation.reportError(output + "\n", false);
+        /*
+         * Encoder values testing
+         * 
+         * DriverStation.reportError("\nRight Encoder Value::" +
+         * getEncoderDistance(SensorType.RIGHT_ENCODER) +
+         * " --- Left Encoder Value:: " +
+         * getEncoderDistance(SensorType.LEFT_ENCODER), false);
+         */
     }
     public double getInitPitch() {
         return INITIAL_PITCH;
@@ -76,14 +78,15 @@ public class SensorInputControlSRX {
         return navx.getRoll();
     }
     public void init() {
-        setEncoderPosition(SensorType.SHOOTER_TWIST_ENCODER,0);
+        setEncoderPosition(SensorType.SHOOTER_TWIST_ENCODER, 0);
         INITIAL_POT_A_POSITION = rsrx.getSensor()
                 .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw()
                 * UtilityArm.CONVERSION_FACTOR;
         INITIAL_POT_B_POSITION = rsrx.getSensor()
                 .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
                 * UtilityArm.CONVERSION_FACTOR;
-        INITIAL_TILT_POSITION = getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER);
+        INITIAL_TILT_POSITION = getAnalogGeneric(
+                SensorType.SHOOTER_TILT_POTENTIOMETER);
         DriverStation.reportError("" + INITIAL_TILT_POSITION, false);
     }
     public double getCurrent(int channel) {
@@ -99,15 +102,16 @@ public class SensorInputControlSRX {
         rsrx.getSensor().get(type).setEncPosition(pos);
     }
     public double getAnalogGeneric(SensorType type) {
-       switch(type){
-       case SHOOTER_TILT_POTENTIOMETER:
-           return rsrx.getSensor().get(type).getAnalogInRaw() / POTENTIOMETER_CONVERSION_FACTOR * Shooter.GEAR_RATIO_TILT;
-       default:
-           return rsrx.getSensor().get(type).getAnalogInRaw();
-       }
+        switch (type) {
+        case SHOOTER_TILT_POTENTIOMETER:
+            return rsrx.getSensor().get(type).getAnalogInRaw()
+                    / POTENTIOMETER_CONVERSION_FACTOR * Shooter.GEAR_RATIO_TILT;
+        default:
+            return rsrx.getSensor().get(type).getAnalogInRaw();
+        }
     }
     public double getZeroedPotentiometer(SensorType type) {
-        switch( type ) {
+        switch (type) {
         case SHOOTER_TILT_POTENTIOMETER:
             return getAnalogGeneric(type) - INITIAL_TILT_POSITION;
         case JOINT_A_POTENTIOMETER:
@@ -128,19 +132,21 @@ public class SensorInputControlSRX {
     public int getEncoderVelocity(SensorType type) {
         return rsrx.getSensor().get(type).getEncVelocity();
     }
-    public void addPotentiometer( RobotMotorType motorType, SensorType sensorType, int port ) {
-        rsrx.addTalonSensor( motorType, sensorType, port );
+    public void addPotentiometer(RobotMotorType motorType,
+            SensorType sensorType, int port) {
+        rsrx.addTalonSensor(motorType, sensorType, port);
     }
-    public void addEncoder( RobotMotorType motorType, SensorType sensorType, int port ) {
-        rsrx.addTalonSensor( motorType, sensorType, port );
+    public void addEncoder(RobotMotorType motorType, SensorType sensorType,
+            int port) {
+        rsrx.addTalonSensor(motorType, sensorType, port);
     }
     public double getEncoderAbsolutePosition(SensorType type) {
         return rsrx.getSensor().get(type).getPulseWidthPosition();
     }
 
-    public double getEncoderDistance() {
-        return RobotConfiguration.WHEEL_DIAMETER * Math.PI * rsrx.getSensor()
-                .get(SensorType.RIGHT_ENCODER).getEncPosition() / TICKS_IN_360;
+    public double getEncoderDistance(SensorType type) {
+        return RobotConfiguration.WHEEL_DIAMETER * Math.PI
+                * rsrx.getSensor().get(type).getEncPosition() / TICKS_IN_360;
     }
 
     public void addLidarSensor(Port port) {
@@ -182,7 +188,7 @@ public class SensorInputControlSRX {
     }
     public double getInitialPotBPostition() {
         return INITIAL_POT_B_POSITION;
-}
+    }
     public void resetEncoder(SensorType type) {
         rsrx.getSensor().get(type).setEncPosition(0);
     }
