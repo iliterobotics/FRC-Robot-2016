@@ -27,16 +27,18 @@ public class AutoDriveStart extends AutoCommand {
      * of time, then stops sending power. No other actions can be done during
      * this time.
      * 
-     * @param sec
-     *            Time in seconds
      * @param pow
      *            Power from [-1, 1], or from -100% to 100%
+     * @param sec
+     *            Time in seconds
      */
-    public AutoDriveStart(double sec, double pow) {
+    public AutoDriveStart(double pow, double sec) {
+        SensorInputControlSRX.getInstance().calibrateGyro();
         rightDriveOutput = leftDriveOutput = pow;
         time = sec;
         DriverStation.reportError(
                 "Drive with " + pow + " power for " + sec + " seconds", false);
+        init();
     }
 
     /**
@@ -54,15 +56,12 @@ public class AutoDriveStart extends AutoCommand {
     }
 
     public boolean execute() {
+        Timer.delay(time);
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveOutput);
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveOutput);
         DriverStation.reportError(
                 "\nSetting driving speed to: " + leftDriveOutput, false);
         updateOutputs();
-        if (time != 0) {
-            Timer.delay(time);
-            reset();
-        }
         return true;
     }
     public void reset() {

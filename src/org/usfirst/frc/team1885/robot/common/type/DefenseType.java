@@ -1,13 +1,15 @@
 package org.usfirst.frc.team1885.robot.common.type;
 
 public enum DefenseType {
-    LOWBAR,
+    //This order matches the order in AutonomousConfig
+    //PLEASE DO NOT CHANGE THE ORDER WITHOUT TALKING TO ETHAN OR MICHAEL KELLY
     PORTCULLIS,
-    CHEVAL,
+    CHEVAL_DE_FRISE,
     MOAT,
     RAMPARTS,
     DRAWBRIDGE,
     SALLYPORT,
-    ROCKWALL,
-    ROUGHTERRAIN
+    ROCK_WALL,
+    ROUGH_TERRAIN,
+    LOW_BAR
 }

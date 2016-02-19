@@ -5,7 +5,9 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
+import dataclient.robotdata.autonomous.AutonomousConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -25,8 +27,7 @@ public class AutonomousRoutine {
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
         Timer.delay(5);
-        initAutoBreach(DefenseType.LOWBAR);   // to be changed to equal the analog input
-        initAutoShoot();
+        initAutoBreach(DefenseType.LOW_BAR);   // to be changed to equal the analog input
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -54,19 +55,28 @@ public class AutonomousRoutine {
     // AutoCrossedDefense - checks if we have landed and can prepare to shoot
     // AutoAlign - realigns the robot to move in position to shoot
 
+    public void getConfiguration() {
+        AutonomousConfig  autoC = RobotAutonomousConfiguration.pullConfiguration();
+        DefenseType type = DefenseType.values()[autoC.getDefense()];
+        int targetDefense = autoC.getPosition();
+        int delay = autoC.getDelay();
+        initAutoBreach(type);
+        
+    }
+    
     /**
      * Method that initializes all commands for AutonomousRoutine to run
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAutoBreach(DefenseType dType) {
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+        commands.add(new AutoDriveStart(START_DRIVE_SPEED, delay));
         commands.add(new AutoReachedDefense());
 
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
         switch (dType) {
-        case LOWBAR: autoLowBar(); break;
+        case LOW_BAR: autoLowBar(); break;
         case PORTCULLIS: autoPortcullis(); break;
-        case CHEVAL: autoCheval(); break;
+        case CHEVAL_DE_FRISE: autoCheval(); break;
         case SALLYPORT: autoSally(); break;
         case RAMPARTS: autoRamparts(); break;
         case DRAWBRIDGE: autoDrawbridge(); break;
@@ -85,6 +95,10 @@ public class AutonomousRoutine {
                     //method adds the commands for getting to the correct position
     }
     
+    public void autoMoveToShoot() {
+        //Huge Switch statement that finds all the parameters for autoMoveToShoot that adds commands
+    }
+    
     /**
      * @param firstMove distance in inches for moving after breaching
      * @param firstTurn yaw value to turn to to aim towards goal shooting point
@@ -92,9 +106,9 @@ public class AutonomousRoutine {
      * @param goalTurn yaw value to turn to to aim at goal
      * @param isHigh boolean true = high goal :: false = low goal
      */
-    public void autoGetInPos(double firstMove, double firstTurn, double secondMove, double goalTurn, boolean isHigh) {
+    public void autoMoveToShoot(double firstMove, double firstTurn, double secondMove, double goalTurn, boolean isHigh) {
         commands.add(new AutoDriveDistance(firstMove, true));
-        commands.add(new AutoTurn(firstTurn, .001));
+        commands.add(new AutoTurn(firstTurn, 1));
         commands.add(new AutoDriveDistance(secondMove, true));
         commands.add(new AutoAlign(goalTurn));
         if(isHigh) {
