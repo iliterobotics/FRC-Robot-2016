@@ -25,8 +25,8 @@ public class AutonomousRoutine {
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
         Timer.delay(5);
-        initAutoFirst(DefenseType.LOWBAR);   // to be changed to equal the analog input
-        initAutoSecond();
+        initAutoBreach(DefenseType.LOWBAR);   // to be changed to equal the analog input
+        initAutoShoot();
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -58,39 +58,54 @@ public class AutonomousRoutine {
      * Method that initializes all commands for AutonomousRoutine to run
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
-    public void initAutoFirst(DefenseType dType) {
-        // commands.add(new AutoDriveStart(START_DRIVE_SPEED));
-        // commands.add(new AutoReachedDefense());
+    public void initAutoBreach(DefenseType dType) {
+        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+        commands.add(new AutoReachedDefense());
 
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
         switch (dType) {
-        case LOWBAR:
-            // autoLowBar();
-            break;
-        case PORTCULLIS:
-            autoPortcullis();
-            break;
-        case CHEVAL:
-            autoCheval();
-            break;
-        case SALLYPORT:
-            autoSally();
-            break;
-        case RAMPARTS:
-            autoRamparts();
-            break;
-        case DRAWBRIDGE:
-            autoDrawbridge();
-            break;
+        case LOWBAR: autoLowBar(); break;
+        case PORTCULLIS: autoPortcullis(); break;
+        case CHEVAL: autoCheval(); break;
+        case SALLYPORT: autoSally(); break;
+        case RAMPARTS: autoRamparts(); break;
+        case DRAWBRIDGE: autoDrawbridge(); break;
         default:
             break;
         }
-        // commands.add(new AutoCrossedDefense());
+        commands.add(new AutoCrossedDefense());
         autoAlign();
         
     }
     
-    public void initAutoSecond() {
+    public void initAutoShoot() {
+        //TODO Checks for center, left, or right and chooses the right switch statement to run for
+            // switch statement based off of defense going for
+                //calls individual method inputting values for goal and position
+                    //method adds the commands for getting to the correct position
+    }
+    
+    /**
+     * @param firstMove distance in inches for moving after breaching
+     * @param firstTurn yaw value to turn to to aim towards goal shooting point
+     * @param secondMove distance in inches to move to goal shooting point
+     * @param goalTurn yaw value to turn to to aim at goal
+     * @param isHigh boolean true = high goal :: false = low goal
+     */
+    public void autoGetInPos(double firstMove, double firstTurn, double secondMove, double goalTurn, boolean isHigh) {
+        commands.add(new AutoDriveDistance(firstMove, true));
+        commands.add(new AutoTurn(firstTurn, .001));
+        commands.add(new AutoDriveDistance(secondMove, true));
+        commands.add(new AutoAlign(goalTurn));
+        if(isHigh) {
+            //TODO aim at high goal
+            //shoot
+            
+        } else {
+            //TODO go forward to low goal
+            //raise up shooter
+            //shoot
+        }
         
     }
     

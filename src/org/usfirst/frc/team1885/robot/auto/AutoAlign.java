@@ -22,11 +22,20 @@ public class AutoAlign extends AutoCommand {
     private final double ALIGNMENT_ERROR = 1;
     private final double TURN_SPEED = .35; // should be positive
 
+    private double degreeToTurn;
     private PID pid;
     private SensorInputControlSRX sensorInputControl;
     private double rightDrivePower;
     private double leftDrivePower;
 
+    public AutoAlign() {
+        degreeToTurn = 0;
+    }
+    
+    public AutoAlign(double degree) {
+        degreeToTurn = degree;
+    }
+    
     @Override
     public boolean init() {
         rightDrivePower = leftDrivePower = 0;
@@ -60,10 +69,10 @@ public class AutoAlign extends AutoCommand {
         // ? -AutoAlign.MIN_SPEED : rightDrivePower);
         // }
 
-        if (yaw > ALIGNMENT_ERROR) {
+        if (yaw > degreeToTurn + ALIGNMENT_ERROR) {
             leftDrivePower = TURN_SPEED;
             rightDrivePower = -TURN_SPEED;
-        } else if (yaw < -ALIGNMENT_ERROR) {
+        } else if (yaw < degreeToTurn - ALIGNMENT_ERROR) {
             rightDrivePower = TURN_SPEED;
             leftDrivePower = -TURN_SPEED;
         } else {
