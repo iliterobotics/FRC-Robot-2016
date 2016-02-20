@@ -19,8 +19,8 @@ public class Shooter implements Module {
     private final double TILT_BRAKE = .1;
     private final double TILT_LIMIT_UPPER = 45;
     private final double TILT_LIMIT_LOWER = 5;
-    private final double TWIST_BOUND_RIGHT = -128;
-    private final double TWIST_BOUND_LEFT = 185;
+    private final double TWIST_BOUND_RIGHT = (1024.0 / GEAR_RATIO_TWIST) / (360 / 45);
+    private final double TWIST_BOUND_LEFT = (1024.0 / GEAR_RATIO_TWIST) / (360 / 45);
     //public static final double GEAR_RATIO_TILT = 1.0 / 3;
     public static final double GEAR_RATIO_TWIST = 3.0 / 7;
     private double flywheelSpeedLeft;
@@ -134,11 +134,11 @@ public class Shooter implements Module {
         int twistInput = driverInputControl.getShooterTwist();
         double encoder = getTwistEncoder();
         if (sensorControl.getZeroedPotentiometer(
-                SensorType.SHOOTER_TILT_POTENTIOMETER) >= 20) {
+                SensorType.SHOOTER_TILT_POTENTIOMETER) >= 45) {
                 if (twistInput > 0) {
-                    twistSpeed = ( encoder > -TWIST_BOUND_RIGHT && encoder > -TWIST_BOUND_LEFT ) ? -TWIST_SPEED : twistSpeed;
+                    twistSpeed = ( encoder > -TWIST_BOUND_RIGHT /*&& encoder > -TWIST_BOUND_LEFT*/ ) ? -TWIST_SPEED : twistSpeed;
                 } else if (twistInput < 0) {
-                    twistSpeed = ( encoder < TWIST_BOUND_RIGHT && encoder < TWIST_BOUND_LEFT ) ? TWIST_SPEED : twistSpeed;
+                    twistSpeed = ( /*encoder < TWIST_BOUND_RIGHT &&*/ encoder < TWIST_BOUND_LEFT ) ? TWIST_SPEED : twistSpeed;
                 }
         } /*else {
             DriverStation.reportError("Below Tilt threshold", false);
