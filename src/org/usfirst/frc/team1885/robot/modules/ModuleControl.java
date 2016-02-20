@@ -32,9 +32,6 @@ public class ModuleControl{
 		return modules.get(module_type);
 	}
 	
-	public Shooter getShooter() {
-		return (Shooter)modules.get(ModuleType.SHOOTER);
-	}
 	public DrivetrainControl getDriveTrain() {
 		return (DrivetrainControl)modules.get(ModuleType.DRIVE_TRAIN);
 	}

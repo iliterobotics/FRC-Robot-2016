@@ -1,12 +1,12 @@
 package org.usfirst.frc.team1885.robot.input;
 
-import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
-import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 import org.usfirst.frc.team1885.robot.sensor.PressureSensor;
@@ -108,14 +108,12 @@ public class SensorInputControlSRX {
     public double getAnalogInPosition(SensorType type) {
         return rsrx.getSensor().get(type).getAnalogInPosition();
     }
+
     public void setEncoderPosition(SensorType type, int pos) {
         rsrx.getSensor().get(type).setEncPosition(pos);
     }
     public double getAnalogGeneric(SensorType type) {
         switch (type) {
-        case SHOOTER_TILT_POTENTIOMETER:
-            return rsrx.getSensor().get(type).getAnalogInRaw()
-                    / POTENTIOMETER_CONVERSION_FACTOR * Shooter.GEAR_RATIO_TILT;
         default:
             return rsrx.getSensor().get(type).getAnalogInRaw();
         }

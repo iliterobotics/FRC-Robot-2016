@@ -6,8 +6,6 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.DriverStation;
-
 public class ActiveIntake implements Module {
 
     public static final double INTAKE_SPEED = 1;
@@ -81,7 +79,7 @@ public class ActiveIntake implements Module {
     }
 
     public void updateOutputs() {
-        robotControl.updateIntakeMotor(intakeSpeed);
+        robotControl.updateIntakeMotors(intakeSpeed);
         robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER,
                 isIntaking);
     }

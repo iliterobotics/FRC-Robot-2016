@@ -73,19 +73,13 @@ public class RobotControlWithSRX {
             rightMotor.set(rightspeed);
         }
     }
-    public void updateIntakeMotor(double intakeSpeed) {
+    public void updateIntakeMotors(double intakeSpeed) {
         talons.get(RobotMotorType.ACTIVE_INTAKE).set(intakeSpeed);
     }
-    public void updateShooterTilt(double tiltSpeed) {
-        talons.get(RobotMotorType.SHOOTER_TILT).set(tiltSpeed);
-    }
-    public void updateShooterTwist(double twistSpeed) {
-        talons.get(RobotMotorType.SHOOTER_TWIST).set(twistSpeed);
-    }
-    public void updateFlywheelShooter(double flywheelSpeedLeft,
-            double flywheelSpeedRight) {
-        talons.get(RobotMotorType.FLYWHEEL_LEFT).set(flywheelSpeedLeft);
-        talons.get(RobotMotorType.FLYWHEEL_RIGHT).set(flywheelSpeedRight);
+    public void updateShooterMotors(double shooterSpeedLeft,
+            double shooterSpeedRight) {
+        talons.get(RobotMotorType.SHOOTER_LEFT).set(shooterSpeedLeft);
+        talons.get(RobotMotorType.SHOOTER_RIGHT).set(shooterSpeedRight);
     }
 
     public List<CANTalon> getLeftDrive() {
@@ -100,10 +94,6 @@ public class RobotControlWithSRX {
     public void updateDoubleSolenoid(RobotPneumaticType type,
             DoubleSolenoid.Value value) {
         doubleSolenoids.get(type).set(value);
-    }
-    public void updateIntakeMotors(double intakeLeftSpeed,
-            double intakeRightSpeed) {
-        // TODO Auto-generated method stub
     }
     public void updateArmMotors(double jointASpeed, double jointBSpeed) {
         // talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);

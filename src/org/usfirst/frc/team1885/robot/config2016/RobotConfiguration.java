@@ -14,7 +14,6 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * 
@@ -56,18 +55,6 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TILT_DOWN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TWIST_LEFT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TWIST_RIGHT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
-        
-        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.FLYWHEEL_LEFT, 5);
-        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.FLYWHEEL_RIGHT, 6);
-        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.SHOOTER_TILT, 7);
-        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.SHOOTER_TWIST, 8);
-        
-        SensorInputControlSRX.getInstance().addEncoder(RobotMotorType.FLYWHEEL_LEFT,SensorType.FLYWHEEL_LEFT_ENCODER, 5);
-        SensorInputControlSRX.getInstance().addEncoder(RobotMotorType.FLYWHEEL_RIGHT,SensorType.FLYWHEEL_RIGHT_ENCODER, 6);
-        SensorInputControlSRX.getInstance().addPotentiometer(RobotMotorType.SHOOTER_TILT,SensorType.SHOOTER_TILT_POTENTIOMETER, 7);
-        SensorInputControlSRX.getInstance().addEncoder(RobotMotorType.SHOOTER_TWIST,SensorType.SHOOTER_TWIST_ENCODER, 8);
-        
-                
 
         // Temp comment because we don't have the actual robot. We just have the
         // test board...
