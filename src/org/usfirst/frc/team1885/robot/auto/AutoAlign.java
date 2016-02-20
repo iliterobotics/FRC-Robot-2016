@@ -119,7 +119,7 @@ public class AutoAlign extends AutoCommand {
     }
 
     public void setTargetDegree(double degree) {
-        targetDegree = degree;
+        targetDegree = (degree < 0 ? 360 + degree : degree % 360);
         pid.setScalingValue(targetDegree);
     }
 }
