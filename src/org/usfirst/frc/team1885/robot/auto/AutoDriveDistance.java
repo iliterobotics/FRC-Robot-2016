@@ -43,17 +43,6 @@ public class AutoDriveDistance extends AutoCommand {
     private final double MIN_SPEED;
     private final double ERROR;
 
-    public AutoDriveDistance() {
-        MIN_SPEED = 0.2;
-        ERROR = 4;
-        P = .8;
-        I = 0.005;
-        D = 5;
-        leftPID = new PID(P, I, D);
-        rightPID = new PID(P, I, D);
-        differenceLeft = differenceRight = 0;
-    }
-
     /**
      * @param d
      *            Distance to travel in inches
@@ -61,7 +50,17 @@ public class AutoDriveDistance extends AutoCommand {
      *            If it should stop at the end of the distance
      */
     public AutoDriveDistance(double d, boolean b) {
-        this();
+        double scale = (16 * 12 /Math.abs(d)); //Based on 16 foot calculations
+        MIN_SPEED = 0.4;
+        ERROR = 4;
+        P = 1.25 / scale;
+        I = 0.005 / scale;     
+        D = 10 / scale;
+        leftPID = new PID(P, I, D);
+        rightPID = new PID(P, I, D);
+        differenceLeft = differenceRight = 0;
+        
+        
         leftPID.setScalingValue(d);
         rightPID.setScalingValue(d);
         sensorInputControl = SensorInputControlSRX.getInstance();

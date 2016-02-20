@@ -33,7 +33,7 @@ public class AutonomousRoutine {
         DriverStation.reportError("Gyro Calibrated", false);
         Timer.delay(1);
 
-        commands.add(new AutoDriveDistance(-16 * 12, true));
+        commands.add(new AutoDriveDistance(-6 * 12, true));
 //        getConfiguration();
 //        initAutoBreach();
 //        autoMoveToShoot();
