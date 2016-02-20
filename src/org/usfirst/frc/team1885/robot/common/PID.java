@@ -36,8 +36,8 @@ public class PID {
 
         error = error / this.scaleOutput;
 
-        DriverStation.reportError("\nP: " + (p * getP()) + " ::: I: "
-                + (i * getI(1.0)) + " ::: D: " + (d * getD()), false);
+        DriverStation.reportError("\nP: " + (p * getP()) + "\nI: "
+                + (i * getI(1.0)) + "\nD: " + (d * getD()) + "\nError:" + error + "\nscaleOutput:" + this.scaleOutput, false);
 
         double output = (p * getP()) + (i * getI(1.0)) + (d * getD());
 

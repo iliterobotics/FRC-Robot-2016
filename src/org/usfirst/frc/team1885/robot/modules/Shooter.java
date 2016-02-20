@@ -134,7 +134,12 @@ public class Shooter implements Module {
         }
     }
     public void updateTilt() {     
-        updateTilt(tiltCheck(driverInputControl.getShooterTilt()));
+        int direction = driverInputControl.getShooterTilt();
+        if(direction == 0){
+            breakTilt();
+        }
+        else
+            updateTilt(tiltCheck(direction == -1? -0.3:0.3));
     }
     public void updateTilt(double speed) {
         speed = tiltCheck(speed); 
@@ -214,16 +219,16 @@ public class Shooter implements Module {
         }
     }
     public void updateOutputs() {
-        RobotControlWithSRX.getInstance().updateFlywheelShooter(getLeftSpeed(),
-                getRightSpeed());
-        RobotControlWithSRX.getInstance().updateShooterTilt(tiltSpeed);
-        RobotControlWithSRX.getInstance().updateShooterTwist(twistSpeed);
-        // RobotControlWithSRX.getInstance()
-        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER,
-        // containerState);
-        // RobotControlWithSRX.getInstance()
-        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,
-        // kickerState);
+//        RobotControlWithSRX.getInstance().updateFlywheelShooter(getLeftSpeed(),
+//                getRightSpeed());
+//        RobotControlWithSRX.getInstance().updateShooterTilt(tiltSpeed);
+//        RobotControlWithSRX.getInstance().updateShooterTwist(twistSpeed);
+//        // RobotControlWithSRX.getInstance()
+//        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER,
+//        // containerState);
+//        // RobotControlWithSRX.getInstance()
+//        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,
+//        // kickerState);
     }
     @Override
     public void update() {

@@ -151,12 +151,12 @@ public class DriverInputControlSRX {
     public boolean isButtonDown(RobotButtonType type){
         return this.getButton(type);
     }
-    public double getShooterTilt() {
+    public int getShooterTilt() {
         if(this.isButtonDown(RobotButtonType.SHOOTER_TILT_UP)) {
-            return 0.3;
+            return 1;
         }
         else if(this.isButtonDown(RobotButtonType.SHOOTER_TILT_DOWN)){
-            return -0.2;
+            return -1;
         }
         else {
             return 0;
