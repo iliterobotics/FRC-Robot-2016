@@ -76,6 +76,8 @@ public class AutonomousRoutine {
         delay = autoC.getDelay() / 1000.0; // time in seconds
         isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
         goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
+        
+        DriverStation.reportError("\n\ntype:" + type + "\ntargetDefense:" + targetDefense + "\ndelay:" + delay, false);
     }
 
     /**

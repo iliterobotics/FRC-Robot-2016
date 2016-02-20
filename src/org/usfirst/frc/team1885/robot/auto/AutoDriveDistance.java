@@ -35,7 +35,6 @@ public class AutoDriveDistance extends AutoCommand {
                                     // traversing
     private boolean isRightFinished; // If the right drive train side is
                                      // finished traversing
-    private AutoDriveForward driveForward;
 
     /**
      * @param d
@@ -47,8 +46,6 @@ public class AutoDriveDistance extends AutoCommand {
         sensorInputControl = SensorInputControlSRX.getInstance();
         distance = d;
         doesStop = b;
-        driveForward = new AutoDriveForward(SensorType.LEFT_ENCODER,
-                SensorType.RIGHT_ENCODER);
     }
 
     /**
@@ -107,7 +104,8 @@ public class AutoDriveDistance extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-        driveForward.driveForward(leftDriveSpeed, rightDriveSpeed);
+        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
+                rightDriveSpeed);
         return false;
     }
 
