@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class AutoAlign extends AutoCommand {
 
     private final double SPEED = 0.2;
-    private final double ALIGNMENT_ERROR = 1;
-    private final double TURN_SPEED = .35; // should be positive
+    private final double ALIGNMENT_ERROR = .5;
+    private final double TURN_SPEED = .46; // should be positive
     private double degreeToTurn;
     private PID pid;
     private SensorInputControlSRX sensorInputControl;
@@ -48,6 +48,11 @@ public class AutoAlign extends AutoCommand {
     public boolean execute() {
         double yaw = sensorInputControl.getYaw();
 
+        DriverStation.reportError(
+                "\n Degree to turn : " + degreeToTurn + " --- Current yaw: "
+                        + sensorInputControl.getInstance().getYaw(),
+                false);
+
         rightDrivePower = leftDrivePower = SPEED;
 
         // leftDrivePower = pid.getPID(0, -yaw);
@@ -71,11 +76,21 @@ public class AutoAlign extends AutoCommand {
         // }
 
         if (yaw > degreeToTurn + ALIGNMENT_ERROR) {
-            leftDrivePower = TURN_SPEED;
-            rightDrivePower = -TURN_SPEED;
+            if (yaw < degreeToTurn + 6 + ALIGNMENT_ERROR) {
+                leftDrivePower = TURN_SPEED / 2;
+                rightDrivePower = -TURN_SPEED / 2;
+            } else {
+                leftDrivePower = TURN_SPEED;
+                rightDrivePower = -TURN_SPEED;
+            }
         } else if (yaw < degreeToTurn - ALIGNMENT_ERROR) {
-            rightDrivePower = TURN_SPEED;
-            leftDrivePower = -TURN_SPEED;
+            if (yaw > degreeToTurn - 6 - ALIGNMENT_ERROR) {
+                leftDrivePower = -TURN_SPEED / 2;
+                rightDrivePower = TURN_SPEED / 2;
+            } else {
+                leftDrivePower = -TURN_SPEED;
+                rightDrivePower = TURN_SPEED;
+            }
         } else {
             DriverStation.reportError("Alligned.", false);
             leftDrivePower = 0;

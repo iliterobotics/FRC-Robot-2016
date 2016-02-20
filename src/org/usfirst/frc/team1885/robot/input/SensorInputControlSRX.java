@@ -88,15 +88,12 @@ public class SensorInputControlSRX {
         return navx.getRoll();
     }
     public void init() {
-        setEncoderPosition(SensorType.SHOOTER_TWIST_ENCODER, 0);
         INITIAL_POT_A_POSITION = rsrx.getSensor()
                 .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw()
                 * UtilityArm.CONVERSION_FACTOR;
         INITIAL_POT_B_POSITION = rsrx.getSensor()
                 .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
                 * UtilityArm.CONVERSION_FACTOR;
-        INITIAL_TILT_POSITION = getAnalogGeneric(
-                SensorType.SHOOTER_TILT_POTENTIOMETER);
         DriverStation.reportError("" + INITIAL_TILT_POSITION, false);
     }
     public double getCurrent(int channel) {
@@ -120,8 +117,6 @@ public class SensorInputControlSRX {
     }
     public double getZeroedPotentiometer(SensorType type) {
         switch (type) {
-        case SHOOTER_TILT_POTENTIOMETER:
-            return getAnalogGeneric(type) - INITIAL_TILT_POSITION;
         case JOINT_A_POTENTIOMETER:
             return getAnalogGeneric(type) - INITIAL_POT_A_POSITION;
         case JOINT_B_POTENTIOMETER:

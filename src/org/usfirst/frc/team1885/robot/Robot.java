@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot;
 
+import java.sql.Driver;
 import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
@@ -52,9 +53,13 @@ public class Robot extends SampleRobot {
         try {
             RobotConfiguration.configureRobot();
             DriverStation.reportError("Robot Configured", false);
-            sensorInputControl.init();
-        } catch (Exception e) {
-            DriverStation.reportError("Robot - Error configuring Robot", false);
+        } catch (Throwable e) {
+            e.printStackTrace();
+            for (StackTraceElement anElement : e.getStackTrace()) {
+                DriverStation.reportError("\n" + anElement.toString(), false);
+            }
+            DriverStation.reportError(
+                    "Robot - Error configuring Robot" + e.getClass(), false);
         }
         diameter = 4.0;
         maxSpeed = 15.0;
@@ -70,7 +75,7 @@ public class Robot extends SampleRobot {
 
         while (isOperatorControl() && isEnabled()) {
             sensorInputControl.update();
-            // driverInputControl.update();
+            driverInputControl.update();
             // UtilityArm.getInstance().update();
             Timer.delay(.005);
         }

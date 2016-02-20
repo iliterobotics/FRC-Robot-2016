@@ -125,7 +125,7 @@ public class DriverInputControlSRX {
                         .getAxis(AxisType.kY),
                 this.getJoystick(RobotJoystickType.RIGHT_DRIVE)
                         .getAxis(AxisType.kY));
-        ActiveIntake.getInstance().update();
+//        ActiveIntake.getInstance().update();
     }
     public void update(double leftJoystick, double rightJoystick) {
         System.err
@@ -149,27 +149,5 @@ public class DriverInputControlSRX {
     
     public boolean isButtonDown(RobotButtonType type){
         return this.getButton(type);
-    }
-    public int getShooterTilt() {
-        if(this.isButtonDown(RobotButtonType.SHOOTER_TILT_UP)) {
-            return 1;
-        }
-        else if(this.isButtonDown(RobotButtonType.SHOOTER_TILT_DOWN)){
-            return -1;
-        }
-        else {
-            return 0;
-        }
-    }
-    public int getShooterTwist() {
-        if(this.isButtonDown(RobotButtonType.SHOOTER_TWIST_RIGHT)) {
-            return 1;
-        }
-        else if(this.isButtonDown(RobotButtonType.SHOOTER_TWIST_LEFT)){
-            return -1;
-        }
-        else {
-            return 0;
-        }
     }
 }
