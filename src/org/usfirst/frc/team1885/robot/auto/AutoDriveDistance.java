@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot.auto;
 
+import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
@@ -34,6 +35,13 @@ public class AutoDriveDistance extends AutoCommand {
                                     // traversing
     private boolean isRightFinished; // If the right drive train side is
                                      // finished traversing
+    private double differenceLeft, differenceRight;
+
+    private PID leftPID, rightPID;
+    private double P, I, D;
+
+    private final double MIN_SPEED = .4;
+    private final double ERROR = 4;
 
     /**
      * @param d
@@ -42,6 +50,16 @@ public class AutoDriveDistance extends AutoCommand {
      *            If it should stop at the end of the distance
      */
     public AutoDriveDistance(double d, boolean b) {
+        double scale = (16 * 12 / Math.abs(d)); // Based on 16 foot calculations
+        P = 1.25 / scale;
+        I = 0.005 / scale;
+        D = 10 / scale;
+        leftPID = new PID(P, I, D);
+        rightPID = new PID(P, I, D);
+        differenceLeft = differenceRight = 0;
+
+        leftPID.setScalingValue(d);
+        rightPID.setScalingValue(d);
         sensorInputControl = SensorInputControlSRX.getInstance();
         distance = d;
         doesStop = b;
@@ -68,13 +86,41 @@ public class AutoDriveDistance extends AutoCommand {
 
     @Override
     public boolean execute() {
-        disLeft = sensorInputControl
-                .getEncoderDistance(SensorType.LEFT_ENCODER);
+        disLeft = sensorInputControl.getEncoderDistance(SensorType.LEFT_ENCODER)
+                - initDisLeft;
         disRight = sensorInputControl
-                .getEncoderDistance(SensorType.RIGHT_ENCODER);
+                .getEncoderDistance(SensorType.RIGHT_ENCODER) - initDisRight;
+
+        // DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
+        // DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
+
+        differenceLeft = disLeft - distance;
+        differenceRight = disRight - distance;
+
+        leftDriveSpeed = leftPID.getPID(distance, disLeft);
+        rightDriveSpeed = rightPID.getPID(distance, disRight);
+
+        isLeftFinished = Math.abs(differenceLeft) < ERROR;
+        isRightFinished = Math.abs(differenceRight) < ERROR;
+
+        // DriverStation.reportError("\n\nDistance Left:: " + disLeft
+        // + "\ndistance Right:: " + disRight + "\nDifference Left:: "
+        // + differenceLeft + "\nDifference Right:: " + differenceRight,
+        // false);
+
+        if (leftDriveSpeed > 0) {
+            leftDriveSpeed = leftDriveSpeed < MIN_SPEED ? MIN_SPEED
+                    : leftDriveSpeed;
+        } else if (leftDriveSpeed < 0) {
+            leftDriveSpeed = leftDriveSpeed > -MIN_SPEED ? -MIN_SPEED
+                    : leftDriveSpeed;
+        }
 
         isLeftFinished = Math.abs(disLeft - initDisLeft) >= distance;
         isRightFinished = Math.abs(disRight - initDisRight) >= distance;
+
+        // DriverStation.reportError("\nRight Drive Speed:: " + rightDriveSpeed
+        // + "\nLeft Drive Speed:: " + leftDriveSpeed, false);
 
         // DriverStation.reportError(
         // "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
@@ -82,6 +128,9 @@ public class AutoDriveDistance extends AutoCommand {
         // DriverStation.reportError(
         // "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
         // false);
+
+        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
+        DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
 
         if (!doesStop && isRightFinished && isLeftFinished) {
             DriverStation.reportError("\nFinished Distance", false);
@@ -96,7 +145,8 @@ public class AutoDriveDistance extends AutoCommand {
         } else if (isRightFinished) {
             rightDriveSpeed = 0;
         }
-        DriverStation.reportError("\nLeft Status:: " + isLeftFinished + "Right Status:: " + isRightFinished, false);
+        DriverStation.reportError("\nLeft Status:: " + isLeftFinished
+                + "Right Status:: " + isRightFinished, false);
         return false;
     }
 
