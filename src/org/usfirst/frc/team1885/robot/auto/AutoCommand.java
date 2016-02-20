@@ -23,9 +23,8 @@ public abstract class AutoCommand {
     public abstract boolean execute();
 
     /**
-     * Updates the global informative variables. These variables do not
-     * necessarily correlate to the actions of the Drive Train, they are
-     * primarily used as information points.
+     * Updates the global informative variables. These variables directly
+     * correlate to the actions of the Drive Train.
      * 
      * @return False.
      */
