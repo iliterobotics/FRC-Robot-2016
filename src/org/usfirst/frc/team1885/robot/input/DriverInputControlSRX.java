@@ -125,7 +125,6 @@ public class DriverInputControlSRX {
                         .getAxis(AxisType.kY),
                 this.getJoystick(RobotJoystickType.RIGHT_DRIVE)
                         .getAxis(AxisType.kY));
-//        ActiveIntake.getInstance().update();
     }
     public void update(double leftJoystick, double rightJoystick) {
         System.err
@@ -136,18 +135,20 @@ public class DriverInputControlSRX {
                 rightDriveSpeed);
     }
     public double getControllerTwist() {
-        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kThrottle);
+        return this.getJoystick(RobotJoystickType.CONTROLLER)
+                .getAxis(AxisType.kThrottle);
     }
-    
+
     public double getControllerThrottle() {
-        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kTwist);
+        return this.getJoystick(RobotJoystickType.CONTROLLER)
+                .getAxis(AxisType.kTwist);
     }
-    
+
     public boolean isResetButtonDown() {
         return this.getButton(RobotButtonType.RESET_BUTTON);
     }
-    
-    public boolean isButtonDown(RobotButtonType type){
+
+    public boolean isButtonDown(RobotButtonType type) {
         return this.getButton(type);
     }
 }

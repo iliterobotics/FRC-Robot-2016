@@ -22,7 +22,7 @@ public class AutonomousRoutine {
 
     private Robot robot;
     private LinkedList<AutoCommand> commands;
-    private double delay = 0.05;
+    private double delay = 0.005;
     private boolean isHigh;
     private int goal;
 
@@ -31,12 +31,15 @@ public class AutonomousRoutine {
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
-        Timer.delay(1);
+        Timer.delay(3);
 
-        commands.add(new AutoDriveDistance(-6 * 12, true));
-//        getConfiguration();
-//        initAutoBreach();
-//        autoMoveToShoot();
+//        commands.add(new AutoDriveStraightDistance(-16 * 12, true));
+//        commands.add(new AutoAlign());
+//        commands.add(new AutoWait(5000));
+//        commands.add(new AutoAlign(5));
+         getConfiguration();
+         initAutoBreach();
+         autoMoveToShoot();
 
         // autoMoveToShoot(needs values)
 
@@ -204,7 +207,7 @@ public class AutonomousRoutine {
         } else {
             DriverStation.reportError("Invalid Goal Number", false);
         }
-        autoMoveToShoot(firstMove, firstTurn, secondMove, align);
+        autoMoveToShoot(-firstMove, firstTurn, -secondMove, align);
     }
 
     /**

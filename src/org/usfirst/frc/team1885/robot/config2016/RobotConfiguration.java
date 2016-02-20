@@ -59,10 +59,10 @@ public class RobotConfiguration {
                 .addTalonOutput(RobotMotorType.LEFT_DRIVE, 3);
         RobotControlWithSRX.getInstance()
                 .addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
-//        RobotControlWithSRX.getInstance()
-//                .addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
-//        RobotControlWithSRX.getInstance()
-//                .addSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
+        RobotControlWithSRX.getInstance()
+                .addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
+        RobotControlWithSRX.getInstance()
+                .addSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
         
 //        RobotControlWithSRX.getInstance().addDoubleSolenoid(RobotPneumaticType.GEAR_SHIFT, 1);
 
