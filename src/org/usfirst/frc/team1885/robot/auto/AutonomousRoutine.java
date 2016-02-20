@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -58,8 +59,8 @@ public class AutonomousRoutine {
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAuto() {
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
-        commands.add(new AutoReachedDefense());
+//        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+//        commands.add(new AutoReachedDefense());
         DefenseType type = DefenseType.LOWBAR; // to be changed to equal the
                                                // analog input
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
@@ -85,8 +86,9 @@ public class AutonomousRoutine {
         default:
             break;
         }
-        commands.add(new AutoCrossedDefense());
-        autoAlign();
+        autoShootHighGoal();
+//        commands.add(new AutoCrossedDefense());
+//        autoAlign();
     }
     /**
      * Controls processes for passing the low bar
@@ -138,7 +140,7 @@ public class AutonomousRoutine {
      * Controls processes required for locating the high goal and shooting
      */
     public void autoShootHighGoal() {
-        // autoShootBall(false);
+        autoShootBall(true);
     }
 
     /**
@@ -149,5 +151,6 @@ public class AutonomousRoutine {
      *            = high goal; false = low goal
      */
     public void autoShootBall(boolean goal) {
+        commands.add(new AutoShooterPosition(Shooter.HIGH_GOAL_ANGLE));
     }
 }

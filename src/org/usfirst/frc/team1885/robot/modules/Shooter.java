@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Shooter implements Module {
 
     private static Shooter instance;
-
+    public static final double HIGH_GOAL_ANGLE = 45.0;
     private final double SHOOTER_SPEED = 1;
     private final double TWIST_SPEED = .3;
     private final double TILT_SPEED = .2;
@@ -104,21 +104,8 @@ public class Shooter implements Module {
             rightState = MotorState.OFF;
         }
     }
-    public void updateTilt() {
-        tiltSpeed = TILT_BRAKE;
-        int tiltInput = driverInputControl.getShooterTilt();
-        totalTilt = sensorControl
-                .getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER);
-        if (tiltInput > 0) {
-            if (totalTilt < TILT_LIMIT_UPPER) {
-                tiltSpeed = TILT_SPEED + TILT_BRAKE;
-            }
-        } else if (tiltInput < 0) {
-            if (totalTilt > TILT_LIMIT_LOWER) {
-                tiltSpeed = -TILT_SPEED + TILT_BRAKE;
-            }
-        }
-        updateTilt(tiltSpeed);
+    public void updateTilt() {     
+        updateTilt(tiltCheck(driverInputControl.getShooterTilt()));
     }
     public void updateTilt(double speed) {
         if (speed > 0) {
@@ -128,6 +115,8 @@ public class Shooter implements Module {
         } else {
             tiltState = MotorState.OFF;
         }
+        DriverStation.reportError("\n Tilt Speed: " + speed, false);
+        RobotControlWithSRX.getInstance().updateShooterTilt(speed);
     }
     public void updateTwist() {
         twistSpeed = 0;
@@ -164,6 +153,7 @@ public class Shooter implements Module {
         } else {
             twistState = MotorState.OFF;
         }
+        RobotControlWithSRX.getInstance().updateShooterTwist(speed);
     }
     public void reset() {
         rightState = leftState = MotorState.OFF;
@@ -205,7 +195,7 @@ public class Shooter implements Module {
         updateShooter();
         updateTilt();
         updateTwist();
-        updateOutputs();
+        //updateOutputs();
         StringBuilder output = new StringBuilder();
         output.append("\nTilt Raw: " + sensorControl.getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER));
         output.append("\nTilt Zero: " + sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER));
@@ -213,5 +203,43 @@ public class Shooter implements Module {
         output.append("\nTwist Zero: " + sensorControl.getZeroedEncoder(SensorType.SHOOTER_TWIST_ENCODER));
         DriverStation.reportError(output.toString(), false);
     }
-
+    public boolean position(double angle) {
+        boolean isInPosition = true;
+        tiltSpeed = TILT_BRAKE;
+        double currentAngle = sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER);
+        double angleDifference = currentAngle - angle;
+        int divisor = 1;
+        if (Math.abs(angleDifference) < 5) {
+            divisor++;
+        }
+        if (Math.abs(angleDifference) > 1.0 ) {
+            isInPosition = false;
+        }
+        if (angleDifference < 0) {            
+            tiltSpeed = tiltCheck(1);
+        } else if (angleDifference > 0) {
+            tiltSpeed = tiltCheck(-1);
+        }
+        tiltSpeed /= divisor;
+        if (isInPosition) {
+            tiltSpeed = TILT_BRAKE;
+        }
+        updateTilt(tiltSpeed);
+        return isInPosition;
+    }
+    public double tiltCheck(int tiltInput) {
+        double tiltSpeed = TILT_BRAKE;
+        totalTilt = sensorControl
+                .getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER);
+        if (tiltInput > 0) {
+            if (totalTilt < TILT_LIMIT_UPPER) {
+                tiltSpeed = TILT_SPEED + TILT_BRAKE;
+            }
+        } else if (tiltInput < 0) {
+            if (totalTilt > TILT_LIMIT_LOWER) {
+                tiltSpeed = -TILT_SPEED + TILT_BRAKE;
+            }
+        }
+        return tiltSpeed;
+    }
 }
