@@ -50,17 +50,16 @@ public class AutoDriveDistance extends AutoCommand {
      *            If it should stop at the end of the distance
      */
     public AutoDriveDistance(double d, boolean b) {
-        double scale = (16 * 12 /Math.abs(d)); //Based on 16 foot calculations
+        double scale = (16 * 12 / Math.abs(d)); // Based on 16 foot calculations
         MIN_SPEED = 0.4;
         ERROR = 4;
         P = 1.25 / scale;
-        I = 0.005 / scale;     
+        I = 0.005 / scale;
         D = 10 / scale;
         leftPID = new PID(P, I, D);
         rightPID = new PID(P, I, D);
         differenceLeft = differenceRight = 0;
-        
-        
+
         leftPID.setScalingValue(d);
         rightPID.setScalingValue(d);
         sensorInputControl = SensorInputControlSRX.getInstance();
@@ -86,8 +85,8 @@ public class AutoDriveDistance extends AutoCommand {
 
     @Override
     public boolean execute() {
-        disLeft = sensorInputControl
-                .getEncoderDistance(SensorType.LEFT_ENCODER) - initDisLeft;
+        disLeft = sensorInputControl.getEncoderDistance(SensorType.LEFT_ENCODER)
+                - initDisLeft;
         disRight = sensorInputControl
                 .getEncoderDistance(SensorType.RIGHT_ENCODER) - initDisRight;
 
@@ -103,10 +102,10 @@ public class AutoDriveDistance extends AutoCommand {
         isLeftFinished = Math.abs(differenceLeft) < ERROR;
         isRightFinished = Math.abs(differenceRight) < ERROR;
 
-        DriverStation.reportError("\n\nDistance Left:: " + disLeft
-                + "\ndistance Right:: " + disRight + "\nDifference Left:: "
-                + differenceLeft + "\nDifference Right:: " + differenceRight,
-                false);
+//        DriverStation.reportError("\n\nDistance Left:: " + disLeft
+//                + "\ndistance Right:: " + disRight + "\nDifference Left:: "
+//                + differenceLeft + "\nDifference Right:: " + differenceRight,
+//                false);
 
         if (leftDriveSpeed > 0) {
             leftDriveSpeed = leftDriveSpeed < MIN_SPEED ? MIN_SPEED
@@ -124,14 +123,18 @@ public class AutoDriveDistance extends AutoCommand {
                     : rightDriveSpeed;
         }
 
-        DriverStation.reportError("\nRight Drive Speed:: " + rightDriveSpeed + "\nLeft Drive Speed:: " + leftDriveSpeed, false);
-        
+//        DriverStation.reportError("\nRight Drive Speed:: " + rightDriveSpeed
+//                + "\nLeft Drive Speed:: " + leftDriveSpeed, false);
+
         // DriverStation.reportError(
         // "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
         // false);
         // DriverStation.reportError(
         // "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
         // false);
+
+        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
+        DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
 
         if (!doesStop && isRightFinished && isLeftFinished) {
             DriverStation.reportError("\nFinished traveling distance!"
