@@ -4,6 +4,8 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class AutoDriveStraightDistance extends AutoCommand {
     private SensorInputControlSRX sensorInputControl;
 
@@ -19,6 +21,7 @@ public class AutoDriveStraightDistance extends AutoCommand {
 
     public AutoDriveStraightDistance(double distance, boolean doesStop) {
         disToTravel = distance;
+        sensorInputControl = SensorInputControlSRX.getInstance();
         this.doesStop = doesStop;
     }
 
@@ -51,12 +54,28 @@ public class AutoDriveStraightDistance extends AutoCommand {
     @Override
     public boolean execute() {
         boolean isAlignFinished = align.execute();
-        leftPow = DrivetrainControl.getInstance().getLeftDriveSpeed();
-        rightPow = DrivetrainControl.getInstance().getRightDriveSpeed();
+        leftPow = DrivetrainControl.getInstance().getLeftDriveSpeed() * .5;
+        rightPow = DrivetrainControl.getInstance().getRightDriveSpeed() * .5;
+        DriverStation.reportError("\nLeft Turn:: " + leftPow + "\nRight Turn:: "
+                + rightPow + "\n", false);
         boolean isDriveDisFinished = driveDis.execute();
-        leftPow = leftPow + DrivetrainControl.getInstance().getLeftDriveSpeed();
-        rightPow = rightPow
-                + DrivetrainControl.getInstance().getRightDriveSpeed();
+        if (leftPow > 0) {
+            leftPow = -leftPow
+                    + DrivetrainControl.getInstance().getLeftDriveSpeed() * .75;
+            rightPow = rightPow
+                    + DrivetrainControl.getInstance().getRightDriveSpeed() * .75;
+        } else {
+            leftPow = leftPow
+                    + DrivetrainControl.getInstance().getLeftDriveSpeed() * .75;
+            rightPow = -rightPow
+                    + DrivetrainControl.getInstance().getRightDriveSpeed() * .75;
+        }
+
+        DriverStation.reportError("\nDriveDis Left Power:: "
+                + DrivetrainControl.getInstance().getLeftDriveSpeed()
+                + "\nDriveDis Right Power:: "
+                + DrivetrainControl.getInstance().getRightDriveSpeed() + "\n",
+                false);
         return isAlignFinished && isDriveDisFinished;
     }
 
