@@ -12,7 +12,7 @@ public class AutoUtilityArm extends AutoCommand {
     private UtilityArm uArm;
     private double xDistance, yDistance;
 
-    public AutoUtilityArm(boolean b) {
+    public AutoUtilityArm() {
         this(RESET_X, RESET_Y);
     }
 

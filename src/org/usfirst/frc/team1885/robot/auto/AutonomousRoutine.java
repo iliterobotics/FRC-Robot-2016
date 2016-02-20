@@ -37,11 +37,8 @@ public class AutonomousRoutine {
             Timer.delay(delay);
         }
     }
-    public void testArm() {
-        double jointAPosition = 90.0;
-        double jointBPosition = (180.0 - 9.866);
-        commands.add(new AutoArm(.25, .50, jointAPosition, jointBPosition));
-        jointBPosition -= 62;
-        commands.add(new AutoArm(.25, -.25, jointAPosition, jointBPosition));
+
+    public void drawbridge() {
+        commands.add(new AutoUtilityArm());
     }
 }
