@@ -17,20 +17,29 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @version 2/13/2016
  */
 public class AutoAlign extends AutoCommand {
-
-    private final double P = 0.7;
-    private final double I = 0.05;
-    private final double D = 0;
-    private final double ALIGNMENT_ERROR = 1;
-    private final double TURN_SPEED = .25; // should be positive
-
+    private final double P, I, D;
+    private final double ALIGNMENT_ERROR = .5;
+    private final double MIN_SPEED = 0.3;
+    private double targetDegree;
     private PID pid;
     private SensorInputControlSRX sensorInputControl;
     private double rightDrivePower;
     private double leftDrivePower;
     private double initial_yaw; // Yaw before we start aligning
 
-    private static double MIN_SPEED = 0.15;
+    public AutoAlign() {
+        this(0);
+    }
+
+    public AutoAlign(double degree) {
+        targetDegree = (degree < 0 ? 360 + degree : degree % 360);
+        double scale = 180 / Math.abs(degree == 0 ? 1 : degree);
+        P = 1 / scale;
+        I = 0.001 / scale;
+        D = 5 / scale;
+        pid = new PID(P, I, D);
+        pid.setScalingValue(targetDegree);
+    }
 
     @Override
     public boolean init() {
@@ -45,41 +54,39 @@ public class AutoAlign extends AutoCommand {
     @Override
     public boolean execute() {
         double yaw = sensorInputControl.getYaw();
-
-        DriverStation.reportError("\nInitial yaw: " + initial_yaw + " ::: Yaw: "
-                + yaw + "\nLeft Speed: " + leftDrivePower + " ::: Right Speed: "
-                + rightDrivePower + "\n", false);
-
-        // leftDrivePower = pid.getPID(0, -yaw);
-
-        // if (leftDrivePower > 0) {
-        // leftDrivePower = (leftDrivePower < AutoAlign.MIN_SPEED
-        // ? AutoAlign.MIN_SPEED : leftDrivePower);
-        // } else if (leftDrivePower < 0) {
-        // leftDrivePower = (leftDrivePower > -AutoAlign.MIN_SPEED
-        // ? -AutoAlign.MIN_SPEED : leftDrivePower);
+        // if (yaw < 0) {
+        // yaw += 360;
         // }
 
-        // rightDrivePower = pid.getPID(0, -yaw);
+        double difference = (yaw - targetDegree);
 
-        // if (rightDrivePower > 0) {
-        // rightDrivePower = (rightDrivePower < AutoAlign.MIN_SPEED
-        // ? AutoAlign.MIN_SPEED : rightDrivePower);
-        // } else if (rightDrivePower < 0) {
-        // rightDrivePower = (rightDrivePower > -AutoAlign.MIN_SPEED
-        // ? -AutoAlign.MIN_SPEED : rightDrivePower);
-        // }
+        rightDrivePower = pid.getPID(difference < -180 ? -360 : 0, difference);
+        leftDrivePower = rightDrivePower * -1;
 
-        if (yaw > ALIGNMENT_ERROR) {
-            leftDrivePower = TURN_SPEED;
-            rightDrivePower = 0;
-        } else if (yaw < -ALIGNMENT_ERROR) {
-            rightDrivePower = TURN_SPEED;
-            leftDrivePower = 0;
-        } else {
-            DriverStation.reportError("Alligned.", false);
-            leftDrivePower = 0;
-            rightDrivePower = 0;
+        DriverStation.reportError("\n Degree to turn : " + targetDegree
+                + " --- Normalized yaw: " + yaw + "\n Pid Speed:: "
+                + rightDrivePower + "\n difference:: " + difference, false);
+
+        if (leftDrivePower > 0) {
+            leftDrivePower = (leftDrivePower < MIN_SPEED ? MIN_SPEED
+                    : leftDrivePower);
+        } else if (leftDrivePower < 0) {
+            leftDrivePower = (leftDrivePower > -MIN_SPEED ? -MIN_SPEED
+                    : leftDrivePower);
+        }
+
+        if (rightDrivePower > 0) {
+            rightDrivePower = (rightDrivePower < MIN_SPEED ? MIN_SPEED
+                    : rightDrivePower);
+        } else if (rightDrivePower < 0) {
+            rightDrivePower = (rightDrivePower > -MIN_SPEED ? -MIN_SPEED
+                    : rightDrivePower);
+        }
+
+        if (Math.abs((difference < 0 ? difference + 360
+                : difference)) < ALIGNMENT_ERROR) {
+            DriverStation.reportError("\nAligned.", false);
+            this.reset();
             return true;
         }
 
