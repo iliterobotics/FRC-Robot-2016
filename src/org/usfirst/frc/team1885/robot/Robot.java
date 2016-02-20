@@ -39,6 +39,7 @@ public class Robot extends SampleRobot {
     private LinkedList<AutoCommand> commands;
     private long timeTracker = 0;
     private double delayTime = 1;// Input time in seconds
+    public static final double AUTO_CYCLE_TIME = 0.05;
 
     private RobotControlWithSRX robotControlWithSRX;
     private DriverInputControlSRX driverInputControl;
