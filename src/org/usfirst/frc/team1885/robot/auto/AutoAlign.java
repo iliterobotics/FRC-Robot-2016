@@ -5,6 +5,8 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import com.sun.xml.internal.ws.api.pipe.Tube;
+
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @version 2/13/2016
  */
 public class AutoAlign extends AutoCommand {
+
     private final double P, I, D;
     private final double ALIGNMENT_ERROR = .5;
     private final double MIN_SPEED = 0.3;
@@ -25,7 +28,6 @@ public class AutoAlign extends AutoCommand {
     private SensorInputControlSRX sensorInputControl;
     private double rightDrivePower;
     private double leftDrivePower;
-    private double initial_yaw; // Yaw before we start aligning
 
     public AutoAlign() {
         this(0);
@@ -45,25 +47,26 @@ public class AutoAlign extends AutoCommand {
     public boolean init() {
         rightDrivePower = leftDrivePower = 0;
         sensorInputControl = SensorInputControlSRX.getInstance();
-        initial_yaw = sensorInputControl.getYaw();
-        pid = new PID(P, I, D); // Test for appropriate final values
-        pid.setScalingValue(10);
         return true;
     }
 
     @Override
     public boolean execute() {
         double yaw = sensorInputControl.getYaw();
-        // if (yaw < 0) {
-        // yaw += 360;
-        // }
+
+//        if (yaw < 0) {
+//            yaw += 360;
+//        }
 
         double difference = (yaw - targetDegree);
 
         rightDrivePower = pid.getPID(difference < -180 ? -360 : 0, difference);
         leftDrivePower = rightDrivePower * -1;
 
-        
+        DriverStation.reportError("\n Degree to turn : " + targetDegree
+                + " --- Normalized yaw: " + yaw + "\n Pid Speed:: "
+                + rightDrivePower + "\n difference:: " + difference, false);
+
         if (leftDrivePower > 0) {
             leftDrivePower = (leftDrivePower < MIN_SPEED ? MIN_SPEED
                     : leftDrivePower);
@@ -80,8 +83,8 @@ public class AutoAlign extends AutoCommand {
                     : rightDrivePower);
         }
 
-        if (Math.abs((difference < 0 ? difference + 360
-                : difference)) < ALIGNMENT_ERROR) {
+        if (Math.abs((difference < 0 ? difference + 360 : difference)) < ALIGNMENT_ERROR) {
+            DriverStation.reportError("\nAligned.", false);
             this.reset();
             return true;
         }
@@ -101,9 +104,15 @@ public class AutoAlign extends AutoCommand {
 
     @Override
     public void reset() {
+        pid.reset();
+        leftDrivePower = 0;
+        rightDrivePower = 0;
         DrivetrainControl.getInstance().setLeftDriveSpeed(0);
         DrivetrainControl.getInstance().setRightDriveSpeed(0);
-        pid.reset();
     }
 
+    public void setTargetDegree(double degree) {
+        targetDegree = (degree < 0 ? 360 + degree : degree % 360);
+        pid.setScalingValue(targetDegree);
+    }
 }
