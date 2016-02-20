@@ -38,14 +38,14 @@ public class SensorInputControlSRX {
         return instance;
     }
     public void update() {
-        /*
-         Encoder values testing
+        
+//         Encoder values testing
          
          DriverStation.reportError("\nRight Encoder Value::" +
          getEncoderDistance(SensorType.RIGHT_ENCODER) +
          " --- Left Encoder Value:: " +
          getEncoderDistance(SensorType.LEFT_ENCODER), false);
-         */
+         
     }
     public double getInitPitch() {
         return INITIAL_PITCH;

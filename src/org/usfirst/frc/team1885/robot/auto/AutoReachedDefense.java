@@ -29,9 +29,11 @@ public class AutoReachedDefense extends AutoCommand {
 
     @Override
     public boolean execute() {
+        DriverStation.reportError("\nRoll:: " + sensorInputControl.getRoll() + "\nPitch" + sensorInputControl.getPitch(), false);
         if (Math.abs(sensorInputControl.getNavX()
                 .getRoll()) >= AutonomousRoutine.PITCH_CHANGE_ON_RAMP
                         + Math.abs(sensorInputControl.getInitRoll())) {
+            DriverStation.reportError("\nReached Defense", false);
             return true;
         }
         return false;

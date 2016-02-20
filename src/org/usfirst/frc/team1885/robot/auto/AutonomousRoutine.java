@@ -25,7 +25,7 @@ public class AutonomousRoutine {
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
-        Timer.delay(3);
+        Timer.delay(1);
         initAuto();
     }
 
@@ -61,7 +61,7 @@ public class AutonomousRoutine {
     public void initAuto() {
         commands.add(new AutoDriveStart(START_DRIVE_SPEED));
         commands.add(new AutoReachedDefense());
-        DefenseType type = DefenseType.MOAT; // to be changed to equal the
+        DefenseType type = DefenseType.LOWBAR; // to be changed to equal the
                                                // analog input
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
         switch (type) {

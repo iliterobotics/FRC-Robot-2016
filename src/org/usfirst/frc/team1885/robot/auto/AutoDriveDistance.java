@@ -84,6 +84,7 @@ public class AutoDriveDistance extends AutoCommand {
         // false);
 
         if (!doesStop && isRightFinished && isLeftFinished) {
+            DriverStation.reportError("\nFinished Distance", false);
             return true;
         } else if (isRightFinished && isLeftFinished) {
             leftDriveSpeed = rightDriveSpeed = 0;

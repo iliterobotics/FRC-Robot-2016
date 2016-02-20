@@ -6,6 +6,8 @@ import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
+import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
+import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
@@ -32,6 +34,7 @@ public class DrivetrainControl implements Module {
     public static final double NUDGE_POWER = 0.15;
     public static final double NUDGE_POWER_TURN = 0.75;
     private static DrivetrainControl instance;
+    private boolean gearMode;
 
     private DrivetrainControl(final double d, final double m) {
         maxSpeed = m;
@@ -39,6 +42,7 @@ public class DrivetrainControl implements Module {
         diameter = d;
         circumference = Math.PI * (diameter);
         driveMode = DriveMode.TANK;
+        gearMode = true;
         setGearState(GearState.HIGH_GEAR);
         driverInput = DriverInputControlSRX.getInstance();
     }
@@ -95,8 +99,13 @@ public class DrivetrainControl implements Module {
             update(driverInput.getLeftDrive(), driverInput.getRightDrive());
         }
 
+        if (DriverInputControlSRX.getInstance()
+                .getButton(RobotButtonType.GEAR_SHIFT)) {
+            gearMode = !gearMode;
+        }
+        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, gearMode);
     }
-
+    
     public void update(double leftJoystick, double rightJoystick) {
         if (!isTurning || (leftJoystick > 0 || rightJoystick > 0)) {
             isTurning = false;

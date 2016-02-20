@@ -48,6 +48,11 @@ public class RobotConfiguration {
 //        JoystickButtonMap.getInstance().addControllerButton(
 //                RobotButtonType.INTAKE_OUT,
 //                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
+     
+        JoystickButtonMap.getInstance().addControllerButton(
+                RobotButtonType.GEAR_SHIFT, 
+                new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 3));
+//        
         SensorInputControlSRX.getInstance().createNavX(SerialPort.Port.kMXP);
         SensorInputControlSRX.getInstance().addPressureSensor(0);
 
@@ -66,8 +71,8 @@ public class RobotConfiguration {
 //        RobotControlWithSRX.getInstance()
 //                .addDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
         
-//        RobotControlWithSRX.getInstance().addDoubleSolenoid(RobotPneumaticType.GEAR_SHIFT, 1);
-
+        RobotControlWithSRX.getInstance().addSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, 1);
+        
         RobotControlWithSRX.getInstance().addTalonSensor(
                 RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
         RobotControlWithSRX.getInstance().addTalonSensor(

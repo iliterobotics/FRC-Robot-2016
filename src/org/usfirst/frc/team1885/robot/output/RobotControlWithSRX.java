@@ -33,7 +33,8 @@ public class RobotControlWithSRX {
     }
     protected RobotControlWithSRX() {
         c = new Compressor(0);
-        c.start();
+//        c.start();
+        c.stop();
         leftDrive = new ArrayList<CANTalon>();
         rightDrive = new ArrayList<CANTalon>();
         singleSolenoids = new HashMap<RobotPneumaticType, Solenoid>();
