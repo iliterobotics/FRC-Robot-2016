@@ -29,7 +29,7 @@ public class SensorInputControlSRX {
     private LidarSensor ls;
     private BuiltInAccelerometer bia;
     private AHRS navx;
-    private PressureSensor ps;
+    private PressureSensor pressureSensor;
 
     public static SensorInputControlSRX getInstance() {
         if (instance == null) {
@@ -46,7 +46,6 @@ public class SensorInputControlSRX {
          " --- Left Encoder Value:: " +
          getEncoderDistance(SensorType.LEFT_ENCODER), false);
          */
-         
     }
     public double getInitPitch() {
         return INITIAL_PITCH;
@@ -121,13 +120,16 @@ public class SensorInputControlSRX {
         rsrx.getSensor().get(type).setEncPosition(0);
     }
     public void addPressureSensor( int channel ) {
-        ps = new PressureSensor(channel);
+        pressureSensor = new PressureSensor(channel);
     }
     public double getPressureVoltage() {
-        return ps.getVoltage();
+        return pressureSensor.getVoltage();
     }
     public double getPressureAverageVoltage() {
-        return ps.getAverageVoltage();
+        return pressureSensor.getAverageVoltage();
+    }
+    public double getPressure(){
+        return pressureSensor.getPressure();
     }
 
     /**

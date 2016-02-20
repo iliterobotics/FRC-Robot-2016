@@ -49,6 +49,7 @@ public class RobotConfiguration {
 //                RobotButtonType.INTAKE_OUT,
 //                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
         SensorInputControlSRX.getInstance().createNavX(SerialPort.Port.kMXP);
+        SensorInputControlSRX.getInstance().addPressureSensor(0);
 
         // Temp comment because we don't have the actual robot. We just have the
         // test board...
