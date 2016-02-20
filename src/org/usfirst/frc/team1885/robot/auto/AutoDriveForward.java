@@ -5,10 +5,7 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import com.sun.org.glassfish.external.statistics.annotations.Reset;
-
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 
 public class AutoDriveForward {
 

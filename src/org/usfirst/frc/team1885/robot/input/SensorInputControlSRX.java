@@ -37,6 +37,7 @@ public class SensorInputControlSRX {
 
     private double INITIAL_POT_B_POSITION;
     private double INITIAL_POT_A_POSITION;
+    private static double INITIAL_TWIST_POSITION;
     public static double INITIAL_TILT_POSITION;
     private static final double POTENTIOMETER_CONVERSION_FACTOR = 1024 / 360;
     private Map<SensorType, Integer> ticks;
@@ -78,7 +79,6 @@ public class SensorInputControlSRX {
         return navx.getRoll();
     }
     public void init() {
-        setEncoderPosition(SensorType.SHOOTER_TWIST_ENCODER, 0);
         INITIAL_POT_A_POSITION = rsrx.getSensor()
                 .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw()
                 * UtilityArm.CONVERSION_FACTOR;
@@ -87,7 +87,9 @@ public class SensorInputControlSRX {
                 * UtilityArm.CONVERSION_FACTOR;
         INITIAL_TILT_POSITION = getAnalogGeneric(
                 SensorType.SHOOTER_TILT_POTENTIOMETER);
-        DriverStation.reportError("" + INITIAL_TILT_POSITION, false);
+        DriverStation.reportError("\nInit Tilt" + INITIAL_TILT_POSITION, false);
+        INITIAL_TWIST_POSITION = getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER);
+        DriverStation.reportError("\nInit Twist " + INITIAL_TWIST_POSITION, false);
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
@@ -105,7 +107,7 @@ public class SensorInputControlSRX {
         switch (type) {
         case SHOOTER_TILT_POTENTIOMETER:
             return rsrx.getSensor().get(type).getAnalogInRaw()
-                    / POTENTIOMETER_CONVERSION_FACTOR * Shooter.GEAR_RATIO_TILT;
+                    / POTENTIOMETER_CONVERSION_FACTOR;
         default:
             return rsrx.getSensor().get(type).getAnalogInRaw();
         }
@@ -120,6 +122,14 @@ public class SensorInputControlSRX {
             return getAnalogGeneric(type) - INITIAL_POT_B_POSITION;
         default:
             return getAnalogGeneric(type);
+        }
+    }
+    public double getZeroedEncoder(SensorType type) {
+        switch(type) {
+        case SHOOTER_TWIST_ENCODER:
+            return getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER) - INITIAL_TWIST_POSITION;
+        default:
+            return getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER);
         }
     }
     public boolean digitalLimitSwitch(SensorType type) {

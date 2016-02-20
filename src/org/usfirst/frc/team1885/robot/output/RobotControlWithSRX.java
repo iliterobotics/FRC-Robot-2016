@@ -55,6 +55,10 @@ public class RobotControlWithSRX {
             int port) {
         if (talons.containsKey(motorType)) {
             sensors.put(sensorType, talons.get(motorType));
+        }else{
+            CANTalon talon = new CANTalon(port);
+            talons.put(motorType, talon);
+            sensors.put(sensorType, talon);
         }
     }
     public void addDoubleSolenoid(RobotPneumaticType type, int port1,
