@@ -39,15 +39,15 @@ public class RobotConfiguration {
         DriverInputControlSRX.getInstance()
                 .addJoystick(RobotJoystickType.CONTROLLER, new Joystick(2));
 
-        JoystickButtonMap.getInstance().addControllerButton(
-                RobotButtonType.INTAKE_SOLENOID,
-                new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 4));
-        JoystickButtonMap.getInstance().addControllerButton(
-                RobotButtonType.INTAKE_IN,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
-        JoystickButtonMap.getInstance().addControllerButton(
-                RobotButtonType.INTAKE_OUT,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
+//        JoystickButtonMap.getInstance().addControllerButton(
+//                RobotButtonType.INTAKE_SOLENOID,
+//                new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 4));
+//        JoystickButtonMap.getInstance().addControllerButton(
+//                RobotButtonType.INTAKE_IN,
+//                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
+//        JoystickButtonMap.getInstance().addControllerButton(
+//                RobotButtonType.INTAKE_OUT,
+//                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
         SensorInputControlSRX.getInstance().createNavX(SerialPort.Port.kMXP);
 
         // Temp comment because we don't have the actual robot. We just have the
@@ -60,10 +60,10 @@ public class RobotConfiguration {
                 .addTalonOutput(RobotMotorType.LEFT_DRIVE, 3);
         RobotControlWithSRX.getInstance()
                 .addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
-        RobotControlWithSRX.getInstance()
-                .addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
-        RobotControlWithSRX.getInstance()
-                .addSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
+//        RobotControlWithSRX.getInstance()
+//                .addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
+//        RobotControlWithSRX.getInstance()
+//                .addDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
         
 //        RobotControlWithSRX.getInstance().addDoubleSolenoid(RobotPneumaticType.GEAR_SHIFT, 1);
 

@@ -5,8 +5,6 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import com.sun.xml.internal.ws.api.pipe.Tube;
-
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**

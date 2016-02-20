@@ -11,7 +11,8 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class RobotControlWithSRX {
@@ -21,7 +22,7 @@ public class RobotControlWithSRX {
     private Map<RobotMotorType, CANTalon> talons = new HashMap<RobotMotorType, CANTalon>();
     private Map<SensorType, CANTalon> sensors;
     private Map<RobotPneumaticType, Solenoid> singleSolenoids;
-    private Map<RobotPneumaticType, Solenoid> doubleSolenoids;
+    private Map<RobotPneumaticType, DoubleSolenoid> doubleSolenoids;
     private Compressor c;
 
     public static synchronized RobotControlWithSRX getInstance() {
@@ -71,7 +72,7 @@ public class RobotControlWithSRX {
         }
     }
     public void updateIntakeMotor(double intakeSpeed) {
-        talons.get(RobotMotorType.ACTIVE_INTAKE).set(intakeSpeed);
+//        talons.get(RobotMotorType.ACTIVE_INTAKE).set(intakeSpeed);
     }
     public void updateShooterMotors(double shooterSpeedLeft,
             double shooterSpeedRight) {
@@ -92,14 +93,11 @@ public class RobotControlWithSRX {
         // talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
         // talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
     }
-    public void gearShift(boolean gear){
-        doubleSolenoids.get(RobotPneumaticType.GEAR_SHIFT).set(gear);
-    }
     public void addSingleSolenoid(RobotPneumaticType type, int port) {
         singleSolenoids.put(type, new Solenoid(port));
     }
     public void addDoubleSolenoid(RobotPneumaticType type, int port) {
-        doubleSolenoids.put(type, new Solenoid(port));
+        doubleSolenoids.put(type, new DoubleSolenoid(port, port + 1));
     }
     public void updateSingleSolenoid(RobotPneumaticType type, boolean value) {
         singleSolenoids.get(type).set(value);
@@ -109,5 +107,9 @@ public class RobotControlWithSRX {
     }
     public Map<SensorType, CANTalon> getSensor() {
         return this.sensors;
+    }
+    public void updateDoubleSolenoid(RobotPneumaticType type,
+            Value state) {
+        doubleSolenoids.get(type).set(state);     
     }
 }

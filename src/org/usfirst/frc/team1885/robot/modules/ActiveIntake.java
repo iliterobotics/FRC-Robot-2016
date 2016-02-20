@@ -6,6 +6,7 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class ActiveIntake implements Module {
@@ -13,7 +14,7 @@ public class ActiveIntake implements Module {
     public static final double INTAKE_SPEED = 1;
     private static ActiveIntake instance;
     private double intakeSpeed;
-    private boolean isIntaking;
+    private DoubleSolenoid.Value isIntaking;
     private MotorState intakeState;
     private DriverInputControlSRX driverInputControl;
     private RobotControlWithSRX robotControl;
@@ -58,7 +59,7 @@ public class ActiveIntake implements Module {
         }
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)
                 && System.currentTimeMillis() >= counter + delay)) {
-            isIntaking = !isIntaking;
+            isIntaking = isIntaking == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
             counter = System.currentTimeMillis();
         }
         updateIntake(intakeSpeed);
@@ -76,14 +77,14 @@ public class ActiveIntake implements Module {
     public void reset() {
         this.intakeState = MotorState.OFF;
         intakeSpeed = 0;
-        isIntaking = true;        
+        isIntaking = DoubleSolenoid.Value.kForward;        
         updateOutputs();
     }
 
     public void updateOutputs() {
-        robotControl.updateIntakeMotor(intakeSpeed);
-        robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER,
-                isIntaking);
+//        robotControl.updateIntakeMotor(intakeSpeed);
+//        robotControl.updateDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER,
+//                isIntaking);
     }
     @Override
     public void update() {
@@ -91,11 +92,9 @@ public class ActiveIntake implements Module {
         updateOutputs();
     }
     public void intakeUp(){
-       isIntaking = true;
-       updateOutputs();
+       isIntaking = DoubleSolenoid.Value.kForward;
     }
     public void intakeDown(){
-        isIntaking = false;
-        updateOutputs();
+        isIntaking = DoubleSolenoid.Value.kReverse;
     }
 }

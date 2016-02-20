@@ -51,9 +51,6 @@ public class DrivetrainControl implements Module {
     public void addSpeed(Integer gear, Double speed) {
         speeds.put(gear, speed);
     }
-    public Integer getTotes() {
-        return 1; // CHANGE TO WHAT SENSOR INPUTS SAYS
-    }
     public double getSpeed(double speed) {
         return speed * circumference;
     }
@@ -103,9 +100,8 @@ public class DrivetrainControl implements Module {
     public void update(double leftJoystick, double rightJoystick) {
         if (!isTurning || (leftJoystick > 0 || rightJoystick > 0)) {
             isTurning = false;
-            leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
-            rightDriveSpeed = rightJoystick
-                    * (speeds.get(getTotes()) / maxSpeed);
+            leftDriveSpeed = leftJoystick;
+            rightDriveSpeed = rightJoystick;
 
             if (Math.abs(leftJoystick
                     - rightJoystick) < DriverInputControlSRX.DEADZONE) {
@@ -116,9 +112,8 @@ public class DrivetrainControl implements Module {
             leftDriveSpeed = DriverInputControlSRX.expScale(leftDriveSpeed);
             rightDriveSpeed = DriverInputControlSRX.expScale(rightDriveSpeed);
         } else if (isTurning) {
-            leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
-            rightDriveSpeed = rightJoystick
-                    * (speeds.get(getTotes()) / maxSpeed);
+            leftDriveSpeed = leftJoystick;
+            rightDriveSpeed = rightJoystick;
         }
     }
     /**
@@ -138,15 +133,14 @@ public class DrivetrainControl implements Module {
      * @return the rightDriveSpeed
      */
     public double getRightDriveSpeed() {
-        return rightDriveSpeed * (speeds.get(getTotes()) / maxSpeed);
+        return rightDriveSpeed;
     }
     /**
      * @param rightDriveSpeed
      *            the rightDriveSpeed to set
      */
     public void setRightDriveSpeed(double rightDriveSpeed) {
-        this.rightDriveSpeed = rightDriveSpeed
-                * (speeds.get(getTotes()) / maxSpeed);
+        this.rightDriveSpeed = rightDriveSpeed;
         ;
     }
     /**
@@ -172,10 +166,8 @@ public class DrivetrainControl implements Module {
      *            right joystick
      */
     public void straightDrive(double driveSpeed) {
-        this.rightDriveSpeed = driveSpeed * (speeds.get(getTotes()) / maxSpeed);
-        ;
-        this.leftDriveSpeed = driveSpeed * (speeds.get(getTotes()) / maxSpeed);
-        ;
+        this.rightDriveSpeed = driveSpeed;
+        this.leftDriveSpeed = driveSpeed;
     }
     public GearState getGearState() {
         return gearState;

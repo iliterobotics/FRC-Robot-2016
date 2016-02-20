@@ -125,7 +125,6 @@ public class DriverInputControlSRX {
                         .getAxis(AxisType.kY),
                 this.getJoystick(RobotJoystickType.RIGHT_DRIVE)
                         .getAxis(AxisType.kY));
-        ActiveIntake.getInstance().update();
     }
     public void update(double leftJoystick, double rightJoystick) {
         System.err
