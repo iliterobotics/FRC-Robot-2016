@@ -151,6 +151,9 @@ public class AutonomousRoutine {
      *            = high goal; false = low goal
      */
     public void autoShootBall(boolean goal) {
-        commands.add(new AutoShooterPosition(Shooter.HIGH_GOAL_ANGLE));
+        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_ANGLE));
+        commands.add(new AutoShooterTwist(45));
+        commands.add(new AutoShooterTwist(0));
+        commands.add(new AutoShooterTilt(0));
     }
 }

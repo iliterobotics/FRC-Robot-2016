@@ -4,23 +4,25 @@ import org.usfirst.frc.team1885.robot.modules.Shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
-public class AutoShooterPosition extends AutoCommand {
-    private double angle;
+public class AutoShooterTilt extends AutoCommand {
+    private final double angle;
     private Shooter shooter;
-    public AutoShooterPosition(double angle) {
+    
+    public AutoShooterTilt(double angle) {
         this.angle = angle;
         shooter = Shooter.getInstance();
+        shooter.reset();
     }
     @Override
     public boolean init() {
-        // TODO Auto-generated method stub
+        shooter.setToTiltValue(angle);
         return true;
     }
     @Override
-    public boolean execute() {   
-        boolean yes = shooter.position(angle);
-        shooter.updateOutputs();
-        return yes;
+    public boolean execute() {
+        boolean completed = shooter.positionTilt();
+        DriverStation.reportError("\nPositioning Shootr..." + completed, false);
+        return completed;
     }
     @Override
     public boolean updateOutputs() {
