@@ -31,8 +31,9 @@ public class AutonomousRoutine {
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
-        Timer.delay(3);
-        
+        Timer.delay(1);
+
+//        commands.add(new AutoAlign(90));
         getConfiguration();
         initAutoBreach();
         autoMoveToShoot();
