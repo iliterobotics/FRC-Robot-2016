@@ -21,8 +21,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class AutoAlign extends AutoCommand {
 
     private final double P, I, D;
-    private final double ALIGNMENT_ERROR = .25;
-    private final double MIN_SPEED = 0.2;
+    private final double ALIGNMENT_ERROR = .5;
+    private final double MIN_SPEED = 0.3;
     private double targetDegree;
     private PID pid;
     private SensorInputControlSRX sensorInputControl;
@@ -35,9 +35,10 @@ public class AutoAlign extends AutoCommand {
 
     public AutoAlign(double degree) {
         targetDegree = (degree < 0 ? 360 + degree : degree % 360);
-        P = 0.7;
-        I = 0.01;
-        D = 0;
+        double scale = 180 / Math.abs(degree == 0 ? 1 : degree);
+        P = 1 / scale;
+        I = 0.001 / scale;
+        D = 5 / scale;
         pid = new PID(P, I, D);
         pid.setScalingValue(targetDegree);
     }
@@ -53,23 +54,18 @@ public class AutoAlign extends AutoCommand {
     public boolean execute() {
         double yaw = sensorInputControl.getYaw();
 
+//        if (yaw < 0) {
+//            yaw += 360;
+//        }
+
         double difference = (yaw - targetDegree);
 
-        if (Math.abs(difference) > Math.abs((360 - yaw) + targetDegree)) {
-            difference = -((360 - yaw) + targetDegree);
-        }
+        rightDrivePower = pid.getPID(difference < -180 ? -360 : 0, difference);
+        leftDrivePower = rightDrivePower * -1;
 
-        if (Math.abs(difference) > Math.abs((360 - targetDegree) + yaw)) {
-            difference = ((360 - targetDegree) + yaw);
-        }
-
-        rightDrivePower = leftDrivePower = pid.getPID(0, difference);
-
-        DriverStation.reportError(
-                "\n Degree to turn : " + targetDegree + " --- Current yaw: "
-                        + sensorInputControl.getYaw() + "\n Pid Speed:: "
-                        + rightDrivePower + "\n difference:: " + difference,
-                false);
+        DriverStation.reportError("\n Degree to turn : " + targetDegree
+                + " --- Normalized yaw: " + yaw + "\n Pid Speed:: "
+                + rightDrivePower + "\n difference:: " + difference, false);
 
         if (leftDrivePower > 0) {
             leftDrivePower = (leftDrivePower < MIN_SPEED ? MIN_SPEED
@@ -87,15 +83,12 @@ public class AutoAlign extends AutoCommand {
                     : rightDrivePower);
         }
 
-        if (difference > ALIGNMENT_ERROR) {
-            rightDrivePower = -rightDrivePower;
-        } else if (difference < -ALIGNMENT_ERROR) {
-            leftDrivePower = -leftDrivePower;
-        } else {
-            DriverStation.reportError("Alligned.", false);
+        if (Math.abs((difference < 0 ? difference + 360 : difference)) < ALIGNMENT_ERROR) {
+            DriverStation.reportError("\nAligned.", false);
             this.reset();
             return true;
         }
+
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDrivePower);
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDrivePower);
 
