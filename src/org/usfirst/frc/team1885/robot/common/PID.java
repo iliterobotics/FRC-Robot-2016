@@ -26,7 +26,7 @@ public class PID {
     }
 
     public void setScalingValue(double scaleFactor) {
-        this.scaleOutput = Math.abs(scaleFactor);
+        this.scaleOutput = scaleFactor == 0 ? 1.0 : Math.abs(scaleFactor);
     }
 
     public double getPID(double projectedValue, double currentValue) {
@@ -34,10 +34,16 @@ public class PID {
 
         error = projectedValue - currentValue;
 
+        if (scaleOutput == 0) {
+            return 0;
+        }
+
         error = error / this.scaleOutput;
 
-        DriverStation.reportError("\nP: " + (p * getP()) + "\nI: "
-                + (i * getI(1.0)) + "\nD: " + (d * getD()) + "\nError:" + error + "\nscaleOutput:" + this.scaleOutput, false);
+        DriverStation.reportError(
+                "\nP: " + (p * getP()) + " ::: I: " + (i * getI(1.0))
+                        + " ::: D: " + (d * getD()) + "    --- Error: " + error,
+                false);
 
         double output = (p * getP()) + (i * getI(1.0)) + (d * getD());
 

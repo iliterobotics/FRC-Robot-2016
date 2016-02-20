@@ -56,6 +56,7 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TILT_DOWN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TWIST_LEFT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TWIST_RIGHT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_RESET, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 10));
         
         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.FLYWHEEL_LEFT, 5);
         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.FLYWHEEL_RIGHT, 6);
