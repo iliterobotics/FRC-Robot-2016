@@ -7,14 +7,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class AutoUtilityArm extends AutoCommand {
 
     private static final double RESET_X = 0;
-    private static final double RESET_Y = Math
-            .sin(Math.toRadians(UtilityArm.DEF_B_ANGLE)) * UtilityArm.LENGTH_B * 2;
+    private static final double RESET_Y = Math.sin(
+            Math.toRadians(UtilityArm.DEF_B_ANGLE)) * UtilityArm.LENGTH_B * 2.5;
 
     private UtilityArm uArm;
     private double xDistance, yDistance;
 
     public AutoUtilityArm() {
-        this(RESET_X, RESET_Y);
+        this(-RESET_X, RESET_Y);
     }
 
     public AutoUtilityArm(double x, double y) {
@@ -31,8 +31,9 @@ public class AutoUtilityArm extends AutoCommand {
 
     @Override
     public boolean execute() {
-        DriverStation.reportError("\nGoing to (" + xDistance + ", " + yDistance + ")",
-                false);
+        DriverStation.reportError(
+                "\nGoing to (" + xDistance + ", " + yDistance + ")", false);
+        DriverStation.reportError("\n Y-Position: " + RESET_Y, false);
         uArm.update();
         return uArm.isFinished();
     }

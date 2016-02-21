@@ -32,23 +32,27 @@ public class PID {
 		
 		error = projectedValue - currentValue;
 		
+		if(scaleOutput == 0){
+		    return 0;
+		}
+		
 		error = error / this.scaleOutput;
 		
-		double output = (p * getP()) + (i * getI(1.0)) + (d * getD());
+		double output = (getP()) + (getI(1.0)) + (getD());
 		
 		return output;
 	}
 
 	public double getP() {
-		return error;
+		return p * error;
 	}
 
 	public double getI (double dt) {
-		return integral += error * dt;
+		return integral += i * error * dt;
 	}
 
 	public double getD () {
-		return error - previousError;
+		return d * (error - previousError);
 	}
 }
 
