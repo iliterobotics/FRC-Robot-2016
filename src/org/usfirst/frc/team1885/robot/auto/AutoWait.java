@@ -17,7 +17,6 @@ public class AutoWait extends AutoCommand {
     }
     public boolean execute() {
         if (System.currentTimeMillis() >= startTime + miliseconds) {
-            DriverStation.reportError("finished waiting", false);
             return true;
         } else {
             return false;

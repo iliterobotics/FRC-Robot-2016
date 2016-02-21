@@ -54,8 +54,6 @@ public class AutoDriveStart extends AutoCommand {
     public boolean execute() {
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveOutput);
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveOutput);
-        DriverStation.reportError(
-                "\nSetting driving speed to: " + leftDriveOutput, false);
         updateOutputs();
         if (time != 0) {
             Timer.delay(time);

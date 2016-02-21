@@ -103,11 +103,6 @@ public class AutoDriveDistance extends AutoCommand {
         isLeftFinished = Math.abs(differenceLeft) < ERROR;
         isRightFinished = Math.abs(differenceRight) < ERROR;
 
-        // DriverStation.reportError("\n\nDistance Left:: " + disLeft
-        // + "\ndistance Right:: " + disRight + "\nDifference Left:: "
-        // + differenceLeft + "\nDifference Right:: " + differenceRight,
-        // false);
-
         if (leftDriveSpeed > 0) {
             leftDriveSpeed = leftDriveSpeed < MIN_SPEED ? MIN_SPEED
                     : leftDriveSpeed;
@@ -119,21 +114,10 @@ public class AutoDriveDistance extends AutoCommand {
         isLeftFinished = Math.abs(disLeft - initDisLeft) >= distance;
         isRightFinished = Math.abs(disRight - initDisRight) >= distance;
 
-        // DriverStation.reportError("\nRight Drive Speed:: " + rightDriveSpeed
-        // + "\nLeft Drive Speed:: " + leftDriveSpeed, false);
-
-        // DriverStation.reportError(
-        // "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
-        // false);
-        // DriverStation.reportError(
-        // "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
-        // false);
-
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
 
         if (!doesStop && isRightFinished && isLeftFinished) {
-            DriverStation.reportError("\nFinished Distance", false);
             return true;
         } else if (isRightFinished && isLeftFinished) {
             leftDriveSpeed = rightDriveSpeed = 0;
@@ -145,8 +129,6 @@ public class AutoDriveDistance extends AutoCommand {
         } else if (isRightFinished) {
             rightDriveSpeed = 0;
         }
-        DriverStation.reportError("\nLeft Status:: " + isLeftFinished
-                + "Right Status:: " + isRightFinished, false);
         return false;
     }
 

@@ -24,7 +24,6 @@ public class AutonomousRoutine {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
-        DriverStation.reportError("Gyro Calibrated", false);
         Timer.delay(1);
         initAuto();
     }

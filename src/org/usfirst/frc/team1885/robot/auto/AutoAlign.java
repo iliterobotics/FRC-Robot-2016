@@ -63,10 +63,7 @@ public class AutoAlign extends AutoCommand {
         rightDrivePower = pid.getPID(difference < -180 ? -360 : 0, difference);
         leftDrivePower = rightDrivePower * -1;
 
-        DriverStation.reportError("\n Degree to turn : " + targetDegree
-                + " --- Normalized yaw: " + yaw + "\n Pid Speed:: "
-                + rightDrivePower + "\n difference:: " + difference, false);
-
+        
         if (leftDrivePower > 0) {
             leftDrivePower = (leftDrivePower < MIN_SPEED ? MIN_SPEED
                     : leftDrivePower);
@@ -85,7 +82,6 @@ public class AutoAlign extends AutoCommand {
 
         if (Math.abs((difference < 0 ? difference + 360
                 : difference)) < ALIGNMENT_ERROR) {
-            DriverStation.reportError("\nAligned.", false);
             this.reset();
             return true;
         }

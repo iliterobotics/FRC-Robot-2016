@@ -58,7 +58,6 @@ public class AutoCrossedDefense extends AutoCommand {
             if (System.currentTimeMillis() - startTime > WAIT_TIME * 1000) {
                 // WAIT_TIME converted to millis
                 leftDriveSpeed = rightDriveSpeed = 0;
-                DriverStation.reportError("\nCrossed Defense", false);
                 return true;
             }
         } else {
