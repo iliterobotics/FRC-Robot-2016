@@ -33,5 +33,7 @@ public enum RobotButtonType {
 	READY_LOW,
 	READY_HIGH,
 	AIM,
-	FIRE
+	FIRE,
+	TEST_CONTAINER_CLOSED,
+	TEST_CONTAINER_OPEN
 }

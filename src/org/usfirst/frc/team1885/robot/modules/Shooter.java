@@ -148,8 +148,8 @@ public class Shooter implements Module {
             DriverStation.reportError("\nR flywheel power:" + (flywheelSpeedLeft + leftFlyWheelSpeedOffset), false);
             DriverStation.reportError("\nL flywheel power:" + (flywheelSpeedRight + rightFlyWheelSpeedOffset), false);
         } else if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_IN)) {
-          flywheelSpeedLeft = SHOOTER_SPEED * .4;
-          flywheelSpeedRight = -SHOOTER_SPEED * .4;
+          flywheelSpeedLeft = SHOOTER_SPEED * .6;
+          flywheelSpeedRight = -SHOOTER_SPEED * .6;
           leftFlyWheelSpeedOffset = 0;
           rightFlyWheelSpeedOffset = 0;
         } else {
@@ -245,12 +245,22 @@ public class Shooter implements Module {
         rightState = leftState = MotorState.OFF;
         flywheelSpeedRight = flywheelSpeedLeft = 0;
     }
+    /**
+     * true = closed-- false = open
+     */
     public void updateContainer() {
-        if (!DriverInputControlSRX.getInstance()
-                .getButton(RobotButtonType.FLYWHEEL_IN) && previousFlywheel) {
-            containerState = !containerState;
-            DriverStation.reportError("Containing: " + containerState + "\n",
-                    false);
+        
+//        if (!DriverInputControlSRX.getInstance()
+//                .getButton(RobotButtonType.FLYWHEEL_IN) && previousFlywheel) {
+//            containerState = !containerState;
+//            DriverStation.reportError("Containing: " + containerState + "\n",
+//                    false);
+//        }
+        if(DriverInputControlSRX.getInstance().getButton(RobotButtonType.TEST_CONTAINER_CLOSED)){
+            containerState = true;
+        }
+        if(DriverInputControlSRX.getInstance().getButton(RobotButtonType.TEST_CONTAINER_OPEN)){
+            containerState = false;
         }
     }
     public void updateKicker() {
@@ -267,9 +277,10 @@ public class Shooter implements Module {
     public void updateOutputs() {
         RobotControlWithSRX.getInstance().updateShooterTilt(tiltSpeed);
         RobotControlWithSRX.getInstance().updateShooterTwist(twistSpeed);
-//         RobotControlWithSRX.getInstance()
-//         .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER,
-//         containerState);
+         RobotControlWithSRX.getInstance()
+         .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER,
+         containerState);
+         DriverStation.reportError("\nContainer State:: " + containerState, false);
 //        // RobotControlWithSRX.getInstance()
 //        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,
 //        // kickerState);
@@ -352,9 +363,11 @@ public class Shooter implements Module {
     @Override
     public void update() {
         updateShooter();
+        updateContainer();
         listenReset();
         listenLowGoal();
         listenHighGoal();
+        updateOutputs();
     }
     
     public void setToTiltValue(double angle){
