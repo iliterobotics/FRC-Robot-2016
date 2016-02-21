@@ -58,7 +58,6 @@ public class AutoCrossedDefense extends AutoCommand {
             if (System.currentTimeMillis() - startTime > WAIT_TIME * 1000) {
                 // WAIT_TIME converted to millis
                 leftDriveSpeed = rightDriveSpeed = 0;
-<<<<<<< HEAD
                 DrivetrainControl.getInstance()
                         .setLeftDriveSpeed(leftDriveSpeed);
                 DrivetrainControl.getInstance()
@@ -68,8 +67,6 @@ public class AutoCrossedDefense extends AutoCommand {
                         "\nCrossed the defense, stopping robot now."
                                 + System.currentTimeMillis(),
                         false);
-=======
->>>>>>> 42685b4ae6af574524934021823108cc3ddc2e92
                 return true;
             }
         } else {
