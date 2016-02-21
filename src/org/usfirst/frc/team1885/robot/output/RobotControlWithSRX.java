@@ -129,6 +129,9 @@ public class RobotControlWithSRX {
     public Solenoid getSingleSolenoid(RobotPneumaticType type) {
         return singleSolenoids.get(type);
     }
+    public DoubleSolenoid getDoubleSolenoid(RobotPneumaticType type ) {
+        return doubleSolenoids.get(type);
+    }
     public Map<SensorType, CANTalon> getSensor() {
         return this.sensors;
     }

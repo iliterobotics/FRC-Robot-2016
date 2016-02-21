@@ -125,17 +125,17 @@ public class Shooter implements Module {
             int vleft = Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
             int vright = Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
             
-//            if(vleft > vright){
-//                leftSpinnerPID.setScalingValue(vright);
-//                double difference = (vleft - vright)/vleft/2;
-//                leftFlyWheelSpeedOffset -= difference;
-//                rightFlyWheelSpeedOffset-= difference;
-//            }else if(vright > vleft){
-//                rightSpinnerPID.setScalingValue(vleft);
-//                double difference = (vright - vleft)/vright/2;
-//                leftFlyWheelSpeedOffset += difference;
-//                rightFlyWheelSpeedOffset+= difference;
-//            }
+            if(vleft > vright){
+                leftSpinnerPID.setScalingValue(vright);
+                double difference = leftSpinnerPID.getPID(vright, vleft)/2;
+                leftFlyWheelSpeedOffset -= difference;
+                rightFlyWheelSpeedOffset-= difference;
+            }else if(vright > vleft){
+                rightSpinnerPID.setScalingValue(vleft);
+                double difference = leftSpinnerPID.getPID(vleft, vright)/2;
+                leftFlyWheelSpeedOffset += difference;
+                rightFlyWheelSpeedOffset+= difference;
+            }
             
             DriverStation.reportError("\nR flywheel velocity:" + vleft, false);
             DriverStation.reportError("\nL flywheel velocity:" + vright, false);
@@ -268,9 +268,55 @@ public class Shooter implements Module {
 //        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,
 //        // kickerState);
     }
-    @Override
-    public void update() {
-        updateShooter();
+    public void listenHighGoal() {
+        if(reseting){
+            if(!twistDone && positionTwist()){
+                twistDone = true;
+            }
+            if(twistDone){
+                if(positionTilt()){
+                    reseting = false;
+                }
+            }
+        }
+        else if(driverInputControl.isButtonDown(RobotButtonType.READY_HIGH)){
+            setToTwistValue(0);
+            setToTiltValue(HIGH_GOAL_ANGLE);
+            twistPID = new PID(D_TWIST_P, D_TWIST_I, D_TWIST_D);
+            tiltPID = new PID(D_TILT_P, D_TILT_I, D_TILT_D);
+            reseting = true;
+            twistDone = false;
+        }
+        else{
+            updateTilt();
+            updateTwist();
+        }
+    }
+    public void listenLowGoal() {
+        if(reseting){
+            if(!twistDone && positionTwist()){
+                twistDone = true;
+            }
+            if(twistDone){
+                if(positionTilt()){
+                    reseting = false;
+                }
+            }
+        }
+        else if(driverInputControl.isButtonDown(RobotButtonType.READY_LOW)){
+            setToTwistValue(0);
+            setToTiltValue(5);
+            twistPID = new PID(D_TWIST_P, D_TWIST_I, D_TWIST_D);
+            tiltPID = new PID(D_TILT_P, D_TILT_I, D_TILT_D);
+            reseting = true;
+            twistDone = false;
+        }
+        else{
+            updateTilt();
+            updateTwist();
+        }
+    }
+    public void listenReset() {
         if(reseting){
             if(!twistDone && positionTwist()){
                 twistDone = true;
@@ -293,6 +339,13 @@ public class Shooter implements Module {
             updateTilt();
             updateTwist();
         }
+    }
+    @Override
+    public void update() {
+        updateShooter();
+        listenReset();
+        listenLowGoal();
+        listenHighGoal();
     }
     
     public void setToTiltValue(double angle){

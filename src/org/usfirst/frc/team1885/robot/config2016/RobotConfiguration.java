@@ -56,8 +56,11 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TILT_DOWN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TWIST_LEFT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TWIST_RIGHT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
-        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_RESET, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 10));
-        
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_RESET, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.READY_HIGH, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,1));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.READY_LOW, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,2));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.AIM, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,3));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.FIRE, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,8));
         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.FLYWHEEL_LEFT, 5);
         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.FLYWHEEL_RIGHT, 6);
         RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.SHOOTER_TILT, 7);

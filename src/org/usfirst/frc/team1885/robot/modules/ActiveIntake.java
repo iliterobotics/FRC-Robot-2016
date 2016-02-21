@@ -6,8 +6,6 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.DriverStation;
-
 public class ActiveIntake implements Module {
 
     public static final double INTAKE_SPEED = 1;
@@ -58,10 +56,21 @@ public class ActiveIntake implements Module {
             intakeSpeed = INTAKE_SPEED;
             // DriverStation.reportError("Spit Out\n", false);
         }
-        if ((driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)
-                && System.currentTimeMillis() >= counter + delay)) {
-            isIntaking = !isIntaking;
+        if ((driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID) && System.currentTimeMillis() >= counter + delay)) {
+            if (robotControl.getSingleSolenoid(RobotPneumaticType.INTAKE_SETTER).get() == true) {
+                robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, false);
+            } else if (robotControl.getSingleSolenoid(RobotPneumaticType.INTAKE_SETTER).get() == false) {
+                robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, true);
+            }
             counter = System.currentTimeMillis();
+        }
+        if (driverInputControl.getButton(RobotButtonType.READY_LOW)
+                && System.currentTimeMillis() >= counter + delay) {
+            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, true);
+        }
+        if (driverInputControl.getButton(RobotButtonType.READY_HIGH)
+                && System.currentTimeMillis() >= counter + delay) {
+            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, false);
         }
         updateIntake(intakeSpeed);
     }
@@ -78,6 +87,9 @@ public class ActiveIntake implements Module {
     public void reset() {
         this.intakeState = MotorState.OFF;
         intakeSpeed = 0;
+    }
+    public void listenLowGoal() {
+
     }
 
     public void updateOutputs() {
