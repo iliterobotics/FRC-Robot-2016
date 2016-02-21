@@ -61,9 +61,6 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,3));
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INTAKE_OUT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,5));
         
-        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.TEST_CONTAINER_CLOSED, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 2));
-        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.TEST_CONTAINER_OPEN, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 3));
-        
         SensorInputControlSRX.getInstance().addEncoder(RobotMotorType.FLYWHEEL_LEFT,SensorType.FLYWHEEL_LEFT_ENCODER, 8);
         SensorInputControlSRX.getInstance().addEncoder(RobotMotorType.FLYWHEEL_RIGHT,SensorType.FLYWHEEL_RIGHT_ENCODER, 9);
         SensorInputControlSRX.getInstance().addPotentiometer(RobotMotorType.SHOOTER_TILT,SensorType.SHOOTER_TILT_POTENTIOMETER, 10);
