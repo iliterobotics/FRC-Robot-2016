@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.auto;
 import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.Robot;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -17,7 +18,6 @@ public class AutonomousRoutine {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         drawbridge();
-
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -28,7 +28,7 @@ public class AutonomousRoutine {
                 currCommand.updateOutputs();
                 if (commandState) {
                     DriverStation.reportError(
-                            "finished command " + commands.size(), false);
+                            "\nfinished command " + commands.size(), false);
                     commands.poll();
                 }
             } else {
@@ -45,8 +45,10 @@ public class AutonomousRoutine {
         double disX1 = 6 + X_ERROR;
         double disY1 = 28.75 + Y_OVERSHOOT_DISTANCE;
         commands.add(new AutoUtilityArm(-disX1, disY1));
-
         commands.add(new AutoWait(2000));
-        commands.add(new AutoUtilityArm());
+        double floorX1 = 12;
+        double floorY1 = 2;
+        commands.add(new AutoUtilityArm(-floorX1, floorY1));
+        commands.add(new AutoWait(2000));
     }
 }
