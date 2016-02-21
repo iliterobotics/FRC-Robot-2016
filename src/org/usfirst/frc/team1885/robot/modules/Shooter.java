@@ -337,7 +337,7 @@ public class Shooter implements Module {
         }
         else if(driverInputControl.getButton(RobotButtonType.SHOOTER_RESET) && !previousReset){
             setToTwistValue(0);
-            setToTiltValue(0);
+            setToTiltValue(13);
             twistPID = new PID(D_TWIST_P, D_TWIST_I, D_TWIST_D);
             tiltPID = new PID(D_TILT_P, D_TILT_I, D_TILT_D);
             reseting = true;

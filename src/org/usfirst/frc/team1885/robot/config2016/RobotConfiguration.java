@@ -57,9 +57,9 @@ public class RobotConfiguration {
 //        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.READY_LOW, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,2));
 //        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.AIM, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,3));
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.FIRE, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,8));
-        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INTAKE_SOLENOID, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE,4));
-        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE,1));
-        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INTAKE_OUT, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE,1));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INTAKE_SOLENOID, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,1));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,3));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INTAKE_OUT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,5));
         
         
         
@@ -93,6 +93,7 @@ public class RobotConfiguration {
         RobotControlWithSRX.getInstance()
                 .addDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
         RobotControlWithSRX.getInstance().addSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, 3);
+        RobotControlWithSRX.getInstance().addSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, 4);
         
         
         //Talon Sensors

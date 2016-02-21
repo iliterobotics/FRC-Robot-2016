@@ -35,6 +35,7 @@ public class DrivetrainControl implements Module {
     public static final double NUDGE_POWER_TURN = 0.75;
     private static DrivetrainControl instance;
     private boolean gearMode;
+    private boolean previousGearShiftState;
 
     private DrivetrainControl(final double d, final double m) {
         maxSpeed = m;
@@ -45,6 +46,7 @@ public class DrivetrainControl implements Module {
         gearMode = true;
         setGearState(GearState.HIGH_GEAR);
         driverInput = DriverInputControlSRX.getInstance();
+        previousGearShiftState = false;
     }
     public static DrivetrainControl getInstance() {
         if (instance == null) {
@@ -100,10 +102,10 @@ public class DrivetrainControl implements Module {
 //        }
 
         if (DriverInputControlSRX.getInstance()
-                .getButton(RobotButtonType.GEAR_SHIFT)) {
+                .getButton(RobotButtonType.GEAR_SHIFT) && !previousGearShiftState) {
             gearMode = !gearMode;
         }
-        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, gearMode);
+        previousGearShiftState = DriverInputControlSRX.getInstance().getButton(RobotButtonType.GEAR_SHIFT);
     }
     
     public void update(double leftJoystick, double rightJoystick) {
@@ -193,8 +195,8 @@ public class DrivetrainControl implements Module {
     }
 
     public void updateOutputs() {
-        // udicious - 3/6 hard coding low gear with 2 speeds.
         RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
                 rightDriveSpeed);
+        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, gearMode);
     }
 }
