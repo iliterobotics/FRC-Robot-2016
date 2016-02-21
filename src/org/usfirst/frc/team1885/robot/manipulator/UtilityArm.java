@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.robot.manipulator;
 
+import javax.sql.rowset.Joinable;
+
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
@@ -25,9 +27,10 @@ public class UtilityArm implements Module {
     public static final double LENGTH_A = 17.5;
     public static final double LENGTH_B = 18;
     public static final double CONVERSION_FACTOR = 360.0 / 1024;
+    public static final int DEF_A_ANGLE = 10, DEF_B_ANGLE = 170;
     private static final double MOTOR_SPEED_A = .3;
-    private static final double MOTOR_SPEED_B = .6;
-    private static final double DEGREE_MARGIN_E = 6;
+    private static final double MOTOR_SPEED_B = .5;
+    private static final double DEGREE_MARGIN_E = 4;
     private static final double JOY_DEADZONE = .1;
     private static final double JOY_CHANGE = .005;
 
@@ -71,8 +74,8 @@ public class UtilityArm implements Module {
     public void update() {
         // changeValues();
         if (driverInputControl.isResetButtonDown()) {
-            jointAAngle = 0;
-            jointBAngle = 170;
+            jointAAngle = DEF_A_ANGLE;
+            jointBAngle = DEF_B_ANGLE;
         }
         if (driverInputControl.isButtonDown(RobotButtonType.INCREMENT_ARM_UP)) {
             goTo(-20, 10);
@@ -146,10 +149,17 @@ public class UtilityArm implements Module {
      */
     public double getAngleB() {
         double angleA = getAngleA();
+        double rawAngle = sensorInputControl.getAnalogGeneric(
+                SensorType.JOINT_B_POTENTIOMETER)
+                * CONVERSION_FACTOR;
+        if(rawAngle < sensorInputControl.getInitialPotBPostition()){
+            rawAngle += 360;
+        }
+        else{
+            rawAngle -= sensorInputControl.getInitialPotBPostition();
+        }
         double angleB = angleA + 360
-                - (sensorInputControl.getAnalogGeneric(
-                        SensorType.JOINT_B_POTENTIOMETER) * CONVERSION_FACTOR
-                - sensorInputControl.getInitialPotBPostition() + 190);
+                - (rawAngle + DEF_B_ANGLE);
         return angleB;
     }
 
@@ -238,14 +248,14 @@ public class UtilityArm implements Module {
             jointBAngle += 360;
         }
 
-        if (jointAAngle < 0) {
-            jointAAngle = 0;
+        if (jointAAngle < DEF_A_ANGLE) {
+            jointAAngle = DEF_A_ANGLE;
         }
         if (jointAAngle > 180) {
             jointAAngle = 180;
         }
-        if (jointBAngle > (180 + jointAAngle) - 10) {
-            jointBAngle = (180 + jointAAngle) - 10;
+        if (jointBAngle > (160 + jointAAngle)) {
+            jointBAngle = (160 + jointAAngle);
         }
         if (jointBAngle < jointAAngle) {
             jointBAngle = jointAAngle;
@@ -316,24 +326,41 @@ public class UtilityArm implements Module {
                 }
             }
         }
-        if (jointBAngle > 170 - jointAAngle) {
-            jointBAngle = 170 - jointAAngle;
+        if (jointBAngle > DEF_B_ANGLE - jointAAngle) {
+            jointBAngle = DEF_B_ANGLE - jointAAngle;
         }
         if (jointBAngle < jointAAngle) {
             jointBAngle = jointAAngle;
         }
     }
     public boolean isFinished() {
-        boolean isJointAFinished = jointAAngle - getAngleA() > DEGREE_MARGIN_E
-                && jointAAngle - getAngleA() < -DEGREE_MARGIN_E;
-        boolean isJointBFinished = jointBAngle - getAngleB() > DEGREE_MARGIN_E
-                && jointBAngle - getAngleB() < -DEGREE_MARGIN_E;
+        boolean isJointAFinished = jointAAngle - getAngleA() < DEGREE_MARGIN_E
+                && jointAAngle - getAngleA() > -DEGREE_MARGIN_E;
+        boolean isJointBFinished = jointBAngle - getAngleB() < DEGREE_MARGIN_E
+                && jointBAngle - getAngleB() > -DEGREE_MARGIN_E;
 
+        DriverStation.reportError("\nAre finished? ("
+                + (isJointAFinished ? "true" : "false") + ", "
+                + (isJointBFinished ? "true" : "false") + ")\n Joint Angle A: "
+                + jointAAngle + " -- Joint Angle B: " + jointBAngle
+                + "\n Get Angle A: " + getAngleA() + " -- Get Angle B: "
+                + getAngleB() + "\nInitial B value: "
+                + sensorInputControl.INITIAL_POT_B_POSITION + 
+                "\nRaw angle B:" + sensorInputControl.getAnalogGeneric(
+                        SensorType.JOINT_B_POTENTIOMETER) * CONVERSION_FACTOR + 
+                "\nRaw pot val:" + sensorInputControl.getAnalogGeneric(
+                        SensorType.JOINT_B_POTENTIOMETER), false);
+        if(isJointAFinished && isJointBFinished){
+            jointASpeed = 0;
+            jointBSpeed = 0;
+            RobotControlWithSRX.getInstance().updateArmMotors(jointASpeed,
+                jointBSpeed);
+        }
         return isJointAFinished && isJointBFinished;
     }
     public void resetPos() {
-        jointAAngle = 0;
-        jointBAngle = 170;
+        jointAAngle = DEF_A_ANGLE;
+        jointBAngle = DEF_B_ANGLE;
     }
 
 }

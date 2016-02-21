@@ -11,12 +11,12 @@ import edu.wpi.first.wpilibj.Timer;
 public class AutonomousRoutine {
     private Robot robot;
     private LinkedList<AutoCommand> commands;
-    private static final double delay = 0.05;
+    private static final double delay = 0.005;
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
         robot = r;
-        commands.add(new AutoUtilityArm(-10, 10));
+        drawbridge();
 
     }
     public void execute() {
@@ -38,7 +38,15 @@ public class AutonomousRoutine {
         }
     }
 
+    private final double X_ERROR = 1;
+    private final double Y_OVERSHOOT_DISTANCE = 0;
+
     public void drawbridge() {
+        double disX1 = 6 + X_ERROR;
+        double disY1 = 28.75 + Y_OVERSHOOT_DISTANCE;
+        commands.add(new AutoUtilityArm(-disX1, disY1));
+
+        commands.add(new AutoWait(2000));
         commands.add(new AutoUtilityArm());
     }
 }

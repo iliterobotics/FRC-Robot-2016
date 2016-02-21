@@ -35,6 +35,8 @@ public class Robot extends SampleRobot {
 
     private final double diameter;
     private final double maxSpeed;
+    private final double armHieght = 8.25;
+    private final double armRange = 6;
     private LinkedList<AutoCommand> commands;
     private long timeTracker = 0;
     private double delayTime = 1;// Input time in seconds
@@ -134,7 +136,6 @@ public class Robot extends SampleRobot {
 
     public void autonomous() {
         AutonomousRoutine ar = new AutonomousRoutine(this);
-        ar.testArm();
         ar.execute();
     }
 }
