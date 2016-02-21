@@ -5,8 +5,6 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import com.sun.xml.internal.ws.api.pipe.Tube;
-
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -22,7 +20,7 @@ public class AutoAlign extends AutoCommand {
 
     private final double P, I, D;
     private final double ALIGNMENT_ERROR = .5;
-    private final double MIN_SPEED = 0.3;
+    private final double MIN_SPEED = 0.225;
     private double targetDegree;
     private PID pid;
     private SensorInputControlSRX sensorInputControl;

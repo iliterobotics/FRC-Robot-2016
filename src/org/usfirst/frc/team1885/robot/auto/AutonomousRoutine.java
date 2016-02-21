@@ -18,7 +18,7 @@ public class AutonomousRoutine {
 
     private Robot robot;
     private LinkedList<AutoCommand> commands;
-    private static final double delay = 0.05;
+    private static final double delay = 0.005;
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();

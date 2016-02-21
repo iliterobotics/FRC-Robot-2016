@@ -87,6 +87,10 @@ public class SensorInputControlSRX {
     }
 
     public double getEncoderDistance(SensorType type) {
+        if(type == SensorType.LEFT_ENCODER){
+            return -RobotConfiguration.WHEEL_DIAMETER * Math.PI
+                    * rsrx.getSensor().get(type).getEncPosition() / TICKS_IN_360;
+        }
         return RobotConfiguration.WHEEL_DIAMETER * Math.PI
                 * rsrx.getSensor().get(type).getEncPosition() / TICKS_IN_360;
     }
