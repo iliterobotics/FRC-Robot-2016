@@ -86,7 +86,6 @@ public class AutoAlign extends AutoCommand {
             this.reset();
             return true;
         }
-
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDrivePower);
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDrivePower);
 

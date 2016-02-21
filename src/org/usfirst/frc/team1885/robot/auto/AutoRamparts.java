@@ -4,6 +4,8 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * This class crosses the Rampart defense by shimmy-ing up the ramps. The ramps
  * must be angled toward the ground beforehand.
@@ -15,12 +17,15 @@ public class AutoRamparts extends AutoCommand {
     // Made by Aaron. Fixed by Noah. Pushed by Teddy.
     private final double YAW_ZONE = 5.0; // Margin of error to be within in
                                          // order to be considered straight.
+    private final double RAMPART_SPEED_MAX = 0.6; // Subject to testing change
+    private final double RAMPART_SPEED_MIN = 0.5; // Subject to testing change
     private SensorInputControlSRX sensorControl = SensorInputControlSRX
             .getInstance();
     private RobotControlWithSRX robotControl = RobotControlWithSRX
             .getInstance();
     private DrivetrainControl driveTrainControl = DrivetrainControl
             .getInstance();
+    private AutoCrossedDefense acd;
     private double leftDriveSpeed;
     private double rightDriveSpeed;
 
@@ -29,29 +34,30 @@ public class AutoRamparts extends AutoCommand {
         reset();
         leftDriveSpeed = driveTrainControl.getLeftDriveSpeed();
         rightDriveSpeed = driveTrainControl.getRightDriveSpeed();
+        acd = new AutoCrossedDefense();
         return true;
     }
 
     @Override
     public boolean execute() {
         double yaw = sensorControl.getYaw();
-        if ((new AutoCrossedDefense()).execute()) {
+        DriverStation.reportError("\nRight side: " + leftDriveSpeed
+                + " --- Left side: " + rightDriveSpeed, false);
+        if (acd.execute()) {
             return true;
         }
         if (this.inZone(yaw)) {
-            leftDriveSpeed = rightDriveSpeed = AutonomousRoutine.RAMPART_SPEED_MAX;
+            leftDriveSpeed = rightDriveSpeed = RAMPART_SPEED_MAX;
         } else if (yaw > YAW_ZONE) {
-            if (driveTrainControl
-                    .getLeftDriveSpeed() == AutonomousRoutine.RAMPART_SPEED_MAX) {
-                leftDriveSpeed = AutonomousRoutine.RAMPART_SPEED_MIN;
+            if (driveTrainControl.getLeftDriveSpeed() == RAMPART_SPEED_MAX) {
+                leftDriveSpeed = RAMPART_SPEED_MIN;
             }
-            rightDriveSpeed = AutonomousRoutine.RAMPART_SPEED_MAX;
+            rightDriveSpeed = RAMPART_SPEED_MAX;
         } else if (yaw < -YAW_ZONE) {
-            if (driveTrainControl
-                    .getRightDriveSpeed() == AutonomousRoutine.RAMPART_SPEED_MAX) {
-                rightDriveSpeed = AutonomousRoutine.RAMPART_SPEED_MIN;
+            if (driveTrainControl.getRightDriveSpeed() == RAMPART_SPEED_MAX) {
+                rightDriveSpeed = RAMPART_SPEED_MIN;
             }
-            leftDriveSpeed = AutonomousRoutine.RAMPART_SPEED_MAX;
+            leftDriveSpeed = RAMPART_SPEED_MAX;
         }
         driveTrainControl.setLeftDriveSpeed(leftDriveSpeed);
         driveTrainControl.setRightDriveSpeed(rightDriveSpeed);
@@ -66,7 +72,8 @@ public class AutoRamparts extends AutoCommand {
 
     @Override
     public void reset() {
-        robotControl.updateDriveSpeed(0, 0);
+        robotControl.updateDriveSpeed(driveTrainControl.getLeftDriveSpeed(),
+                driveTrainControl.getRightDriveSpeed());
     }
 
     /**

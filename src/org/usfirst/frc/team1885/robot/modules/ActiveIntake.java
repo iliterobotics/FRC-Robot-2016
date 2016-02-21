@@ -24,6 +24,7 @@ public class ActiveIntake implements Module {
     protected ActiveIntake() {
         driverInputControl = DriverInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
+        //isIntaking = true;
         counter = System.currentTimeMillis();
         reset();
     }
@@ -62,6 +63,14 @@ public class ActiveIntake implements Module {
             isIntaking = isIntaking == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
             counter = System.currentTimeMillis();
         }
+        if (driverInputControl.getButton(RobotButtonType.READY_LOW)
+                && System.currentTimeMillis() >= counter + delay) {
+            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, true);
+        }
+        if (driverInputControl.getButton(RobotButtonType.READY_HIGH)
+                && System.currentTimeMillis() >= counter + delay) {
+            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, false);
+        }
         updateIntake(intakeSpeed);
     }
     public void updateIntake(double intakeSpeed) {
@@ -79,6 +88,9 @@ public class ActiveIntake implements Module {
         intakeSpeed = 0;
         isIntaking = DoubleSolenoid.Value.kForward;        
         updateOutputs();
+    }
+    public void listenLowGoal() {
+
     }
 
     public void updateOutputs() {

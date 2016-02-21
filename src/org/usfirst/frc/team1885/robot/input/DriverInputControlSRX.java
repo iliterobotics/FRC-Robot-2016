@@ -7,6 +7,7 @@ import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -133,5 +134,42 @@ public class DriverInputControlSRX {
         this.leftDriveSpeed = deadzone(leftJoystick);
         RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
                 rightDriveSpeed);
+    }
+    public double getControllerTwist() {
+        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kThrottle);
+    }
+    
+    public double getControllerThrottle() {
+        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kTwist);
+    }
+    
+    public boolean isResetButtonDown() {
+        return this.getButton(RobotButtonType.RESET_BUTTON);
+    }
+    
+    public boolean isButtonDown(RobotButtonType type){
+        return this.getButton(type);
+    }
+    public int getShooterTilt() {
+        if(this.isButtonDown(RobotButtonType.SHOOTER_TILT_UP)) {
+            return 1;
+        }
+        else if(this.isButtonDown(RobotButtonType.SHOOTER_TILT_DOWN)){
+            return -1;
+        }
+        else {
+            return 0;
+        }
+    }
+    public double getShooterTwist() {
+        if(this.isButtonDown(RobotButtonType.SHOOTER_TWIST_RIGHT)) {
+            return Shooter.TWIST_SPEED;
+        }
+        else if(this.isButtonDown(RobotButtonType.SHOOTER_TWIST_LEFT)){
+            return -Shooter.TWIST_SPEED;
+        }
+        else {
+            return 0;
+        }
     }
 }

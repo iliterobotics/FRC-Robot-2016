@@ -9,7 +9,6 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
-import org.usfirst.frc.team1885.robot.manipulator.AuxArm;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;

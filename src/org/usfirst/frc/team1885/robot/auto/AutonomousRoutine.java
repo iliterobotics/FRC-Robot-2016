@@ -3,14 +3,15 @@ package org.usfirst.frc.team1885.robot.auto;
 import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.Robot;
+import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine {
-    public static final double PITCH_CHANGE_ON_RAMP = 4.5;
+    public static final double PITCH_CHANGE_ON_RAMP = 4.5; // NavX is sideways
     public static final double RAMPART_SPEED_MAX = 0.6;
     public static final double RAMPART_SPEED_MIN = 0.5;
     public static final double START_DRIVE_SPEED = -0.45;
@@ -36,7 +37,8 @@ public class AutonomousRoutine {
                 boolean commandState = currCommand.execute();
                 currCommand.updateOutputs();
                 if (commandState) {
-                    System.out.println("finished command " + commands.size());
+                    // DriverStation.reportError(
+                    // "\nfinished command " + commands.size(), false);
                     commands.poll();
                 }
             } else {
@@ -58,14 +60,14 @@ public class AutonomousRoutine {
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAuto() {
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
-        commands.add(new AutoReachedDefense());
+//        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+//        commands.add(new AutoReachedDefense());
         DefenseType type = DefenseType.LOWBAR; // to be changed to equal the
                                                // analog input
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
         switch (type) {
         case LOWBAR:
-            autoLowBar();
+            // autoLowBar();
             break;
         case PORTCULLIS:
             autoPortcullis();
@@ -87,8 +89,9 @@ public class AutonomousRoutine {
         default:
             break;
         }
-        commands.add(new AutoCrossedDefense());
-        autoAlign();
+        autoShootHighGoal();
+//        commands.add(new AutoCrossedDefense());
+//        autoAlign();
     }
     /**
      * Adds speed to the robot to clear the moat
@@ -104,11 +107,14 @@ public class AutonomousRoutine {
         ActiveIntake.getInstance().intakeDown();
         commands.add(
                 new AutoDriveDistance(lowBarTravelDistance, false, -.3, -.3));
-
     }
 
+    /**
+     * Controls processes for crossing the ramparts
+     */
     public void autoRamparts() {
         commands.add(new AutoRamparts());
+        autoAlign();
     }
 
     public void autoPortcullis() {
@@ -123,16 +129,25 @@ public class AutonomousRoutine {
 
     }
 
+    /**
+     * Controls process for lowering and crossing the drawbridge
+     */
     public void autoDrawbridge() {
-
+        // Needs to include moving to Drawbridge
+        // commands.add(new AutoDrawbridge());
     }
-
     /**
      * Reusable method to align robot after crossing a defense
      */
     public void autoAlign() {
         commands.add(new AutoAlign());
-        // autoShootBall(false);
+        autoShootHighGoal();
+    }
+    /**
+     * Controls processes required for locating the high goal and shooting
+     */
+    public void autoShootHighGoal() {
+        autoShootBall(true);
     }
 
     /**
@@ -143,6 +158,9 @@ public class AutonomousRoutine {
      *            = high goal; false = low goal
      */
     public void autoShootBall(boolean goal) {
-
+        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_ANGLE));
+        commands.add(new AutoShooterTwist(45));
+        commands.add(new AutoShooterTwist(0));
+        commands.add(new AutoShooterTilt(0));
     }
 }

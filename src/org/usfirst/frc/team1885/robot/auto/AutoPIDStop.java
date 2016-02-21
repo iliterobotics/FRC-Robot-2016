@@ -6,6 +6,8 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class AutoPIDStop extends AutoCommand{
     
     private PID rightDistanceControlLoop;
@@ -88,8 +90,9 @@ public class AutoPIDStop extends AutoCommand{
             rightDriveOutput = 0;
         }
         
-//      System.out.println("AutoDriveFwd::[left speed, right speed] " + leftDriveOutput + ", " + rightDriveOutput);
-        
+        DriverStation.reportError("\nAutoDriveFwd::[left speed, right speed] " + leftDriveOutput + ", " + rightDriveOutput, false);
+        DriverStation.reportError("\nRight Distance Traveled::" + rightDistanceTraveled + "\nLef Distance Traveled::" + leftDistanceTraveled, false);
+      
         DrivetrainControl.getInstance().setLeftDriveSpeed(-leftDriveOutput);
         DrivetrainControl.getInstance().setRightDriveSpeed(-rightDriveOutput);
         

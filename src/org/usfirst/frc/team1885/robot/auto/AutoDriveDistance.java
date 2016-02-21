@@ -7,6 +7,7 @@ import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 
 /**
  * Waits until the robot has traversed a certain distance. Moving forward 1 in
@@ -153,8 +154,6 @@ public class AutoDriveDistance extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
-                rightDriveSpeed);
         return false;
     }
 
