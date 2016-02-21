@@ -6,12 +6,14 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+
 public class ActiveIntake implements Module {
 
     public static final double INTAKE_SPEED = 1;
     private static ActiveIntake instance;
     private double intakeSpeed;
-    private boolean isIntaking;
+    private DoubleSolenoid.Value isIntaking;
     private MotorState intakeState;
     private DriverInputControlSRX driverInputControl;
     private RobotControlWithSRX robotControl;
@@ -19,12 +21,12 @@ public class ActiveIntake implements Module {
     private static final double delay = 1000;
 
     protected ActiveIntake() {
-        this.intakeState = MotorState.OFF;
-        intakeSpeed = 0;
         driverInputControl = DriverInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
-        isIntaking = false;
+
+        isIntaking = DoubleSolenoid.Value.kOff;
         counter = System.currentTimeMillis();
+        reset();
     }
     public static ActiveIntake getInstance() {
         if (instance == null) {
@@ -58,8 +60,16 @@ public class ActiveIntake implements Module {
         }
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)
                 && System.currentTimeMillis() >= counter + delay)) {
-            isIntaking = !isIntaking;
+            isIntaking = isIntaking == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
             counter = System.currentTimeMillis();
+        }
+        if (driverInputControl.getButton(RobotButtonType.READY_LOW)
+                && System.currentTimeMillis() >= counter + delay) {
+            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, true);
+        }
+        if (driverInputControl.getButton(RobotButtonType.READY_HIGH)
+                && System.currentTimeMillis() >= counter + delay) {
+            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, false);
         }
         updateIntake(intakeSpeed);
     }
@@ -76,16 +86,27 @@ public class ActiveIntake implements Module {
     public void reset() {
         this.intakeState = MotorState.OFF;
         intakeSpeed = 0;
+        isIntaking = DoubleSolenoid.Value.kForward;        
+        updateOutputs();
+    }
+    public void listenLowGoal() {
+
     }
 
     public void updateOutputs() {
         robotControl.updateIntakeMotors(intakeSpeed);
-        robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER,
+        robotControl.updateDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER,
                 isIntaking);
     }
     @Override
     public void update() {
         updateIntake();
         updateOutputs();
+    }
+    public void intakeUp(){
+       isIntaking = DoubleSolenoid.Value.kForward;
+    }
+    public void intakeDown(){
+        isIntaking = DoubleSolenoid.Value.kReverse;
     }
 }

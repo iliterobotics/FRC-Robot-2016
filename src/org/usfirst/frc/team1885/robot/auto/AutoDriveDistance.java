@@ -137,12 +137,12 @@ public class AutoDriveDistance extends AutoCommand {
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
 
         if (!doesStop && isRightFinished && isLeftFinished) {
-            DriverStation.reportError("\nFinished traveling distance!"
-                    + System.currentTimeMillis(), false);
+//            DriverStation.reportError("\nFinished traveling distance!"
+//                    + System.currentTimeMillis(), false);
             return true;
         } else if (isRightFinished && isLeftFinished) {
-            DriverStation.reportError(
-                    "\nFinished traveling distance! Stopping.", false);
+//            DriverStation.reportError(
+//                    "\nFinished traveling distance! Stopping.", false);
             leftDriveSpeed = rightDriveSpeed = 0;
             DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
             DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);

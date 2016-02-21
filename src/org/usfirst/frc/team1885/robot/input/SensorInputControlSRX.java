@@ -37,6 +37,7 @@ public class SensorInputControlSRX {
 
     private double INITIAL_POT_B_POSITION;
     private double INITIAL_POT_A_POSITION;
+    private static double INITIAL_TWIST_POSITION;
     public static double INITIAL_TILT_POSITION;
     private static final double POTENTIOMETER_CONVERSION_FACTOR = 1024 / 360;
     private Map<SensorType, Integer> ticks;
@@ -71,6 +72,14 @@ public class SensorInputControlSRX {
          * " --- Left Encoder Value:: " +
          * getEncoderDistance(SensorType.LEFT_ENCODER), false);
          */
+        
+//         Encoder values testing
+         
+         DriverStation.reportError("\nRight Encoder Value::" +
+         getEncoderDistance(SensorType.RIGHT_ENCODER) +
+         " --- Left Encoder Value:: " +
+         getEncoderDistance(SensorType.LEFT_ENCODER), false);
+         
     }
     public double getInitPitch() {
         return INITIAL_PITCH;
@@ -94,7 +103,12 @@ public class SensorInputControlSRX {
         INITIAL_POT_B_POSITION = rsrx.getSensor()
                 .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
                 * UtilityArm.CONVERSION_FACTOR;
-        DriverStation.reportError("" + INITIAL_TILT_POSITION, false);
+
+        INITIAL_TILT_POSITION = getAnalogGeneric(
+                SensorType.SHOOTER_TILT_POTENTIOMETER);
+        DriverStation.reportError("\nInit Tilt" + INITIAL_TILT_POSITION, false);
+        INITIAL_TWIST_POSITION = getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER);
+        DriverStation.reportError("\nInit Twist " + INITIAL_TWIST_POSITION, false);
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
@@ -111,6 +125,9 @@ public class SensorInputControlSRX {
     }
     public double getAnalogGeneric(SensorType type) {
         switch (type) {
+        case SHOOTER_TILT_POTENTIOMETER:
+            return rsrx.getSensor().get(type).getAnalogInRaw()
+                    / POTENTIOMETER_CONVERSION_FACTOR;
         default:
             return rsrx.getSensor().get(type).getAnalogInRaw();
         }
@@ -123,6 +140,14 @@ public class SensorInputControlSRX {
             return getAnalogGeneric(type) - INITIAL_POT_B_POSITION;
         default:
             return getAnalogGeneric(type);
+        }
+    }
+    public double getZeroedEncoder(SensorType type) {
+        switch(type) {
+        case SHOOTER_TWIST_ENCODER:
+            return getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER) - INITIAL_TWIST_POSITION;
+        default:
+            return getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER);
         }
     }
     public boolean digitalLimitSwitch(SensorType type) {
@@ -148,6 +173,10 @@ public class SensorInputControlSRX {
     }
 
     public double getEncoderDistance(SensorType type) {
+        if(type == SensorType.LEFT_ENCODER){
+            return -RobotConfiguration.WHEEL_DIAMETER * Math.PI
+                    * rsrx.getSensor().get(type).getEncPosition() / TICKS_IN_360;
+        }
         return RobotConfiguration.WHEEL_DIAMETER * Math.PI
                 * rsrx.getSensor().get(type).getEncPosition() / TICKS_IN_360;
     }
@@ -195,4 +224,8 @@ public class SensorInputControlSRX {
     public void resetEncoder(SensorType type) {
         rsrx.getSensor().get(type).setEncPosition(0);
     }
+    public double getPressure(){
+        return pressureSensor.getPressure();
+    }
+
 }

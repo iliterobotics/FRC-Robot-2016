@@ -5,8 +5,6 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import com.sun.xml.internal.ws.api.pipe.Tube;
-
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -22,7 +20,11 @@ public class AutoAlign extends AutoCommand {
 
     private final double P, I, D;
     private final double ALIGNMENT_ERROR = .5;
+<<<<<<< HEAD
     private final double MIN_SPEED = 0.3;
+=======
+    private final double MIN_SPEED = 0.225;
+>>>>>>> 42685b4ae6af574524934021823108cc3ddc2e92
     private double targetDegree;
     private PID pid;
     private SensorInputControlSRX sensorInputControl;
@@ -115,4 +117,8 @@ public class AutoAlign extends AutoCommand {
         targetDegree = (degree < 0 ? 360 + degree : degree % 360);
         pid.setScalingValue(targetDegree);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 42685b4ae6af574524934021823108cc3ddc2e92

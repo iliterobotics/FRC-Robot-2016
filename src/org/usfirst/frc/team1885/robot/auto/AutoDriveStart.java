@@ -36,8 +36,6 @@ public class AutoDriveStart extends AutoCommand {
         SensorInputControlSRX.getInstance().calibrateGyro();
         rightDriveOutput = leftDriveOutput = pow;
         time = sec;
-        DriverStation.reportError(
-                "Drive with " + pow + " power for " + sec + " seconds", false);
     }
 
     /**
@@ -58,8 +56,6 @@ public class AutoDriveStart extends AutoCommand {
         Timer.delay(time);
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveOutput);
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveOutput);
-        DriverStation.reportError(
-                "\nSetting driving speed to: " + leftDriveOutput, false);
         updateOutputs();
         if (time != 0) {
             Timer.delay(time);

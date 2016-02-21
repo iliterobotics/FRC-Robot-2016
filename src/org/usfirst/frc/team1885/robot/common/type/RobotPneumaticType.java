@@ -1,5 +1,5 @@
 package org.usfirst.frc.team1885.robot.common.type;
 
 public enum RobotPneumaticType {
-    INTAKE_SETTER, GEAR_SHIFT
+    SHOOTER_CONTAINER, SHOOTER_KICKER, INTAKE_SETTER, GEAR_SHIFT
 }

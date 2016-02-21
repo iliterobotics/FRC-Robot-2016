@@ -36,8 +36,18 @@ public class RobotConfiguration {
         DriverInputControlSRX.getInstance()
                 .addJoystick(RobotJoystickType.RIGHT_DRIVE, new Joystick(1));
         DriverInputControlSRX.getInstance()
-                .addJoystick(RobotJoystickType.CONTROLLER, new Joystick(2));
+                .addJoystick(RobotJoystickType.CONTROLLER, new Joystick(0));
 
+//        JoystickButtonMap.getInstance().addControllerButton(
+//                RobotButtonType.INTAKE_SOLENOID,
+//                new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 4));
+//        JoystickButtonMap.getInstance().addControllerButton(
+//                RobotButtonType.INTAKE_IN,
+//                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
+//        JoystickButtonMap.getInstance().addControllerButton(
+//                RobotButtonType.INTAKE_OUT,
+//                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
+     
         JoystickButtonMap.getInstance().addControllerButton(
                 RobotButtonType.INTAKE_SOLENOID,
                 new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 4));
@@ -47,8 +57,33 @@ public class RobotConfiguration {
         JoystickButtonMap.getInstance().addControllerButton(
                 RobotButtonType.INTAKE_OUT,
                 new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 1));
+        JoystickButtonMap.getInstance().addControllerButton(
+                RobotButtonType.GEAR_SHIFT, 
+                new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 3));
+
         SensorInputControlSRX.getInstance().createNavX(SerialPort.Port.kMXP);
+        SensorInputControlSRX.getInstance().addPressureSensor(0);
         
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.FLYWHEEL_IN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 5));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.FLYWHEEL_OUT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TILT_UP, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TILT_DOWN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TWIST_LEFT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_TWIST_RIGHT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.SHOOTER_RESET, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.READY_HIGH, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,1));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.READY_LOW, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,2));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.AIM, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,3));
+        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.FIRE, new JoystickButtonMatch(RobotJoystickType.CONTROLLER,8));
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.FLYWHEEL_LEFT, 5);
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.FLYWHEEL_RIGHT, 6);
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.SHOOTER_TILT, 7);
+        RobotControlWithSRX.getInstance().addTalonOutput(RobotMotorType.SHOOTER_TWIST, 8);
+        
+        SensorInputControlSRX.getInstance().addEncoder(RobotMotorType.FLYWHEEL_LEFT,SensorType.FLYWHEEL_LEFT_ENCODER, 5);
+        SensorInputControlSRX.getInstance().addEncoder(RobotMotorType.FLYWHEEL_RIGHT,SensorType.FLYWHEEL_RIGHT_ENCODER, 6);
+        SensorInputControlSRX.getInstance().addPotentiometer(RobotMotorType.SHOOTER_TILT,SensorType.SHOOTER_TILT_POTENTIOMETER, 7);
+        SensorInputControlSRX.getInstance().addEncoder(RobotMotorType.SHOOTER_TWIST,SensorType.SHOOTER_TWIST_ENCODER, 8);
         // Temp comment because we don't have the actual robot. We just have the
         // test board...
         RobotControlWithSRX.getInstance()
@@ -59,13 +94,13 @@ public class RobotConfiguration {
                 .addTalonOutput(RobotMotorType.LEFT_DRIVE, 3);
         RobotControlWithSRX.getInstance()
                 .addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
-        RobotControlWithSRX.getInstance()
-                .addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
-        RobotControlWithSRX.getInstance()
-                .addSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
+//        RobotControlWithSRX.getInstance()
+//                .addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
+//        RobotControlWithSRX.getInstance()
+//                .addDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
         
-//        RobotControlWithSRX.getInstance().addDoubleSolenoid(RobotPneumaticType.GEAR_SHIFT, 1);
-
+        RobotControlWithSRX.getInstance().addSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, 1);
+        
         RobotControlWithSRX.getInstance().addTalonSensor(
                 RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
         RobotControlWithSRX.getInstance().addTalonSensor(

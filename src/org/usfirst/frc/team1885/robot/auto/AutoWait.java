@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.robot.auto;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 /**
  * Stops procedures for given time, in millis.
  * 

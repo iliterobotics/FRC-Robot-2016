@@ -29,7 +29,7 @@ public class AutoCrossedDefense extends AutoCommand {
 
     public AutoCrossedDefense() {
         sensorInputControl = SensorInputControlSRX.getInstance();
-        ERROR = 2;
+        ERROR = 2.5;
         WAIT_TIME = 0.15;
         FLAT_ROLL = sensorInputControl.getInitRoll();
         FLAT_PITCH = sensorInputControl.getInitPitch();
@@ -48,10 +48,6 @@ public class AutoCrossedDefense extends AutoCommand {
         double currentRoll = sensorInputControl.getNavX().getRoll();
         double currentPitch = sensorInputControl.getNavX().getPitch();
 
-        DriverStation.reportError("\nInitial Roll: " + FLAT_ROLL
-                + ":::Initial Pitch: " + FLAT_PITCH + "\nCurrent Roll: "
-                + currentRoll + ":::Current Pitch: " + currentPitch, false);
-
         boolean isAlignedRoll = currentRoll <= FLAT_ROLL + ERROR
                 && currentRoll >= FLAT_ROLL - ERROR;
 
@@ -62,6 +58,7 @@ public class AutoCrossedDefense extends AutoCommand {
             if (System.currentTimeMillis() - startTime > WAIT_TIME * 1000) {
                 // WAIT_TIME converted to millis
                 leftDriveSpeed = rightDriveSpeed = 0;
+<<<<<<< HEAD
                 DrivetrainControl.getInstance()
                         .setLeftDriveSpeed(leftDriveSpeed);
                 DrivetrainControl.getInstance()
@@ -71,6 +68,8 @@ public class AutoCrossedDefense extends AutoCommand {
                         "\nCrossed the defense, stopping robot now."
                                 + System.currentTimeMillis(),
                         false);
+=======
+>>>>>>> 42685b4ae6af574524934021823108cc3ddc2e92
                 return true;
             }
         } else {

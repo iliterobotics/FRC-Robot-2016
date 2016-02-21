@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1885.robot;
 
-import java.sql.Driver;
 import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
@@ -34,24 +33,23 @@ import edu.wpi.first.wpilibj.Timer;
  */
 
 public class Robot extends SampleRobot {
-
     private final double diameter;
-    private final double maxSpeed;
     private LinkedList<AutoCommand> commands;
     private long timeTracker = 0;
     private double delayTime = 1;// Input time in seconds
     public static final double AUTO_CYCLE_TIME = 0.05;
 
-    private RobotControlWithSRX robotControlWithSRX;
+    private RobotControlWithSRX srx;
     private DriverInputControlSRX driverInputControl;
     private SensorInputControlSRX sensorInputControl;
 
     private AutoTemplate activeTemplate;
 
     public Robot() {
-        this.robotControlWithSRX = RobotControlWithSRX.getInstance();
-        this.driverInputControl = DriverInputControlSRX.getInstance();
-        this.sensorInputControl = SensorInputControlSRX.getInstance();
+
+        srx = RobotControlWithSRX.getInstance();
+        driverInputControl = DriverInputControlSRX.getInstance();
+        sensorInputControl = SensorInputControlSRX.getInstance();
         try {
             RobotConfiguration.configureRobot();
             DriverStation.reportError("Robot Configured", false);
@@ -61,12 +59,13 @@ public class Robot extends SampleRobot {
                 DriverStation.reportError("\n" + anElement.toString(), false);
             }
             DriverStation.reportError(
-                    "Robot - Error configuring Robot" + e.getClass(), false);
+                    "Robot - Error configuring Robot " + e.getClass(), false);
         }
-        diameter = 4.0;
-        maxSpeed = 15.0;
+        diameter = 9.0;
+        ActiveIntake.getInstance();
 
         DrivetrainControl.getInstance().addSpeed(1, 15.0);
+        this.srx = RobotControlWithSRX.getInstance();
 
     }
 
@@ -80,6 +79,8 @@ public class Robot extends SampleRobot {
             driverInputControl.update();
             ActiveIntake.getInstance().update();
             // UtilityArm.getInstance().update();
+            // New canbus code
+            // AuxArm.getInstance().update();
             Timer.delay(.005);
         }
 
@@ -138,5 +139,5 @@ public class Robot extends SampleRobot {
         // sensorrx.resetEncoder(SensorType.RIGHT_ENCODER);
         ar.execute();
     }
-
+    
 }

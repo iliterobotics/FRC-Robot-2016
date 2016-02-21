@@ -6,6 +6,8 @@ import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
+import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
+import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
@@ -32,6 +34,7 @@ public class DrivetrainControl implements Module {
     public static final double NUDGE_POWER = 0.15;
     public static final double NUDGE_POWER_TURN = 0.75;
     private static DrivetrainControl instance;
+    private boolean gearMode;
 
     private DrivetrainControl(final double d, final double m) {
         maxSpeed = m;
@@ -39,6 +42,7 @@ public class DrivetrainControl implements Module {
         diameter = d;
         circumference = Math.PI * (diameter);
         driveMode = DriveMode.TANK;
+        gearMode = true;
         setGearState(GearState.HIGH_GEAR);
         driverInput = DriverInputControlSRX.getInstance();
     }
@@ -50,9 +54,6 @@ public class DrivetrainControl implements Module {
     }
     public void addSpeed(Integer gear, Double speed) {
         speeds.put(gear, speed);
-    }
-    public Integer getTotes() {
-        return 1; // CHANGE TO WHAT SENSOR INPUTS SAYS
     }
     public double getSpeed(double speed) {
         return speed * circumference;
@@ -98,14 +99,18 @@ public class DrivetrainControl implements Module {
             update(driverInput.getLeftDrive(), driverInput.getRightDrive());
         }
 
+        if (DriverInputControlSRX.getInstance()
+                .getButton(RobotButtonType.GEAR_SHIFT)) {
+            gearMode = !gearMode;
+        }
+        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, gearMode);
     }
-
+    
     public void update(double leftJoystick, double rightJoystick) {
         if (!isTurning || (leftJoystick > 0 || rightJoystick > 0)) {
             isTurning = false;
-            leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
-            rightDriveSpeed = rightJoystick
-                    * (speeds.get(getTotes()) / maxSpeed);
+            leftDriveSpeed = leftJoystick;
+            rightDriveSpeed = rightJoystick;
 
             if (Math.abs(leftJoystick
                     - rightJoystick) < DriverInputControlSRX.DEADZONE) {
@@ -116,9 +121,8 @@ public class DrivetrainControl implements Module {
             leftDriveSpeed = DriverInputControlSRX.expScale(leftDriveSpeed);
             rightDriveSpeed = DriverInputControlSRX.expScale(rightDriveSpeed);
         } else if (isTurning) {
-            leftDriveSpeed = leftJoystick * (speeds.get(getTotes()) / maxSpeed);
-            rightDriveSpeed = rightJoystick
-                    * (speeds.get(getTotes()) / maxSpeed);
+            leftDriveSpeed = leftJoystick;
+            rightDriveSpeed = rightJoystick;
         }
     }
     /**
@@ -138,15 +142,14 @@ public class DrivetrainControl implements Module {
      * @return the rightDriveSpeed
      */
     public double getRightDriveSpeed() {
-        return rightDriveSpeed * (speeds.get(getTotes()) / maxSpeed);
+        return rightDriveSpeed;
     }
     /**
      * @param rightDriveSpeed
      *            the rightDriveSpeed to set
      */
     public void setRightDriveSpeed(double rightDriveSpeed) {
-        this.rightDriveSpeed = rightDriveSpeed
-                * (speeds.get(getTotes()) / maxSpeed);
+        this.rightDriveSpeed = rightDriveSpeed;
         ;
     }
     /**
@@ -172,10 +175,8 @@ public class DrivetrainControl implements Module {
      *            right joystick
      */
     public void straightDrive(double driveSpeed) {
-        this.rightDriveSpeed = driveSpeed * (speeds.get(getTotes()) / maxSpeed);
-        ;
-        this.leftDriveSpeed = driveSpeed * (speeds.get(getTotes()) / maxSpeed);
-        ;
+        this.rightDriveSpeed = driveSpeed;
+        this.leftDriveSpeed = driveSpeed;
     }
     public GearState getGearState() {
         return gearState;

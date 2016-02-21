@@ -33,7 +33,8 @@ public class RobotControlWithSRX {
     }
     protected RobotControlWithSRX() {
         c = new Compressor(0);
-        c.start();
+//        c.start();
+        c.stop();
         leftDrive = new ArrayList<CANTalon>();
         rightDrive = new ArrayList<CANTalon>();
         talons = new HashMap<RobotMotorType, CANTalon>();
@@ -55,10 +56,10 @@ public class RobotControlWithSRX {
             int port) {
         if (talons.containsKey(motorType)) {
             sensors.put(sensorType, talons.get(motorType));
-        } else {
-            CANTalon ct = new CANTalon(port);
-            talons.put(motorType, ct);
-            sensors.put(sensorType, ct);
+        }else{
+            CANTalon talon = new CANTalon(port);
+            talons.put(motorType, talon);
+            sensors.put(sensorType, talon);
         }
     }
     public void addDoubleSolenoid(RobotPneumaticType type, int port1,
@@ -79,6 +80,17 @@ public class RobotControlWithSRX {
     }
     public void updateIntakeMotors(double intakeSpeed) {
         talons.get(RobotMotorType.ACTIVE_INTAKE).set(intakeSpeed);
+    }
+    public void updateShooterTilt(double tiltSpeed) {
+        talons.get(RobotMotorType.SHOOTER_TILT).set(tiltSpeed);
+    }
+    public void updateShooterTwist(double twistSpeed) {
+        talons.get(RobotMotorType.SHOOTER_TWIST).set(twistSpeed);
+    }
+    public void updateFlywheelShooter(double flywheelSpeedLeft,
+            double flywheelSpeedRight) {
+        talons.get(RobotMotorType.FLYWHEEL_LEFT).set(flywheelSpeedLeft);
+        talons.get(RobotMotorType.FLYWHEEL_RIGHT).set(flywheelSpeedRight);
     }
     public List<CANTalon> getLeftDrive() {
         return leftDrive;
@@ -112,6 +124,9 @@ public class RobotControlWithSRX {
     }
     public Solenoid getSingleSolenoid(RobotPneumaticType type) {
         return singleSolenoids.get(type);
+    }
+    public DoubleSolenoid getDoubleSolenoid(RobotPneumaticType type ) {
+        return doubleSolenoids.get(type);
     }
     public Map<SensorType, CANTalon> getSensor() {
         return this.sensors;

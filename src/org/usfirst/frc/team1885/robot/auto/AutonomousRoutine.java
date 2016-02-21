@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
 import dataclient.robotdata.autonomous.AutonomousConfig;
@@ -25,6 +27,7 @@ public class AutonomousRoutine {
     private double delay = 0.005;
     private boolean isHigh;
     private int goal;
+    public static final double MOAT_CLEAR_SPEED = -0.75;
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
@@ -42,6 +45,7 @@ public class AutonomousRoutine {
          initAutoBreach();
          autoMoveToShoot();
     }
+
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
                 && robot.isAutonomous()) {
@@ -91,7 +95,6 @@ public class AutonomousRoutine {
     public void initAutoBreach() {
         commands.add(new AutoDriveStart(START_DRIVE_SPEED));
         commands.add(new AutoReachedDefense());
-
         // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
         switch (type) {
         case LOW_BAR:
@@ -229,7 +232,6 @@ public class AutonomousRoutine {
             // raise up shooter
             // shoot
         }
-
     }
 
     /**
@@ -237,7 +239,7 @@ public class AutonomousRoutine {
      */
     public void autoLowBar() {
         double lowBarTravelDistance = 4.2 * 12; // subject to change from
-                                                // testing
+        ActiveIntake.getInstance().intakeDown();
         commands.add(
                 new AutoDriveDistance(lowBarTravelDistance, false, -.3, -.3));
     }
@@ -281,7 +283,7 @@ public class AutonomousRoutine {
      * Controls processes required for locating the high goal and shooting
      */
     public void autoShootHighGoal() {
-        // autoShootBall(false);
+        autoShootBall(true);
     }
 
     /**
@@ -292,6 +294,10 @@ public class AutonomousRoutine {
      *            = high goal; false = low goal
      */
     public void autoShootBall(boolean goal) {
+        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_ANGLE));
+        commands.add(new AutoShooterTwist(45));
+        commands.add(new AutoShooterTwist(0));
+        commands.add(new AutoShooterTilt(0));
     }
 
     
