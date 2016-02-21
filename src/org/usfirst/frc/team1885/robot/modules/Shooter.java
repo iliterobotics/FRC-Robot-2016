@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.modules;
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
+import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
@@ -13,7 +14,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Shooter implements Module {
 
     private static Shooter instance;
-    public static final double HIGH_GOAL_ANGLE = 45.0;
+    public static final double HIGH_GOAL_ANGLE = 135.0;
+    public static final double LOW_GOAL_ANGLE = 5.0;
     public static final double ANGLE_ERROR = 1;
     public static final int TICK_ERROR = 10;
     public static final double SHOOTER_SPEED = 1;
@@ -23,6 +25,7 @@ public class Shooter implements Module {
     private static final double TILT_LIMIT_UPPER = 45;
     private static  final double TILT_LIMIT_LOWER = 5;
     public static final double GEAR_RATIO_TWIST = 3.0 / 7;
+    public static final int MAX_FLYWHEEL_SPEED = 30000;
     private static final double TWIST_BOUND_RIGHT = (1024.0 / GEAR_RATIO_TWIST) / (360 / 45);
     private static final double TWIST_BOUND_LEFT = (1024.0 / GEAR_RATIO_TWIST) / (360 / 45);
     //public static final double GEAR_RATIO_TILT = 1.0 / 3;
@@ -74,6 +77,7 @@ public class Shooter implements Module {
     private PID twistPID;
     private PID leftSpinnerPID;
     private PID rightSpinnerPID;
+    private boolean previousContainerState;
 
     public static Shooter getInstance() {
         if (instance == null) {
@@ -82,7 +86,7 @@ public class Shooter implements Module {
         return instance;
     }
     protected Shooter() {
-
+        previousContainerState = false;
         this.leftState = MotorState.OFF;
         this.rightState = MotorState.OFF;
         this.twistState = this.tiltState = MotorState.OFF;
@@ -116,37 +120,50 @@ public class Shooter implements Module {
     public MotorState getTiltState() {
         return tiltState;
     }
-    public void updateShooter() {
-        // TODO modify values after testing for direction
-        if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT)) {
-            flywheelSpeedLeft = -SHOOTER_SPEED;
-            flywheelSpeedRight = SHOOTER_SPEED;
-            
-            int vleft = Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
-            int vright = Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
-            
-            if(vleft > vright){
-                leftSpinnerPID.setScalingValue(vright);
-                double difference = leftSpinnerPID.getPID(vright, vleft)/2;
-                leftFlyWheelSpeedOffset -= difference;
-                rightFlyWheelSpeedOffset-= difference;
-            }else if(vright > vleft){
-                rightSpinnerPID.setScalingValue(vleft);
-                double difference = leftSpinnerPID.getPID(vleft, vright)/2;
-                leftFlyWheelSpeedOffset += difference;
-                rightFlyWheelSpeedOffset+= difference;
-            }
+    public boolean flywheelOutSpeed() {
+        if ( Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER)) < MAX_FLYWHEEL_SPEED ) {
+            updateFlywheelOut();
+            return false;
+        }
+        return true;
+    }
+    public void updateFlywheelOut() {
+        flywheelSpeedLeft = -SHOOTER_SPEED;
+        flywheelSpeedRight = SHOOTER_SPEED;
+        
+        int vleft = Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
+        int vright = Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
+        
+        if(vleft > vright){
+            leftSpinnerPID.setScalingValue(vright);
+            double difference = leftSpinnerPID.getPID(vright, vleft)/2;
+            leftFlyWheelSpeedOffset -= difference;
+            rightFlyWheelSpeedOffset-= difference;
+        }else if(vright > vleft){
+            rightSpinnerPID.setScalingValue(vleft);
+            double difference = leftSpinnerPID.getPID(vleft, vright)/2;
+            leftFlyWheelSpeedOffset += difference;
+            rightFlyWheelSpeedOffset+= difference;
             
             DriverStation.reportError("\nR flywheel velocity:" + vleft, false);
             DriverStation.reportError("\nL flywheel velocity:" + vright, false);
             
             DriverStation.reportError("\nR flywheel power:" + (flywheelSpeedLeft + leftFlyWheelSpeedOffset), false);
             DriverStation.reportError("\nL flywheel power:" + (flywheelSpeedRight + rightFlyWheelSpeedOffset), false);
+        }
+    }
+    public void updateFlywheelIn() {
+        flywheelSpeedLeft = SHOOTER_SPEED * .4;
+        flywheelSpeedRight = -SHOOTER_SPEED * .4;
+        leftFlyWheelSpeedOffset = 0;
+        rightFlyWheelSpeedOffset = 0;
+    }
+    public void updateShooter() {
+        // TODO modify values after testing for direction
+        if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT)) {
+            updateFlywheelOut();      
         } else if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_IN)) {
-          flywheelSpeedLeft = SHOOTER_SPEED * .4;
-          flywheelSpeedRight = -SHOOTER_SPEED * .4;
-          leftFlyWheelSpeedOffset = 0;
-          rightFlyWheelSpeedOffset = 0;
+            updateFlywheelIn();
         } else {
             flywheelSpeedLeft = 0;
             flywheelSpeedRight = 0;
@@ -241,11 +258,12 @@ public class Shooter implements Module {
     }
     public void updateContainer() {
         if (DriverInputControlSRX.getInstance()
-                .getButton(RobotButtonType.SHOOTER_CONTAINER_TOGGLE)) {
+                .getButton(RobotButtonType.SHOOTER_CONTAINER_TOGGLE) && !previousContainerState ) {
             containerState = !containerState;
             DriverStation.reportError("Containing: " + containerState + "\n",
                     false);
         }
+        previousContainerState = DriverInputControlSRX.getInstance().getButton(RobotButtonType.SHOOTER_CONTAINER_TOGGLE);
     }
     public void updateKicker() {
         if (DriverInputControlSRX.getInstance().getButton(
@@ -261,9 +279,9 @@ public class Shooter implements Module {
     public void updateOutputs() {
 //        RobotControlWithSRX.getInstance().updateShooterTilt(tiltSpeed);
 //        RobotControlWithSRX.getInstance().updateShooterTwist(twistSpeed);
-//        // RobotControlWithSRX.getInstance()
-//        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER,
-//        // containerState);
+         RobotControlWithSRX.getInstance()
+         .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER,
+         containerState);
 //        // RobotControlWithSRX.getInstance()
 //        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,
 //        // kickerState);
@@ -280,6 +298,7 @@ public class Shooter implements Module {
             }
         }
         else if(driverInputControl.isButtonDown(RobotButtonType.READY_HIGH)){
+            ActiveIntake.getInstance().intakeDown();
             setToTwistValue(0);
             setToTiltValue(HIGH_GOAL_ANGLE);
             twistPID = new PID(D_TWIST_P, D_TWIST_I, D_TWIST_D);
@@ -304,6 +323,7 @@ public class Shooter implements Module {
             }
         }
         else if(driverInputControl.isButtonDown(RobotButtonType.READY_LOW)){
+            ActiveIntake.getInstance().intakeUp();
             setToTwistValue(0);
             setToTiltValue(5);
             twistPID = new PID(D_TWIST_P, D_TWIST_I, D_TWIST_D);
@@ -346,6 +366,8 @@ public class Shooter implements Module {
         listenReset();
         listenLowGoal();
         listenHighGoal();
+        updateContainer();
+        updateOutputs();
     }
     
     public void setToTiltValue(double angle){

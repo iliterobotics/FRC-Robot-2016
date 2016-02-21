@@ -119,16 +119,8 @@ public class AutonomousRoutine {
             break;
         }
         commands.add(new AutoCrossedDefense());
-        autoAlign();
+        commands.add(new AutoAlign());
 
-    }
-
-    public void initAutoShoot() {
-        // TODO Checks for center, left, or right and chooses the right switch
-        // statement to run for
-        // switch statement based off of defense going for
-        // calls individual method inputting values for goal and position
-        // method adds the commands for getting to the correct position
     }
 
     public void autoMoveToShoot() {
@@ -168,23 +160,23 @@ public class AutonomousRoutine {
             switch (targetDefense) {
             case 1:
                 firstTurn = 90;
-                secondMove = 11 * 12;
+                secondMove = 10 * 12;
                 break;
             case 2:
                 firstTurn = 90;
-                secondMove = 7 * 12;
+                secondMove = 6 * 12;
                 break;
             case 3:
                 firstTurn = 90;
-                secondMove = 3 * 12;
+                secondMove = 2 * 12;
                 break;
             case 4:
                 firstTurn = -90;
-                secondMove = 1 * 12;
+                secondMove = 2 * 12;
                 break;
             case 5:
                 firstTurn = -90;
-                secondMove = 3 * 12;
+                secondMove = 4 * 12;
                 break;
             default:
                 DriverStation.reportError("Invalid Target Defense", false);
@@ -223,14 +215,14 @@ public class AutonomousRoutine {
         commands.add(new AutoAlign(firstTurn));
         commands.add(new AutoDriveDistance(secondMove, true, -.5, -.5));
         commands.add(new AutoAlign(goalTurn));
-        if (isHigh) {
-            // TODO aim at high goal
-            // shoot
-
-        } else {
-            // TODO go forward to low goal
-            // raise up shooter
-            // shoot
+        //TODO line up to shoot with vision
+        if (!isHigh) {
+            commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+            commands.add(new AutoCrossedDefense());
+            autoShootBall(Shooter.LOW_GOAL_ANGLE);
+        }
+        else {
+            autoShootBall(Shooter.HIGH_GOAL_ANGLE);
         }
     }
 
@@ -249,7 +241,6 @@ public class AutonomousRoutine {
      */
     public void autoRamparts() {
         commands.add(new AutoRamparts());
-        autoAlign();
     }
 
     public void autoPortcullis() {
@@ -271,20 +262,6 @@ public class AutonomousRoutine {
         // Needs to include moving to Drawbridge
         // commands.add(new AutoDrawbridge());
     }
-    /**
-     * Reusable method to align robot after crossing a defense
-     */
-    public void autoAlign() {
-        commands.add(new AutoAlign());
-        commands.add(new AutoWait(5000));
-        autoShootHighGoal();
-    }
-    /**
-     * Controls processes required for locating the high goal and shooting
-     */
-    public void autoShootHighGoal() {
-        autoShootBall(true);
-    }
 
     /**
      * Controls processes required for locating the high and low goal and
@@ -293,11 +270,11 @@ public class AutonomousRoutine {
      * @param true
      *            = high goal; false = low goal
      */
-    public void autoShootBall(boolean goal) {
-        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_ANGLE));
-        commands.add(new AutoShooterTwist(45));
-        commands.add(new AutoShooterTwist(0));
-        commands.add(new AutoShooterTilt(0));
+    public void autoShootBall(double angle) {
+        commands.add(new AutoShooterTilt(angle));
+        commands.add(new AutoShooterShoot());
+        //TODO vision to twist for more accurate
+        
     }
 
     
