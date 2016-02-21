@@ -26,10 +26,12 @@ public class UtilityArm implements Module {
     public static final double LENGTH_A = 17.5;
     public static final double LENGTH_B = 18;
     public static final double CONVERSION_FACTOR = 360.0 / 1024;
-    public static final double DEF_A_ANGLE = .3, DEF_B_ANGLE = 170;
+    public static final double DEF_A_ANGLE = .5, DEF_B_ANGLE = 173;
+    private static final double MAX_MOTOR_SPEED_A = .5;
+    private static final double MAX_MOTOR_SPEED_B = .7;
     private static final double MOTOR_SPEED_A = .2;
     private static final double MOTOR_SPEED_B = .2;
-    private static final double DEGREE_MARGIN_E = 2;
+    private static final double DEGREE_MARGIN_E = 5;
     private static final double JOY_DEADZONE = .1;
     private static final double JOY_CHANGE = .005;
 
@@ -56,11 +58,11 @@ public class UtilityArm implements Module {
     private DriverInputControlSRX driverInputControl;
 
     protected UtilityArm() {
-        aP = 0.5;
-        aI = 0.005;
-        aD = 0;
-        bP = 1;
-        bI = 0;
+        aP = .7;
+        aI = 0.0005;
+        aD = 3;
+        bP = 2;
+        bI = 0.00125;
         bD = 0;
         this.jointAState = MotorState.OFF;
         this.jointBState = MotorState.OFF;
@@ -110,6 +112,16 @@ public class UtilityArm implements Module {
     public void updateOutputs() {
         jointASpeed = jointAControlLoop.getPID(jointAAngle, getAngleA());
         jointBSpeed = -jointBControlLoop.getPID(jointBAngle, getAngleB());
+
+        if (Math.abs(jointASpeed) > MAX_MOTOR_SPEED_A) {
+            jointASpeed = jointASpeed > 0 ? MAX_MOTOR_SPEED_A
+                    : -MAX_MOTOR_SPEED_A;
+        }
+        if (Math.abs(jointBSpeed) > MAX_MOTOR_SPEED_B) {
+            jointBSpeed = jointBSpeed > 0 ? MAX_MOTOR_SPEED_B
+                    : -MAX_MOTOR_SPEED_B;
+        }
+
         //
         // if (jointBAngle - getAngleB() > DEGREE_MARGIN_E) {
         // jointBSpeed = -MOTOR_SPEED_B;
@@ -127,14 +139,14 @@ public class UtilityArm implements Module {
         }
 
         DriverStation.reportError("\n\nJoint B:: Speed: " + jointBSpeed
-                + " Goal: " + jointBAngle + " Current: " + getAngleB() + " P: "
-                + jointBControlLoop.getP() + " I: "
+                + " Goal: " + jointBAngle + " Current: " + getAngleB()
+                + "\n P: " + jointBControlLoop.getP() + " I: "
                 + jointBControlLoop.getI(1.0) + " D: "
                 + jointBControlLoop.getD(), false);
 
         DriverStation.reportError("\n\nJoint A:: Speed: " + jointASpeed
-                + " Goal: " + jointAAngle + " Current: " + getAngleA() + " P: "
-                + jointBControlLoop.getP() + " I: "
+                + " Goal: " + jointAAngle + " Current: " + getAngleA()
+                + "\n P: " + jointBControlLoop.getP() + " I: "
                 + jointBControlLoop.getI(1.0) + " D: "
                 + jointBControlLoop.getD(), false);
 
@@ -182,11 +194,6 @@ public class UtilityArm implements Module {
                 - (sensorInputControl.getAnalogGeneric(
                         SensorType.JOINT_B_POTENTIOMETER) * CONVERSION_FACTOR
                 - sensorInputControl.getInitialPotBPostition() + 190);
-
-        DriverStation.reportError(
-                "\n getAngleB() --- " + angleB + " --- Initial position B: "
-                        + sensorInputControl.getInitialPotBPostition(),
-                false);
 
         return angleB;
     }

@@ -3,8 +3,6 @@ package org.usfirst.frc.team1885.robot.auto;
 import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.Robot;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -39,16 +37,32 @@ public class AutonomousRoutine {
     }
 
     private final double X_ERROR = 1;
-    private final double Y_OVERSHOOT_DISTANCE = 0;
+    private final double Y_OVERSHOOT_DISTANCE = 2;
 
     public void drawbridge() {
-        double disX1 = 6 + X_ERROR;
-        double disY1 = 28.75 + Y_OVERSHOOT_DISTANCE;
-        commands.add(new AutoUtilityArm(-disX1, disY1));
-        commands.add(new AutoWait(2000));
-        double floorX1 = 12;
-        double floorY1 = 2;
-        commands.add(new AutoUtilityArm(-floorX1, floorY1));
-        commands.add(new AutoWait(2000));
+        double disXInit = 0;
+        double disYInit = 30 + Y_OVERSHOOT_DISTANCE;
+        commands.add(new AutoUtilityArm(disXInit, disYInit));
+        commands.add(new AutoWait(500));
+        double disXHangOver = 6 + X_ERROR;
+        double disYHangOver = 28.75 + Y_OVERSHOOT_DISTANCE;
+        commands.add(new AutoUtilityArm(-disXHangOver, disYHangOver));
+        commands.add(new AutoWait(500));
+        double disXGrabOnto = disXHangOver;
+        double disYGrabOnto = 26.25 + Y_OVERSHOOT_DISTANCE;
+        commands.add(new AutoUtilityArm(-disXGrabOnto, disYGrabOnto));
+        commands.add(new AutoWait(500));
+        // commands.add(new Auto); drive back SLOWLY
+        double disXPushDown = 16 + X_ERROR;
+        double disYPushDown = -2.3 - Y_OVERSHOOT_DISTANCE;
+        commands.add(new AutoUtilityArm(-disXPushDown, disYPushDown));
+        commands.add(new AutoWait(500));
+        double disXCompactArm = 9 + X_ERROR;
+        double disYCompactArm = -4.2 - Y_OVERSHOOT_DISTANCE;
+        commands.add(new AutoUtilityArm(-disXCompactArm, disYCompactArm));
+        commands.add(new AutoWait(500));
+        // commands.add(new Auto); drive forward onto ramp, somewhat slow
+        commands.add(new AutoWait(1000));
+        commands.add(new AutoUtilityArm());
     }
 }
