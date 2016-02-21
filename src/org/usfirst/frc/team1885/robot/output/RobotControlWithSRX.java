@@ -33,8 +33,8 @@ public class RobotControlWithSRX {
     }
     protected RobotControlWithSRX() {
         c = new Compressor(0);
-//        c.start();
-        c.stop();
+        c.start();
+//        c.stop();
         leftDrive = new ArrayList<CANTalon>();
         rightDrive = new ArrayList<CANTalon>();
         talons = new HashMap<RobotMotorType, CANTalon>();
@@ -79,7 +79,7 @@ public class RobotControlWithSRX {
         }
     }
     public void updateIntakeMotor(double intakeSpeed) {
-//        talons.get(RobotMotorType.ACTIVE_INTAKE).set(intakeSpeed);
+        talons.get(RobotMotorType.ACTIVE_INTAKE).set(intakeSpeed);
     }
     public void updateShooterTilt(double tiltSpeed) {
         talons.get(RobotMotorType.SHOOTER_TILT).set(tiltSpeed);
@@ -89,8 +89,8 @@ public class RobotControlWithSRX {
     }
     public void updateFlywheelShooter(double flywheelSpeedLeft,
             double flywheelSpeedRight) {
-        talons.get(RobotMotorType.FLYWHEEL_LEFT).set(flywheelSpeedLeft);
-        talons.get(RobotMotorType.FLYWHEEL_RIGHT).set(flywheelSpeedRight);
+        talons.get(RobotMotorType.FLYWHEEL_LEFT).set(-flywheelSpeedLeft);
+        talons.get(RobotMotorType.FLYWHEEL_RIGHT).set(-flywheelSpeedRight);
     }
 
     public List<CANTalon> getLeftDrive() {
@@ -133,7 +133,7 @@ public class RobotControlWithSRX {
         return this.sensors;
     }
     public void updateDoubleSolenoid(RobotPneumaticType type,
-            Value state) {
+           Value state) {
         doubleSolenoids.get(type).set(state);     
     }
 }

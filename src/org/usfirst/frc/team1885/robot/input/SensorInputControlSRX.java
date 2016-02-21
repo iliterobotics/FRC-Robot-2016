@@ -52,16 +52,17 @@ public class SensorInputControlSRX {
         rsrx = RobotControlWithSRX.getInstance();
         PDP = new PowerDistributionPanel();
         ticks = new HashMap<SensorType, Integer>();
+        INITIAL_TILT_POSITION = 126;
     }
     public void update() {
         
 //         Encoder values testing
          
-         DriverStation.reportError("\nRight Encoder Value::" +
-         getEncoderDistance(SensorType.RIGHT_ENCODER) +
-         " --- Left Encoder Value:: " +
-         getEncoderDistance(SensorType.LEFT_ENCODER), false);
-         
+//         DriverStation.reportError("\nRight Encoder Value::" +
+//         getEncoderDistance(SensorType.RIGHT_ENCODER) +
+//         " --- Left Encoder Value:: " +
+//         getEncoderDistance(SensorType.LEFT_ENCODER), false);
+//         DriverStation.reportError("\n\nZero Tilt:: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
     }
     public double getInitPitch() {
         return INITIAL_PITCH;
@@ -79,14 +80,14 @@ public class SensorInputControlSRX {
         return navx.getRoll();
     }
     public void init() {
-        INITIAL_POT_A_POSITION = rsrx.getSensor()
-                .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw()
-                * UtilityArm.CONVERSION_FACTOR;
-        INITIAL_POT_B_POSITION = rsrx.getSensor()
-                .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
-                * UtilityArm.CONVERSION_FACTOR;
-        INITIAL_TILT_POSITION = getAnalogGeneric(
-                SensorType.SHOOTER_TILT_POTENTIOMETER);
+//        INITIAL_POT_A_POSITION = rsrx.getSensor()
+//                .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw()
+//                * UtilityArm.CONVERSION_FACTOR;
+//        INITIAL_POT_B_POSITION = rsrx.getSensor()
+//                .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
+//                * UtilityArm.CONVERSION_FACTOR;
+//        INITIAL_TILT_POSITION = getAnalogGeneric(
+//                SensorType.SHOOTER_TILT_POTENTIOMETER);
         DriverStation.reportError("\nInit Tilt" + INITIAL_TILT_POSITION, false);
         INITIAL_TWIST_POSITION = getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER);
         DriverStation.reportError("\nInit Twist " + INITIAL_TWIST_POSITION, false);

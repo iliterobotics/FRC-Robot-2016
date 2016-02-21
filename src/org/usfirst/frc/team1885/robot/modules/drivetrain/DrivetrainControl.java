@@ -66,38 +66,38 @@ public class DrivetrainControl implements Module {
     }
     public void update() {
         // FIXME: add slow straight drive state + button
-        if ((DriverInputControlSRX.getInstance()
-                .getButton(RobotButtonType.LEFT_DRIFT)
-                || DriverInputControlSRX.getInstance()
-                        .getButton(RobotButtonType.RIGHT_DRIFT))
-                && !isTurning) {
-
-            if (!isTurning) {
-
-                double angle = (DriverInputControlSRX.getInstance()
-                        .getButton(RobotButtonType.LEFT_DRIFT) ? 90 : -90);
-
-                turn = new AutoTurn(angle, 5);
-                turn.init();
-            }
-
-            isTurning = turn.execute();
-
-        } else if (DriverInputControlSRX.getInstance()
-                .getPOVButton(RobotButtonType.NUDGE) == 90) {
-            update(-NUDGE_POWER_TURN, NUDGE_POWER_TURN);
-        } else if (DriverInputControlSRX.getInstance()
-                .getPOVButton(RobotButtonType.NUDGE) == 270) {
-            update(NUDGE_POWER_TURN, -NUDGE_POWER_TURN);
-        } else if (DriverInputControlSRX.getInstance()
-                .getPOVButton(RobotButtonType.NUDGE) == 0) {
-            update(-NUDGE_POWER, -NUDGE_POWER);
-        } else if (DriverInputControlSRX.getInstance()
-                .getPOVButton(RobotButtonType.NUDGE) == 180) {
-            update(NUDGE_POWER, NUDGE_POWER);
-        } else {
-            update(driverInput.getLeftDrive(), driverInput.getRightDrive());
-        }
+//        if ((DriverInputControlSRX.getInstance()
+//                .getButton(RobotButtonType.LEFT_DRIFT)
+//                || DriverInputControlSRX.getInstance()
+//                        .getButton(RobotButtonType.RIGHT_DRIFT))
+//                && !isTurning) {
+//
+//            if (!isTurning) {
+//
+//                double angle = (DriverInputControlSRX.getInstance()
+//                        .getButton(RobotButtonType.LEFT_DRIFT) ? 90 : -90);
+//
+//                turn = new AutoTurn(angle, 5);
+//                turn.init();
+//            }
+//
+//            isTurning = turn.execute();
+//
+//        } else if (DriverInputControlSRX.getInstance()
+//                .getPOVButton(RobotButtonType.NUDGE) == 90) {
+//            update(-NUDGE_POWER_TURN, NUDGE_POWER_TURN);
+//        } else if (DriverInputControlSRX.getInstance()
+//                .getPOVButton(RobotButtonType.NUDGE) == 270) {
+//            update(NUDGE_POWER_TURN, -NUDGE_POWER_TURN);
+//        } else if (DriverInputControlSRX.getInstance()
+//                .getPOVButton(RobotButtonType.NUDGE) == 0) {
+//            update(-NUDGE_POWER, -NUDGE_POWER);
+//        } else if (DriverInputControlSRX.getInstance()
+//                .getPOVButton(RobotButtonType.NUDGE) == 180) {
+//            update(NUDGE_POWER, NUDGE_POWER);
+//        } else {
+//            update(driverInput.getLeftDrive(), driverInput.getRightDrive());
+//        }
 
         if (DriverInputControlSRX.getInstance()
                 .getButton(RobotButtonType.GEAR_SHIFT)) {

@@ -5,11 +5,11 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -39,19 +39,20 @@ public class Robot extends SampleRobot {
     private long timeTracker = 0;
     private double delayTime = 1;// Input time in seconds
 
-    private RobotControlWithSRX srx;
-    private DriverInputControlSRX drx;
-    private SensorInputControlSRX sensorrx;
+    private RobotControlWithSRX robotControl;
+    private DriverInputControlSRX driverInputControl;
+    private SensorInputControlSRX sensorInputControl;
 
     private AutoTemplate activeTemplate;
 
     public Robot() {
 
-        srx = RobotControlWithSRX.getInstance();
-        drx = DriverInputControlSRX.getInstance();
-        this.sensorrx = SensorInputControlSRX.getInstance();
+        robotControl = RobotControlWithSRX.getInstance();
+        driverInputControl = DriverInputControlSRX.getInstance();
+        sensorInputControl = SensorInputControlSRX.getInstance();
         try {
             RobotConfiguration.configureRobot();
+            sensorInputControl.init();
         } catch (Exception e) {
             DriverStation.reportError("Robot - Error configuring Robot", false);
         }
@@ -59,7 +60,7 @@ public class Robot extends SampleRobot {
         ActiveIntake.getInstance();
 
         DrivetrainControl.getInstance().addSpeed(1, 15.0);
-        this.srx = RobotControlWithSRX.getInstance();
+        robotControl = RobotControlWithSRX.getInstance();
 
     }
 
@@ -70,9 +71,12 @@ public class Robot extends SampleRobot {
 
         while (isOperatorControl() && isEnabled()) {
             // New canbus code
-            drx.update();
             // AuxArm.getInstance().update();
-            sensorrx.update();
+            sensorInputControl.update();
+            driverInputControl.update();
+            ActiveIntake.getInstance().update();
+            DrivetrainControl.getInstance().update();
+            Shooter.getInstance().update();
             Timer.delay(.005);
         }
 

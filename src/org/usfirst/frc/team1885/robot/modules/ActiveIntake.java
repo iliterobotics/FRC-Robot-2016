@@ -19,6 +19,7 @@ public class ActiveIntake implements Module {
     private DriverInputControlSRX driverInputControl;
     private RobotControlWithSRX robotControl;
     private double counter;
+    private boolean previousIntakeToggle;
     private static final double delay = 1000;
 
     protected ActiveIntake() {
@@ -27,6 +28,7 @@ public class ActiveIntake implements Module {
         //isIntaking = true;
         counter = System.currentTimeMillis();
         reset();
+        previousIntakeToggle = false;
     }
     public static ActiveIntake getInstance() {
         if (instance == null) {
@@ -50,27 +52,28 @@ public class ActiveIntake implements Module {
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_IN))) {
             intakeState = MotorState.REVERSE;
             intakeSpeed = -INTAKE_SPEED;
-            // DriverStation.reportError("Suck It\n", false);
         }
 
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_OUT))) {
             intakeState = MotorState.FORWARD;
             intakeSpeed = INTAKE_SPEED;
-            // DriverStation.reportError("Spit Out\n", false);
         }
-        if ((driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)
-                && System.currentTimeMillis() >= counter + delay)) {
+//        DriverStation.reportError("Solenoid Button State " + driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID) 
+//        + "\n", false);
+//        DriverStation.reportError("Solenoid State " + isIntaking + "\n", false);
+        if (driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)
+                && !previousIntakeToggle) {
             isIntaking = isIntaking == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
-            counter = System.currentTimeMillis();
         }
-        if (driverInputControl.getButton(RobotButtonType.READY_LOW)
-                && System.currentTimeMillis() >= counter + delay) {
-            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, true);
-        }
-        if (driverInputControl.getButton(RobotButtonType.READY_HIGH)
-                && System.currentTimeMillis() >= counter + delay) {
-            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, false);
-        }
+        previousIntakeToggle = driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID);
+//        if (driverInputControl.getButton(RobotButtonType.READY_LOW)
+//                && System.currentTimeMillis() >= counter + delay) {
+//            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, true);
+//        }
+//        if (driverInputControl.getButton(RobotButtonType.READY_HIGH)
+//                && System.currentTimeMillis() >= counter + delay) {
+//            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, false);
+//        }
         updateIntake(intakeSpeed);
     }
     public void updateIntake(double intakeSpeed) {
@@ -94,9 +97,10 @@ public class ActiveIntake implements Module {
     }
 
     public void updateOutputs() {
-//        robotControl.updateIntakeMotor(intakeSpeed);
-//        robotControl.updateDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER,
-//                isIntaking);
+//        DriverStation.reportError("\nIntake Motor Speed " + intakeSpeed + "\nSolenoid State" + isIntaking, false);
+        robotControl.updateIntakeMotor(intakeSpeed);
+        robotControl.updateDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER,
+                isIntaking);
     }
     @Override
     public void update() {

@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.modules;
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
+import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
@@ -13,14 +14,14 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Shooter implements Module {
 
     private static Shooter instance;
-    public static final double HIGH_GOAL_ANGLE = 45.0;
+    public static final double HIGH_GOAL_ANGLE = 130.0;
     public static final double ANGLE_ERROR = 1;
     public static final int TICK_ERROR = 10;
     public static final double SHOOTER_SPEED = 1;
     public static final double TWIST_SPEED = .3;
     public static final double TILT_SPEED = .2;
     private static final double TILT_BRAKE = .1;
-    private static final double TILT_LIMIT_UPPER = 45;
+    private static final double TILT_LIMIT_UPPER = 90;
     private static  final double TILT_LIMIT_LOWER = 5;
     public static final double GEAR_RATIO_TWIST = 3.0 / 7;
     private static final double TWIST_BOUND_RIGHT = (1024.0 / GEAR_RATIO_TWIST) / (360 / 45);
@@ -74,6 +75,10 @@ public class Shooter implements Module {
     private PID twistPID;
     private PID leftSpinnerPID;
     private PID rightSpinnerPID;
+    private boolean previousReset;
+    private boolean previousLow;
+    private boolean previousHigh;
+    private boolean previousFlywheel;
 
     public static Shooter getInstance() {
         if (instance == null) {
@@ -82,7 +87,7 @@ public class Shooter implements Module {
         return instance;
     }
     protected Shooter() {
-
+        previousFlywheel = false;
         this.leftState = MotorState.OFF;
         this.rightState = MotorState.OFF;
         this.twistState = this.tiltState = MotorState.OFF;
@@ -175,6 +180,7 @@ public class Shooter implements Module {
     }
     public void updateTilt() {     
         int direction = driverInputControl.getShooterTilt();
+        DriverStation.reportError("\nDirection:: " + direction, false);
         if(direction == 0){
             breakTilt();
         }
@@ -240,8 +246,8 @@ public class Shooter implements Module {
         flywheelSpeedRight = flywheelSpeedLeft = 0;
     }
     public void updateContainer() {
-        if (DriverInputControlSRX.getInstance()
-                .getButton(RobotButtonType.SHOOTER_CONTAINER_TOGGLE)) {
+        if (!DriverInputControlSRX.getInstance()
+                .getButton(RobotButtonType.FLYWHEEL_IN) && previousFlywheel) {
             containerState = !containerState;
             DriverStation.reportError("Containing: " + containerState + "\n",
                     false);
@@ -259,11 +265,11 @@ public class Shooter implements Module {
         }
     }
     public void updateOutputs() {
-//        RobotControlWithSRX.getInstance().updateShooterTilt(tiltSpeed);
-//        RobotControlWithSRX.getInstance().updateShooterTwist(twistSpeed);
-//        // RobotControlWithSRX.getInstance()
-//        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER,
-//        // containerState);
+        RobotControlWithSRX.getInstance().updateShooterTilt(tiltSpeed);
+        RobotControlWithSRX.getInstance().updateShooterTwist(twistSpeed);
+//         RobotControlWithSRX.getInstance()
+//         .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER,
+//         containerState);
 //        // RobotControlWithSRX.getInstance()
 //        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,
 //        // kickerState);
@@ -279,7 +285,7 @@ public class Shooter implements Module {
                 }
             }
         }
-        else if(driverInputControl.isButtonDown(RobotButtonType.READY_HIGH)){
+        else if(driverInputControl.getButton(RobotButtonType.READY_HIGH) && !previousHigh){
             setToTwistValue(0);
             setToTiltValue(HIGH_GOAL_ANGLE);
             twistPID = new PID(D_TWIST_P, D_TWIST_I, D_TWIST_D);
@@ -291,6 +297,7 @@ public class Shooter implements Module {
             updateTilt();
             updateTwist();
         }
+        previousHigh = driverInputControl.getButton(RobotButtonType.READY_HIGH);
     }
     public void listenLowGoal() {
         if(reseting){
@@ -303,7 +310,7 @@ public class Shooter implements Module {
                 }
             }
         }
-        else if(driverInputControl.isButtonDown(RobotButtonType.READY_LOW)){
+        else if(driverInputControl.getButton(RobotButtonType.READY_LOW) && !previousLow ){
             setToTwistValue(0);
             setToTiltValue(5);
             twistPID = new PID(D_TWIST_P, D_TWIST_I, D_TWIST_D);
@@ -315,6 +322,7 @@ public class Shooter implements Module {
             updateTilt();
             updateTwist();
         }
+        previousLow = driverInputControl.getButton(RobotButtonType.READY_LOW);
     }
     public void listenReset() {
         if(reseting){
@@ -327,7 +335,7 @@ public class Shooter implements Module {
                 }
             }
         }
-        else if(driverInputControl.isButtonDown(RobotButtonType.SHOOTER_RESET)){
+        else if(driverInputControl.getButton(RobotButtonType.SHOOTER_RESET) && !previousReset){
             setToTwistValue(0);
             setToTiltValue(0);
             twistPID = new PID(D_TWIST_P, D_TWIST_I, D_TWIST_D);
@@ -339,6 +347,7 @@ public class Shooter implements Module {
             updateTilt();
             updateTwist();
         }
+        previousReset = driverInputControl.getButton(RobotButtonType.SHOOTER_RESET);
     }
     @Override
     public void update() {
@@ -370,6 +379,7 @@ public class Shooter implements Module {
         return isInPosition;
     }
     public double tiltCheck(double tiltInput) {
+//        if ( sensorControl.getZeroedPotentiometer(SensorType.))
         double tiltSpeed = TILT_BRAKE;
         double totalTilt = sensorControl
                 .getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER);
