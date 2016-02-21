@@ -31,22 +31,16 @@ public class AutonomousRoutine {
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
         DriverStation.reportError("Gyro Calibrated", false);
-        Timer.delay(3);
 
-//        commands.add(new AutoDriveStraightDistance(-16 * 12, true));
-//        commands.add(new AutoAlign());
-//        commands.add(new AutoWait(5000));
-//        commands.add(new AutoAlign(5));
+
+        // commands.add(new AutoDriveStraightDistance(-16 * 12, true));
+        // commands.add(new AutoAlign());
+        // commands.add(new AutoWait(5000));
+        // commands.add(new AutoAlign(5));
+
          getConfiguration();
          initAutoBreach();
          autoMoveToShoot();
-
-        // autoMoveToShoot(needs values)
-
-        // Not finished yet
-        // getConfiguration();
-        // initAutoBreach(type);
-        // autoMoveToShoot();
     }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
@@ -300,4 +294,13 @@ public class AutonomousRoutine {
     public void autoShootBall(boolean goal) {
     }
 
+    
+    public void autoWheelie() {
+        commands.add(new AutoDriveStart(-1));
+        commands.add(new AutoWait(500));
+        commands.add(new AutoDriveStart(1));
+        commands.add(new AutoWait(300));
+        commands.add(new AutoDriveStart(-1));
+        commands.add(new AutoCrossedDefense());
+    }
 }

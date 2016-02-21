@@ -43,10 +43,10 @@ public class RobotConfiguration {
                 new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 4));
         JoystickButtonMap.getInstance().addControllerButton(
                 RobotButtonType.INTAKE_IN,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
+                new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 1));
         JoystickButtonMap.getInstance().addControllerButton(
                 RobotButtonType.INTAKE_OUT,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
+                new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 1));
         SensorInputControlSRX.getInstance().createNavX(SerialPort.Port.kMXP);
         
         // Temp comment because we don't have the actual robot. We just have the
