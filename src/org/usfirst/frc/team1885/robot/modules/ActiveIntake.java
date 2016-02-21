@@ -50,11 +50,9 @@ public class ActiveIntake implements Module {
     }
     public void updateIntake() {
         intakeSpeed = 0;
-
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_IN))) {
-            intakeState = MotorState.REVERSE;
-            intakeSpeed = -INTAKE_SPEED;
-            intakeDown();
+                    intakeState = MotorState.REVERSE;
+                    intakeSpeed = -INTAKE_SPEED;
         }
 
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_OUT))) {
@@ -67,11 +65,6 @@ public class ActiveIntake implements Module {
         if (driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)
                 && !previousIntakeToggle ) {
             isIntaking = isIntaking == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
-        }
-        DriverStation.reportError("\n" + SensorInputControlSRX.getInstance().getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
-        if(SensorInputControlSRX.getInstance().getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER) < 100){
-            intakeDown();
-            DriverStation.reportError("Intake Down, below limit", false);
         }
         previousIntakeToggle = driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID);
 //        if (driverInputControl.getButton(RobotButtonType.READY_LOW)

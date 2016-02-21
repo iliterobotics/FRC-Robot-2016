@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class Shooter implements Module {
 
-    private static final int FLYWHEEL_MAX_SPEED = 26000;
+    private static final int FLYWHEEL_MIN_SPEED = 25000;
     private static Shooter instance;
     public static final double HIGH_GOAL_ANGLE = 130.0;
     public static final double ANGLE_ERROR = 1;
@@ -21,7 +21,7 @@ public class Shooter implements Module {
     public static final double SHOOTER_SPEED = 1;
     public static final double TWIST_SPEED = .3;
     public static final double TILT_SPEED = .2;
-    private static final double TILT_BRAKE = .1;
+    private static final double TILT_BRAKE = .05;
     private static final double TILT_LIMIT_UPPER = 90;
     private static  final double TILT_LIMIT_LOWER = 5;
     public static final double GEAR_RATIO_TWIST = 3.0 / 7;
@@ -124,39 +124,53 @@ public class Shooter implements Module {
     }
     public void updateShooter() {
         // TODO modify values after testing for direction
+        DriverStation.reportError("\n\nLeft Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER) + "\nRight Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER), false);
+
         if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT)) {
             flywheelSpeedLeft = -SHOOTER_SPEED;
             flywheelSpeedRight = SHOOTER_SPEED;
-            if(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER) >= FLYWHEEL_MAX_SPEED){
+            if(sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER) < 10){
+                setToTiltValue(5);
+                positionTilt();
+            }
+            if(Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER)) >= FLYWHEEL_MIN_SPEED && Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER)) >= FLYWHEEL_MIN_SPEED){
                 isHeld = false;
             }
             
-            int vleft = Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
-            int vright = Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
+            leftFlyWheelSpeedOffset = -1;
+            rightFlyWheelSpeedOffset = 1;
             
-            if(vleft > vright){
-                leftSpinnerPID.setScalingValue(vright);
-                double difference = leftSpinnerPID.getPID(vright, vleft)/2;
-                leftFlyWheelSpeedOffset -= difference;
-                rightFlyWheelSpeedOffset-= difference;
-            }else if(vright > vleft){
-                rightSpinnerPID.setScalingValue(vleft);
-                double difference = leftSpinnerPID.getPID(vleft, vright)/2;
-                leftFlyWheelSpeedOffset += difference;
-                rightFlyWheelSpeedOffset+= difference;
-            }
+//            int vleft = Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
+//            int vright = Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
+//            
+//            if(vleft > vright){
+//                leftSpinnerPID.setScalingValue(vright);
+//                double difference = leftSpinnerPID.getPID(vright, vleft)/2;
+//                leftFlyWheelSpeedOffset -= difference;
+//                rightFlyWheelSpeedOffset-= difference;
+//            }else if(vright > vleft){
+//                rightSpinnerPID.setScalingValue(vleft);
+//                double difference = leftSpinnerPID.getPID(vleft, vright)/2;
+//                leftFlyWheelSpeedOffset += difference;
+//                rightFlyWheelSpeedOffset+= difference;
+//            }
             
-            DriverStation.reportError("\nR flywheel velocity:" + vleft, false);
-            DriverStation.reportError("\nL flywheel velocity:" + vright, false);
-            
-            DriverStation.reportError("\nR flywheel power:" + (flywheelSpeedLeft + leftFlyWheelSpeedOffset), false);
-            DriverStation.reportError("\nL flywheel power:" + (flywheelSpeedRight + rightFlyWheelSpeedOffset), false);
+//            DriverStation.reportError("\nR flywheel velocity:" + vleft, false);
+//            DriverStation.reportError("\nL flywheel velocity:" + vright, false);
+//            
+//            DriverStation.reportError("\nR flywheel power:" + (flywheelSpeedLeft + leftFlyWheelSpeedOffset), false);
+//            DriverStation.reportError("\nL flywheel power:" + (flywheelSpeedRight + rightFlyWheelSpeedOffset), false);
         } else if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_IN)) {
-          flywheelSpeedLeft = SHOOTER_SPEED * .6;
-          flywheelSpeedRight = -SHOOTER_SPEED * .6;
-          leftFlyWheelSpeedOffset = 0;
-          rightFlyWheelSpeedOffset = 0;
+          if ( sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER) > 11 
+                  && sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER) < 15) {
+              flywheelSpeedLeft = SHOOTER_SPEED * .6;
+              flywheelSpeedRight = -SHOOTER_SPEED * .6;
+              leftFlyWheelSpeedOffset = 0;
+              rightFlyWheelSpeedOffset = 0;
+          }
           isHeld = false;
+          setToTiltValue(13);
+          positionTilt();
         } else {
             flywheelSpeedLeft = 0;
             flywheelSpeedRight = 0;
@@ -191,8 +205,6 @@ public class Shooter implements Module {
             breakTilt();
         }
         else{
-            if(sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER) < 100)
-                ActiveIntake.getInstance().intakeDown();
             updateTilt(tiltCheck(direction == -1? -0.3:0.3));
         }
     }
@@ -205,7 +217,7 @@ public class Shooter implements Module {
         } else {
             tiltState = MotorState.OFF;
         }
-        DriverStation.reportError("\n Tilt Speed: " + speed, false);
+//        DriverStation.reportError("\n Tilt Speed: " + speed, false);
         RobotControlWithSRX.getInstance().updateShooterTilt(speed<-0.2?-0.2:speed);
     }
     public void updateTwist() {
@@ -289,7 +301,7 @@ public class Shooter implements Module {
          RobotControlWithSRX.getInstance()
          .updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER,
          isHeld);
-         DriverStation.reportError("\nContainer State:: " + isHeld, false);
+//         DriverStation.reportError("\nContainer State:: " + isHeld, false);
 //        // RobotControlWithSRX.getInstance()
 //        // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,
 //        // kickerState);
@@ -373,6 +385,7 @@ public class Shooter implements Module {
     public void update() {
         updateShooter();
         updateContainer();
+        updateTilt();
         listenReset();
         listenLowGoal();
         listenHighGoal();
@@ -419,11 +432,11 @@ public class Shooter implements Module {
         return tiltSpeed;
     }
     public void breakTilt(){
-        RobotControlWithSRX.getInstance().updateShooterTilt(TILT_BRAKE * Math.cos(Math.toRadians(sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER))));
+//        RobotControlWithSRX.getInstance().updateShooterTilt(TILT_BRAKE * Math.cos(Math.toRadians(sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER))));
     }
     public void setToTwistValue(double angle){
         twistPID.setScalingValue(twistDegreesToTicks(angle) - getTwistEncoder());
-        DriverStation.reportError("\ngoing to " + twistDegreesToTicks(angle) + "\nwe are at " + getTwistEncoder(), false);
+//        DriverStation.reportError("\ngoing to " + twistDegreesToTicks(angle) + "\nwe are at " + getTwistEncoder(), false);
         toTwistTicks = twistDegreesToTicks(angle);
     }
     public boolean positionTwist() {
