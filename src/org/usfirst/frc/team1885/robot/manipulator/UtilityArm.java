@@ -155,26 +155,6 @@ public class UtilityArm implements Module {
     }
 
     /*
-     * Gets x position for the end-point of the utility arm with respect to the
-     * base joint in inches
-     */
-    public double getDistanceX() {
-        double distanceB = (LENGTH_B * (Math.cos(Math.toRadians(getAngleB()))));
-        double distanceA = (LENGTH_A * (Math.cos(Math.toRadians(getAngleA()))));
-        return distanceA + distanceB;
-    }
-
-    /*
-     * Gets y position for the end-point of the utility arm with respect to the
-     * base joint in inches
-     */
-    public double getDistanceY() {
-        double distanceB = (LENGTH_B * (Math.sin(Math.toRadians(getAngleB()))));
-        double distanceA = (LENGTH_A * (Math.sin(Math.toRadians(getAngleA()))));
-        return distanceA + distanceB;
-    }
-
-    /*
      * Gets angle in degrees for the bottom joint going clockwise from 0
      */
     public double getAngleA() {
@@ -198,35 +178,6 @@ public class UtilityArm implements Module {
         return angleB;
     }
 
-    /*
-     * Finds the conversion from the joystick throttle value to x movement in
-     * inches
-     */
-    public double getJoystickXConversion() {
-        double throttle = driverInputControl.getControllerThrottle();
-        if (throttle > JOY_DEADZONE) {
-            return xDirection = JOY_CHANGE * Math.abs(throttle);
-        } else if (throttle < -JOY_DEADZONE) {
-            return xDirection = -JOY_CHANGE * Math.abs(throttle);
-        } else {
-            return xDirection = 0.0;
-        }
-    }
-
-    /*
-     * Finds the conversion from the joystick twist value to y movement in
-     * inches
-     */
-    public double getJoystickYConversion() {
-        double twist = driverInputControl.getControllerTwist();
-        if (twist > JOY_DEADZONE) {
-            return yDirection = -JOY_CHANGE * Math.abs(twist);
-        } else if (twist < -JOY_DEADZONE) {
-            return yDirection = JOY_CHANGE * Math.abs(twist);
-        } else {
-            return yDirection = 0.0;
-        }
-    }
     /**
      * A simple down to earth equation for calculating the angles required to
      * acieve a point
@@ -305,71 +256,6 @@ public class UtilityArm implements Module {
         goingToX = x;
         goingToY = y;
 
-    }
-
-    /*
-     * Takes the change in x and y movement and converts them to angular change
-     */
-    public void changeValues() {
-        // change in Y
-        double origA = jointAAngle;
-        double origB = jointBAngle;
-
-        double changeX = getJoystickXConversion();
-        double changeY = getJoystickYConversion();
-
-        if (driverInputControl.isButtonDown(RobotButtonType.INCREMENT_ARM_UP)) {
-            changeY = 0.2;
-        }
-        if (driverInputControl
-                .isButtonDown(RobotButtonType.INCREMENT_ARM_DOWN)) {
-            changeY = -0.2;
-        }
-        if (driverInputControl
-                .isButtonDown(RobotButtonType.INCREMENT_ARM_LEFT)) {
-            changeX = -0.2;
-        }
-        if (driverInputControl
-                .isButtonDown(RobotButtonType.INCREMENT_ARM_RIGHT)) {
-            changeX = 0.2;
-        }
-
-        double sinY;
-        if (Math.abs(changeY) >= Math.abs(changeX)) {
-            sinY = Math.sin(Math.toRadians(origB)) + changeY;
-            if (sinY <= 1 && sinY >= -1) {
-                jointBAngle = 180 - Math.toDegrees(Math.asin(sinY));
-                double cosX = Math.cos(Math.toRadians(origA))
-                        - (Math.cos(Math.toRadians(jointBAngle))
-                                - Math.cos(Math.toRadians(origB)));
-                // DriverStation.reportError("cos: " + cosX + "\n", false);
-                // DriverStation.reportError("sin: " + sinY + "\n", false);
-                if (cosX >= -1 && cosX <= 1) {
-                    // TODO set cosx to the limit that it is passing
-                    jointAAngle = Math.toDegrees(Math.acos(cosX));
-                }
-            }
-        } else {
-            // change in X
-            origA = jointAAngle;
-            origB = jointBAngle;
-            double cosX = Math.cos(Math.toRadians(origA)) + changeX;
-            if (cosX >= -1 && cosX <= 1) {
-                jointAAngle = Math.toDegrees(Math.acos(cosX));
-                sinY = Math.sin(Math.toRadians(origB))
-                        - (Math.sin(Math.toRadians(jointAAngle))
-                                - Math.cos(Math.toRadians(origA)));
-                if (sinY <= 1 && sinY >= -1) {
-                    jointBAngle = 180 - Math.toDegrees(Math.asin(sinY));
-                }
-            }
-        }
-        if (jointBAngle > DEF_B_ANGLE - jointAAngle) {
-            jointBAngle = DEF_B_ANGLE - jointAAngle;
-        }
-        if (jointBAngle < jointAAngle) {
-            jointBAngle = jointAAngle;
-        }
     }
     public boolean isFinished() {
         boolean isJointAFinished = jointAAngle - getAngleA() < DEGREE_MARGIN_E
