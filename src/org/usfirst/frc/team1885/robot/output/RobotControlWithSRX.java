@@ -31,7 +31,7 @@ public class RobotControlWithSRX {
         }
         return instance;
     }
-    protected RobotControlWithSRX() {
+    private RobotControlWithSRX() {
         c = new Compressor(0);
         c.start();
 //        c.stop();
@@ -42,6 +42,7 @@ public class RobotControlWithSRX {
         singleSolenoids = new HashMap<RobotPneumaticType, Solenoid>();
         doubleSolenoids = new HashMap<RobotPneumaticType, DoubleSolenoid>();
     }
+    //Add outputs
     public void addTalonOutput(RobotMotorType type, int port) {
         if (type == RobotMotorType.LEFT_DRIVE) {
             leftDrive.add(new CANTalon(port));
@@ -62,6 +63,12 @@ public class RobotControlWithSRX {
             sensors.put(sensorType, talon);
         }
     }
+    public void addSingleSolenoid(RobotPneumaticType type, int port) {
+        singleSolenoids.put(type, new Solenoid(port));
+    }
+    public void addDoubleSolenoid(RobotPneumaticType type, int port) {
+        doubleSolenoids.put(type, new DoubleSolenoid(port, port + 1));
+    }
     public void addDoubleSolenoid(RobotPneumaticType type, int port1,
             int port2) {
         doubleSolenoids.put(type, new DoubleSolenoid(port1, port2));
@@ -69,6 +76,27 @@ public class RobotControlWithSRX {
     public Compressor getCompressor() {
         return c;
     }
+    //Update Components
+    public Map<RobotMotorType, CANTalon> getTalons() {
+        return this.talons;
+    }
+    public Map<SensorType, CANTalon> getSensor() {
+        return this.sensors;
+    }
+    public List<CANTalon> getLeftDrive() {
+        return leftDrive;
+    }
+    public List<CANTalon> getRightDrive() {
+        return rightDrive;
+    }
+    public void updateSingleSolenoid(RobotPneumaticType type, boolean value) {
+        singleSolenoids.get(type).set(value);
+    }
+    public void updateDoubleSolenoid(RobotPneumaticType type,
+            Value state) {
+         doubleSolenoids.get(type).set(state);     
+     }
+    //Update Modules
     public void updateDriveSpeed(double leftspeed, double rightspeed) {
         for (CANTalon leftMotor : leftDrive) {
             leftMotor.set(-leftspeed);
@@ -92,48 +120,14 @@ public class RobotControlWithSRX {
         talons.get(RobotMotorType.FLYWHEEL_LEFT).set(-flywheelSpeedLeft);
         talons.get(RobotMotorType.FLYWHEEL_RIGHT).set(-flywheelSpeedRight);
     }
-
-    public List<CANTalon> getLeftDrive() {
-        return leftDrive;
-    }
-    public List<CANTalon> getRightDrive() {
-        return rightDrive;
-    }
-    public Map<RobotMotorType, CANTalon> getTalons() {
-        return this.talons;
-    }
     public void updateIntakeMotors(double intakeLeftSpeed,
             double intakeRightSpeed) {
-        // TODO Auto-generated method stub
     }
     public void updateArmMotors(double jointASpeed, double jointBSpeed) {
         // talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
         // talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
     }
-    public void gearShift(Value gear) {
-        doubleSolenoids.get(RobotPneumaticType.GEAR_SHIFT).set(gear);
-        // May need to be fixed, not sure if it is correct.
-    }
-    public void addSingleSolenoid(RobotPneumaticType type, int port) {
-        singleSolenoids.put(type, new Solenoid(port));
-    }
-    public void addDoubleSolenoid(RobotPneumaticType type, int port) {
-        doubleSolenoids.put(type, new DoubleSolenoid(port, port + 1));
-    }
-    public void updateSingleSolenoid(RobotPneumaticType type, boolean value) {
-        singleSolenoids.get(type).set(value);
-    }
-    public Solenoid getSingleSolenoid(RobotPneumaticType type) {
-        return singleSolenoids.get(type);
-    }
-    public DoubleSolenoid getDoubleSolenoid(RobotPneumaticType type ) {
-        return doubleSolenoids.get(type);
-    }
-    public Map<SensorType, CANTalon> getSensor() {
-        return this.sensors;
-    }
-    public void updateDoubleSolenoid(RobotPneumaticType type,
-           Value state) {
-        doubleSolenoids.get(type).set(state);     
+    public void gearShift(boolean gear) {
+        singleSolenoids.get(RobotPneumaticType.GEAR_SHIFT).set(gear);
     }
 }
