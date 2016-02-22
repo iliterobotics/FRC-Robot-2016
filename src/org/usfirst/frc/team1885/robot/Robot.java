@@ -10,6 +10,8 @@ import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
+import org.usfirst.frc.team1885.robot.modules.Module;
+import org.usfirst.frc.team1885.robot.modules.ModuleControl;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -46,11 +48,7 @@ public class Robot extends SampleRobot {
     private DriverInputControlSRX driverInputControl;
     private SensorInputControlSRX sensorInputControl;
     // Module Control
-    private DrivetrainControl drivetrainControl;
-    private ActiveIntake activeIntake;
-    private Shooter shooter;
-    private UtilityArm ultilityArm;
-    
+    private Module[] modules;
 
     private AutoTemplate activeTemplate;
 
@@ -71,10 +69,7 @@ public class Robot extends SampleRobot {
         }
         diameter = 9.0;
         //Initialize Modules
-        drivetrainControl = DrivetrainControl.getInstance();
-        activeIntake = ActiveIntake.getInstance();
-        shooter = Shooter.getInstance();
-        ultilityArm = UtilityArm.getInstance();
+        modules = ModuleControl.getInstance().getModules();
     }
 
     /**
@@ -87,15 +82,13 @@ public class Robot extends SampleRobot {
             sensorInputControl.update();
             driverInputControl.update();
             //Update Module Data
-            drivetrainControl.update();
-            activeIntake.update();
-            shooter.update();
-//            utilityArm.update
+            for(Module m: modules) {
+                m.update();
+            }
             //Update Module Outputs
-            drivetrainControl.updateOutputs();
-            activeIntake.updateOutputs();
-            shooter.updateOutputs();
-//            utilityArm.updateOutputs();
+            for(Module m: modules) {
+                m.updateOutputs();
+            }
             Timer.delay(.005);
         }
     }

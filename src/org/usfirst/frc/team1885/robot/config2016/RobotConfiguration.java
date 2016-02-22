@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.config2016;
 
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
+import org.usfirst.frc.team1885.robot.common.type.ModuleType;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
@@ -10,11 +11,15 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
+import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
+import org.usfirst.frc.team1885.robot.modules.ModuleControl;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
+import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.buttons.JoystickButton;
 
 /**
  * 
@@ -36,6 +41,13 @@ public class RobotConfiguration {
         DriverInputControlSRX driverInputControl = DriverInputControlSRX.getInstance();
         SensorInputControlSRX sensorInputControl = SensorInputControlSRX.getInstance();
         JoystickButtonMap joystickButtonMap = JoystickButtonMap.getInstance();
+        ModuleControl moduleControl = ModuleControl.getInstance();
+        
+        // Add Modules
+        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
+        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
+        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
+//        moduleControl.addModule(ModuleType.UTILITY_ARM, UtilityArm.getInstance());
         
         // Add JoystickType Configurations
         driverInputControl.addJoystick(RobotJoystickType.LEFT_DRIVE, new Joystick(0));
