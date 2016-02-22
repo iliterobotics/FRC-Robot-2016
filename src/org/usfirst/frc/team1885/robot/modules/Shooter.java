@@ -13,7 +13,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
-
+//TODO add @depricated tags (or alternate documentation) to all methods no longer being used
 public class Shooter implements Module {
 
     private static final int FLYWHEEL_MIN_SPEED = 29000;
