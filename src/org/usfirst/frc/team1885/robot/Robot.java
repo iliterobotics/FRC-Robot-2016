@@ -39,30 +39,39 @@ public class Robot extends SampleRobot {
     private long timeTracker = 0;
     private double delayTime = 1;// Input time in seconds
 
+    //Output Control
     private RobotControlWithSRX robotControl;
+    //InputControl
     private DriverInputControlSRX driverInputControl;
     private SensorInputControlSRX sensorInputControl;
+    // Module Control
+    private DrivetrainControl drivetrainControl;
+    private ActiveIntake activeIntake;
+    private Shooter shooter;
+    
 
     private AutoTemplate activeTemplate;
 
     public Robot() {
-
+        //Initialize Output Control
         robotControl = RobotControlWithSRX.getInstance();
+        //Initialize Input Control
         driverInputControl = DriverInputControlSRX.getInstance();
         sensorInputControl = SensorInputControlSRX.getInstance();
         try {
             Timer.delay(0.5);
+            //Configure Robot
             RobotConfiguration.configureRobot();
+            //Initialize Sensor Values
             sensorInputControl.init();
         } catch (Exception e) {
             DriverStation.reportError("Robot - Error configuring Robot", false);
         }
         diameter = 9.0;
-        ActiveIntake.getInstance();
-
-        DrivetrainControl.getInstance().addSpeed(1, 15.0);
-        robotControl = RobotControlWithSRX.getInstance();
-
+        //Initialize Modules
+        drivetrainControl = DrivetrainControl.getInstance();
+        activeIntake = ActiveIntake.getInstance();
+        shooter = Shooter.getInstance();
     }
 
     /**
@@ -71,69 +80,23 @@ public class Robot extends SampleRobot {
     public void operatorControl() {
 
         while (isOperatorControl() && isEnabled()) {
-            // New canbus code
-            // AuxArm.getInstance().update();
+            //Update Inputs
             sensorInputControl.update();
             driverInputControl.update();
-            ActiveIntake.getInstance().update();
-            DrivetrainControl.getInstance().update();
-            Shooter.getInstance().update();
+            //Update Module Data
+            drivetrainControl.update();
+            activeIntake.update();
+            shooter.update();
+            //Update Module Outputs
+            drivetrainControl.updateOutputs();
+            activeIntake.updateOutputs();
+            shooter.updateOutputs();
             Timer.delay(.005);
         }
-
-        // System.out.println(SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER)
-        // + " "
-        // +
-        // SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER)
-        // + " " +
-        // SensorInputControl.getInstance().getEncoderTicks(SensorType.TOTE_ENCODER)
-        // + " " +
-        // SensorInputControl.getInstance().isActive(SensorType.RECYCLE_BIN_LOWER_LIMIT)
-        // + " " +
-        // SensorInputControl.getInstance().isActive(SensorType.RECYCLE_BIN_UPPER_LIMIT));
-        // if (System.currentTimeMillis() - timeTracker >= (delayTime * 1000)) {
-        // timeTracker = System.currentTimeMillis();
-        // try {
-        // robotStatusService.update();
-        // RobotServer.getInstance().send(robotStatusService.getTm());
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // }
-        //
-        //// System.out.println(SensorInputControl.getInstance().getNAVX()
-        //// .getYaw360());
-        // }
-        /*
-         * if((DriverInputControl.getInstance().getButton(
-         * RobotButtonType.CANCEL_AUTOMATION))) { this.activeTemplate = null; }
-         * 
-         * // if((DriverInputControl.getInstance().getButton( //
-         * RobotButtonType.AUTOMATE_2_TOTES)) || this.activeTemplate != null) {
-         * // // if(this.activeTemplate == null) { // this.activeTemplate =
-         * AutoTemplate.automate2Totes(); // } // //
-         * if(this.activeTemplate.execute()) { // this.activeTemplate = null; //
-         * } // // } else { this.activeTemplate = null;
-         * DrivetrainControl.getInstance().update();
-         * ActiveIntake.getInstance().update(); System.out.println(
-         * "Updated active intake" ); // System.out.println(
-         * "Robot::tele - lidar: " + //
-         * SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).
-         * getDistance()); // BackupRoutine.getInstance().update();
-         * 
-         * // robotControl.updateDriveSpeed(DrivetrainControl.getInstance().
-         * getLeftDriveSpeed(), //
-         * DrivetrainControl.getInstance().getRightDriveSpeed());
-         * DrivetrainControl.getInstance().updateOutputs();
-         * ActiveIntake.getInstance().updateOutputs(); System.out.println(
-         * "Updated active intake outputs" ); } Timer.delay(.005); // wait for a
-         * motor update time }
-         */
     }
 
     public void autonomous() {
         AutonomousRoutine ar = new AutonomousRoutine(this);
-//        sensorrx.resetEncoder(SensorType.LEFT_ENCODER);
-//        sensorrx.resetEncoder(SensorType.RIGHT_ENCODER);
         ar.execute();
     }
     
