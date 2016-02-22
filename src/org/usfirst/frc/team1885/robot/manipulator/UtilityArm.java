@@ -3,13 +3,18 @@ package org.usfirst.frc.team1885.robot.manipulator;
 import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
+import com.ni.vision.NIVision.ConcentricRakeDirection;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.RobotDrive.MotorType;
 
 /**
  * @author ILITE Robotics
@@ -26,7 +31,8 @@ public class UtilityArm implements Module {
     public static final double LENGTH_A = 17.5;
     public static final double LENGTH_B = 18;
     public static final double CONVERSION_FACTOR = 360.0 / 1024;
-    public static final double DEF_A_ANGLE = .75, DEF_B_ANGLE = 173;
+    public static final double DEF_A_ANGLE = 10 / CONVERSION_FACTOR,
+            DEF_B_ANGLE = 173 / CONVERSION_FACTOR;
     private static final double MAX_MOTOR_SPEED_A = .5;
     private static final double MAX_MOTOR_SPEED_B = .7;
     private static final double MOTOR_SPEED_A = .2;
@@ -56,14 +62,30 @@ public class UtilityArm implements Module {
     private MotorState jointBState;
     private SensorInputControlSRX sensorInputControl;
     private DriverInputControlSRX driverInputControl;
+    private RobotControlWithSRX robotControl;
 
     protected UtilityArm() {
-        aP = .7;
-        aI = 0.0005;
-        aD = 3;
-        bP = 2;
-        bI = 0.00125;
+        aP = 1;
+        aI = 0;
+        aD = 0;
+        bP = 1;
+        bI = 0;
         bD = 0;
+
+        robotControl = RobotControlWithSRX.getInstance();
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A)
+                .changeControlMode(TalonControlMode.Position);
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B)
+                .changeControlMode(TalonControlMode.Position);
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A)
+                .setFeedbackDevice(FeedbackDevice.AnalogPot);
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B)
+                .setFeedbackDevice(FeedbackDevice.AnalogPot);
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).setPID(aP, aI,
+                aD);
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).setPID(bP, bI,
+                bD);
+
         this.jointAState = MotorState.OFF;
         this.jointBState = MotorState.OFF;
         jointAAngle = getAngleA();
@@ -110,8 +132,8 @@ public class UtilityArm implements Module {
 
     @Override
     public void updateOutputs() {
-        jointASpeed = jointAControlLoop.getPID(jointAAngle, getAngleA());
-        jointBSpeed = -jointBControlLoop.getPID(jointBAngle, getAngleB());
+        // jointASpeed = jointAControlLoop.getPID(jointAAngle, getAngleA());
+        // jointBSpeed = -jointBControlLoop.getPID(jointBAngle, getAngleB());
 
         if (Math.abs(jointASpeed) > MAX_MOTOR_SPEED_A) {
             jointASpeed = jointASpeed > 0 ? MAX_MOTOR_SPEED_A
@@ -150,8 +172,8 @@ public class UtilityArm implements Module {
                 + jointBControlLoop.getI(1.0) + " D: "
                 + jointBControlLoop.getD(), false);
 
-        RobotControlWithSRX.getInstance().updateArmMotors(jointASpeed,
-                jointBSpeed);
+        // RobotControlWithSRX.getInstance().updateArmMotors(jointASpeed,
+        // jointBSpeed);
     }
 
     /*
@@ -250,8 +272,15 @@ public class UtilityArm implements Module {
         // DriverStation.reportError("\nJointAAngle:" + jointAAngle, false);
         // DriverStation.reportError("\nJointBAngle:" + jointBAngle, false);
 
-        jointAControlLoop.setScalingValue(jointAAngle);
-        jointBControlLoop.setScalingValue(jointBAngle);
+        // jointAControlLoop.setScalingValue(jointAAngle);
+        // jointBControlLoop.setScalingValue(jointBAngle);
+
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).set(jointAAngle
+                / CONVERSION_FACTOR
+                + SensorInputControlSRX.getInstance().INITIAL_POT_A_POSITION);
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).set(jointBAngle
+                / CONVERSION_FACTOR
+                + SensorInputControlSRX.getInstance().INITIAL_POT_B_POSITION);
 
         goingToX = x;
         goingToY = y;
