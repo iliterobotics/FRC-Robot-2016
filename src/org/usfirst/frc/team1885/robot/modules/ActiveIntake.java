@@ -3,7 +3,9 @@ package org.usfirst.frc.team1885.robot.modules;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
+import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -48,10 +50,9 @@ public class ActiveIntake implements Module {
     }
     public void updateIntake() {
         intakeSpeed = 0;
-
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_IN))) {
-            intakeState = MotorState.REVERSE;
-            intakeSpeed = -INTAKE_SPEED;
+                    intakeState = MotorState.REVERSE;
+                    intakeSpeed = -INTAKE_SPEED;
         }
 
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_OUT))) {
@@ -62,7 +63,7 @@ public class ActiveIntake implements Module {
 //        + "\n", false);
 //        DriverStation.reportError("Solenoid State " + isIntaking + "\n", false);
         if (driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)
-                && !previousIntakeToggle) {
+                && !previousIntakeToggle ) {
             isIntaking = isIntaking == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
         }
         previousIntakeToggle = driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID);
@@ -93,7 +94,7 @@ public class ActiveIntake implements Module {
         updateOutputs();
     }
     public void listenLowGoal() {
-
+        
     }
 
     public void updateOutputs() {
