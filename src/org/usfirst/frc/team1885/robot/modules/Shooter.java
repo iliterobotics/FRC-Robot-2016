@@ -224,7 +224,7 @@ public class Shooter implements Module {
             rightState = MotorState.OFF;
         }
     }
-    // updates tilt telemtru
+    // updates tilt telemtry
     public void updateTilt() {
         int userTiltDirection = driverInputControl.getShooterTilt();
         // DriverStation.reportError("\nDirection:: " + direction, false);
@@ -241,8 +241,6 @@ public class Shooter implements Module {
         } else {
             tiltState = MotorState.OFF;
         }
-        // DriverStation.reportError("\n Tilt Speed: " + speed, false);
-        // RobotControlWithSRX.getInstance().updateShooterTilt(position);
     }
     // updates twist telemtry
     public void updateTwist() {

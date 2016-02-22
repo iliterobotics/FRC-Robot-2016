@@ -8,11 +8,13 @@ import java.util.Map;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class RobotControlWithSRX {
@@ -111,6 +113,7 @@ public class RobotControlWithSRX {
     }
     public void updateShooterTilt(double tiltSpeed) {
         talons.get(RobotMotorType.SHOOTER_TILT).set(tiltSpeed);
+        DriverStation.reportError("\n\nShooter Tilt Goal:: " + tiltSpeed + "\nPotentiometer Reading:: " + SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER) * (1024 / 360.0), false);
     }
     public void updateShooterTwist(double twistSpeed) {
         talons.get(RobotMotorType.SHOOTER_TWIST).set(twistSpeed);
