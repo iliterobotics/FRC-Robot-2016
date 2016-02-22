@@ -85,10 +85,10 @@ public class RobotConfiguration {
         SensorInputControlSRX.getInstance().addPressureSensor(0);
         RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
         RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.RIGHT_DRIVE, SensorType.RIGHT_ENCODER, 2);
-        SensorInputControlSRX.getInstance().addEncoder(RobotMotorType.FLYWHEEL_LEFT, SensorType.FLYWHEEL_LEFT_ENCODER, 8);
-        SensorInputControlSRX.getInstance().addEncoder(RobotMotorType.FLYWHEEL_RIGHT, SensorType.FLYWHEEL_RIGHT_ENCODER, 9);
-        SensorInputControlSRX.getInstance().addPotentiometer(RobotMotorType.SHOOTER_TILT, SensorType.SHOOTER_TILT_POTENTIOMETER, 10);
-        SensorInputControlSRX.getInstance().addEncoder(RobotMotorType.SHOOTER_TWIST, SensorType.SHOOTER_TWIST_ENCODER, 11);
+        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.FLYWHEEL_LEFT, SensorType.FLYWHEEL_LEFT_ENCODER, 8);
+        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.FLYWHEEL_RIGHT, SensorType.FLYWHEEL_RIGHT_ENCODER, 9);
+        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.SHOOTER_TILT, SensorType.SHOOTER_TILT_POTENTIOMETER, 10);
+        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.SHOOTER_TWIST, SensorType.SHOOTER_TWIST_ENCODER, 11);
 
         // TODO change to match actual input
         // RobotControlWithSRX.getInstance().addTalonSensor(
