@@ -34,8 +34,7 @@ public class DrivetrainControl implements Module {
     public static final double NUDGE_POWER = 0.15;
     public static final double NUDGE_POWER_TURN = 0.75;
     private static DrivetrainControl instance;
-    private boolean gearMode;
-    private boolean previousGearShiftState;
+    private boolean isHighGear;
 
     private DrivetrainControl(final double d, final double m) {
         maxSpeed = m;
@@ -43,10 +42,8 @@ public class DrivetrainControl implements Module {
         diameter = d;
         circumference = Math.PI * (diameter);
         driveMode = DriveMode.TANK;
-        gearMode = true;
-        setGearState(GearState.HIGH_GEAR);
+        isHighGear = true;
         driverInput = DriverInputControlSRX.getInstance();
-        previousGearShiftState = false;
     }
     public static DrivetrainControl getInstance() {
         if (instance == null) {
@@ -59,9 +56,6 @@ public class DrivetrainControl implements Module {
     }
     public double getSpeed(double speed) {
         return speed * circumference;
-    }
-    public double getDistance() {
-        return 1.0;
     }
     public boolean getIsTurning() {
         return isTurning;
@@ -102,10 +96,12 @@ public class DrivetrainControl implements Module {
 //        }
 
         if (DriverInputControlSRX.getInstance()
-                .getButton(RobotButtonType.GEAR_SHIFT) && !previousGearShiftState) {
-            gearMode = !gearMode;
+                .getButton(RobotButtonType.GEAR_SHIFT)) {
+            isHighGear = true;
         }
-        previousGearShiftState = DriverInputControlSRX.getInstance().getButton(RobotButtonType.GEAR_SHIFT);
+        else {
+            isHighGear = false;
+        }
     }
     
     public void update(double leftJoystick, double rightJoystick) {
@@ -180,23 +176,10 @@ public class DrivetrainControl implements Module {
         this.rightDriveSpeed = driveSpeed;
         this.leftDriveSpeed = driveSpeed;
     }
-    public GearState getGearState() {
-        return gearState;
-    }
-    public boolean getGearValue() {
-        if (this.gearState == GearState.HIGH_GEAR) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    public void setGearState(GearState gearState) {
-        this.gearState = gearState;
-    }
-
+    
     public void updateOutputs() {
         RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
                 rightDriveSpeed);
-        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, gearMode);
+        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, isHighGear);
     }
 }
