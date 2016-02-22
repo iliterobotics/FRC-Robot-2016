@@ -41,26 +41,26 @@ public class AutonomousRoutine {
 
     public void drawbridge() {
         double disXInit = 0;
-        double disYInit = 30 + Y_OVERSHOOT_DISTANCE;
+        double disYInit = 30 + Y_OVERSHOOT_DISTANCE; //Initialize arm position
         commands.add(new AutoUtilityArm(disXInit, disYInit));
-        commands.add(new AutoWait(500));
+        commands.add(new AutoWait(100));
         double disXHangOver = 6 + X_ERROR;
-        double disYHangOver = 28.75 + Y_OVERSHOOT_DISTANCE;
+        double disYHangOver = 28.75 + Y_OVERSHOOT_DISTANCE; // Hang over the drawbridge
         commands.add(new AutoUtilityArm(-disXHangOver, disYHangOver));
-        commands.add(new AutoWait(500));
+        commands.add(new AutoWait(300));
         double disXGrabOnto = disXHangOver;
-        double disYGrabOnto = 26.25 + Y_OVERSHOOT_DISTANCE;
+        double disYGrabOnto = 26.25 + Y_OVERSHOOT_DISTANCE; // 'Grab' onto the bridge
         commands.add(new AutoUtilityArm(-disXGrabOnto, disYGrabOnto));
-        commands.add(new AutoWait(500));
+        commands.add(new AutoWait(100));
         // commands.add(new Auto); drive back SLOWLY
         double disXPushDown = 16 + X_ERROR;
-        double disYPushDown = -2.3 - Y_OVERSHOOT_DISTANCE;
+        double disYPushDown = -2.3 - Y_OVERSHOOT_DISTANCE; // Push drawbridge the rest of the way down
         commands.add(new AutoUtilityArm(-disXPushDown, disYPushDown));
-        commands.add(new AutoWait(500));
+        commands.add(new AutoWait(100));
         double disXCompactArm = 9 + X_ERROR;
-        double disYCompactArm = -4.2 - Y_OVERSHOOT_DISTANCE;
+        double disYCompactArm = -4.2 - Y_OVERSHOOT_DISTANCE; // Bring arm closer to us, to make sure the wheels can go over the bridge
         commands.add(new AutoUtilityArm(-disXCompactArm, disYCompactArm));
-        commands.add(new AutoWait(500));
+        commands.add(new AutoWait(300));
         // commands.add(new Auto); drive forward onto ramp, somewhat slow
         commands.add(new AutoWait(1000));
         commands.add(new AutoUtilityArm());

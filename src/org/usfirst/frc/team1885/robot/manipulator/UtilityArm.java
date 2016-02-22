@@ -26,7 +26,7 @@ public class UtilityArm implements Module {
     public static final double LENGTH_A = 17.5;
     public static final double LENGTH_B = 18;
     public static final double CONVERSION_FACTOR = 360.0 / 1024;
-    public static final double DEF_A_ANGLE = .5, DEF_B_ANGLE = 173;
+    public static final double DEF_A_ANGLE = .75, DEF_B_ANGLE = 173;
     private static final double MAX_MOTOR_SPEED_A = .5;
     private static final double MAX_MOTOR_SPEED_B = .7;
     private static final double MOTOR_SPEED_A = .2;
