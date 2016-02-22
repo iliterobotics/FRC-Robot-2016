@@ -33,7 +33,7 @@ public class DrivetrainControl implements Module {
     public static final double NUDGE_POWER = 0.15;
     public static final double NUDGE_POWER_TURN = 0.75;
     private static DrivetrainControl instance;
-    private boolean isHighGear;
+    private boolean isLowGear;
     
     private static final double P = 1.0;
     private static final double I = 0.0;
@@ -44,15 +44,15 @@ public class DrivetrainControl implements Module {
         diameter = d;
         circumference = Math.PI * (diameter);
         driveMode = DriveMode.TANK;
-        isHighGear = true;
+        isLowGear = true;
         driverInput = DriverInputControlSRX.getInstance();
         robotSRX = RobotControlWithSRX.getInstance();
         
         robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Speed);
         robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Speed);
         
-        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setFeedbackDevice(FeedbackDevice.AnalogEncoder);
-        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
 
         robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
         robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
@@ -103,10 +103,10 @@ public class DrivetrainControl implements Module {
 
         if (DriverInputControlSRX.getInstance()
                 .getButton(RobotButtonType.GEAR_SHIFT)) {
-            isHighGear = true;
+            isLowGear = false;
         }
         else {
-            isHighGear = false;
+            isLowGear = true;
         }
     }
     
@@ -188,6 +188,6 @@ public class DrivetrainControl implements Module {
         robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(leftDriveSpeed * maxSpeed * TICKS_IN_ROTATION / 100.0);
         robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(rightDriveSpeed * maxSpeed * TICKS_IN_ROTATION / 100.0);
         
-        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, isHighGear);
+        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, isLowGear);
     }
 }

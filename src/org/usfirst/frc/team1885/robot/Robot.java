@@ -53,6 +53,9 @@ public class Robot extends SampleRobot {
     private AutoTemplate activeTemplate;
 
     public Robot() {
+        System.out.print("Robot Initializing");
+        System.out.flush();
+        DriverStation.reportError("Intializing Robot\n", false);
         //Initialize Output Control
         robotControl = RobotControlWithSRX.getInstance();
         //Initialize Input Control
@@ -64,12 +67,14 @@ public class Robot extends SampleRobot {
             RobotConfiguration.configureRobot();
             //Initialize Sensor Values
             sensorInputControl.init();
+            DriverStation.reportError("Robot configured", false);
         } catch (Exception e) {
             DriverStation.reportError("Robot - Error configuring Robot", false);
         }
         diameter = 9.0;
         //Initialize Modules
         modules = ModuleControl.getInstance().getModules();
+        DriverStation.reportError("\nRobot Intialized", false);
     }
 
     /**
