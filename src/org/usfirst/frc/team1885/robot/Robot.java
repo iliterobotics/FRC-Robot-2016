@@ -37,7 +37,6 @@ import edu.wpi.first.wpilibj.Timer;
  */
 
 public class Robot extends SampleRobot {
-    private final double diameter;
     private LinkedList<AutoCommand> commands;
     private long timeTracker = 0;
     private double delayTime = 1;// Input time in seconds
@@ -71,7 +70,6 @@ public class Robot extends SampleRobot {
         } catch (Exception e) {
             DriverStation.reportError("Robot - Error configuring Robot", false);
         }
-        diameter = 9.0;
         //Initialize Modules
         modules = ModuleControl.getInstance().getModules();
         DriverStation.reportError("\nRobot Intialized", false);

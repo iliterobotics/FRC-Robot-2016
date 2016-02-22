@@ -28,3 +28,5 @@ After installing open the build.properties located at: user.dir/wpilib/java/curr
 
 #Things to keep in mind
 Always pull before you push.
+
+Never push .settings files.
