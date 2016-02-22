@@ -51,6 +51,7 @@ public class Robot extends SampleRobot {
         driverInputControl = DriverInputControlSRX.getInstance();
         sensorInputControl = SensorInputControlSRX.getInstance();
         try {
+            Timer.delay(0.5);
             RobotConfiguration.configureRobot();
             sensorInputControl.init();
         } catch (Exception e) {

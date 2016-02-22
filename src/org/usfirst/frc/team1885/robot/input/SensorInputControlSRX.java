@@ -39,7 +39,7 @@ public class SensorInputControlSRX {
     private double INITIAL_POT_A_POSITION;
     private static double INITIAL_TWIST_POSITION;
     public static double INITIAL_TILT_POSITION;
-    private static final double POTENTIOMETER_CONVERSION_FACTOR = 1024 / 360;
+    private static final double POTENTIOMETER_CONVERSION_FACTOR = 1024.0 / 360;
     private Map<SensorType, Integer> ticks;
 
     public static SensorInputControlSRX getInstance() {
@@ -52,7 +52,6 @@ public class SensorInputControlSRX {
         rsrx = RobotControlWithSRX.getInstance();
         PDP = new PowerDistributionPanel();
         ticks = new HashMap<SensorType, Integer>();
-        INITIAL_TILT_POSITION = 126;
     }
     public void update() {
         
@@ -62,7 +61,7 @@ public class SensorInputControlSRX {
 //         getEncoderDistance(SensorType.RIGHT_ENCODER) +
 //         " --- Left Encoder Value:: " +
 //         getEncoderDistance(SensorType.LEFT_ENCODER), false);
-//         DriverStation.reportError("\n\nZero Tilt:: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
+//         DriverStation.reportError("\n\nZero Tilt:: " + getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
     }
     public double getInitPitch() {
         return INITIAL_PITCH;
@@ -86,8 +85,8 @@ public class SensorInputControlSRX {
 //        INITIAL_POT_B_POSITION = rsrx.getSensor()
 //                .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
 //                * UtilityArm.CONVERSION_FACTOR;
-//        INITIAL_TILT_POSITION = getAnalogGeneric(
-//                SensorType.SHOOTER_TILT_POTENTIOMETER);
+        INITIAL_TILT_POSITION = getAnalogGeneric(
+                SensorType.SHOOTER_TILT_POTENTIOMETER);
         DriverStation.reportError("\nInit Tilt" + INITIAL_TILT_POSITION, false);
         INITIAL_TWIST_POSITION = getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER);
         DriverStation.reportError("\nInit Twist " + INITIAL_TWIST_POSITION, false);

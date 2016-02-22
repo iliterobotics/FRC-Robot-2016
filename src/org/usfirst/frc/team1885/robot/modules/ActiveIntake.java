@@ -94,7 +94,7 @@ public class ActiveIntake implements Module {
         updateOutputs();
     }
     public void listenLowGoal() {
-
+        
     }
 
     public void updateOutputs() {
