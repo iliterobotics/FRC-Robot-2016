@@ -8,6 +8,7 @@ import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
@@ -48,6 +49,7 @@ public class Robot extends SampleRobot {
     private DrivetrainControl drivetrainControl;
     private ActiveIntake activeIntake;
     private Shooter shooter;
+    private UtilityArm ultilityArm;
     
 
     private AutoTemplate activeTemplate;
@@ -72,6 +74,7 @@ public class Robot extends SampleRobot {
         drivetrainControl = DrivetrainControl.getInstance();
         activeIntake = ActiveIntake.getInstance();
         shooter = Shooter.getInstance();
+        ultilityArm = UtilityArm.getInstance();
     }
 
     /**
@@ -87,10 +90,12 @@ public class Robot extends SampleRobot {
             drivetrainControl.update();
             activeIntake.update();
             shooter.update();
+//            utilityArm.update
             //Update Module Outputs
             drivetrainControl.updateOutputs();
             activeIntake.updateOutputs();
             shooter.updateOutputs();
+//            utilityArm.updateOutputs();
             Timer.delay(.005);
         }
     }
