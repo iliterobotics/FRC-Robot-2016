@@ -44,7 +44,7 @@ public class AutoUtilityArm extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-        // Done for us in UtilityArm
+        uArm.updateOutputs();
         return false;
     }
 
