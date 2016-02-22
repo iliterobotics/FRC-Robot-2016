@@ -1,61 +1,67 @@
 package org.usfirst.frc.team1885.robot.modules.drivetrain;
 
-import java.util.HashMap;
-
 import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
-import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
-import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 public class DrivetrainControl implements Module {
     /**
      * drive mode where you can only move straight using the right joystick
      */
+    private static double TICKS_IN_ROTATION = 1024;
     private double leftDriveSpeed;
     private double rightDriveSpeed;
     private DriveMode driveMode;
     private GearState gearState;
+    /**in rps*/
     private final double maxSpeed;
     private final double diameter;
     private final double circumference;
-    private HashMap<Integer, Double> speeds;
     private DriverInputControlSRX driverInput;
+    private RobotControlWithSRX robotSRX;
     private boolean isTurning;
     private AutoTurn turn;
     public static final double NUDGE_POWER = 0.15;
     public static final double NUDGE_POWER_TURN = 0.75;
     private static DrivetrainControl instance;
     private boolean isHighGear;
+    
+    private static final double P = 1.0;
+    private static final double I = 0.0;
+    private static final double D = 0.0;
 
     private DrivetrainControl(final double d, final double m) {
         maxSpeed = m;
-        speeds = new HashMap<Integer, Double>();
         diameter = d;
         circumference = Math.PI * (diameter);
         driveMode = DriveMode.TANK;
         isHighGear = true;
         driverInput = DriverInputControlSRX.getInstance();
+        robotSRX = RobotControlWithSRX.getInstance();
+        
+        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Speed);
+        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Speed);
+        
+        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.AnalogEncoder);
+
+        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
+        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
     }
     public static DrivetrainControl getInstance() {
         if (instance == null) {
             instance = new DrivetrainControl(4.0 * 1.5, 15.0);
         }
         return instance;
-    }
-    public void addSpeed(Integer gear, Double speed) {
-        speeds.put(gear, speed);
-    }
-    public double getSpeed(double speed) {
-        return speed * circumference;
     }
     public boolean getIsTurning() {
         return isTurning;
@@ -178,8 +184,10 @@ public class DrivetrainControl implements Module {
     }
     
     public void updateOutputs() {
-        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
-                rightDriveSpeed);
+        //100 represents conversion from seconds in the max speed to the .01 second rate that the talons takes
+        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(leftDriveSpeed * maxSpeed * TICKS_IN_ROTATION / 100.0);
+        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(rightDriveSpeed * maxSpeed * TICKS_IN_ROTATION / 100.0);
+        
         RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, isHighGear);
     }
 }
