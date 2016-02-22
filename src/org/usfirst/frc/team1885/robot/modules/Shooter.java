@@ -313,23 +313,6 @@ public class Shooter implements Module {
             DriverStation.reportError("Retracting", false);
         }
     }
-    public void updateOutputs() {
-        // DriverStation.reportError("\n Tilt Position: " + tiltPosition,
-        // false);
-        // DriverStation.reportError("\nTo Tilt Angle: " + relativeTiltAngle,
-        // false);
-        // DriverStation.reportError("\n Raw Pot: " +
-        // sensorControl.getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER)
-        // *(1024.0/360), false);
-        RobotControlWithSRX.getInstance().updateFlywheelShooter(flywheelSpeedLeft, flywheelSpeedRight);
-        RobotControlWithSRX.getInstance().updateShooterTilt(tiltPosition);
-        RobotControlWithSRX.getInstance().updateShooterTwist(twistSpeed);
-        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, isHeld);
-        // DriverStation.reportError("\nContainer State:: " + isHeld, false);
-        // // RobotControlWithSRX.getInstance()
-        // // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,
-        // // kickerState);
-    }
     public void listenHighGoal() {
         if (reseting) {
             if (!twistDone && positionTwist()) {
@@ -407,7 +390,24 @@ public class Shooter implements Module {
         listenLowGoal();
         listenHighGoal();
         updateTilt();
-        updateOutputs();
+    }
+    
+    public void updateOutputs() {
+        // DriverStation.reportError("\n Tilt Position: " + tiltPosition,
+        // false);
+        // DriverStation.reportError("\nTo Tilt Angle: " + relativeTiltAngle,
+        // false);
+        // DriverStation.reportError("\n Raw Pot: " +
+        // sensorControl.getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER)
+        // *(1024.0/360), false);
+        RobotControlWithSRX.getInstance().updateFlywheelShooter(flywheelSpeedLeft, flywheelSpeedRight);
+        RobotControlWithSRX.getInstance().updateShooterTilt(tiltPosition);
+        RobotControlWithSRX.getInstance().updateShooterTwist(twistSpeed);
+        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, isHeld);
+        // DriverStation.reportError("\nContainer State:: " + isHeld, false);
+        // // RobotControlWithSRX.getInstance()
+        // // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,
+        // // kickerState);
     }
 
     public void setToTiltValue(double angle) {
