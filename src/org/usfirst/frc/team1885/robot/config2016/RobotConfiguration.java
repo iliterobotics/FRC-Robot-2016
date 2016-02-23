@@ -43,11 +43,6 @@ public class RobotConfiguration {
         JoystickButtonMap joystickButtonMap = JoystickButtonMap.getInstance();
         ModuleControl moduleControl = ModuleControl.getInstance();
         
-        // Add Modules
-        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
-        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
-        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
-//        moduleControl.addModule(ModuleType.UTILITY_ARM, UtilityArm.getInstance());
         
         // Add JoystickType Configurations
         driverInputControl.addJoystick(RobotJoystickType.LEFT_DRIVE, new Joystick(0));
@@ -110,5 +105,11 @@ public class RobotConfiguration {
                 // Utility Arm potentiometers
         robotControl.addTalonSensor(RobotMotorType.ARM_JOINT_B, SensorType.JOINT_B_POTENTIOMETER, ARM_JOINT_B_PORT);
         robotControl.addTalonSensor(RobotMotorType.ARM_JOINT_A, SensorType.JOINT_A_POTENTIOMETER, ARM_JOINT_A_PORT);
+        
+        // Add Modules
+        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
+        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
+        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
+//        moduleControl.addModule(ModuleType.UTILITY_ARM, UtilityArm.getInstance());
     }
 }

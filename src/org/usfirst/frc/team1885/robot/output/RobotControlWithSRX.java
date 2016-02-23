@@ -11,6 +11,8 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
 import edu.wpi.first.wpilibj.CANTalon;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -46,13 +48,21 @@ public class RobotControlWithSRX {
     }
     //Add outputs
     public void addTalonOutput(RobotMotorType type, int port) {
+        CANTalon talon = new CANTalon(port);
         if (type == RobotMotorType.LEFT_DRIVE) {
-            leftDrive.add(new CANTalon(port));
+            leftDrive.add(talon);
+            if(port != 1){
+                talon.changeControlMode(TalonControlMode.Follower);
+                talon.set(1);
+            }
         } else if (type == RobotMotorType.RIGHT_DRIVE) {
-            // add to right motor
-            rightDrive.add(new CANTalon(port));
+            rightDrive.add(talon);
+            if(port != 2){
+                talon.changeControlMode(TalonControlMode.Follower);
+                talon.set(2);
+            }
         } else {
-            talons.put(type, new CANTalon(port));
+            talons.put(type, talon);
         }
     }
     public void addTalonSensor(RobotMotorType motorType, SensorType sensorType,
@@ -113,7 +123,6 @@ public class RobotControlWithSRX {
     }
     public void updateShooterTilt(double tiltSpeed) {
         talons.get(RobotMotorType.SHOOTER_TILT).set(tiltSpeed);
-        DriverStation.reportError("\n\nShooter Tilt Goal:: " + tiltSpeed + "\nPotentiometer Reading:: " + SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER) * (1024 / 360.0), false);
     }
     public void updateShooterTwist(double twistSpeed) {
         talons.get(RobotMotorType.SHOOTER_TWIST).set(twistSpeed);

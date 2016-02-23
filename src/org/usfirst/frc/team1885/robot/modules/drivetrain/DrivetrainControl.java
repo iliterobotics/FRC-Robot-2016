@@ -6,10 +6,14 @@ import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
+import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
@@ -17,7 +21,7 @@ public class DrivetrainControl implements Module {
     /**
      * drive mode where you can only move straight using the right joystick
      */
-    private static double TICKS_IN_ROTATION = 1024;
+    public static double TICKS_IN_ROTATION = 1024;
     private double leftDriveSpeed;
     private double rightDriveSpeed;
     private DriveMode driveMode;
@@ -35,7 +39,7 @@ public class DrivetrainControl implements Module {
     private static DrivetrainControl instance;
     private boolean isLowGear;
     
-    private static final double P = 1.0;
+    private static final double P = .25;
     private static final double I = 0.0;
     private static final double D = 0.0;
 
@@ -57,9 +61,9 @@ public class DrivetrainControl implements Module {
         robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
         robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
     }
-    public static DrivetrainControl getInstance() {
+    public static synchronized DrivetrainControl getInstance() {
         if (instance == null) {
-            instance = new DrivetrainControl(4.0 * 1.5, 15.0);
+            instance = new DrivetrainControl(RobotConfiguration.WHEEL_DIAMETER, 20.0);
         }
         return instance;
     }
@@ -122,8 +126,8 @@ public class DrivetrainControl implements Module {
                         + rightDriveSpeed) / 2;
             }
 
-            leftDriveSpeed = DriverInputControlSRX.expScale(leftDriveSpeed);
-            rightDriveSpeed = DriverInputControlSRX.expScale(rightDriveSpeed);
+//            leftDriveSpeed = DriverInputControlSRX.expScale(leftDriveSpeed);
+//            rightDriveSpeed = DriverInputControlSRX.expScale(rightDriveSpeed);
         } else if (isTurning) {
             leftDriveSpeed = leftJoystick;
             rightDriveSpeed = rightJoystick;
@@ -185,9 +189,13 @@ public class DrivetrainControl implements Module {
     
     public void updateOutputs() {
         //100 represents conversion from seconds in the max speed to the .01 second rate that the talons takes
-        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(leftDriveSpeed * maxSpeed * TICKS_IN_ROTATION / 100.0);
-        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(rightDriveSpeed * maxSpeed * TICKS_IN_ROTATION / 100.0);
-        
+        double leftDriveVelocity = -leftDriveSpeed * maxSpeed / (Math.PI * RobotConfiguration.WHEEL_DIAMETER / 12.0) * TICKS_IN_ROTATION;
+        double rightDriveVelocity = rightDriveSpeed * maxSpeed / (Math.PI * RobotConfiguration.WHEEL_DIAMETER / 12.0) * TICKS_IN_ROTATION;
+        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(leftDriveVelocity);
+        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(rightDriveVelocity);
+                
+        DriverStation.reportError("\nGoal:: Left: " + leftDriveVelocity + " Right: " + rightDriveVelocity, false);
+        DriverStation.reportError("\nEncoder:: Left: " + robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).get() + " Right: " + robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
         RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, isLowGear);
     }
 }

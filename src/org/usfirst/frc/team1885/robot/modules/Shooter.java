@@ -103,7 +103,6 @@ public class Shooter implements Module {
     }
     private Shooter() {
         sensorControl = SensorInputControlSRX.getInstance();
-        relativeTiltAngle = sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER);
         previousFlywheel = false;
         this.leftState = MotorState.OFF;
         this.rightState = MotorState.OFF;
@@ -124,6 +123,9 @@ public class Shooter implements Module {
         twistPID = new PID(TWIST_P, TWIST_I, TWIST_D);
         leftSpinnerPID = new PID(SPIN_P, SPIN_I, SPIN_D);
         rightSpinnerPID = new PID(SPIN_P, SPIN_I, SPIN_D);
+    }
+    public void init(){
+        relativeTiltAngle = sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER);
     }
     // Get telemetry data
     public MotorState getLeftMotorState() {
@@ -147,7 +149,7 @@ public class Shooter implements Module {
     // updates shooter fly wheels
     public void updateShooter() {
         // TODO modify values after testing for direction
-        DriverStation.reportError("\n\nLeft Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER) + "\nRight Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER), false);
+//        DriverStation.reportError("\n\nLeft Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER) + "\nRight Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER), false);
 
         if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT)) {
             flywheelSpeedLeft = -SHOOTER_SPEED;
@@ -391,17 +393,14 @@ public class Shooter implements Module {
     }
     
     public void updateOutputs() {
-        // DriverStation.reportError("\n Tilt Position: " + tiltPosition,
-        // false);
-        // DriverStation.reportError("\nTo Tilt Angle: " + relativeTiltAngle,
-        // false);
-        // DriverStation.reportError("\n Raw Pot: " +
-        // sensorControl.getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER)
-        // *(1024.0/360), false);
-        RobotControlWithSRX.getInstance().updateFlywheelShooter(flywheelSpeedLeft, flywheelSpeedRight);
-        RobotControlWithSRX.getInstance().updateShooterTilt(tiltPosition);
-        RobotControlWithSRX.getInstance().updateShooterTwist(twistSpeed);
-        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, isHeld);
+//         DriverStation.reportError("\n Tilt Position: " + tiltPosition, false);
+//         DriverStation.reportError("\nTo Tilt Angle: " + relativeTiltAngle,false);
+//         DriverStation.reportError("\n Raw Pot: " + sensorControl.getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER) *(1024.0/360), false);
+//         DriverStation.reportError("\n", false);
+         //        RobotControlWithSRX.getInstance().updateFlywheelShooter(flywheelSpeedLeft, flywheelSpeedRight);
+//        RobotControlWithSRX.getInstance().updateShooterTilt(tiltPosition);
+//        RobotControlWithSRX.getInstance().updateShooterTwist(twistSpeed);
+//        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, isHeld);
         // DriverStation.reportError("\nContainer State:: " + isHeld, false);
         // // RobotControlWithSRX.getInstance()
         // // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,

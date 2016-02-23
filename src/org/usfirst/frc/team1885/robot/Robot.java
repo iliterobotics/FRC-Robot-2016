@@ -52,9 +52,6 @@ public class Robot extends SampleRobot {
     private AutoTemplate activeTemplate;
 
     public Robot() {
-        System.out.print("Robot Initializing");
-        System.out.flush();
-        DriverStation.reportError("Intializing Robot\n", false);
         //Initialize Output Control
         robotControl = RobotControlWithSRX.getInstance();
         //Initialize Input Control
@@ -66,11 +63,12 @@ public class Robot extends SampleRobot {
             RobotConfiguration.configureRobot();
             //Initialize Sensor Values
             sensorInputControl.init();
-            DriverStation.reportError("Robot configured", false);
+            Shooter.getInstance().init();
+            DriverStation.reportError("\nRobot configured", false);
         } catch (Exception e) {
-            DriverStation.reportError("Robot - Error configuring Robot", false);
+            DriverStation.reportError("\nRobot - Error configuring Robot", false);
         }
-        //Initialize Modules
+//        Initialize Modules
         modules = ModuleControl.getInstance().getModules();
         DriverStation.reportError("\nRobot Intialized", false);
     }

@@ -26,7 +26,12 @@ public class AutonomousRoutine {
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
         Timer.delay(1);
-        initAuto();
+        commands.add(new AutoAlign(90));
+//        commands.add(new AutoWait(2500));
+//        commands.add(new AutoAlign(180));
+        commands.add(new AutoWait(2500));
+        commands.add(new AutoAlign(-90));
+//        initAuto();
     }
 
     public void execute() {
