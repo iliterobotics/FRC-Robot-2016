@@ -83,7 +83,7 @@ public class UtilityArm implements Module {
                 .setFeedbackDevice(FeedbackDevice.AnalogPot);
         robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).setPID(aP, aI,
                 aD);
-        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).setPID(bP, bI,
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).setPID(bP, bI,
                 bD);
 
         this.jointAState = MotorState.OFF;
