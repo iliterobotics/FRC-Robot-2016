@@ -90,9 +90,9 @@ public class RobotControlWithSRX
         // TODO Auto-generated method stub
         
     }
-    public void updateArmMotors(double jointASpeed, double jointBSpeed) {
-        talons.get(RobotMotorType.ARM_JOINT_A).set(jointASpeed);
-        talons.get(RobotMotorType.ARM_JOINT_B).set(jointBSpeed);
+    public void updateArmMotors(double jointAPosition, double jointBPosition) {
+        talons.get(RobotMotorType.ARM_JOINT_A).set(jointAPosition);
+        talons.get(RobotMotorType.ARM_JOINT_B).set(jointBPosition);
     }
     
     public Map<SensorType, CANTalon> getSensor()

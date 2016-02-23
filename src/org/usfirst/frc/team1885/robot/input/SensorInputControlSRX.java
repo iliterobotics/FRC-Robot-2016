@@ -87,12 +87,9 @@ public class SensorInputControlSRX {
     }
     public void init() {
         INITIAL_POT_A_POSITION = rsrx.getSensor()
-                .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw()
-                * UtilityArm.CONVERSION_FACTOR;
+                .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw();
         INITIAL_POT_B_POSITION = rsrx.getSensor()
-                .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
-                * UtilityArm.CONVERSION_FACTOR;
-        DriverStation.reportError("" + INITIAL_TILT_POSITION, false);
+                .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw();
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
