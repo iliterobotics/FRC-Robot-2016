@@ -31,9 +31,6 @@ public class AutoUtilityArm extends AutoCommand {
 
     @Override
     public boolean execute() {
-        DriverStation.reportError(
-                "\nGoing to (" + xDistance + ", " + yDistance + ")", false);
-        DriverStation.reportError("\n Y-Position: " + RESET_Y, false);
         uArm.update();
         return uArm.isFinished();
     }

@@ -17,7 +17,7 @@ public class AuxArm implements Module {
     public static final double P = .8, I = 0.02, D = 0;
     public static final double MAX_ARM_SPEED = 0.4;
     public static final double MIN_ARM_SPEED = 0.1;
-    
+
     public static final double STOP_POWER = 0.05;
     public static final double CONVERSION_FACTOR = 360.0 / 1024;
     public static final double JOINT_A_CLOCK_BOUND = 155.0;
@@ -37,14 +37,14 @@ public class AuxArm implements Module {
     private MotorState jointAState;
     private MotorState jointBState;
     private PID pid;
-    
+
     protected AuxArm() {
         this.jointAState = MotorState.OFF;
         this.jointBState = MotorState.OFF;
         jointASpeed = 0;
         jointBSpeed = 0;
         armSpeed = FULL_SPEED;
-        
+
         pid = new PID(P, I, D);
     }
     public static AuxArm getInstance() {
@@ -76,26 +76,26 @@ public class AuxArm implements Module {
         }
         jointBSpeed = 0;
 
-//        if ((DriverInputControlSRX.getInstance()
-//                .getButton(RobotButtonType.ARM_JOINT_A_EXTEND))) {
-//            jointAState = MotorState.FORWARD;
-//            jointASpeed = MAX_ARM_SPEED;
-//        }
-//        if ((DriverInputControlSRX.getInstance()
-//                .getButton(RobotButtonType.ARM_JOINT_A_RETRACT))) {
-//            jointAState = MotorState.REVERSE;
-//            jointASpeed = -MAX_ARM_SPEED;
-//        }
-//        if ((DriverInputControlSRX.getInstance()
-//                .getButton(RobotButtonType.ARM_JOINT_B_EXTEND))) {
-//            jointBState = MotorState.FORWARD;
-//            jointBSpeed = MAX_ARM_SPEED;
-//        }
-//        if ((DriverInputControlSRX.getInstance()
-//                .getButton(RobotButtonType.ARM_JOINT_B_RETRACT))) {
-//            jointBState = MotorState.REVERSE;
-//            jointBSpeed = -MAX_ARM_SPEED;
-//        }
+        // if ((DriverInputControlSRX.getInstance()
+        // .getButton(RobotButtonType.ARM_JOINT_A_EXTEND))) {
+        // jointAState = MotorState.FORWARD;
+        // jointASpeed = MAX_ARM_SPEED;
+        // }
+        // if ((DriverInputControlSRX.getInstance()
+        // .getButton(RobotButtonType.ARM_JOINT_A_RETRACT))) {
+        // jointAState = MotorState.REVERSE;
+        // jointASpeed = -MAX_ARM_SPEED;
+        // }
+        // if ((DriverInputControlSRX.getInstance()
+        // .getButton(RobotButtonType.ARM_JOINT_B_EXTEND))) {
+        // jointBState = MotorState.FORWARD;
+        // jointBSpeed = MAX_ARM_SPEED;
+        // }
+        // if ((DriverInputControlSRX.getInstance()
+        // .getButton(RobotButtonType.ARM_JOINT_B_RETRACT))) {
+        // jointBState = MotorState.REVERSE;
+        // jointBSpeed = -MAX_ARM_SPEED;
+        // }
         updateArm(jointASpeed, jointBSpeed);
     }
     public void updateArm(double aSpeed, double bSpeed) {
@@ -116,15 +116,17 @@ public class AuxArm implements Module {
             jointBState = MotorState.OFF;
         }
     }
-    public boolean isWithinPerimeterRange(double angleJointA, double angleJointB) {
+    public boolean isWithinPerimeterRange(double angleJointA,
+            double angleJointB) {
         SensorInputControlSRX sensorInputControl = SensorInputControlSRX
                 .getInstance();
         double zeroedA = angleJointA
                 - sensorInputControl.getInitialPotAPostition();
-        return (LENGTH_B * (Math.cos(Math.toRadians(
-                angleJointB - sensorInputControl.getInitialPotBPostition()
-                        - zeroedA))))
-                - (LENGTH_A * (Math.cos(Math.toRadians(zeroedA)))) <= (PERIMETER_LENGTH - 1);
+        return (LENGTH_B * (Math.cos(Math.toRadians(angleJointB
+                - sensorInputControl.getInitialPotBPostition() - zeroedA))))
+                - (LENGTH_A * (Math
+                        .cos(Math.toRadians(zeroedA)))) <= (PERIMETER_LENGTH
+                                - 1);
     }
     @Override
     public void update() {
@@ -137,37 +139,32 @@ public class AuxArm implements Module {
         RobotControlWithSRX.getInstance().updateArmMotors(jointASpeed,
                 jointBSpeed);
     }
-    
-    private void adjustPower(){
+
+    private void adjustPower() {
         SensorInputControlSRX sensorInputControl = SensorInputControlSRX
                 .getInstance();
-        double angleA = sensorInputControl.getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER) * CONVERSION_FACTOR;
+        double angleA = sensorInputControl.getAnalogGeneric(
+                SensorType.JOINT_A_POTENTIOMETER) * CONVERSION_FACTOR;
         double zeroedA = angleA - sensorInputControl.getInitialPotAPostition();
-        double angleB = zeroedA  + 360 - ( sensorInputControl.getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER) * CONVERSION_FACTOR - sensorInputControl.getInitialPotBPostition() + 190);
-        double distanceB = //(LENGTH_B * (Math.cos(Math.toRadians(angleB))));
-                            -LENGTH_B;
+        double angleB = zeroedA + 360
+                - (sensorInputControl.getAnalogGeneric(
+                        SensorType.JOINT_B_POTENTIOMETER) * CONVERSION_FACTOR
+                - sensorInputControl.getInitialPotBPostition() + 190);
+        double distanceB = // (LENGTH_B * (Math.cos(Math.toRadians(angleB))));
+        -LENGTH_B;
         double distanceA = (LENGTH_A * (Math.cos(Math.toRadians(zeroedA))));
         double distance = distanceA + distanceB;
 
-        DriverStation.reportError("\nAngle A:: " + zeroedA, false);
-        DriverStation.reportError("\nAngle B:: " + angleB, false);
-        DriverStation.reportError("\nDistance A:: " + distanceA, false);
-        DriverStation.reportError("\nDistance B:: " + distanceB, false);
-        DriverStation.reportError("\nDistance:: " + distance + "\n", false);
-        if(distance > -PERIMETER_LENGTH + ERROR_DISTANCE){
-            if(distance < 0){
-                armSpeed = MAX_ARM_SPEED * ( 1 - distance / -PERIMETER_LENGTH);
-                if(armSpeed < MIN_ARM_SPEED){
+        if (distance > -PERIMETER_LENGTH + ERROR_DISTANCE) {
+            if (distance < 0) {
+                armSpeed = MAX_ARM_SPEED * (1 - distance / -PERIMETER_LENGTH);
+                if (armSpeed < MIN_ARM_SPEED) {
                     armSpeed = MIN_ARM_SPEED;
                 }
-            }
-            else armSpeed = MAX_ARM_SPEED;
-            
-            DriverStation.reportError("" + armSpeed, false);
-
-        }
-        else{
-         armSpeed = 0;   
+            } else
+                armSpeed = MAX_ARM_SPEED;
+        } else {
+            armSpeed = 0;
         }
     }
 

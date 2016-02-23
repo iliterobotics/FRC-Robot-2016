@@ -37,14 +37,14 @@ public class UtilityArm implements Module {
     private static final double MAX_MOTOR_SPEED_B = .7;
     private static final double MOTOR_SPEED_A = .2;
     private static final double MOTOR_SPEED_B = .2;
-    private static final double DEGREE_MARGIN_E = 5;
+    private static final double DEGREE_MARGIN_E = 5 / CONVERSION_FACTOR;
     private static final double JOY_DEADZONE = .1;
     private static final double JOY_CHANGE = .005;
 
     private double jointASpeed; // speed that joint A will go at
     private double jointBSpeed; // speed that joint B will go at
-    private double jointAAngle; // storage for updating the A angle
-    private double jointBAngle; // storage for updating the B angle
+    private double jointAPosition; // storage for updating the A angle
+    private double jointBPosition; // storage for updating the B angle
     private double xDirection; // what direction the system needs to move in
     private double yDirection; // what direction the system needs to move in
     private double aP, aI, aD; // values for the PID to move joint A
@@ -68,7 +68,7 @@ public class UtilityArm implements Module {
         aP = 1;
         aI = 0;
         aD = 0;
-        bP = 1;
+        bP = 3;
         bI = 0;
         bD = 0;
 
@@ -88,8 +88,8 @@ public class UtilityArm implements Module {
 
         this.jointAState = MotorState.OFF;
         this.jointBState = MotorState.OFF;
-        jointAAngle = getAngleA();
-        jointBAngle = getAngleB();
+        jointAPosition = getAngleA();
+        jointBPosition = getAngleB();
         xDirection = 0;
         yDirection = 0;
         sensorInputControl = SensorInputControlSRX.getInstance();
@@ -110,8 +110,8 @@ public class UtilityArm implements Module {
     public void update() {
         // changeValues();
         if (driverInputControl.isResetButtonDown()) {
-            jointAAngle = DEF_A_ANGLE;
-            jointBAngle = DEF_B_ANGLE;
+            jointAPosition = DEF_A_ANGLE;
+            jointBPosition = DEF_B_ANGLE;
         }
         if (driverInputControl.isButtonDown(RobotButtonType.INCREMENT_ARM_UP)) {
             goTo(-20, 10);
@@ -151,29 +151,17 @@ public class UtilityArm implements Module {
         // jointBSpeed = MOTOR_SPEED_B;
         // }
 
-        if (jointAAngle - getAngleA() < DEGREE_MARGIN_E
-                && jointAAngle - getAngleA() > -DEGREE_MARGIN_E) {
+        if (jointAPosition - getAngleA() < DEGREE_MARGIN_E
+                && jointAPosition - getAngleA() > -DEGREE_MARGIN_E) {
             jointASpeed = 0;
         }
-        if (jointBAngle - getAngleB() < DEGREE_MARGIN_E
-                && jointBAngle - getAngleB() > -DEGREE_MARGIN_E) {
+        if (jointBPosition - getAngleB() < DEGREE_MARGIN_E
+                && jointBPosition - getAngleB() > -DEGREE_MARGIN_E) {
             jointBSpeed = 0;
         }
 
-        DriverStation.reportError("\n\nJoint B:: Speed: " + jointBSpeed
-                + " Goal: " + jointBAngle + " Current: " + getAngleB()
-                + "\n P: " + jointBControlLoop.getP() + " I: "
-                + jointBControlLoop.getI(1.0) + " D: "
-                + jointBControlLoop.getD(), false);
-
-        DriverStation.reportError("\n\nJoint A:: Speed: " + jointASpeed
-                + " Goal: " + jointAAngle + " Current: " + getAngleA()
-                + "\n P: " + jointBControlLoop.getP() + " I: "
-                + jointBControlLoop.getI(1.0) + " D: "
-                + jointBControlLoop.getD(), false);
-
-        // RobotControlWithSRX.getInstance().updateArmMotors(jointASpeed,
-        // jointBSpeed);
+        RobotControlWithSRX.getInstance().updateArmMotors(jointAPosition,
+                jointBPosition);
     }
 
     /*
@@ -247,26 +235,26 @@ public class UtilityArm implements Module {
         // DriverStation.reportError("\ntanB:" + (y - finaly) / (x - finalx),
         // false);
 
-        jointAAngle = Math.toDegrees(Math.atan2(finaly, finalx));
+        jointAPosition = Math.toDegrees(Math.atan2(finaly, finalx));
 
         double transformedX = (x - finalx);
         double transformedY = (y - finaly);
-        jointBAngle = Math.toDegrees(Math.atan2(transformedY, transformedX));
-        if (jointBAngle < 0) {
-            jointBAngle += 360;
+        jointBPosition = Math.toDegrees(Math.atan2(transformedY, transformedX));
+        if (jointBPosition < 0) {
+            jointBPosition += 360;
         }
 
-        if (jointAAngle < DEF_A_ANGLE) {
-            jointAAngle = DEF_A_ANGLE;
+        if (jointAPosition < DEF_A_ANGLE) {
+            jointAPosition = DEF_A_ANGLE;
         }
-        if (jointAAngle > 180) {
-            jointAAngle = 180;
+        if (jointAPosition > 180) {
+            jointAPosition = 180;
         }
-        if (jointBAngle > (160 + jointAAngle)) {
-            jointBAngle = (160 + jointAAngle);
+        if (jointBPosition > (160 + jointAPosition)) {
+            jointBPosition = (160 + jointAPosition);
         }
-        if (jointBAngle < jointAAngle) {
-            jointBAngle = jointAAngle;
+        if (jointBPosition < jointAPosition) {
+            jointBPosition = jointAPosition;
         }
 
         // DriverStation.reportError("\nJointAAngle:" + jointAAngle, false);
@@ -275,22 +263,29 @@ public class UtilityArm implements Module {
         // jointAControlLoop.setScalingValue(jointAAngle);
         // jointBControlLoop.setScalingValue(jointBAngle);
 
-        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).set(jointAAngle
-                / CONVERSION_FACTOR
-                + SensorInputControlSRX.getInstance().INITIAL_POT_A_POSITION);
-        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).set(jointBAngle
-                / CONVERSION_FACTOR
-                + SensorInputControlSRX.getInstance().INITIAL_POT_B_POSITION);
+        jointAPosition = jointAPosition / CONVERSION_FACTOR
+                + SensorInputControlSRX.getInstance().INITIAL_POT_A_POSITION;
+        jointBPosition = jointBPosition / CONVERSION_FACTOR
+                + SensorInputControlSRX.getInstance().INITIAL_POT_B_POSITION;
+
+        RobotControlWithSRX.getInstance().updateArmMotors(jointAPosition,
+                jointBPosition);
 
         goingToX = x;
         goingToY = y;
 
     }
     public boolean isFinished() {
-        boolean isJointAFinished = jointAAngle - getAngleA() < DEGREE_MARGIN_E
-                && jointAAngle - getAngleA() > -DEGREE_MARGIN_E;
-        boolean isJointBFinished = jointBAngle - getAngleB() < DEGREE_MARGIN_E
-                && jointBAngle - getAngleB() > -DEGREE_MARGIN_E;
+        boolean isJointAFinished = robotControl.getTalons()
+                .get(RobotMotorType.ARM_JOINT_A).get()
+                - jointAPosition < DEGREE_MARGIN_E
+                && robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A)
+                        .get() - jointAPosition > -DEGREE_MARGIN_E;
+        boolean isJointBFinished = robotControl.getTalons()
+                .get(RobotMotorType.ARM_JOINT_B).get()
+                - jointBPosition < DEGREE_MARGIN_E
+                && robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B)
+                        .get() - jointBPosition > -DEGREE_MARGIN_E;
 
         // DriverStation.reportError("\nAre finished? ("
         // + (isJointAFinished ? "true" : "false") + ", "
@@ -304,18 +299,18 @@ public class UtilityArm implements Module {
         // "\nRaw pot val:" + sensorInputControl.getAnalogGeneric(
         // SensorType.JOINT_B_POTENTIOMETER), false);
         if (isJointAFinished && isJointBFinished) {
-            jointAControlLoop.reset();
-            jointBControlLoop.reset();
-            jointASpeed = 0;
-            jointBSpeed = 0;
-            RobotControlWithSRX.getInstance().updateArmMotors(jointASpeed,
-                    jointBSpeed);
+            // jointAControlLoop.reset();
+            // jointBControlLoop.reset();
+            // jointASpeed = 0;
+            // jointBSpeed = 0;
+            // RobotControlWithSRX.getInstance().updateArmMotors(jointASpeed,
+            // jointBSpeed);
         }
         return isJointAFinished && isJointBFinished;
     }
     public void resetPos() {
-        jointAAngle = DEF_A_ANGLE;
-        jointBAngle = DEF_B_ANGLE;
+        jointAPosition = DEF_A_ANGLE;
+        jointBPosition = DEF_B_ANGLE;
     }
 
 }
