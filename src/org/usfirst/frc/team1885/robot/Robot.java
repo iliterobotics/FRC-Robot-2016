@@ -8,12 +8,9 @@ import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
-import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
-import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.ModuleControl;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
-import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -54,9 +51,6 @@ public class Robot extends SampleRobot {
     public Robot() {
         //Initialize Output Control
         robotControl = RobotControlWithSRX.getInstance();
-        robotControl.set(0, true);
-        robotControl.enablePWM(0, .25);
-        robotControl.setPWMRate(0, .1);
         //Initialize Input Control
         driverInputControl = DriverInputControlSRX.getInstance();
         sensorInputControl = SensorInputControlSRX.getInstance();
@@ -73,6 +67,9 @@ public class Robot extends SampleRobot {
         }
 //        Initialize Modules
         modules = ModuleControl.getInstance().getModules();
+        robotControl.set(0, true);
+        robotControl.enablePWM(0, .25);
+        robotControl.setPWMRate(0, .1);
         DriverStation.reportError("\nRobot Intialized", false);
     }
 
