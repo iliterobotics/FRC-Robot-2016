@@ -142,4 +142,11 @@ public class RobotControlWithSRX {
     public void gearShift(boolean gear) {
         singleSolenoids.get(RobotPneumaticType.GEAR_SHIFT).set(gear);
     }
+    
+    public void resetEncoderVoltage(){
+        getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Voltage);
+        getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Voltage);
+        getTalons().get(RobotMotorType.LEFT_DRIVE).set(0);
+        getTalons().get(RobotMotorType.RIGHT_DRIVE).set(0);
+    }
 }

@@ -58,9 +58,6 @@ public class AutoAlign extends AutoCommand {
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Position);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Position);
         
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
-        
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
         
@@ -85,8 +82,7 @@ public class AutoAlign extends AutoCommand {
 //        leftDrivePower = rightDrivePower * -1;
 
         DriverStation.reportError("\n Degree to turn : " + targetDegree
-                + " --- Normalized yaw: " + yaw + "\n Pid Speed:: "
-                + rightDrivePower + "\n difference:: " + difference, false);
+                + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
 
 //        if (leftDrivePower > 0) {
 //            leftDrivePower = (leftDrivePower < MIN_SPEED ? MIN_SPEED
@@ -104,7 +100,7 @@ public class AutoAlign extends AutoCommand {
 //                    : rightDrivePower);
 //        }
 //
-        if (Math.abs((difference < 0 ? difference + 360 : difference)) < ALIGNMENT_ERROR) {
+        if (Math.abs(difference) < ALIGNMENT_ERROR) {
             DriverStation.reportError("\nAligned.", false);
             this.reset();
             return true;
@@ -124,6 +120,7 @@ public class AutoAlign extends AutoCommand {
 
     @Override
     public void reset() {
+        RobotControlWithSRX.getInstance().resetEncoderVoltage();
 //        pid.reset();
 //        leftDrivePower = 0;
 //        rightDrivePower = 0;

@@ -22,7 +22,7 @@ public class AutoCalibrateWheels extends AutoCommand{
         initialTickRight = initialTickLeft = currentTickRight = currentTickLeft = 0;
         yawChange = 0;
         P = 2.0;
-        I = 0.0002;
+        I = 0.0004;
         D = 0;
         this.rotations = rotations;
         this.wheelDiameter = 0;

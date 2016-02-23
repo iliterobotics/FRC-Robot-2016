@@ -20,6 +20,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 
 /**
  * 
@@ -88,7 +89,7 @@ public class RobotConfiguration {
 
         // Solenoids and DoubleSolenoids
         robotControl.addDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
-        robotControl.addSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, 3);
+        robotControl.addSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, 2);
         robotControl.addSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, 4);
 
         // Talon Sensors
@@ -105,6 +106,10 @@ public class RobotConfiguration {
                 // Utility Arm potentiometers
         robotControl.addTalonSensor(RobotMotorType.ARM_JOINT_B, SensorType.JOINT_B_POTENTIOMETER, ARM_JOINT_B_PORT);
         robotControl.addTalonSensor(RobotMotorType.ARM_JOINT_A, SensorType.JOINT_A_POTENTIOMETER, ARM_JOINT_A_PORT);
+        
+        //Set Feedback Devices for PID
+//        robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
+//        robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
         
         // Add Modules
         moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());

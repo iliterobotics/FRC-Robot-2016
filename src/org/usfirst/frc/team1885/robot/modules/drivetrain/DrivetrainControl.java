@@ -26,7 +26,7 @@ public class DrivetrainControl implements Module {
     private double rightDriveSpeed;
     private DriveMode driveMode;
     private GearState gearState;
-    /**in rps*/
+    /** in rps */
     private final double maxSpeed;
     private final double diameter;
     private final double circumference;
@@ -38,7 +38,7 @@ public class DrivetrainControl implements Module {
     public static final double NUDGE_POWER_TURN = 0.75;
     private static DrivetrainControl instance;
     private boolean isLowGear;
-    
+
     private static final double P = .25;
     private static final double I = 0.0;
     private static final double D = 0.0;
@@ -51,69 +51,72 @@ public class DrivetrainControl implements Module {
         isLowGear = true;
         driverInput = DriverInputControlSRX.getInstance();
         robotSRX = RobotControlWithSRX.getInstance();
-        
-        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Speed);
-        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Speed);
-        
-        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
-        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
+
+      robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Speed);
+      robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Speed);
 
         robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
         robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
     }
     public static synchronized DrivetrainControl getInstance() {
         if (instance == null) {
-            instance = new DrivetrainControl(RobotConfiguration.WHEEL_DIAMETER, 20.0);
+            instance = new DrivetrainControl(RobotConfiguration.WHEEL_DIAMETER,
+                    10.0);
         }
         return instance;
+    }
+    public void init(){
+        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Speed);
+        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Speed);
+        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
+        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
     }
     public boolean getIsTurning() {
         return isTurning;
     }
     public void update() {
         // FIXME: add slow straight drive state + button
-//        if ((DriverInputControlSRX.getInstance()
-//                .getButton(RobotButtonType.LEFT_DRIFT)
-//                || DriverInputControlSRX.getInstance()
-//                        .getButton(RobotButtonType.RIGHT_DRIFT))
-//                && !isTurning) {
-//
-//            if (!isTurning) {
-//
-//                double angle = (DriverInputControlSRX.getInstance()
-//                        .getButton(RobotButtonType.LEFT_DRIFT) ? 90 : -90);
-//
-//                turn = new AutoTurn(angle, 5);
-//                turn.init();
-//            }
-//
-//            isTurning = turn.execute();
-//
-//        } else if (DriverInputControlSRX.getInstance()
-//                .getPOVButton(RobotButtonType.NUDGE) == 90) {
-//            update(-NUDGE_POWER_TURN, NUDGE_POWER_TURN);
-//        } else if (DriverInputControlSRX.getInstance()
-//                .getPOVButton(RobotButtonType.NUDGE) == 270) {
-//            update(NUDGE_POWER_TURN, -NUDGE_POWER_TURN);
-//        } else if (DriverInputControlSRX.getInstance()
-//                .getPOVButton(RobotButtonType.NUDGE) == 0) {
-//            update(-NUDGE_POWER, -NUDGE_POWER);
-//        } else if (DriverInputControlSRX.getInstance()
-//                .getPOVButton(RobotButtonType.NUDGE) == 180) {
-//            update(NUDGE_POWER, NUDGE_POWER);
-//        } else {
-//            update(driverInput.getLeftDrive(), driverInput.getRightDrive());
-//        }
+        // if ((DriverInputControlSRX.getInstance()
+        // .getButton(RobotButtonType.LEFT_DRIFT)
+        // || DriverInputControlSRX.getInstance()
+        // .getButton(RobotButtonType.RIGHT_DRIFT))
+        // && !isTurning) {
+        //
+        // if (!isTurning) {
+        //
+        // double angle = (DriverInputControlSRX.getInstance()
+        // .getButton(RobotButtonType.LEFT_DRIFT) ? 90 : -90);
+        //
+        // turn = new AutoTurn(angle, 5);
+        // turn.init();
+        // }
+        //
+        // isTurning = turn.execute();
+        //
+        // } else if (DriverInputControlSRX.getInstance()
+        // .getPOVButton(RobotButtonType.NUDGE) == 90) {
+        // update(-NUDGE_POWER_TURN, NUDGE_POWER_TURN);
+        // } else if (DriverInputControlSRX.getInstance()
+        // .getPOVButton(RobotButtonType.NUDGE) == 270) {
+        // update(NUDGE_POWER_TURN, -NUDGE_POWER_TURN);
+        // } else if (DriverInputControlSRX.getInstance()
+        // .getPOVButton(RobotButtonType.NUDGE) == 0) {
+        // update(-NUDGE_POWER, -NUDGE_POWER);
+        // } else if (DriverInputControlSRX.getInstance()
+        // .getPOVButton(RobotButtonType.NUDGE) == 180) {
+        // update(NUDGE_POWER, NUDGE_POWER);
+        // } else {
+        // update(driverInput.getLeftDrive(), driverInput.getRightDrive());
+        // }
 
         if (DriverInputControlSRX.getInstance()
                 .getButton(RobotButtonType.GEAR_SHIFT)) {
             isLowGear = false;
-        }
-        else {
+        } else {
             isLowGear = true;
         }
     }
-    
+
     public void update(double leftJoystick, double rightJoystick) {
         if (!isTurning || (leftJoystick > 0 || rightJoystick > 0)) {
             isTurning = false;
@@ -126,8 +129,9 @@ public class DrivetrainControl implements Module {
                         + rightDriveSpeed) / 2;
             }
 
-//            leftDriveSpeed = DriverInputControlSRX.expScale(leftDriveSpeed);
-//            rightDriveSpeed = DriverInputControlSRX.expScale(rightDriveSpeed);
+            // leftDriveSpeed = DriverInputControlSRX.expScale(leftDriveSpeed);
+            // rightDriveSpeed =
+            // DriverInputControlSRX.expScale(rightDriveSpeed);
         } else if (isTurning) {
             leftDriveSpeed = leftJoystick;
             rightDriveSpeed = rightJoystick;
@@ -186,16 +190,25 @@ public class DrivetrainControl implements Module {
         this.rightDriveSpeed = driveSpeed;
         this.leftDriveSpeed = driveSpeed;
     }
-    
+
     public void updateOutputs() {
-        //100 represents conversion from seconds in the max speed to the .01 second rate that the talons takes
-        double leftDriveVelocity = -leftDriveSpeed * maxSpeed / (Math.PI * RobotConfiguration.WHEEL_DIAMETER / 12.0) * TICKS_IN_ROTATION;
-        double rightDriveVelocity = rightDriveSpeed * maxSpeed / (Math.PI * RobotConfiguration.WHEEL_DIAMETER / 12.0) * TICKS_IN_ROTATION;
-        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(leftDriveVelocity);
-        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(rightDriveVelocity);
-                
-        DriverStation.reportError("\nGoal:: Left: " + leftDriveVelocity + " Right: " + rightDriveVelocity, false);
-        DriverStation.reportError("\nEncoder:: Left: " + robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).get() + " Right: " + robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
-        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, isLowGear);
+        // 100 represents conversion from seconds in the max speed to the .01
+        // second rate that the talons takes
+        double leftDriveVelocity = -leftDriveSpeed * maxSpeed
+                / (Math.PI * RobotConfiguration.WHEEL_DIAMETER / 12.0)
+                * TICKS_IN_ROTATION;
+        double rightDriveVelocity = rightDriveSpeed * maxSpeed
+                / (Math.PI * RobotConfiguration.WHEEL_DIAMETER / 12.0)
+                * TICKS_IN_ROTATION;
+            robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(leftDriveVelocity);
+            robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(rightDriveVelocity);
+
+        // DriverStation.reportError("\nGoal:: Left: " + leftDriveVelocity + "
+        // Right: " + rightDriveVelocity, false);
+//        DriverStation.reportError(
+//                        "\nSpeed:: Left: " + -leftDriveSpeed + " Right: " + rightDriveSpeed, false);
+//        DriverStation.reportError("\nOutput Value:: Left: " + robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).get() + " Right: " + robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
+        RobotControlWithSRX.getInstance()
+                .updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, isLowGear);
     }
 }
