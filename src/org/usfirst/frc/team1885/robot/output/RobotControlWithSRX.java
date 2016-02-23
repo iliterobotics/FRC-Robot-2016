@@ -27,6 +27,7 @@ public class RobotControlWithSRX {
     private Map<SensorType, CANTalon> sensors;
     private Map<RobotPneumaticType, Solenoid> singleSolenoids;
     private Map<RobotPneumaticType, DoubleSolenoid> doubleSolenoids;
+    private Map<Integer, LED> leds;
     private Compressor c;
 
     public static synchronized RobotControlWithSRX getInstance() {
@@ -45,6 +46,7 @@ public class RobotControlWithSRX {
         sensors = new HashMap<SensorType, CANTalon>();
         singleSolenoids = new HashMap<RobotPneumaticType, Solenoid>();
         doubleSolenoids = new HashMap<RobotPneumaticType, DoubleSolenoid>();
+        leds = new HashMap<Integer, LED>();
     }
     //Add outputs
     public void addTalonOutput(RobotMotorType type, int port) {
@@ -74,6 +76,12 @@ public class RobotControlWithSRX {
             talons.put(motorType, talon);
             sensors.put(sensorType, talon);
         }
+    }
+    public void addLED(int channel) {
+        leds.put(channel, new LED(channel));
+    }
+    public Map<Integer, LED> getLEDs() {
+        return leds;
     }
     public void addSingleSolenoid(RobotPneumaticType type, int port) {
         singleSolenoids.put(type, new Solenoid(port));
@@ -141,5 +149,20 @@ public class RobotControlWithSRX {
     }
     public void gearShift(boolean gear) {
         singleSolenoids.get(RobotPneumaticType.GEAR_SHIFT).set(gear);
+    }
+    public void setPWMRate(int channel, double rate) {
+        leds.get(channel).setPWMRate(rate);
+    }
+    public void set(int channel, boolean value) {
+        leds.get(channel).set(value);
+    }
+    public void updateDutyCycle(int channel, double dutyCycle) {
+        leds.get(channel).updateDutyCycle(dutyCycle);
+    }
+    public void pulse(int channel, float pulseLength) {
+        leds.get(channel).pulse(channel, pulseLength);
+    }
+    public void enablePWM(int channel, double initialDutyCycle) {
+        leds.get(channel).enablePWM(initialDutyCycle);
     }
 }

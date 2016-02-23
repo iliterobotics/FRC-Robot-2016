@@ -43,6 +43,9 @@ public class RobotConfiguration {
         JoystickButtonMap joystickButtonMap = JoystickButtonMap.getInstance();
         ModuleControl moduleControl = ModuleControl.getInstance();
         
+        // Add Programmable LEDs
+        robotControl.addLED(0);
+        
         
         // Add JoystickType Configurations
         driverInputControl.addJoystick(RobotJoystickType.LEFT_DRIVE, new Joystick(0));
