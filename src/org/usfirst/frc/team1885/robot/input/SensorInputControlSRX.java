@@ -103,6 +103,7 @@ public class SensorInputControlSRX {
         Timer.delay(.3); // Time needed to calibrate gyro
         INITIAL_PITCH = navx.getPitch();
         INITIAL_ROLL = navx.getRoll();
+        DriverStation.reportError("\nGyro Calibrated at: " + getYaw(), false);
     }
     //Get gyro values
     public double getPitch() {

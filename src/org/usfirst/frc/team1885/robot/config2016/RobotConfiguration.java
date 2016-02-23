@@ -28,7 +28,7 @@ import edu.wpi.first.wpilibj.SerialPort;
  *          mappings for the robot Also keeps track of ports for motors
  */
 public class RobotConfiguration {
-    public static final double WHEEL_DIAMETER = 9.0;
+    public static final double WHEEL_DIAMETER = 8.332444254557291;
     public static final int ARM_JOINT_A_PORT = 1; // 5 on real robot
     public static final int ARM_JOINT_B_PORT = 2; // 6 on real robot
     public static final double MAX_SPEED = .8;

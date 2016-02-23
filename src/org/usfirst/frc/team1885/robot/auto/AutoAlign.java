@@ -1,15 +1,14 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * This class rotates the robot into it's initial facing - yaw - position.
@@ -23,7 +22,7 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 public class AutoAlign extends AutoCommand {
 
     private final double P, I, D;
-    private final double ALIGNMENT_ERROR = .5;
+    private final double ALIGNMENT_ERROR = 1;
     private final double MIN_SPEED = 0.225;
     private double targetDegree;
 //    private PID pid;
@@ -31,7 +30,7 @@ public class AutoAlign extends AutoCommand {
     private double rightDrivePower;
     private double leftDrivePower;
     private double initialYaw;
-    private static final double RADIUS = 16.5;
+    public static final double TURN_RADIUS = 16;
     
     public AutoAlign() {
         this(0);
@@ -67,8 +66,8 @@ public class AutoAlign extends AutoCommand {
         
         double currentTicksLeft = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get();
         double currentTicksRight =RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(Math.toRadians(targetDegree) * RADIUS /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(Math.toRadians(targetDegree) * RADIUS /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(Math.toRadians(targetDegree) * TURN_RADIUS /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(Math.toRadians(targetDegree) * TURN_RADIUS /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
         return true;
     }
 
@@ -105,11 +104,11 @@ public class AutoAlign extends AutoCommand {
 //                    : rightDrivePower);
 //        }
 //
-//        if (Math.abs((difference < 0 ? difference + 360 : difference)) < ALIGNMENT_ERROR) {
-//            DriverStation.reportError("\nAligned.", false);
-//            this.reset();
-//            return true;
-//        }
+        if (Math.abs((difference < 0 ? difference + 360 : difference)) < ALIGNMENT_ERROR) {
+            DriverStation.reportError("\nAligned.", false);
+            this.reset();
+            return true;
+        }
 //        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDrivePower);
 //        DrivetrainControl.getInstance().setRightDriveSpeed(rightDrivePower);
         
