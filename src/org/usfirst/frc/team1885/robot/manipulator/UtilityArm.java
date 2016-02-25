@@ -24,10 +24,17 @@ public class UtilityArm implements Module {
 
     public static final double LENGTH_A = 17.5; // length of arm A
     public static final double LENGTH_B = 18; // length of arm B
-    public static final double CONVERSION_FACTOR = 1024 / 360.0; // multiplier to convert from degrees to ticks
-    public static final double DEF_A_ANGLE = 10 / CONVERSION_FACTOR, // Starting tick amount of arm A
-                               DEF_B_ANGLE = 173 / CONVERSION_FACTOR; // Starting tick amount of arm B
-    private static final double DEGREE_MARGIN_ERR = 2 / CONVERSION_FACTOR;
+    public static final double CONVERSION_FACTOR = 1024 / 360.0; // multiplier
+                                                                 // to convert
+                                                                 // from degrees
+                                                                 // to ticks
+    public static final double DEF_A_ANGLE = 10 * CONVERSION_FACTOR, // Starting
+                                                                     // tick
+                                                                     // amount
+                                                                     // of arm A
+            DEF_B_ANGLE = 173 * CONVERSION_FACTOR; // Starting tick amount of
+                                                   // arm B
+    private static final double DEGREE_MARGIN_ERR = 2 * CONVERSION_FACTOR;
 
     private double jointAPosition; // storage for updating the A angle
     private double jointBPosition; // storage for updating the B angle
@@ -35,10 +42,11 @@ public class UtilityArm implements Module {
     private double bP, bI, bD; // values for the PID to move joint B
     private double x, y; // x and y positions that arm is moving towards or at
 
+    private MotorState jointAState; // used for keeping track of the motor state
+                                    // for arm A
+    private MotorState jointBState; // used for keeping track of the motor state
+                                    // for arm B
 
-    private MotorState jointAState; // used for keeping track of the motor state for arm A
-    private MotorState jointBState; // used for keeping track of the motor state for arm B
-    
     private DriverInputControlSRX driverInputControl;
     private RobotControlWithSRX robotControl;
 
@@ -84,10 +92,10 @@ public class UtilityArm implements Module {
         if (driverInputControl.isResetButtonDown()) {
             resetPos();
         }
-        //joystick stuff to put in later
-        //double joystick_x = ;
-        //double joystick_y = ;
-        //goTo(x + joystick_x, y + joysick_y);
+        // joystick stuff to put in later
+        // double joystick_x = ;
+        // double joystick_y = ;
+        // goTo(x + joystick_x, y + joysick_y);
         updateOutputs();
     }
 
@@ -97,7 +105,8 @@ public class UtilityArm implements Module {
     }
 
     /**
-     * A simple down to earth equation for calculating the angles required to reach a point
+     * A simple down to earth equation for calculating the angles required to
+     * reach a point
      * 
      * @param x
      *            the x coordinate of the new end-point
@@ -108,7 +117,7 @@ public class UtilityArm implements Module {
 
         this.x = x;
         this.y = y;
-        
+
         if (x > LENGTH_A - 2 && y < LENGTH_B - 2) {
             x = LENGTH_A - 2;
             y = LENGTH_B - 2;
@@ -144,7 +153,6 @@ public class UtilityArm implements Module {
         double transformedY = (y - finaly);
         jointBPosition = Math.toDegrees(Math.atan2(transformedY, transformedX));
 
-
         if (jointBPosition < 0) {
             jointBPosition += 360;
         }
@@ -162,26 +170,28 @@ public class UtilityArm implements Module {
             jointBPosition = jointAPosition;
         }
 
-
-
-        jointAPosition = jointAPosition / CONVERSION_FACTOR
+        jointAPosition = jointAPosition * CONVERSION_FACTOR
                 + SensorInputControlSRX.getInstance().INITIAL_POT_A_POSITION;
-        jointBPosition = jointBPosition / CONVERSION_FACTOR
+        jointBPosition = jointBPosition * CONVERSION_FACTOR
                 + SensorInputControlSRX.getInstance().INITIAL_POT_B_POSITION;
     }
-    
+
     /**
      * Method for autonomous use to determine if the arm has moved to position
-     * @return Returns boolean whether or not the arm has reached the proper angles within a margin of error
+     * 
+     * @return Returns boolean whether or not the arm has reached the proper
+     *         angles within a margin of error
      */
     public boolean isFinished() {
-        boolean isJointAFinished = Math.abs(robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).get() 
-                                    - jointAPosition) < DEGREE_MARGIN_ERR;
-        boolean isJointBFinished = Math.abs(robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).get()
-                                    - jointBPosition) < DEGREE_MARGIN_ERR;
+        boolean isJointAFinished = Math.abs(
+                robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).get()
+                        - jointAPosition) < DEGREE_MARGIN_ERR;
+        boolean isJointBFinished = Math.abs(
+                robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).get()
+                        - jointBPosition) < DEGREE_MARGIN_ERR;
         return isJointAFinished && isJointBFinished;
     }
-    
+
     public void resetPos() {
         jointAPosition = DEF_A_ANGLE;
         jointBPosition = DEF_B_ANGLE;
