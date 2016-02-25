@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1885.robot.modules.drivetrain;
 
-import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
@@ -13,8 +12,6 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 public class DrivetrainControl implements Module {
@@ -33,7 +30,6 @@ public class DrivetrainControl implements Module {
     private DriverInputControlSRX driverInput;
     private RobotControlWithSRX robotSRX;
     private boolean isTurning;
-    private AutoTurn turn;
     public static final double NUDGE_POWER = 0.15;
     public static final double NUDGE_POWER_TURN = 0.75;
     private static DrivetrainControl instance;
