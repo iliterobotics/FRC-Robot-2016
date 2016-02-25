@@ -1,9 +1,6 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
-
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * 
@@ -13,17 +10,11 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class AutoReachedDefense extends AutoCommand {
 
-    private final double MAX_DISTANCE = 5;
-
     private SensorInputControlSRX sensorInputControl = SensorInputControlSRX
             .getInstance();
-    double rightEncoderDistance;
-    double leftEncoderDistance;
 
     @Override
     public boolean init() {
-        rightEncoderDistance = 0;
-        leftEncoderDistance = 0;
         return true;
     }
 
