@@ -39,9 +39,13 @@ public class DrivetrainControl implements Module {
     private static DrivetrainControl instance;
     private boolean isLowGear;
 
-    private static final double P = .25;
-    private static final double I = 0.0;
-    private static final double D = 0.0;
+    private static final double speedP = .25;
+    private static final double speedI = 0.0;
+    private static final double speedD = 0.0;
+    
+    private static final double positionP = 2.0;
+    private static final double positionI = 0.0002;
+    private static final double positionD = 0;
 
     private DrivetrainControl(final double d, final double m) {
         maxSpeed = m;
@@ -52,11 +56,7 @@ public class DrivetrainControl implements Module {
         driverInput = DriverInputControlSRX.getInstance();
         robotSRX = RobotControlWithSRX.getInstance();
 
-      robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Speed);
-      robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Speed);
-
-        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
-        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
+        setControlMode(TalonControlMode.Speed);
     }
     public static synchronized DrivetrainControl getInstance() {
         if (instance == null) {
@@ -190,12 +190,14 @@ public class DrivetrainControl implements Module {
         robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(mode);
         switch(mode){
         case Speed:
-            robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
-            robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
+            robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(speedP, speedI, speedD);
+            robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(speedP, speedI, speedD);
             robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(0);
             robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(0);
             break;
         case Position:
+            robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(positionP, positionI, positionD);
+            robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(positionP, positionI, positionD);
             robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(SensorInputControlSRX.getInstance().getEncoderPos(SensorType.LEFT_ENCODER));
             robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(SensorInputControlSRX.getInstance().getEncoderPos(SensorType.LEFT_ENCODER));
             break;
