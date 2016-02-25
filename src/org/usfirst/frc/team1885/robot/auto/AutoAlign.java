@@ -20,14 +20,9 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class AutoAlign extends AutoCommand {
 
-    private final double P, I, D;
     private final double ALIGNMENT_ERROR = 1;
-    private final double MIN_SPEED = 0.225;
     private double targetDegree;
-//    private PID pid;
     private SensorInputControlSRX sensorInputControl;
-    private double rightDrivePower;
-    private double leftDrivePower;
     private double initialYaw;
     public static final double TURN_RADIUS = 16;
     
@@ -39,21 +34,10 @@ public class AutoAlign extends AutoCommand {
         sensorInputControl = SensorInputControlSRX.getInstance();
         initialYaw = (sensorInputControl.getYaw() + 360) % 360;
         targetDegree = (degree - initialYaw + 360) % 360;
-//        double scale = 180 / Math.abs(degree == 0 ? 1 : degree);
-//        P = 1 / scale;
-//        I = 0.001 / scale;
-//        D = 5 / scale;
-//        pid = new PID(P, I, D);
-//        pid.setScalingValue(targetDegree);
-        
-        P = 2.0;
-        I = 0.0002;
-        D = 0;
     }
 
     @Override
     public boolean init() {
-        rightDrivePower = leftDrivePower = 0;
         DrivetrainControl.getInstance().setControlMode(TalonControlMode.Position);
         
         double currentTicksLeft = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get();
@@ -66,60 +50,28 @@ public class AutoAlign extends AutoCommand {
     @Override
     public boolean execute() {
         double yaw = sensorInputControl.getYaw();
-
-//        if (yaw < 0) {
-//            yaw += 360;
-//        }
-
         double difference = (yaw - targetDegree);
 
-//        rightDrivePower = pid.getPID(difference < -180 ? -360 : 0, difference);
-//        leftDrivePower = rightDrivePower * -1;
-
-        DriverStation.reportError("\n Degree to turn : " + targetDegree
-                + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
-
-//        if (leftDrivePower > 0) {
-//            leftDrivePower = (leftDrivePower < MIN_SPEED ? MIN_SPEED
-//                    : leftDrivePower);
-//        } else if (leftDrivePower < 0) {
-//            leftDrivePower = (leftDrivePower > -MIN_SPEED ? -MIN_SPEED
-//                    : leftDrivePower);
-//        }
-//
-//        if (rightDrivePower > 0) {
-//            rightDrivePower = (rightDrivePower < MIN_SPEED ? MIN_SPEED
-//                    : rightDrivePower);
-//        } else if (rightDrivePower < 0) {
-//            rightDrivePower = (rightDrivePower > -MIN_SPEED ? -MIN_SPEED
-//                    : rightDrivePower);
-//        }
-//
+//        DriverStation.reportError("\n Degree to turn : " + targetDegree
+//                + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
+        
         if (Math.abs(difference) < ALIGNMENT_ERROR) {
             DriverStation.reportError("\nAligned.", false);
             this.reset();
             return true;
         }
-//        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDrivePower);
-//        DrivetrainControl.getInstance().setRightDriveSpeed(rightDrivePower);
         
         return false;
     }
 
     @Override
     public boolean updateOutputs() {
-//        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDrivePower,
-//                rightDrivePower);
+        //no outputs, controlled by SRX PID
         return false;
     }
 
     @Override
     public void reset() {
         DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
-//        pid.reset();
-//        leftDrivePower = 0;
-//        rightDrivePower = 0;
-//        DrivetrainControl.getInstance().setLeftDriveSpeed(0);
-//        DrivetrainControl.getInstance().setRightDriveSpeed(0);
     }
 }
