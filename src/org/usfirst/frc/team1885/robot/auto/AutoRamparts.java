@@ -4,6 +4,7 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -14,7 +15,6 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @version <2/13/2016>
  */
 public class AutoRamparts extends AutoCommand {
-    // Made by Aaron. Fixed by Noah. Pushed by Teddy.
     private final double YAW_ZONE = 5.0; // Margin of error to be within in
                                          // order to be considered straight.
     private final double RAMPART_SPEED_MAX = 0.6; // Subject to testing change
@@ -25,16 +25,17 @@ public class AutoRamparts extends AutoCommand {
             .getInstance();
     private DrivetrainControl driveTrainControl = DrivetrainControl
             .getInstance();
-    private AutoCrossedDefense acd;
+    private AutoCrossedDefense crossedDefense;
     private double leftDriveSpeed;
     private double rightDriveSpeed;
 
     @Override
     public boolean init() {
+        DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
         reset();
         leftDriveSpeed = driveTrainControl.getLeftDriveSpeed();
         rightDriveSpeed = driveTrainControl.getRightDriveSpeed();
-        acd = new AutoCrossedDefense();
+        crossedDefense = new AutoCrossedDefense();
         return true;
     }
 
@@ -43,7 +44,7 @@ public class AutoRamparts extends AutoCommand {
         double yaw = sensorControl.getYaw();
         DriverStation.reportError("\nRight side: " + leftDriveSpeed
                 + " --- Left side: " + rightDriveSpeed, false);
-        if (acd.execute()) {
+        if (crossedDefense.execute()) {
             return true;
         }
         if (this.inZone(yaw)) {
@@ -66,7 +67,7 @@ public class AutoRamparts extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-        robotControl.updateDriveSpeed(leftDriveSpeed, rightDriveSpeed);
+        DrivetrainControl.getInstance().update();
         return true;
     }
 
