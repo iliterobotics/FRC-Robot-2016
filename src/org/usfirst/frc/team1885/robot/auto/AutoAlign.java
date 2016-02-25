@@ -6,7 +6,6 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -55,11 +54,7 @@ public class AutoAlign extends AutoCommand {
     @Override
     public boolean init() {
         rightDrivePower = leftDrivePower = 0;
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Position);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Position);
-        
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
+        DrivetrainControl.getInstance().setControlMode(TalonControlMode.Position);
         
         double currentTicksLeft = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get();
         double currentTicksRight =RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
@@ -120,7 +115,7 @@ public class AutoAlign extends AutoCommand {
 
     @Override
     public void reset() {
-        RobotControlWithSRX.getInstance().resetEncoderVoltage();
+        DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
 //        pid.reset();
 //        leftDrivePower = 0;
 //        rightDrivePower = 0;

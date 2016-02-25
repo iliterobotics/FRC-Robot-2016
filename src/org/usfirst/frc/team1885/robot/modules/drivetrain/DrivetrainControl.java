@@ -65,12 +65,6 @@ public class DrivetrainControl implements Module {
         }
         return instance;
     }
-    public void init(){
-        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Speed);
-        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Speed);
-        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
-        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
-    }
     public boolean getIsTurning() {
         return isTurning;
     }
@@ -189,6 +183,24 @@ public class DrivetrainControl implements Module {
     public void straightDrive(double driveSpeed) {
         this.rightDriveSpeed = driveSpeed;
         this.leftDriveSpeed = driveSpeed;
+    }
+    
+    public void setControlMode(TalonControlMode mode){
+        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(mode);
+        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(mode);
+        switch(mode){
+        case Speed:
+            robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
+            robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
+            robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(0);
+            robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(0);
+            break;
+        case Position:
+            robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(SensorInputControlSRX.getInstance().getEncoderPos(SensorType.LEFT_ENCODER));
+            robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(SensorInputControlSRX.getInstance().getEncoderPos(SensorType.LEFT_ENCODER));
+            break;
+        default:
+        }
     }
 
     public void updateOutputs() {

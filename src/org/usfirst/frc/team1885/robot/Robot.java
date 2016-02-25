@@ -17,6 +17,7 @@ import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SampleRobot;
 import edu.wpi.first.wpilibj.Timer;
@@ -78,7 +79,7 @@ public class Robot extends SampleRobot {
      * Runs the motors with tank steering.
      */
     public void operatorControl() {
-        DrivetrainControl.getInstance().init();
+        DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
         while (isOperatorControl() && isEnabled()) {
             //Update Inputs
             sensorInputControl.update();
