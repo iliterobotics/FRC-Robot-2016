@@ -6,9 +6,8 @@ import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
-import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
-import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
+import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.Joystick.AxisType;
@@ -132,8 +131,8 @@ public class DriverInputControlSRX {
                 .println("LEFT= " + leftJoystick + ", RIGHT= " + rightJoystick);
         this.rightDriveSpeed = deadzone(rightJoystick);
         this.leftDriveSpeed = deadzone(leftJoystick);
-        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
-                rightDriveSpeed);
+        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
+        DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
     }
     public double getControllerTwist() {
         return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kThrottle);

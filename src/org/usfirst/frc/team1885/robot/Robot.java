@@ -5,10 +5,14 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
+import org.usfirst.frc.team1885.robot.modules.Module;
+import org.usfirst.frc.team1885.robot.modules.ModuleControl;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -34,106 +38,65 @@ import edu.wpi.first.wpilibj.Timer;
  */
 
 public class Robot extends SampleRobot {
-    private final double diameter;
     private LinkedList<AutoCommand> commands;
     private long timeTracker = 0;
     private double delayTime = 1;// Input time in seconds
 
+    //Output Control
     private RobotControlWithSRX robotControl;
+    //InputControl
     private DriverInputControlSRX driverInputControl;
     private SensorInputControlSRX sensorInputControl;
+    // Module Control
+    private Module[] modules;
 
     private AutoTemplate activeTemplate;
 
     public Robot() {
-
+        //Initialize Output Control
         robotControl = RobotControlWithSRX.getInstance();
+        //Initialize Input Control
         driverInputControl = DriverInputControlSRX.getInstance();
         sensorInputControl = SensorInputControlSRX.getInstance();
         try {
             Timer.delay(0.5);
+            //Configure Robot
             RobotConfiguration.configureRobot();
+            //Initialize Sensor Values
             sensorInputControl.init();
+            Shooter.getInstance().init();
+            DriverStation.reportError("\nRobot configured", false);
         } catch (Exception e) {
-            DriverStation.reportError("Robot - Error configuring Robot", false);
+            DriverStation.reportError("\nRobot - Error configuring Robot", false);
         }
-        diameter = 9.0;
-        ActiveIntake.getInstance();
-
-        DrivetrainControl.getInstance().addSpeed(1, 15.0);
-        robotControl = RobotControlWithSRX.getInstance();
-
+//        Initialize Modules
+        modules = ModuleControl.getInstance().getModules();
+        DriverStation.reportError("\nRobot Intialized", false);
     }
 
     /**
      * Runs the motors with tank steering.
      */
     public void operatorControl() {
-
+        DrivetrainControl.getInstance().init();
         while (isOperatorControl() && isEnabled()) {
-            // New canbus code
-            // AuxArm.getInstance().update();
+            //Update Inputs
             sensorInputControl.update();
             driverInputControl.update();
-            ActiveIntake.getInstance().update();
-            DrivetrainControl.getInstance().update();
-            Shooter.getInstance().update();
+            //Update Module Data
+            for(Module m: modules) {
+                m.update();
+            }
+            //Update Module Outputs
+            for(Module m: modules) {
+                m.updateOutputs();
+            }
             Timer.delay(.005);
         }
-
-        // System.out.println(SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_RIGHT_ENCODER)
-        // + " "
-        // +
-        // SensorInputControl.getInstance().getEncoderTicks(SensorType.DRIVE_TRAIN_LEFT_ENCODER)
-        // + " " +
-        // SensorInputControl.getInstance().getEncoderTicks(SensorType.TOTE_ENCODER)
-        // + " " +
-        // SensorInputControl.getInstance().isActive(SensorType.RECYCLE_BIN_LOWER_LIMIT)
-        // + " " +
-        // SensorInputControl.getInstance().isActive(SensorType.RECYCLE_BIN_UPPER_LIMIT));
-        // if (System.currentTimeMillis() - timeTracker >= (delayTime * 1000)) {
-        // timeTracker = System.currentTimeMillis();
-        // try {
-        // robotStatusService.update();
-        // RobotServer.getInstance().send(robotStatusService.getTm());
-        // } catch (Exception e) {
-        // e.printStackTrace();
-        // }
-        //
-        //// System.out.println(SensorInputControl.getInstance().getNAVX()
-        //// .getYaw360());
-        // }
-        /*
-         * if((DriverInputControl.getInstance().getButton(
-         * RobotButtonType.CANCEL_AUTOMATION))) { this.activeTemplate = null; }
-         * 
-         * // if((DriverInputControl.getInstance().getButton( //
-         * RobotButtonType.AUTOMATE_2_TOTES)) || this.activeTemplate != null) {
-         * // // if(this.activeTemplate == null) { // this.activeTemplate =
-         * AutoTemplate.automate2Totes(); // } // //
-         * if(this.activeTemplate.execute()) { // this.activeTemplate = null; //
-         * } // // } else { this.activeTemplate = null;
-         * DrivetrainControl.getInstance().update();
-         * ActiveIntake.getInstance().update(); System.out.println(
-         * "Updated active intake" ); // System.out.println(
-         * "Robot::tele - lidar: " + //
-         * SensorInputControl.getInstance().getLidarSensor(SensorType.LIDAR).
-         * getDistance()); // BackupRoutine.getInstance().update();
-         * 
-         * // robotControl.updateDriveSpeed(DrivetrainControl.getInstance().
-         * getLeftDriveSpeed(), //
-         * DrivetrainControl.getInstance().getRightDriveSpeed());
-         * DrivetrainControl.getInstance().updateOutputs();
-         * ActiveIntake.getInstance().updateOutputs(); System.out.println(
-         * "Updated active intake outputs" ); } Timer.delay(.005); // wait for a
-         * motor update time }
-         */
     }
 
     public void autonomous() {
         AutonomousRoutine ar = new AutonomousRoutine(this);
-//        sensorrx.resetEncoder(SensorType.LEFT_ENCODER);
-//        sensorrx.resetEncoder(SensorType.RIGHT_ENCODER);
         ar.execute();
     }
     

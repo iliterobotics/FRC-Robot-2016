@@ -84,7 +84,6 @@ public class UtilityArm implements Module {
         // false);
         // DriverStation.reportError("current B angle:" + getAngleB() + "\n",
         // false);
-        updateOutputs();
         // DriverStation.reportError("\n\nX Distance = " + getDistanceX(),
         // false);
         // DriverStation.reportError("\nY Distance = " + getDistanceY(), false);

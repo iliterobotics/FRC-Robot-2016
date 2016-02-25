@@ -24,7 +24,7 @@ public class ActiveIntake implements Module {
     private boolean previousIntakeToggle;
     private static final double delay = 1000;
 
-    protected ActiveIntake() {
+    private ActiveIntake() {
         driverInputControl = DriverInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
         //isIntaking = true;
@@ -106,7 +106,6 @@ public class ActiveIntake implements Module {
     @Override
     public void update() {
         updateIntake();
-        updateOutputs();
     }
     public void intakeUp(){
        isIntaking = DoubleSolenoid.Value.kForward;

@@ -63,12 +63,49 @@ public class SensorInputControlSRX {
 //         getEncoderDistance(SensorType.LEFT_ENCODER), false);
 //         DriverStation.reportError("\n\nZero Tilt:: " + getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
     }
+    //Create initial sensor readings
+    public void init() {
+//      INITIAL_POT_A_POSITION = rsrx.getSensor()
+//              .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw()
+//              * UtilityArm.CONVERSION_FACTOR;
+//      INITIAL_POT_B_POSITION = rsrx.getSensor()
+//              .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
+//              * UtilityArm.CONVERSION_FACTOR;
+      INITIAL_TILT_POSITION = getAnalogGeneric(
+              SensorType.SHOOTER_TILT_POTENTIOMETER);
+      DriverStation.reportError("\nInit Tilt" + INITIAL_TILT_POSITION, false);
+      INITIAL_TWIST_POSITION = getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER);
+      DriverStation.reportError("\nInit Twist " + INITIAL_TWIST_POSITION, false);
+  }
     public double getInitPitch() {
         return INITIAL_PITCH;
     }
     public double getInitRoll() {
         return INITIAL_ROLL;
     }
+    //Get intial reading value
+    public double getInitialPotAPostition() {
+        return INITIAL_POT_A_POSITION;
+    }
+    public double getInitialPotBPostition() {
+        return INITIAL_POT_B_POSITION;
+    }
+    //Create navx
+    public void createNavX(SerialPort.Port port) {
+        navx = new AHRS(port);
+    }
+    public AHRS getNavX() {
+        return navx;
+    }
+    //Calibrate navx
+    public void calibrateGyro() {
+        navx.zeroYaw();
+        Timer.delay(.3); // Time needed to calibrate gyro
+        INITIAL_PITCH = navx.getPitch();
+        INITIAL_ROLL = navx.getRoll();
+        DriverStation.reportError("\nGyro Calibrated at: " + getYaw(), false);
+    }
+    //Get gyro values
     public double getPitch() {
         return navx.getPitch();
     }
@@ -78,31 +115,14 @@ public class SensorInputControlSRX {
     public double getRoll() {
         return navx.getRoll();
     }
-    public void init() {
-//        INITIAL_POT_A_POSITION = rsrx.getSensor()
-//                .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw()
-//                * UtilityArm.CONVERSION_FACTOR;
-//        INITIAL_POT_B_POSITION = rsrx.getSensor()
-//                .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
-//                * UtilityArm.CONVERSION_FACTOR;
-        INITIAL_TILT_POSITION = getAnalogGeneric(
-                SensorType.SHOOTER_TILT_POTENTIOMETER);
-        DriverStation.reportError("\nInit Tilt" + INITIAL_TILT_POSITION, false);
-        INITIAL_TWIST_POSITION = getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER);
-        DriverStation.reportError("\nInit Twist " + INITIAL_TWIST_POSITION, false);
-    }
+    //Getters
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
     }
     public double getPDPTemperature() {
         return PDP.getTemperature();
     }
-    public double getAnalogInPosition(SensorType type) {
-        return rsrx.getSensor().get(type).getAnalogInPosition();
-    }
-    public void setEncoderPosition(SensorType type, int pos) {
-        rsrx.getSensor().get(type).setEncPosition(pos);
-    }
+    //Get analog values
     public double getAnalogGeneric(SensorType type) {
         switch (type) {
         case SHOOTER_TILT_POTENTIOMETER:
@@ -112,6 +132,28 @@ public class SensorInputControlSRX {
             return rsrx.getSensor().get(type).getAnalogInRaw();
         }
     }
+    public double getAnalogInPosition(SensorType type) {
+        return rsrx.getSensor().get(type).getAnalogInPosition();
+    }
+    //Get encoder values
+    public int getEncoderPos(SensorType type) {
+        return rsrx.getSensor().get(type).getEncPosition();
+    }
+    public int getEncoderVelocity(SensorType type) {
+        return rsrx.getSensor().get(type).getEncVelocity();
+    }
+    public double getEncoderAbsolutePosition(SensorType type) {
+        return rsrx.getSensor().get(type).getPulseWidthPosition();
+    }
+    public double getEncoderDistance(SensorType type) {
+        if(type == SensorType.LEFT_ENCODER){
+            return -RobotConfiguration.WHEEL_DIAMETER * Math.PI
+                    * rsrx.getSensor().get(type).getEncPosition() / TICKS_IN_360;
+        }
+        return RobotConfiguration.WHEEL_DIAMETER * Math.PI
+                * rsrx.getSensor().get(type).getEncPosition() / TICKS_IN_360;
+    }
+    //Get zeroed value relative to the initial reading
     public double getZeroedPotentiometer(SensorType type) {
         switch (type) {
         case SHOOTER_TILT_POTENTIOMETER:
@@ -135,34 +177,7 @@ public class SensorInputControlSRX {
     public boolean digitalLimitSwitch(SensorType type) {
         return rsrx.getSensor().get(type).isFwdLimitSwitchClosed();
     }
-    public int getEncoderPos(SensorType type) {
-        return rsrx.getSensor().get(type).getEncPosition();
-    }
-
-    public int getEncoderVelocity(SensorType type) {
-        return rsrx.getSensor().get(type).getEncVelocity();
-    }
-    public void addPotentiometer(RobotMotorType motorType,
-            SensorType sensorType, int port) {
-        rsrx.addTalonSensor(motorType, sensorType, port);
-    }
-    public void addEncoder(RobotMotorType motorType, SensorType sensorType,
-            int port) {
-        rsrx.addTalonSensor(motorType, sensorType, port);
-    }
-    public double getEncoderAbsolutePosition(SensorType type) {
-        return rsrx.getSensor().get(type).getPulseWidthPosition();
-    }
-
-    public double getEncoderDistance(SensorType type) {
-        if(type == SensorType.LEFT_ENCODER){
-            return -RobotConfiguration.WHEEL_DIAMETER * Math.PI
-                    * rsrx.getSensor().get(type).getEncPosition() / TICKS_IN_360;
-        }
-        return RobotConfiguration.WHEEL_DIAMETER * Math.PI
-                * rsrx.getSensor().get(type).getEncPosition() / TICKS_IN_360;
-    }
-
+    //Add specialized sensors
     public void addLidarSensor(Port port) {
         ls = new LidarSensor(port);
     }
@@ -176,12 +191,7 @@ public class SensorInputControlSRX {
     public BuiltInAccelerometer getAccelerometer() {
         return bia;
     }
-    public void createNavX(SerialPort.Port port) {
-        navx = new AHRS(port);
-    }
-    public AHRS getNavX() {
-        return navx;
-    }
+    
     public void addPressureSensor(int channel) {
         pressureSensor = new PressureSensor(channel);
     }
@@ -190,21 +200,6 @@ public class SensorInputControlSRX {
     }
     public double getPressureVoltage() {
         return pressureSensor.getVoltage();
-    }
-    public void calibrateGyro() {
-        navx.zeroYaw();
-        Timer.delay(.3); // Time to calibrate gyro
-        INITIAL_PITCH = navx.getPitch();
-        INITIAL_ROLL = navx.getRoll();
-    }
-    public double getInitialPotAPostition() {
-        return INITIAL_POT_A_POSITION;
-    }
-    public double getInitialPotBPostition() {
-        return INITIAL_POT_B_POSITION;
-    }
-    public void resetEncoder(SensorType type) {
-        rsrx.getSensor().get(type).setEncPosition(0);
     }
     public double getPressure(){
         return pressureSensor.getPressure();
