@@ -72,6 +72,5 @@ public class AutoAlign extends AutoCommand {
 
     @Override
     public void reset() {
-        DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
     }
 }
