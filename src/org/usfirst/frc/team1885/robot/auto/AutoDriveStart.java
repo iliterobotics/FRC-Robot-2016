@@ -5,6 +5,7 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -19,8 +20,7 @@ public class AutoDriveStart extends AutoCommand {
     private double time;
     private double leftDriveOutput;
     private double rightDriveOutput;
-
-    private static double MIN_SPEED = 0.0;
+    private DrivetrainControl drivetrainControl;
 
     /**
      * Sends equal power to both sides of the Drive Train for specified amount
@@ -29,11 +29,11 @@ public class AutoDriveStart extends AutoCommand {
      * 
      * @param sec
      *            Time in seconds
-     * @param pow
-     *            Power from [-1, 1], or from -100% to 100%
+     * @param speed
+     *            Power from [-1, 1], or from -100% to 100% of max power
      */
-    public AutoDriveStart(double sec, double pow) {
-        rightDriveOutput = leftDriveOutput = pow;
+    public AutoDriveStart(double sec, double speed) {
+        this(speed);
         time = sec;
     }
 
@@ -41,20 +41,17 @@ public class AutoDriveStart extends AutoCommand {
      * Sends equal power to both sides of the Drive Train. Does not stop sending
      * power.
      * 
-     * @param pow
-     *            Power from [-1, 1], or from -100% to 100%
+     * @param speed
+     *            Power from [-1, 1], or from -100% to 100% of max power
      */
-    public AutoDriveStart(double pow) {
-        SensorInputControlSRX.getInstance().calibrateGyro();
-        rightDriveOutput = leftDriveOutput = pow;
+    public AutoDriveStart(double speed) {
+        drivetrainControl = DrivetrainControl.getInstance();
+        rightDriveOutput = leftDriveOutput = speed;
         time = 0;
         init();
     }
 
     public boolean execute() {
-        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveOutput);
-        DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveOutput);
-        updateOutputs();
         if (time != 0) {
             Timer.delay(time);
             reset();
@@ -62,19 +59,20 @@ public class AutoDriveStart extends AutoCommand {
         return true;
     }
     public void reset() {
-        DrivetrainControl.getInstance().setLeftDriveSpeed(0);
-        DrivetrainControl.getInstance().setRightDriveSpeed(0);
+        drivetrainControl.setLeftDriveSpeed(0);
+        drivetrainControl.setRightDriveSpeed(0);
     }
 
     public boolean updateOutputs() {
-        RobotControlWithSRX.getInstance().updateDriveSpeed(
-                DrivetrainControl.getInstance().getLeftDriveSpeed(),
-                DrivetrainControl.getInstance().getRightDriveSpeed());
+        drivetrainControl.updateOutputs();
         return true;
     }
 
     public boolean init() {
+        drivetrainControl.setControlMode(TalonControlMode.Speed);
         reset();
+        drivetrainControl.setLeftDriveSpeed(leftDriveOutput);
+        drivetrainControl.setRightDriveSpeed(rightDriveOutput);
         return true;
     }
 
