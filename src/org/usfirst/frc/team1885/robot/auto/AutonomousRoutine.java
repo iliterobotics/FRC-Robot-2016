@@ -111,8 +111,7 @@ public class AutonomousRoutine {
     public void autoLowBar() {
         double lowBarTravelDistance = 4.2 * 12; // Best distance from testing
         ActiveIntake.getInstance().intakeDown();
-        commands.add(
-                new AutoDriveDistance(lowBarTravelDistance, false, -.3, -.3));
+        commands.add(new AutoDriveDistance(lowBarTravelDistance, false));
     }
 
     /**
