@@ -17,8 +17,10 @@ public class AutoCalibrateWheels extends AutoCommand{
     private double rotations;
     private double yawChange;
     private double wheelDiameter;
+    RobotControlWithSRX robotControl;
     
     public AutoCalibrateWheels(double rotations){
+        robotControl = RobotControlWithSRX.getInstance();
         initialTickRight = initialTickLeft = currentTickRight = currentTickLeft = 0;
         yawChange = 0;
         P = 2.0;
@@ -30,28 +32,28 @@ public class AutoCalibrateWheels extends AutoCommand{
     
     @Override
     public boolean init() {
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Position);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Position);
+        robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Position);
+        robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Position);
         
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
         
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
+        robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
+        robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
         
-        initialTickLeft = SensorInputControlSRX.getInstance().getEncoderPos(SensorType.LEFT_ENCODER);
-        initialTickRight = SensorInputControlSRX.getInstance().getEncoderPos(SensorType.RIGHT_ENCODER);
+        initialTickLeft = robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get();
+        initialTickRight = robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
         
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(initialTickLeft + (rotations * 1024));
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(initialTickRight + (rotations * 1024));
+        robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).set(initialTickLeft + (rotations * 1024));
+        robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(initialTickRight + (rotations * 1024));
         DriverStation.reportError("Left Goal:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get(), false);
         return true;
     }
 
     @Override
     public boolean execute() {
-        currentTickRight = SensorInputControlSRX.getInstance().getEncoderPos(SensorType.RIGHT_ENCODER);
-        currentTickLeft = SensorInputControlSRX.getInstance().getEncoderPos(SensorType.LEFT_ENCODER);
+        currentTickRight = robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
+        currentTickLeft = robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get();
         DriverStation.reportError("\nCurrent Ticks:: Left: " + currentTickLeft + " Right: " + currentTickRight + "  Initial Ticks:: Left: " + initialTickLeft + " Right: " + initialTickRight, false);
         if(Math.abs(currentTickRight) - Math.abs(initialTickRight) >= (rotations * 1024) && Math.abs(Math.abs(currentTickLeft) - Math.abs(initialTickLeft)) >= (rotations * 1024)){
           yawChange = SensorInputControlSRX.getInstance().getYaw();
