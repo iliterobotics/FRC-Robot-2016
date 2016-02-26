@@ -99,9 +99,9 @@ public class ActiveIntake implements Module {
 
     public void updateOutputs() {
 //        DriverStation.reportError("\nIntake Motor Speed " + intakeSpeed + "\nSolenoid State" + isIntaking, false);
-        robotControl.updateIntakeMotor(intakeSpeed);
-        robotControl.updateDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER,
-                isIntaking);
+//        robotControl.updateIntakeMotor(intakeSpeed);
+//        robotControl.updateDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER,
+//                isIntaking);
     }
     @Override
     public void update() {

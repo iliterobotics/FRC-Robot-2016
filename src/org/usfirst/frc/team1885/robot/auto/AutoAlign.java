@@ -52,8 +52,8 @@ public class AutoAlign extends AutoCommand {
         double yaw = sensorInputControl.getYaw();
         double difference = (yaw - targetDegree);
 
-//        DriverStation.reportError("\n Degree to turn : " + targetDegree
-//                + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
+        DriverStation.reportError("\n Degree to turn : " + targetDegree
+                + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
         
         if (Math.abs(difference) < ALIGNMENT_ERROR) {
             DriverStation.reportError("\nAligned.", false);

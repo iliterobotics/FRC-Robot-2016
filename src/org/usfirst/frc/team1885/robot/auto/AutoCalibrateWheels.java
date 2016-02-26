@@ -44,6 +44,7 @@ public class AutoCalibrateWheels extends AutoCommand{
         
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(initialTickLeft + (rotations * 1024));
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(initialTickRight + (rotations * 1024));
+        DriverStation.reportError("Left Goal:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get(), false);
         return true;
     }
 
@@ -51,8 +52,8 @@ public class AutoCalibrateWheels extends AutoCommand{
     public boolean execute() {
         currentTickRight = SensorInputControlSRX.getInstance().getEncoderPos(SensorType.RIGHT_ENCODER);
         currentTickLeft = SensorInputControlSRX.getInstance().getEncoderPos(SensorType.LEFT_ENCODER);
-        DriverStation.reportError("\nCurrent Ticks: " + currentTickRight + "  Initial Ticks: " + initialTickRight, false);
-        if(currentTickRight - initialTickRight >= (rotations * 1024) && currentTickLeft - initialTickLeft >= (rotations * 1024)){
+        DriverStation.reportError("\nCurrent Ticks:: Left: " + currentTickLeft + " Right: " + currentTickRight + "  Initial Ticks:: Left: " + initialTickLeft + " Right: " + initialTickRight, false);
+        if(Math.abs(currentTickRight) - Math.abs(initialTickRight) >= (rotations * 1024) && Math.abs(Math.abs(currentTickLeft) - Math.abs(initialTickLeft)) >= (rotations * 1024)){
           yawChange = SensorInputControlSRX.getInstance().getYaw();
           wheelDiameter = (1.0 * Math.toRadians(yawChange) * AutoAlign.TURN_RADIUS) / Math.PI;
 //          wheelDiameter /= rotations;

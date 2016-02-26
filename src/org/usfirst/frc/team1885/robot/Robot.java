@@ -85,13 +85,15 @@ public class Robot extends SampleRobot {
             sensorInputControl.update();
             driverInputControl.update();
             //Update Module Data
-            for(Module m: modules) {
-                m.update();
-            }
+//            for(Module m: modules) {
+//                m.update();
+//            }
+            DrivetrainControl.getInstance().update();
+            DrivetrainControl.getInstance().updateOutputs();
             //Update Module Outputs
-            for(Module m: modules) {
-                m.updateOutputs();
-            }
+//            for(Module m: modules) {
+//                m.updateOutputs();
+//            }
             Timer.delay(.005);
         }
     }

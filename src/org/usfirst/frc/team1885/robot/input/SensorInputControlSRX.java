@@ -55,10 +55,10 @@ public class SensorInputControlSRX {
         
 //         Encoder values testing
          
-//         DriverStation.reportError("\nRight Encoder Value::" +
-//         getEncoderDistance(SensorType.RIGHT_ENCODER) +
-//         " --- Left Encoder Value:: " +
-//         getEncoderDistance(SensorType.LEFT_ENCODER), false);
+         DriverStation.reportError("\nRight Encoder Value::" +
+         getEncoderDistance(SensorType.RIGHT_ENCODER) +
+         " --- Left Encoder Value:: " +
+         getEncoderDistance(SensorType.LEFT_ENCODER), false);
 //         DriverStation.reportError("\n\nZero Tilt:: " + getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
     }
     //Create initial sensor readings

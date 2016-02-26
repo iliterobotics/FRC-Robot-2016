@@ -9,6 +9,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * Waits until the robot has traversed a certain distance. Moving forward 1 in
@@ -40,7 +41,7 @@ public class AutoDriveDistance extends AutoCommand {
 
     /**
      * @param distance
-     *            Distance to travel in inches
+     *            Distance to traveled in inches
      * @param doesStop
      *            If it should stop at the end of the distance
      */
@@ -50,7 +51,7 @@ public class AutoDriveDistance extends AutoCommand {
         sensorInputControl = SensorInputControlSRX.getInstance();
         this.distance = distance;
         this.doesStop = doesStop;
-        DrivetrainControl.getInstance().setControlMode(TalonControlMode.Position);
+        P = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).getP();
     }
     
     public AutoDriveDistance(double distance, boolean doesStop, double P){
@@ -65,19 +66,16 @@ public class AutoDriveDistance extends AutoCommand {
         disRight = sensorInputControl
                 .getEncoderDistance(SensorType.RIGHT_ENCODER) - initDisRight;
 
-        // DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
-        // DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
-
         differenceLeft = disLeft - distance;
         differenceRight = disRight - distance;
 
         isLeftFinished = Math.abs(differenceLeft) < ERROR;
         isRightFinished = Math.abs(differenceRight) < ERROR;
 
-//        DriverStation.reportError("\n\nDistance Left:: " + disLeft
-//                + "\ndistance Right:: " + disRight + "\nDifference Left:: "
-//                + differenceLeft + "\nDifference Right:: " + differenceRight,
-//                false);
+        DriverStation.reportError("\n\nDistance Left:: " + disLeft
+                + "\ndistance Right:: " + disRight + "\nDifference Left:: "
+                + differenceLeft + "\nDifference Right:: " + differenceRight,
+                false);
 
 //        DriverStation.reportError("\nRight Drive Speed:: " + rightDriveSpeed
 //                + "\nLeft Drive Speed:: " + leftDriveSpeed, false);
@@ -94,8 +92,8 @@ public class AutoDriveDistance extends AutoCommand {
 //                    + System.currentTimeMillis(), false);
             return true;
         } else if (isRightFinished && isLeftFinished) {
-//            DriverStation.reportError(
-//                    "\nFinished traveling distance! Stopping.", false);
+            DriverStation.reportError(
+                    "\nFinished traveling distance! Stopping.", false);
             return true;
         }
         return false;
@@ -109,6 +107,8 @@ public class AutoDriveDistance extends AutoCommand {
 
     @Override
     public boolean init() {
+        DrivetrainControl.getInstance().setControlMode(TalonControlMode.Position);
+        
         CANTalon left = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE);
         CANTalon right = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE);
         
