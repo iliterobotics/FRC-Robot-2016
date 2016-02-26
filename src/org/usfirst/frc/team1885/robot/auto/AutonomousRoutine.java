@@ -53,8 +53,7 @@ public class AutonomousRoutine {
 
     public void drawbridge() {
 
-        commands.add(new AutoUtilityArm(0, 90));
-        // commands.add(new AutoUtilityArm(10, 170));
+        commands.add(new AutoUtilityArm(-10, 10));
         // commands.add(new AutoWait(3000));
         // commands.add(new AutoUtilityArm(-10, 10));
         // commands.add(new AutoWait(3000));

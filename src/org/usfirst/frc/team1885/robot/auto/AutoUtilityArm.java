@@ -25,9 +25,8 @@ public class AutoUtilityArm extends AutoCommand {
 
     @Override
     public boolean init() {
-        // uArm.goTo(xDistance, yDistance);
+        uArm.goTo(xDistance, yDistance);
         // uArm.moveToPotValues(xDistance, yDistance);
-        uArm.moveToDegreeVlaue(xDistance, yDistance);
         return true;
     }
 

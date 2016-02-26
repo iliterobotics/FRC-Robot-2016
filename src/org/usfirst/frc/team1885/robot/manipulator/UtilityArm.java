@@ -9,6 +9,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * @author ILITE Robotics
@@ -28,12 +29,12 @@ public class UtilityArm implements Module {
                                                                  // to convert
                                                                  // from degrees
                                                                  // to ticks
-    public static final double DEF_A_ANGLE = 10 * CONVERSION_FACTOR, // Starting
+    public static final double DEF_A_ANGLE = 40 * CONVERSION_FACTOR, // Starting
                                                                      // tick
                                                                      // amount
                                                                      // of arm A
-            DEF_B_ANGLE = 173 * CONVERSION_FACTOR; // Starting tick amount of
-                                                   // arm B
+            DEF_B_ANGLE = 40 * CONVERSION_FACTOR; // Starting tick amount of
+                                                  // arm B
     private static final double DEGREE_MARGIN_ERR = 2 * CONVERSION_FACTOR;
 
     private double jointAPosition; // storage for updating the A angle
@@ -91,6 +92,7 @@ public class UtilityArm implements Module {
     public void update() {
         if (driverInputControl.isResetButtonDown()) {
             resetPos();
+            DriverStation.reportError("\nReseting...", false);
         }
         // joystick stuff to put in later
         // double joystick_x = ;
@@ -153,27 +155,35 @@ public class UtilityArm implements Module {
         double transformedY = (y - finaly);
         jointBPosition = Math.toDegrees(Math.atan2(transformedY, transformedX));
 
-        if (jointBPosition < 0) {
-            jointBPosition += 360;
-        }
+        jointBPosition = 180 - jointBPosition;
 
-        if (jointAPosition < DEF_A_ANGLE) {
-            jointAPosition = DEF_A_ANGLE;
+        if (jointBPosition > 350 - jointAPosition) {
+            jointBPosition -= 360;
         }
-        if (jointAPosition > 180) {
-            jointAPosition = 180;
-        }
-        if (jointBPosition > (160 + jointAPosition)) {
-            jointBPosition = (160 + jointAPosition);
-        }
-        if (jointBPosition < jointAPosition) {
-            jointBPosition = jointAPosition;
-        }
+        
+        jointBPosition += jointAPosition;
+
+        DriverStation.reportError("\nJoint A Degree: " + jointAPosition
+                + " --Joint B Degree: " + jointBPosition, false);
+
+        DriverStation.reportError("\nJoint A Degree 2: " + jointAPosition
+                + " --Joint B Degree 2: " + jointBPosition, false);
 
         jointAPosition = jointAPosition * CONVERSION_FACTOR
                 + SensorInputControlSRX.getInstance().INITIAL_POT_A_POSITION;
         jointBPosition = jointBPosition * CONVERSION_FACTOR
                 + SensorInputControlSRX.getInstance().INITIAL_POT_B_POSITION;
+
+        DriverStation
+                .reportError(
+                        "\nJoint A Position: " + jointAPosition
+                                + " --Joint B Position: " + jointBPosition
+                                + "Initial B Pot: "
+                                + SensorInputControlSRX
+                                        .getInstance().INITIAL_POT_B_POSITION,
+                        false);
+
+        robotControl.updateArmMotors(jointAPosition, jointBPosition);
     }
 
     /**
@@ -193,8 +203,8 @@ public class UtilityArm implements Module {
     }
 
     public void resetPos() {
-        jointAPosition = DEF_A_ANGLE;
-        jointBPosition = DEF_B_ANGLE;
+        jointAPosition = 90;
+        jointBPosition = 90;
     }
 
 }
