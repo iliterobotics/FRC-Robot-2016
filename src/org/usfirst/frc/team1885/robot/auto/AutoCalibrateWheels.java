@@ -60,7 +60,8 @@ public class AutoCalibrateWheels extends AutoCommand{
           wheelDiameter = (1.0 * Math.toRadians(yawChange) * AutoAlign.TURN_RADIUS) / Math.PI;
 //          wheelDiameter /= rotations;
           DriverStation.reportError("\nChange in Yaw: " + yawChange + "\nWheel Diameter" + wheelDiameter, false);
-          return true;  
+//          return true;  
+          return false;
         }
         return false;
     }
