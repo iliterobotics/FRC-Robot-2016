@@ -4,6 +4,8 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+
 public class AutoRockWall extends AutoCommand{
     private final double ROCK_SPEED_MAX = 0.8; // Subject to testing change
     private final double ROCK_SPEED_MED = 0.5; // Subject to testing change
@@ -57,5 +59,11 @@ public class AutoRockWall extends AutoCommand{
     public boolean updateOutputs() {
         DrivetrainControl.getInstance().updateOutputs();
         return true;
+    }
+
+    @Override
+    public void reset() {
+        // TODO Auto-generated method stub
+        
     }
 }
