@@ -160,12 +160,12 @@ public class DriverInputControlSRX {
             return 0;
         }
     }
-    public double getShooterTwist() {
+    public int getShooterTwist() {
         if(this.isButtonDown(RobotButtonType.SHOOTER_TWIST_RIGHT)) {
-            return Shooter.TWIST_SPEED;
+            return 1;
         }
         else if(this.isButtonDown(RobotButtonType.SHOOTER_TWIST_LEFT)){
-            return -Shooter.TWIST_SPEED;
+            return -1;
         }
         else {
             return 0;

@@ -4,7 +4,6 @@ import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
-import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
@@ -28,7 +27,7 @@ public class Shooter implements Module {
     private static final double TILT_LIMIT_UPPER = 130;
     private static final double TILT_LIMIT_LOWER = 0;
     public static final double GEAR_RATIO_TWIST = 3.0 / 7;
-    private static final double TWIST_BOUND_RIGHT = (1024.0 / GEAR_RATIO_TWIST) / (360 / 45);
+    private static final double TWIST_BOUND_RIGHT = -(1024.0 / GEAR_RATIO_TWIST) / (360 / 45);
     private static final double TWIST_BOUND_LEFT = (1024.0 / GEAR_RATIO_TWIST) / (360 / 45);
     // public static final double GEAR_RATIO_TILT = 1.0 / 3;
     private double flywheelSpeedLeft;
@@ -94,6 +93,7 @@ public class Shooter implements Module {
     private boolean previousFlywheel;
     private double tiltPosition;
     private double trueTiltAngle;
+    private double relativeTwistPosition;
 
     public static Shooter getInstance() {
         if (instance == null) {
@@ -118,6 +118,10 @@ public class Shooter implements Module {
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).changeControlMode(TalonControlMode.Position);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).setFeedbackDevice(FeedbackDevice.AnalogPot);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).setPID(TILT_P, TILT_I, TILT_D);
+        
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).changeControlMode(TalonControlMode.Position);
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).setPID(TWIST_P, TWIST_I, TWIST_D);
 
         // tiltPID = new PID(TILT_P, TILT_I, TILT_D);
         twistPID = new PID(TWIST_P, TWIST_I, TWIST_D);
@@ -126,6 +130,7 @@ public class Shooter implements Module {
     }
     public void init(){
         relativeTiltAngle = sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER);
+        relativeTwistPosition = sensorControl.getZeroedEncoder(SensorType.SHOOTER_TWIST_ENCODER);
     }
     // Get telemetry data
     public MotorState getLeftMotorState() {
@@ -226,7 +231,7 @@ public class Shooter implements Module {
             rightState = MotorState.OFF;
         }
     }
-    // updates tilt telemtry
+    // updates tilt telemetry
     public void updateTilt() {
         int userTiltDirection = driverInputControl.getShooterTilt();
         // DriverStation.reportError("\nDirection:: " + direction, false);
@@ -246,20 +251,23 @@ public class Shooter implements Module {
     }
     // updates twist telemtry
     public void updateTwist() {
-        twistSpeed = 0;
-        double twistInput = driverInputControl.getShooterTwist();
-        double encoder = getTwistEncoder();
-        if (sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER) >= 45) {
-            if (twistInput > 0) {
-                twistSpeed = (encoder > -TWIST_BOUND_RIGHT /*
-                                                            * && encoder >
-                                                            * -TWIST_BOUND_LEFT
-                                                            */ ) ? -TWIST_SPEED : twistSpeed;
-            } else if (twistInput < 0) {
-                twistSpeed = ( /* encoder < TWIST_BOUND_RIGHT && */ encoder < TWIST_BOUND_LEFT) ? TWIST_SPEED : twistSpeed;
-            }
-        }
-        updateTwist(twistSpeed);
+        int userTwistDirection = driverInputControl.getShooterTwist();
+        
+        this.relativeTwistPosition += userTwistDirection * .25;
+//        twistSpeed = 0;
+//        double twistInput = driverInputControl.getShooterTwist();
+//        double encoder = getTwistEncoder();
+//        if (sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER) >= 45) {
+//            if (twistInput > 0) {
+//                twistSpeed = (encoder > -TWIST_BOUND_RIGHT /*
+//                                                            * && encoder >
+//                                                            * -TWIST_BOUND_LEFT
+//                                                            */ ) ? -TWIST_SPEED : twistSpeed;
+//            } else if (twistInput < 0) {
+//                twistSpeed = ( /* encoder < TWIST_BOUND_RIGHT && */ encoder < TWIST_BOUND_LEFT) ? TWIST_SPEED : twistSpeed;
+//            }
+//        }
+//        updateTwist(twistSpeed);
     }
     public double getTwistEncoder() {
         return sensorControl.getZeroedEncoder(SensorType.SHOOTER_TWIST_ENCODER) * GEAR_RATIO_TWIST;
@@ -412,6 +420,23 @@ public class Shooter implements Module {
         // sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER));
         relativeTiltAngle = angle;
     }
+    public void setToTwistValue(double position) {
+        relativeTwistPosition = position;
+    }
+    public boolean updateTwistPosition() {
+        boolean isInPosition = true;
+        
+        double currentPosition = sensorControl.getZeroedEncoder(SensorType.SHOOTER_TWIST_ENCODER);
+        
+        this.relativeTwistPosition = this.boundTwist(this.relativeTiltAngle) + SensorInputControlSRX.INITIAL_TWIST_POSITION;
+        
+        isInPosition = (currentPosition > relativeTwistPosition - TICK_ERROR) 
+                &&( currentPosition < relativeTwistPosition + TICK_ERROR);
+        
+        updateTwist(relativeTwistPosition);
+        
+        return isInPosition;
+    }
     public boolean updateTiltPosition() {
         boolean isInPosition = true;
         // tiltSpeed = TILT_BRAKE;
@@ -430,6 +455,17 @@ public class Shooter implements Module {
         updateTilt(tiltPosition);
 
         return isInPosition;
+    }
+    private double boundTwist(double twistInputPosition) {
+        double realTwistPosition = twistInputPosition;
+        //Twist Encoder: - on right direction, + on left direction
+        if ( realTwistPosition < TWIST_BOUND_RIGHT) {
+            realTwistPosition = TWIST_BOUND_RIGHT;
+        }
+        if (realTwistPosition < TWIST_BOUND_LEFT) {
+            realTwistPosition = TWIST_BOUND_LEFT;
+        }
+        return realTwistPosition;
     }
 
     /**
@@ -452,6 +488,7 @@ public class Shooter implements Module {
         if (realTiltAngle < TILT_LIMIT_LOWER) {
             realTiltAngle = TILT_LIMIT_LOWER;
         }
+        
 
         // if (tiltInput > 0) {
         //
@@ -466,12 +503,12 @@ public class Shooter implements Module {
         return realTiltAngle;
     }
 
-    public void setToTwistValue(double angle) {
-        twistPID.setScalingValue(twistDegreesToTicks(angle) - getTwistEncoder());
-        // DriverStation.reportError("\ngoing to " + twistDegreesToTicks(angle)
-        // + "\nwe are at " + getTwistEncoder(), false);
-        toTwistTicks = twistDegreesToTicks(angle);
-    }
+//    public void setToTwistValue(double angle) {
+//        twistPID.setScalingValue(twistDegreesToTicks(angle) - getTwistEncoder());
+//        // DriverStation.reportError("\ngoing to " + twistDegreesToTicks(angle)
+//        // + "\nwe are at " + getTwistEncoder(), false);
+//        toTwistTicks = twistDegreesToTicks(angle);
+//    }
     public boolean positionTwist() {
         twistSpeed = TWIST_SPEED * twistPID.getPID(toTwistTicks, getTwistEncoder());
         boolean isInPosition = (getTwistEncoder() > toTwistTicks - TICK_ERROR) && (getTwistEncoder() < toTwistTicks + TICK_ERROR);
