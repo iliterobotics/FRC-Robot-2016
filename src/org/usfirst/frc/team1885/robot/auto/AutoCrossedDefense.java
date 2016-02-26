@@ -68,8 +68,8 @@ public class AutoCrossedDefense extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
-                rightDriveSpeed);
+        DrivetrainControl.getInstance().update(leftDriveSpeed, rightDriveSpeed);
+        DrivetrainControl.getInstance().updateOutputs();
         return false;
     }
 

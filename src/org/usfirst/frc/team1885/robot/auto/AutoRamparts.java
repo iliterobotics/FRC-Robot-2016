@@ -17,8 +17,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class AutoRamparts extends AutoCommand {
     private final double YAW_ZONE = 5.0; // Margin of error to be within in
                                          // order to be considered straight.
-    private final double RAMPART_SPEED_MAX = 0.6; // Subject to testing change
-    private final double RAMPART_SPEED_MIN = 0.5; // Subject to testing change
+    private final double RAMPART_SPEED_MAX = 0.6; // percentage of max speed
+    private final double RAMPART_SPEED_MIN = 0.5; // percentage of max speed
     private SensorInputControlSRX sensorControl = SensorInputControlSRX
             .getInstance();
     private RobotControlWithSRX robotControl = RobotControlWithSRX
@@ -42,8 +42,8 @@ public class AutoRamparts extends AutoCommand {
     @Override
     public boolean execute() {
         double yaw = sensorControl.getYaw();
-        DriverStation.reportError("\nRight side: " + leftDriveSpeed
-                + " --- Left side: " + rightDriveSpeed, false);
+//        DriverStation.reportError("\nRight side: " + leftDriveSpeed
+//                + " --- Left side: " + rightDriveSpeed, false);
         if (crossedDefense.execute()) {
             return true;
         }
@@ -67,7 +67,7 @@ public class AutoRamparts extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-        DrivetrainControl.getInstance().update();
+        DrivetrainControl.getInstance().updateOutputs();
         return true;
     }
 

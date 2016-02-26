@@ -40,7 +40,7 @@ public class DrivetrainControl implements Module {
     private static final double speedD = 0.0;
     
     private static final double positionP = 2.0;
-    private static final double positionI = 0.0002;
+    private static final double positionI = 0.0004;
     private static final double positionD = 0;
 
     private DrivetrainControl(final double d, final double m) {
@@ -57,7 +57,7 @@ public class DrivetrainControl implements Module {
     public static synchronized DrivetrainControl getInstance() {
         if (instance == null) {
             instance = new DrivetrainControl(RobotConfiguration.WHEEL_DIAMETER,
-                    10.0);
+                    12.0);
         }
         return instance;
     }
