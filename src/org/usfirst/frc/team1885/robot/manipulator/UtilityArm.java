@@ -2,6 +2,7 @@ package org.usfirst.frc.team1885.robot.manipulator;
 
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
@@ -39,6 +40,8 @@ public class UtilityArm implements Module {
     // of
     // arm B
     private static final double DEGREE_MARGIN_ERR = 5 * CONVERSION_FACTOR;
+    private final double DEAD_ZONE_X = .2;
+    private final double DEAD_ZONE_Y = .2;
 
     private double jointAPosition; // storage for updating the A angle
     private double jointBPosition; // storage for updating the B angle
@@ -47,10 +50,16 @@ public class UtilityArm implements Module {
     private double aP, aI, aD; // values for the PID to move joint A
     private double bP, bI, bD; // values for the PID to move joint B
 
+    private double xCoord;
+    private double yCoord;
+
     private MotorState jointAState; // used for keeping track of the motor state
                                     // for arm A
     private MotorState jointBState; // used for keeping track of the motor state
                                     // for arm B
+
+    double aAngleVal = 0;
+    double bAngleVal = 0;
 
     private DriverInputControlSRX driverInputControl;
     private RobotControlWithSRX robotControl;
@@ -94,10 +103,37 @@ public class UtilityArm implements Module {
 
     @Override
     public void update() {
+        // DriverStation.reportError("\nA Angle Value: " + aAngleVal
+        // + " --- B Angle Val: " + bAngleVal, false);
+        double xModifier = 0;
+        double yModifier = 0;
+
+        if (xCoord + xModifier < 9 && xCoord + xModifier > -15) {
+            xCoord += xModifier;
+        }
+        yCoord -= yModifier;
+
+        if (Math.abs(driverInputControl.getControllerThrottle()) > DEAD_ZONE_X
+                || Math.abs(driverInputControl
+                        .getControllerTwist()) > DEAD_ZONE_Y) {
+            if (driverInputControl.getControllerThrottle() > DEAD_ZONE_X) {
+                xModifier = driverInputControl.getControllerThrottle() / 12;
+            }
+            if (driverInputControl.getControllerTwist() > DEAD_ZONE_Y) {
+                yModifier = driverInputControl.getControllerTwist() / 12;
+            }
+            goTo(xCoord, yCoord);
+        }
+
         if (driverInputControl.isResetButtonDown()) {
             resetPos();
             DriverStation.reportError("\nReseting...", false);
         }
+
+        DriverStation.reportError(
+                "X Coordinate: " + xCoord + " --- Y Coordinate: " + yCoord,
+                false);
+
         // joystick stuff to put in later
         // double joystick_x = ;
         // double joystick_y = ;
@@ -120,6 +156,9 @@ public class UtilityArm implements Module {
      *            the y coordinate of the new end-point
      */
     public void goTo(double xEndPoint, double yEndPoint) {
+        xCoord = xEndPoint;
+        yCoord = yEndPoint;
+
         if (xEndPoint > LENGTH_A - 2 && yEndPoint < LENGTH_B - 2) {
             xEndPoint = LENGTH_A - 2;
             yEndPoint = LENGTH_B - 2;
@@ -155,8 +194,8 @@ public class UtilityArm implements Module {
         double transformedY = (yEndPoint - finaly);
         jointBDegree = Math.toDegrees(Math.atan2(transformedY, transformedX));
 
-        DriverStation.reportError("\nJoint A Degree: " + jointADegree
-                + " --Joint B Degree: " + jointBDegree, false);
+        // DriverStation.reportError("\nJoint A Degree: " + jointADegree
+        // + " --Joint B Degree: " + jointBDegree, false);
 
         jointBDegree = 180 - jointBDegree;
 
@@ -170,22 +209,22 @@ public class UtilityArm implements Module {
 
         jointBDegree += jointADegree;
 
-        DriverStation.reportError("\nJoint A Degree 2: " + jointADegree
-                + " --Joint B Degree 2: " + jointBDegree, false);
+        // DriverStation.reportError("\nJoint A Degree 2: " + jointADegree
+        // + " --Joint B Degree 2: " + jointBDegree, false);
 
         jointAPosition = jointADegree * CONVERSION_FACTOR
                 + SensorInputControlSRX.getInstance().INITIAL_POT_A_POSITION;
         jointBPosition = jointBDegree * CONVERSION_FACTOR
                 + SensorInputControlSRX.getInstance().INITIAL_POT_B_POSITION;
 
-        DriverStation
-                .reportError(
-                        "\nJoint A Position: " + jointAPosition
-                                + " --Joint B Position: " + jointBPosition
-                                + "Initial B Pot: "
-                                + SensorInputControlSRX
-                                        .getInstance().INITIAL_POT_B_POSITION,
-                        false);
+        // DriverStation
+        // .reportError(
+        // "\nJoint A Position: " + jointAPosition
+        // + " --Joint B Position: " + jointBPosition
+        // + "Initial B Pot: "
+        // + SensorInputControlSRX
+        // .getInstance().INITIAL_POT_B_POSITION,
+        // false);
 
         robotControl.updateArmMotors(jointAPosition, jointBPosition);
     }
@@ -212,6 +251,8 @@ public class UtilityArm implements Module {
     public void resetPos() {
         jointAPosition = 100;
         jointBPosition = 90;
+        xCoord = -2;
+        yCoord = 5;
     }
 
 }
