@@ -48,7 +48,7 @@ public class AutoCalibrateWheels extends AutoCommand{
         
         robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).set(initialTickLeft + 1024);
         robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(initialTickRight + (1024));
-        DriverStation.reportError("\nLeft Goal:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get() + "Left Current:: " + initialTickLeft, false);
+//        DriverStation.reportError("\nLeft Goal:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get() + "Left Current:: " + initialTickLeft, false);
         return true;
     }
 
@@ -57,12 +57,12 @@ public class AutoCalibrateWheels extends AutoCommand{
         currentTickRight = robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
         currentTickLeft = robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get();
 //        DriverStation.reportError("\n Right:: " + (initialTickRight + 1024) + " Left:: " + (initialTickLeft + 1024), false);
-        DriverStation.reportError("\nTime: " + System.currentTimeMillis() + " Current Ticks:: Left: " + currentTickLeft + " Right: " + currentTickRight + "  Initial Ticks:: Left: " + initialTickLeft + " Right: " + initialTickRight, false);
+//        DriverStation.reportError("\nTime: " + System.currentTimeMillis() + " Current Ticks:: Left: " + currentTickLeft + " Right: " + currentTickRight + "  Initial Ticks:: Left: " + initialTickLeft + " Right: " + initialTickRight, false);
         if(Math.abs(currentTickRight) - Math.abs(initialTickRight) >= (rotations * 1024) && Math.abs(Math.abs(currentTickLeft) - Math.abs(initialTickLeft)) >= (rotations * 1024)){
           yawChange = SensorInputControlSRX.getInstance().getYaw();
           wheelDiameter = (1.0 * Math.toRadians(yawChange) * AutoAlign.TURN_RADIUS) / Math.PI;
 //          wheelDiameter /= rotations;
-          DriverStation.reportError("\nChange in Yaw: " + yawChange + "\nWheel Diameter" + wheelDiameter, false);
+//          DriverStation.reportError("\nChange in Yaw: " + yawChange + "\nWheel Diameter" + wheelDiameter, false);
           return true;  
 //          return false;
         }

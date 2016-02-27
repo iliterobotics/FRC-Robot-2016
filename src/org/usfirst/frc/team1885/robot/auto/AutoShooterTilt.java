@@ -21,7 +21,7 @@ public class AutoShooterTilt extends AutoCommand {
     @Override
     public boolean execute() {
         boolean completed = shooter.updateTiltPosition();
-        DriverStation.reportError("\nPositioning Shootr..." + completed, false);
+//        DriverStation.reportError("\nPositioning Shootr..." + completed, false);
         return completed;
     }
     @Override

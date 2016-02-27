@@ -46,7 +46,7 @@ public class AutoDriveStart extends AutoCommand {
      */
     public AutoDriveStart(double speed) {
         drivetrainControl = DrivetrainControl.getInstance();
-        rightDriveOutput = leftDriveOutput = speed;
+        rightDriveOutput = leftDriveOutput = -speed;
         time = 0;
         init();
     }

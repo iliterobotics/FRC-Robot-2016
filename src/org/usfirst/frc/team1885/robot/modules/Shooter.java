@@ -307,10 +307,10 @@ public class Shooter implements Module {
     public void updateKicker() {
         if (DriverInputControlSRX.getInstance().getButton(RobotButtonType.SHOOTER_KICKER_KICK) && !kickerState) {
             kickerState = true;
-            DriverStation.reportError("Kicking", false);
+//            DriverStation.reportError("Kicking", false);
         } else if (DriverInputControlSRX.getInstance().getButton(RobotButtonType.SHOOTER_KICKER_RETRACT) && kickerState) {
             kickerState = false;
-            DriverStation.reportError("Retracting", false);
+//            DriverStation.reportError("Retracting", false);
         }
     }
     public void listenHighGoal() {

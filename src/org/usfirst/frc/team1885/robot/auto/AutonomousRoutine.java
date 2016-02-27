@@ -28,6 +28,7 @@ public class AutonomousRoutine {
         SensorInputControlSRX.getInstance().calibrateGyro();
         Timer.delay(1);
 //        commands.add(new AutoCalibrateWheels(1));
+        commands.add(new AutoDriveStart(.5));
 //        initAuto();
     }
 
@@ -44,7 +45,7 @@ public class AutonomousRoutine {
                     commands.poll();
                 }
             } else {
-                DriverStation.reportError("INIT", false);
+//                DriverStation.reportError("INIT", false);
                 currCommand.setInit(currCommand.init());
             }
             Timer.delay(delay);

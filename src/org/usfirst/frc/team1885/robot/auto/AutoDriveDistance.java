@@ -68,10 +68,10 @@ public class AutoDriveDistance extends AutoCommand {
         isLeftFinished = Math.abs(differenceLeft) < ERROR;
         isRightFinished = Math.abs(differenceRight) < ERROR;
 
-        DriverStation.reportError("\n\nDistance Left:: " + disLeft
-                + "\ndistance Right:: " + disRight + "\nDifference Left:: "
-                + differenceLeft + "\nDifference Right:: " + differenceRight,
-                false);
+//        DriverStation.reportError("\n\nDistance Left:: " + disLeft
+//                + "\ndistance Right:: " + disRight + "\nDifference Left:: "
+//                + differenceLeft + "\nDifference Right:: " + differenceRight,
+//                false);
 
 //         DriverStation.reportError(
 //         "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
@@ -81,8 +81,8 @@ public class AutoDriveDistance extends AutoCommand {
 //         false);
         
         if (isRightFinished && isLeftFinished) {
-            DriverStation.reportError(
-                    "\nFinished traveling distance!", false);
+//            DriverStation.reportError(
+//                    "\nFinished traveling distance!", false);
             return true;
         }
         return false;
