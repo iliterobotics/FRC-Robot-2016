@@ -86,15 +86,15 @@ public class Robot extends SampleRobot {
             // sensorInputControl.update();
             Timer.delay(.005);
 
-            DriverStation.reportError(
-                    "\nValue A: " + SensorInputControlSRX.getInstance()
-                            .getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER),
-                    false);
-
-            DriverStation.reportError(
-                    "\nValue B: " + SensorInputControlSRX.getInstance()
-                            .getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER),
-                    false);
+            // DriverStation.reportError(
+            // "\nValue A: " + SensorInputControlSRX.getInstance()
+            // .getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER),
+            // false);
+            //
+            // DriverStation.reportError(
+            // "\nValue B: " + SensorInputControlSRX.getInstance()
+            // .getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER),
+            // false);
 
         }
 

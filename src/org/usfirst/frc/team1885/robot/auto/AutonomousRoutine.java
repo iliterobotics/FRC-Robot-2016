@@ -51,6 +51,10 @@ public class AutonomousRoutine {
     private final double X_ERROR = 1;
     private final double Y_OVERSHOOT_DISTANCE = 2;
 
+    public void sallyPort() {
+
+    }
+
     public void drawbridge() {
         double disXInit = 0;
         double disYInit = 30 + Y_OVERSHOOT_DISTANCE; // Initialize arm position

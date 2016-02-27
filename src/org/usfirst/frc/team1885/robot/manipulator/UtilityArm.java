@@ -38,7 +38,7 @@ public class UtilityArm implements Module {
     // Starting tick amount
     // of
     // arm B
-    private static final double DEGREE_MARGIN_ERR = 3 * CONVERSION_FACTOR;
+    private static final double DEGREE_MARGIN_ERR = 5 * CONVERSION_FACTOR;
 
     private double jointAPosition; // storage for updating the A angle
     private double jointBPosition; // storage for updating the B angle
@@ -203,9 +203,9 @@ public class UtilityArm implements Module {
         boolean isJointBFinished = Math.abs(
                 robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).get()
                         - jointBPosition) < DEGREE_MARGIN_ERR;
-        DriverStation.reportError(
-                "\nisFinished: " + (isJointAFinished && isJointBFinished),
-                false);
+        // DriverStation.reportError(
+        // "\nisFinished: " + (isJointAFinished && isJointBFinished),
+        // false);
         return isJointAFinished && isJointBFinished;
     }
 
