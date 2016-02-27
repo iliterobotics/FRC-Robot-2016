@@ -1,9 +1,10 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 /**
  * 
@@ -13,17 +14,12 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class AutoReachedDefense extends AutoCommand {
 
-    private final double MAX_DISTANCE = 5;
-
     private SensorInputControlSRX sensorInputControl = SensorInputControlSRX
             .getInstance();
-    double rightEncoderDistance;
-    double leftEncoderDistance;
 
     @Override
     public boolean init() {
-        rightEncoderDistance = 0;
-        leftEncoderDistance = 0;
+        DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
         return true;
     }
 
@@ -32,6 +28,7 @@ public class AutoReachedDefense extends AutoCommand {
         if (Math.abs(sensorInputControl.getNavX()
                 .getRoll()) >= AutonomousRoutine.PITCH_CHANGE_ON_RAMP
                         + Math.abs(sensorInputControl.getInitRoll())) {
+//            DriverStation.reportError("\nReached Defense", false);
             return true;
         }
         return false;

@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1885.robot.modules.drivetrain;
 
-import org.usfirst.frc.team1885.robot.auto.AutoTurn;
 import org.usfirst.frc.team1885.robot.common.type.DriveMode;
 import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
@@ -13,9 +12,8 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class DrivetrainControl implements Module {
     /**
@@ -27,21 +25,24 @@ public class DrivetrainControl implements Module {
     private DriveMode driveMode;
     private GearState gearState;
     /** in rps */
-    private final double maxSpeed;
+    private double maxSpeed;
     private final double diameter;
     private final double circumference;
     private DriverInputControlSRX driverInput;
     private RobotControlWithSRX robotSRX;
     private boolean isTurning;
-    private AutoTurn turn;
     public static final double NUDGE_POWER = 0.15;
     public static final double NUDGE_POWER_TURN = 0.75;
     private static DrivetrainControl instance;
     private boolean isLowGear;
 
-    private static final double P = .25;
-    private static final double I = 0.0;
-    private static final double D = 0.0;
+    private static final double speedP = .25;
+    private static final double speedI = 0.0;
+    private static final double speedD = 0.0;
+    
+    private static final double positionP = 2;
+    private static final double positionI = 0.0001;
+    private static final double positionD = 0;
 
     private DrivetrainControl(final double d, final double m) {
         maxSpeed = m;
@@ -52,24 +53,14 @@ public class DrivetrainControl implements Module {
         driverInput = DriverInputControlSRX.getInstance();
         robotSRX = RobotControlWithSRX.getInstance();
 
-      robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Speed);
-      robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Speed);
-
-        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
-        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
+        setControlMode(TalonControlMode.Speed);
     }
     public static synchronized DrivetrainControl getInstance() {
         if (instance == null) {
             instance = new DrivetrainControl(RobotConfiguration.WHEEL_DIAMETER,
-                    10.0);
+                    9.0);
         }
         return instance;
-    }
-    public void init(){
-        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Speed);
-        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Speed);
-        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
-        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
     }
     public boolean getIsTurning() {
         return isTurning;
@@ -111,6 +102,7 @@ public class DrivetrainControl implements Module {
 
         if (DriverInputControlSRX.getInstance()
                 .getButton(RobotButtonType.GEAR_SHIFT)) {
+            maxSpeed = 15.0;
             isLowGear = false;
         } else {
             isLowGear = true;
@@ -190,6 +182,26 @@ public class DrivetrainControl implements Module {
         this.rightDriveSpeed = driveSpeed;
         this.leftDriveSpeed = driveSpeed;
     }
+    
+    public void setControlMode(TalonControlMode mode){
+        robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(mode);
+        robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(mode);
+        switch(mode){
+        case Speed:
+            robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(speedP, speedI, speedD);
+            robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(speedP, speedI, speedD);
+            robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(0);
+            robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(0);
+            break;
+        case Position:
+            robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(positionP, positionI, positionD);
+            robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(positionP, positionI, positionD);
+            robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(SensorInputControlSRX.getInstance().getEncoderPos(SensorType.LEFT_ENCODER));
+            robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(SensorInputControlSRX.getInstance().getEncoderPos(SensorType.LEFT_ENCODER));
+            break;
+        default:
+        }
+    }
 
     public void updateOutputs() {
         // 100 represents conversion from seconds in the max speed to the .01
@@ -202,9 +214,11 @@ public class DrivetrainControl implements Module {
                 * TICKS_IN_ROTATION;
             robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(leftDriveVelocity);
             robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(rightDriveVelocity);
+            
+            double getR = robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
+            double getL = robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).get();
 
-        // DriverStation.reportError("\nGoal:: Left: " + leftDriveVelocity + "
-        // Right: " + rightDriveVelocity, false);
+//         DriverStation.reportError("\nGoal:: Left: " + leftDriveVelocity + " Right: " + rightDriveVelocity + "", false);
 //        DriverStation.reportError(
 //                        "\nSpeed:: Left: " + -leftDriveSpeed + " Right: " + rightDriveSpeed, false);
 //        DriverStation.reportError("\nOutput Value:: Left: " + robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).get() + " Right: " + robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);

@@ -25,7 +25,7 @@ public class AutoDrawbridge {
      */
     public double distanceY() {
         double disOffRamp = DIS_TO_ARM_Y / Math.cos(armAngle);
-        DriverStation.reportError("\nDisOffRamp: " + disOffRamp, false);
+//        DriverStation.reportError("\nDisOffRamp: " + disOffRamp, false);
         double dis = DRAW_BRIDGE_HEIGHT - disOffRamp;
         return dis;
     }
@@ -41,12 +41,12 @@ public class AutoDrawbridge {
 
     public Collection<AutoCommand> execute() {
         List<AutoCommand> list = new ArrayList<AutoCommand>();
-        DriverStation.reportError(
-                "Gyro values: " + SensorInputControlSRX.getInstance().getRoll(),
-                false);
+//        DriverStation.reportError(
+//                "Gyro values: " + SensorInputControlSRX.getInstance().getRoll(),
+//                false);
         armAngle = Math
                 .toRadians(SensorInputControlSRX.getInstance().getRoll());
-        DriverStation.reportError("\nAngle: " + armAngle, false);
+//        DriverStation.reportError("\nAngle: " + armAngle, false);
         reachTop = new AutoUtilityArm(-(distanceX() + ERROR_ZONE),
                 distanceY() + ERROR_ZONE);
         grabBridge = new AutoUtilityArm(-(distanceX()+ ERROR_ZONE),

@@ -5,6 +5,7 @@ import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 /**
  * Waits until the robot has crossed over a defense. This is determined by if
@@ -37,6 +38,7 @@ public class AutoCrossedDefense extends AutoCommand {
 
     @Override
     public boolean init() {
+        DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
         startTime = System.currentTimeMillis();
         leftDriveSpeed = DrivetrainControl.getInstance().getLeftDriveSpeed();
         rightDriveSpeed = DrivetrainControl.getInstance().getRightDriveSpeed();
@@ -58,6 +60,7 @@ public class AutoCrossedDefense extends AutoCommand {
             if (System.currentTimeMillis() - startTime > WAIT_TIME * 1000) {
                 // WAIT_TIME converted to millis
                 leftDriveSpeed = rightDriveSpeed = 0;
+//                DriverStation.reportError("\nCrossed Defense", false);
                 return true;
             }
         } else {
@@ -68,8 +71,8 @@ public class AutoCrossedDefense extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDriveSpeed,
-                rightDriveSpeed);
+        DrivetrainControl.getInstance().update(leftDriveSpeed, rightDriveSpeed);
+        DrivetrainControl.getInstance().updateOutputs();
         return false;
     }
 

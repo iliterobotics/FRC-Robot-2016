@@ -54,12 +54,16 @@ public class RobotControlWithSRX {
             if(port != 1){
                 talon.changeControlMode(TalonControlMode.Follower);
                 talon.set(1);
+            } else {
+                talons.put(type, talon);
             }
         } else if (type == RobotMotorType.RIGHT_DRIVE) {
             rightDrive.add(talon);
             if(port != 2){
                 talon.changeControlMode(TalonControlMode.Follower);
                 talon.set(2);
+            } else {
+                talons.put(type, talon);
             }
         } else {
             talons.put(type, talon);
@@ -141,12 +145,5 @@ public class RobotControlWithSRX {
     }
     public void gearShift(boolean gear) {
         singleSolenoids.get(RobotPneumaticType.GEAR_SHIFT).set(gear);
-    }
-    
-    public void resetEncoderVoltage(){
-        getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Voltage);
-        getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Voltage);
-        getTalons().get(RobotMotorType.LEFT_DRIVE).set(0);
-        getTalons().get(RobotMotorType.RIGHT_DRIVE).set(0);
     }
 }

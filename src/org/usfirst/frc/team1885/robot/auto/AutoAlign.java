@@ -6,7 +6,6 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 
@@ -21,110 +20,71 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class AutoAlign extends AutoCommand {
 
-    private final double P, I, D;
-    private final double ALIGNMENT_ERROR = 1;
-    private final double MIN_SPEED = 0.225;
+    private final double ALIGNMENT_ERROR = 6;
     private double targetDegree;
-//    private PID pid;
     private SensorInputControlSRX sensorInputControl;
-    private double rightDrivePower;
-    private double leftDrivePower;
     private double initialYaw;
+    private double direction;
+    private boolean aligningToZero;
     public static final double TURN_RADIUS = 16;
     
     public AutoAlign() {
-        this(0);
+        sensorInputControl = SensorInputControlSRX.getInstance();
+        initialYaw = (sensorInputControl.getYaw() + 360) % 360;
+        targetDegree = 0;
+        direction = 1;
+        aligningToZero = true;
     }
 
     public AutoAlign(double degree) {
-        sensorInputControl = SensorInputControlSRX.getInstance();
-        initialYaw = (sensorInputControl.getYaw() + 360) % 360;
-        targetDegree = (degree - initialYaw + 360) % 360;
-//        double scale = 180 / Math.abs(degree == 0 ? 1 : degree);
-//        P = 1 / scale;
-//        I = 0.001 / scale;
-//        D = 5 / scale;
-//        pid = new PID(P, I, D);
-//        pid.setScalingValue(targetDegree);
-        
-        P = 2.0;
-        I = 0.0002;
-        D = 0;
+        this();
+        targetDegree = (Math.abs(degree) - initialYaw + 360) % 360;
+        direction = degree < 0 ? -1 : 1;
+        aligningToZero = false;
     }
 
     @Override
     public boolean init() {
-        rightDrivePower = leftDrivePower = 0;
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).changeControlMode(TalonControlMode.Position);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).changeControlMode(TalonControlMode.Position);
-        
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, I, D);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, I, D);
+        DrivetrainControl.getInstance().setControlMode(TalonControlMode.Position);
+        if( targetDegree == 0 ){
+            targetDegree = -sensorInputControl.getYaw();
+        }
         
         double currentTicksLeft = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get();
-        double currentTicksRight =RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(Math.toRadians(targetDegree) * TURN_RADIUS /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(Math.toRadians(targetDegree) * TURN_RADIUS /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
+        double currentTicksRight = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
         return true;
     }
 
     @Override
     public boolean execute() {
         double yaw = sensorInputControl.getYaw();
-
-//        if (yaw < 0) {
-//            yaw += 360;
-//        }
-
         double difference = (yaw - targetDegree);
 
-//        rightDrivePower = pid.getPID(difference < -180 ? -360 : 0, difference);
-//        leftDrivePower = rightDrivePower * -1;
-
+        if(aligningToZero){
+            difference = yaw;
+        }
+        
         DriverStation.reportError("\n Degree to turn : " + targetDegree
                 + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
-
-//        if (leftDrivePower > 0) {
-//            leftDrivePower = (leftDrivePower < MIN_SPEED ? MIN_SPEED
-//                    : leftDrivePower);
-//        } else if (leftDrivePower < 0) {
-//            leftDrivePower = (leftDrivePower > -MIN_SPEED ? -MIN_SPEED
-//                    : leftDrivePower);
-//        }
-//
-//        if (rightDrivePower > 0) {
-//            rightDrivePower = (rightDrivePower < MIN_SPEED ? MIN_SPEED
-//                    : rightDrivePower);
-//        } else if (rightDrivePower < 0) {
-//            rightDrivePower = (rightDrivePower > -MIN_SPEED ? -MIN_SPEED
-//                    : rightDrivePower);
-//        }
-//
+        
         if (Math.abs(difference) < ALIGNMENT_ERROR) {
             DriverStation.reportError("\nAligned.", false);
             this.reset();
             return true;
         }
-//        DrivetrainControl.getInstance().setLeftDriveSpeed(leftDrivePower);
-//        DrivetrainControl.getInstance().setRightDriveSpeed(rightDrivePower);
         
         return false;
     }
 
     @Override
     public boolean updateOutputs() {
-//        RobotControlWithSRX.getInstance().updateDriveSpeed(leftDrivePower,
-//                rightDrivePower);
+        //no outputs, controlled by SRX PID
         return false;
     }
 
     @Override
     public void reset() {
-        RobotControlWithSRX.getInstance().resetEncoderVoltage();
-//        pid.reset();
-//        leftDrivePower = 0;
-//        rightDrivePower = 0;
-//        DrivetrainControl.getInstance().setLeftDriveSpeed(0);
-//        DrivetrainControl.getInstance().setRightDriveSpeed(0);
     }
 }
