@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.input;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -55,10 +56,15 @@ public class SensorInputControlSRX {
         
 //         Encoder values testing
          
-         DriverStation.reportError("\nRight Encoder Value::" +
-         getEncoderDistance(SensorType.RIGHT_ENCODER) +
-         " --- Left Encoder Value:: " +
-         getEncoderDistance(SensorType.LEFT_ENCODER), false);
+//         DriverStation.reportError("\nRight Encoder Value::" +
+//         getEncoderDistance(SensorType.RIGHT_ENCODER) +
+//         " --- Left Encoder Value:: " +
+//         getEncoderDistance(SensorType.LEFT_ENCODER), false);
+//        DriverStation.reportError("\nLeft Encoder Value::" +
+//                RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get() +
+//                " --- Right Encoder Value:: " +
+//                RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
+        
 //         DriverStation.reportError("\n\nZero Tilt:: " + getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
     }
     //Create initial sensor readings

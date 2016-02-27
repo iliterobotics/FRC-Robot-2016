@@ -20,30 +20,40 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class AutoAlign extends AutoCommand {
 
-    private final double ALIGNMENT_ERROR = 1;
+    private final double ALIGNMENT_ERROR = 6;
     private double targetDegree;
     private SensorInputControlSRX sensorInputControl;
     private double initialYaw;
+    private double direction;
+    private boolean aligningToZero;
     public static final double TURN_RADIUS = 16;
     
     public AutoAlign() {
-        this(0);
+        sensorInputControl = SensorInputControlSRX.getInstance();
+        initialYaw = (sensorInputControl.getYaw() + 360) % 360;
+        targetDegree = 0;
+        direction = 1;
+        aligningToZero = true;
     }
 
     public AutoAlign(double degree) {
-        sensorInputControl = SensorInputControlSRX.getInstance();
-        initialYaw = (sensorInputControl.getYaw() + 360) % 360;
-        targetDegree = (degree - initialYaw + 360) % 360;
+        this();
+        targetDegree = (Math.abs(degree) - initialYaw + 360) % 360;
+        direction = degree < 0 ? -1 : 1;
+        aligningToZero = false;
     }
 
     @Override
     public boolean init() {
         DrivetrainControl.getInstance().setControlMode(TalonControlMode.Position);
+        if( targetDegree == 0 ){
+            targetDegree = -sensorInputControl.getYaw();
+        }
         
         double currentTicksLeft = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get();
-        double currentTicksRight =RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(Math.toRadians(targetDegree) * TURN_RADIUS /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(Math.toRadians(targetDegree) * TURN_RADIUS /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
+        double currentTicksRight = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
         return true;
     }
 
@@ -52,6 +62,10 @@ public class AutoAlign extends AutoCommand {
         double yaw = sensorInputControl.getYaw();
         double difference = (yaw - targetDegree);
 
+        if(aligningToZero){
+            difference = yaw;
+        }
+        
         DriverStation.reportError("\n Degree to turn : " + targetDegree
                 + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
         

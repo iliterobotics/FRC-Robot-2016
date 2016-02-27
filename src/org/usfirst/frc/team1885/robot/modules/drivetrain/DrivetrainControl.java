@@ -13,6 +13,7 @@ import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class DrivetrainControl implements Module {
     /**
@@ -24,7 +25,7 @@ public class DrivetrainControl implements Module {
     private DriveMode driveMode;
     private GearState gearState;
     /** in rps */
-    private final double maxSpeed;
+    private double maxSpeed;
     private final double diameter;
     private final double circumference;
     private DriverInputControlSRX driverInput;
@@ -39,8 +40,8 @@ public class DrivetrainControl implements Module {
     private static final double speedI = 0.0;
     private static final double speedD = 0.0;
     
-    private static final double positionP = 2.0;
-    private static final double positionI = 0.0004;
+    private static final double positionP = 2;
+    private static final double positionI = 0.0001;
     private static final double positionD = 0;
 
     private DrivetrainControl(final double d, final double m) {
@@ -57,7 +58,7 @@ public class DrivetrainControl implements Module {
     public static synchronized DrivetrainControl getInstance() {
         if (instance == null) {
             instance = new DrivetrainControl(RobotConfiguration.WHEEL_DIAMETER,
-                    12.0);
+                    9.0);
         }
         return instance;
     }
@@ -101,6 +102,7 @@ public class DrivetrainControl implements Module {
 
         if (DriverInputControlSRX.getInstance()
                 .getButton(RobotButtonType.GEAR_SHIFT)) {
+            maxSpeed = 15.0;
             isLowGear = false;
         } else {
             isLowGear = true;
@@ -212,12 +214,14 @@ public class DrivetrainControl implements Module {
                 * TICKS_IN_ROTATION;
             robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(leftDriveVelocity);
             robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(rightDriveVelocity);
+            
+            double getR = robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
+            double getL = robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).get();
 
-        // DriverStation.reportError("\nGoal:: Left: " + leftDriveVelocity + "
-        // Right: " + rightDriveVelocity, false);
+//         DriverStation.reportError("\nGoal:: Left: " + leftDriveVelocity + " Right: " + rightDriveVelocity + "", false);
 //        DriverStation.reportError(
 //                        "\nSpeed:: Left: " + -leftDriveSpeed + " Right: " + rightDriveSpeed, false);
-//        DriverStation.reportError("\nOutput Value:: Left: " + robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).get() + " Right: " + robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
+        DriverStation.reportError("\nOutput Value:: Left: " + robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).get() + " Right: " + robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
         RobotControlWithSRX.getInstance()
                 .updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, isLowGear);
     }

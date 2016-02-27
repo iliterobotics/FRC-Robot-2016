@@ -6,6 +6,7 @@ import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
@@ -65,7 +66,7 @@ public class Robot extends SampleRobot {
             RobotConfiguration.configureRobot();
             //Initialize Sensor Values
             sensorInputControl.init();
-            Shooter.getInstance().init();
+//            Shooter.getInstance().init();
             DriverStation.reportError("\nRobot configured", false);
         } catch (Exception e) {
             DriverStation.reportError("\nRobot - Error configuring Robot", false);
@@ -80,20 +81,19 @@ public class Robot extends SampleRobot {
      */
     public void operatorControl() {
         DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
+        DriverStation.reportError("\nBeginning Operator Control", false);
         while (isOperatorControl() && isEnabled()) {
-            //Update Inputs
+//            //Update Inputs
             sensorInputControl.update();
             driverInputControl.update();
-            //Update Module Data
-//            for(Module m: modules) {
-//                m.update();
-//            }
-            DrivetrainControl.getInstance().update();
-            DrivetrainControl.getInstance().updateOutputs();
-            //Update Module Outputs
-//            for(Module m: modules) {
-//                m.updateOutputs();
-//            }
+//            //Update Module Data
+            for(Module m: modules) {
+                m.update();
+            }
+//            //Update Module Outputs
+            for(Module m: modules) {
+                m.updateOutputs();
+            }
             Timer.delay(.005);
         }
     }

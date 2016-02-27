@@ -54,12 +54,16 @@ public class RobotControlWithSRX {
             if(port != 1){
                 talon.changeControlMode(TalonControlMode.Follower);
                 talon.set(1);
+            } else {
+                talons.put(type, talon);
             }
         } else if (type == RobotMotorType.RIGHT_DRIVE) {
             rightDrive.add(talon);
             if(port != 2){
                 talon.changeControlMode(TalonControlMode.Follower);
                 talon.set(2);
+            } else {
+                talons.put(type, talon);
             }
         } else {
             talons.put(type, talon);

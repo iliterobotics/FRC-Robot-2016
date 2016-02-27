@@ -8,6 +8,7 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine {
@@ -27,11 +28,6 @@ public class AutonomousRoutine {
         SensorInputControlSRX.getInstance().calibrateGyro();
         Timer.delay(1);
 //        commands.add(new AutoCalibrateWheels(1));
-        commands.add(new AutoAlign(90));
-//        commands.add(new AutoWait(2500));
-//        commands.add(new AutoAlign(180));
-//        commands.add(new AutoWait(2500));
-//        commands.add(new AutoAlign(-90));
 //        initAuto();
     }
 
@@ -48,6 +44,7 @@ public class AutonomousRoutine {
                     commands.poll();
                 }
             } else {
+                DriverStation.reportError("INIT", false);
                 currCommand.setInit(currCommand.init());
             }
             Timer.delay(delay);
@@ -111,7 +108,7 @@ public class AutonomousRoutine {
     public void autoLowBar() {
         double lowBarTravelDistance = 4.2 * 12; // Best distance from testing
         ActiveIntake.getInstance().intakeDown();
-        commands.add(new AutoDriveDistance(lowBarTravelDistance, false));
+        commands.add(new AutoDriveDistance(lowBarTravelDistance));
     }
 
     /**

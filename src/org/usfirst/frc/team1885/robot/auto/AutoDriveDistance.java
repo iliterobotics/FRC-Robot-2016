@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  * @version <2/13/2016>
  */
 public class AutoDriveDistance extends AutoCommand {
-    private SensorInputControlSRX sensorInputControl;
+    private RobotControlWithSRX robotControl;
 
     private double distance; // Inputed distance to traverse
     private double initDisLeft; // Initial distance of left drive train side
@@ -29,7 +29,6 @@ public class AutoDriveDistance extends AutoCommand {
     private double disLeft; // Current distance of left drive train side
     private double disRight; // Current distance of right drive train side
 
-    private boolean doesStop; // If the drive train should stop after traversing
     private boolean isLeftFinished; // If the left drive train side is finished
                                     // traversing
     private boolean isRightFinished; // If the right drive train side is
@@ -45,29 +44,26 @@ public class AutoDriveDistance extends AutoCommand {
      * @param doesStop
      *            If it should stop at the end of the distance
      */
-    public AutoDriveDistance(double distance, boolean doesStop) {
+    public AutoDriveDistance(double distance) {
         ERROR = 4;
         differenceLeft = differenceRight = 0;
-        sensorInputControl = SensorInputControlSRX.getInstance();
+        robotControl = RobotControlWithSRX.getInstance();
         this.distance = distance;
-        this.doesStop = doesStop;
         P = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).getP();
     }
     
-    public AutoDriveDistance(double distance, boolean doesStop, double P){
-        this(distance, doesStop);
+    public AutoDriveDistance(double distance, double P){
+        this(distance);
         this.P = P;
     }
 
     @Override
     public boolean execute() {
-        disLeft = sensorInputControl.getEncoderDistance(SensorType.LEFT_ENCODER)
-                - initDisLeft;
-        disRight = sensorInputControl
-                .getEncoderDistance(SensorType.RIGHT_ENCODER) - initDisRight;
+        disLeft = (robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get() - initDisLeft) / DrivetrainControl.TICKS_IN_ROTATION * (Math.PI * RobotConfiguration.WHEEL_DIAMETER);
+        disRight = (robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get() - initDisRight) / DrivetrainControl.TICKS_IN_ROTATION * (Math.PI * RobotConfiguration.WHEEL_DIAMETER);
 
         differenceLeft = disLeft - distance;
-        differenceRight = disRight - distance;
+        differenceRight = disRight + distance;
 
         isLeftFinished = Math.abs(differenceLeft) < ERROR;
         isRightFinished = Math.abs(differenceRight) < ERROR;
@@ -77,23 +73,16 @@ public class AutoDriveDistance extends AutoCommand {
                 + differenceLeft + "\nDifference Right:: " + differenceRight,
                 false);
 
-//        DriverStation.reportError("\nRight Drive Speed:: " + rightDriveSpeed
-//                + "\nLeft Drive Speed:: " + leftDriveSpeed, false);
-
-        // DriverStation.reportError(
-        // "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
-        // false);
-        // DriverStation.reportError(
-        // "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
-        // false);
-
-        if (!doesStop && isRightFinished && isLeftFinished) {
-//            DriverStation.reportError("\nFinished traveling distance!"
-//                    + System.currentTimeMillis(), false);
-            return true;
-        } else if (isRightFinished && isLeftFinished) {
+//         DriverStation.reportError(
+//         "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
+//         false);
+//         DriverStation.reportError(
+//         "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
+//         false);
+        
+        if (isRightFinished && isLeftFinished) {
             DriverStation.reportError(
-                    "\nFinished traveling distance! Stopping.", false);
+                    "\nFinished traveling distance!", false);
             return true;
         }
         return false;
@@ -109,17 +98,20 @@ public class AutoDriveDistance extends AutoCommand {
     public boolean init() {
         DrivetrainControl.getInstance().setControlMode(TalonControlMode.Position);
         
-        CANTalon left = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE);
-        CANTalon right = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE);
+        CANTalon left = robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE);
+        CANTalon right = robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE);
         
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, left.getI(), left.getD());
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, right.getI(), right.getD());
+        initDisRight = right.get();
+        initDisLeft = left.get();
         
-        double currentTicksLeft = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get();
-        double currentTicksRight =RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
+        robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, left.getI(), left.getD());
+        robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, right.getI(), right.getD());
         
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(distance /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(distance /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
+        double currentTicksLeft = robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get();
+        double currentTicksRight = robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
+        
+        robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).set(distance /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
+        robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(-distance /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
         return true;
     }
 
