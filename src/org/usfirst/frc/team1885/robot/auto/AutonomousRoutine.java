@@ -17,7 +17,7 @@ public class AutonomousRoutine {
     public static final double PITCH_CHANGE_ON_RAMP = 4.5; // NavX is sideways
     public static final double RAMPART_SPEED_MAX = 0.6;
     public static final double RAMPART_SPEED_MIN = 0.5;
-    public static final double START_DRIVE_SPEED = -0.5;
+    public static final double START_DRIVE_SPEED = 0.5;
 
     private DefenseType type;
     private int targetDefense;
@@ -44,7 +44,7 @@ public class AutonomousRoutine {
 
          getConfiguration();
          initAutoBreach();
-         autoMoveToShoot();
+//         autoMoveToShoot();
     }
 
     public void execute() {
@@ -55,8 +55,7 @@ public class AutonomousRoutine {
                 boolean commandState = currCommand.execute();
                 currCommand.updateOutputs();
                 if (commandState) {
-                    // DriverStation.reportError(
-                    // "\nfinished command " + commands.size(), false);
+                     DriverStation.reportError( "\nfinished command " + commands.size(), false);
                     commands.poll();
                 }
             } else {
@@ -234,7 +233,7 @@ public class AutonomousRoutine {
     public void autoLowBar() {
         double lowBarTravelDistance = 4.2 * 12; // subject to change from
         ActiveIntake.getInstance().intakeDown();
-        commands.add(new AutoDriveDistance(lowBarTravelDistance));
+        commands.add(new AutoDriveDistance(lowBarTravelDistance, .1));
     }
 
     /**

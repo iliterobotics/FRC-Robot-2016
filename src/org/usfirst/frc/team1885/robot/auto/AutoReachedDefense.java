@@ -36,7 +36,7 @@ public class AutoReachedDefense extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-        // no outputs to update, only a checkpoint
+        DrivetrainControl.getInstance().updateOutputs();
         return false;
     }
 

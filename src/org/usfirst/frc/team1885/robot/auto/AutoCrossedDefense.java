@@ -1,9 +1,11 @@
 package org.usfirst.frc.team1885.robot.auto;
 
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
@@ -24,12 +26,14 @@ public class AutoCrossedDefense extends AutoCommand {
                                    // 'flat' to be considered on flat ground
 
     private SensorInputControlSRX sensorInputControl;
+    private RobotControlWithSRX robotControl;
     private long startTime;
     private double leftDriveSpeed;
     private double rightDriveSpeed;
 
     public AutoCrossedDefense() {
         sensorInputControl = SensorInputControlSRX.getInstance();
+        robotControl = RobotControlWithSRX.getInstance();
         ERROR = 2.5;
         WAIT_TIME = 0.15;
         FLAT_ROLL = sensorInputControl.getInitRoll();
@@ -39,9 +43,9 @@ public class AutoCrossedDefense extends AutoCommand {
     @Override
     public boolean init() {
         DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
+        
         startTime = System.currentTimeMillis();
-        leftDriveSpeed = DrivetrainControl.getInstance().getLeftDriveSpeed();
-        rightDriveSpeed = DrivetrainControl.getInstance().getRightDriveSpeed();
+        leftDriveSpeed = rightDriveSpeed = -0.2;
         return true;
     }
 
@@ -60,7 +64,7 @@ public class AutoCrossedDefense extends AutoCommand {
             if (System.currentTimeMillis() - startTime > WAIT_TIME * 1000) {
                 // WAIT_TIME converted to millis
                 leftDriveSpeed = rightDriveSpeed = 0;
-
+                DriverStation.reportError("\nFlat", false);
                 return true;
             }
         } else {

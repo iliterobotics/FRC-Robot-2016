@@ -107,11 +107,11 @@ public class AutoDriveDistance extends AutoCommand {
         robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(P, left.getI(), left.getD());
         robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(P, right.getI(), right.getD());
         
-        double currentTicksLeft = robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get();
-        double currentTicksRight = robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
+        double currentTicksLeft = left.get();
+        double currentTicksRight = right.get();
         
-        robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).set(distance /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
-        robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(-distance /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
+        left.set(distance /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
+        right.set(-distance /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
         return true;
     }
 
