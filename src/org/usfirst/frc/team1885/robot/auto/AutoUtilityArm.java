@@ -5,16 +5,12 @@ import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoUtilityArm extends AutoCommand {
-
-    private static final double RESET_X = 0;
-    private static final double RESET_Y = Math.sin(
-            Math.toRadians(UtilityArm.DEF_B_ANGLE)) * UtilityArm.LENGTH_B * 2.5;
-
     private UtilityArm uArm;
     private double xDistance, yDistance;
+    private boolean reset = false;
 
     public AutoUtilityArm() {
-        this(-RESET_X, RESET_Y);
+        reset = true;
     }
 
     public AutoUtilityArm(double x, double y) {
@@ -25,8 +21,11 @@ public class AutoUtilityArm extends AutoCommand {
 
     @Override
     public boolean init() {
-        uArm.goTo(xDistance, yDistance);
-        // uArm.moveToPotValues(xDistance, yDistance);
+        if (!reset) {
+            uArm.goTo(xDistance, yDistance);
+        } else {
+            uArm.resetPos();
+        }
         return true;
     }
 

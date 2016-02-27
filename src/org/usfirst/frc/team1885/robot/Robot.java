@@ -148,6 +148,7 @@ public class Robot extends SampleRobot {
     }
 
     public void autonomous() {
+        sensorInputControl.init();
         AutonomousRoutine ar = new AutonomousRoutine(this);
         ar.execute();
     }
