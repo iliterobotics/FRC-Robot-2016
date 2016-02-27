@@ -74,7 +74,6 @@ public class AutoAlign extends AutoCommand {
             this.reset();
             return true;
         }
-        
         return false;
     }
 

@@ -19,6 +19,7 @@ public class Shooter implements Module {
     private static final int FLYWHEEL_MIN_SPEED = 29000;
     private static Shooter instance;
     public static final double HIGH_GOAL_ANGLE = 130.0;
+    public static final double LOW_GOAL_ANGLE = 12.0;
     public static final double ANGLE_ERROR = 1;
     public static final int TICK_ERROR = 10;
     public static final double SHOOTER_SPEED = 1;

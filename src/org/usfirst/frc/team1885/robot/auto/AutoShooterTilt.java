@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot.auto;
 
+import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -22,6 +23,7 @@ public class AutoShooterTilt extends AutoCommand {
     public boolean execute() {
         boolean completed = shooter.updateTiltPosition();
 //        DriverStation.reportError("\nPositioning Shootr..." + completed, false);
+
         return completed;
     }
     @Override

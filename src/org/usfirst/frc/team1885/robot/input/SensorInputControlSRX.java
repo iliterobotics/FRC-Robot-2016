@@ -3,7 +3,6 @@ package org.usfirst.frc.team1885.robot.input;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -53,6 +52,24 @@ public class SensorInputControlSRX {
         ticks = new HashMap<SensorType, Integer>();
     }
     public void update() {
+        // StringBuilder output = new StringBuilder();
+        // output.append("\nLeft Flywheel Velocity: " +
+        // getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
+        // output.append("\nRight Flywheel Velocity: " +
+        // getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER));
+        // output.append("\nTilt Potentiometer: " +
+        // getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER));
+        // output.append("\n Twist Position: " +
+        // getEncoderAbsolutePosition(SensorType.SHOOTER_TWIST_ENCODER));
+        // DriverStation.reportError(output + "\n", false);
+        /*
+         * Encoder values testing
+         * 
+         * DriverStation.reportError("\nRight Encoder Value::" +
+         * getEncoderDistance(SensorType.RIGHT_ENCODER) +
+         * " --- Left Encoder Value:: " +
+         * getEncoderDistance(SensorType.LEFT_ENCODER), false);
+         */
         
 //         Encoder values testing
          
@@ -119,7 +136,7 @@ public class SensorInputControlSRX {
     public double getRoll() {
         return navx.getRoll();
     }
-    //Getters
+
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
     }
@@ -160,8 +177,6 @@ public class SensorInputControlSRX {
     //Get zeroed value relative to the initial reading
     public double getZeroedPotentiometer(SensorType type) {
         switch (type) {
-        case SHOOTER_TILT_POTENTIOMETER:
-            return getAnalogGeneric(type) - INITIAL_TILT_POSITION;
         case JOINT_A_POTENTIOMETER:
             return getAnalogGeneric(type) - INITIAL_POT_A_POSITION;
         case JOINT_B_POTENTIOMETER:

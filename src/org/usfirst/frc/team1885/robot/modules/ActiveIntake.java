@@ -9,7 +9,6 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DriverStation;
 
 public class ActiveIntake implements Module {
 
@@ -27,8 +26,8 @@ public class ActiveIntake implements Module {
     private ActiveIntake() {
         driverInputControl = DriverInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
-        //isIntaking = true;
-        counter = System.currentTimeMillis();
+
+        isIntaking = DoubleSolenoid.Value.kOff;
         reset();
         previousIntakeToggle = false;
     }

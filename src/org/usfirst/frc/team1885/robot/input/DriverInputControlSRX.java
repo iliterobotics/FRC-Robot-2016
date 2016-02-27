@@ -135,18 +135,20 @@ public class DriverInputControlSRX {
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
     }
     public double getControllerTwist() {
-        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kThrottle);
+        return this.getJoystick(RobotJoystickType.CONTROLLER)
+                .getAxis(AxisType.kThrottle);
     }
-    
+
     public double getControllerThrottle() {
-        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kTwist);
+        return this.getJoystick(RobotJoystickType.CONTROLLER)
+                .getAxis(AxisType.kTwist);
     }
-    
+
     public boolean isResetButtonDown() {
         return this.getButton(RobotButtonType.RESET_BUTTON);
     }
-    
-    public boolean isButtonDown(RobotButtonType type){
+
+    public boolean isButtonDown(RobotButtonType type) {
         return this.getButton(type);
     }
     public int getShooterTilt() {

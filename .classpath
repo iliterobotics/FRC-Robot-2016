@@ -5,5 +5,7 @@
 	<classpathentry kind="var" path="networktables"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="var" path="navx-mxp"/>
+	<classpathentry kind="var" path="dataServerClient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DataServerClient"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
