@@ -30,6 +30,10 @@ public class AutoAlign extends AutoCommand {
         this(0);
     }
 
+    /**
+     * Aligns to degree degree relative to initial yaw
+     * @param degree value to align to
+     */
     public AutoAlign(double degree) {
         sensorInputControl = SensorInputControlSRX.getInstance();
         targetDegree = degree;
