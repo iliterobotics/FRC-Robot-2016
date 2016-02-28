@@ -49,17 +49,17 @@ public class AutoAlign extends AutoCommand {
         double initialYaw = SensorInputControlSRX.getInstance().getYaw();
         
         direction = (targetDegree - initialYaw) < 0 ? -1 : 1;
-        targetDegree = Math.abs(targetDegree);
+        targetDegree = Math.abs(targetDegree) - initialYaw;
         
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(direction * (Math.toRadians(targetDegree - initialYaw) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(direction * (Math.toRadians(targetDegree -  initialYaw) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
         return true;
     }
 
     @Override
     public boolean execute() {
-        double yaw = sensorInputControl.getYaw();
-        double difference = (yaw - targetDegree);
+        double yaw = (sensorInputControl.getYaw() + 360) % 360;
+        double difference = (yaw - targetDegree % 360);
         
         DriverStation.reportError("\n Degree to turn : " + targetDegree
                 + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
