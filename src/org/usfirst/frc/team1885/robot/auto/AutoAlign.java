@@ -32,8 +32,7 @@ public class AutoAlign extends AutoCommand {
 
     public AutoAlign(double degree) {
         sensorInputControl = SensorInputControlSRX.getInstance();
-        targetDegree = Math.abs(degree);
-        direction = degree < 0 ? -1 : 1;
+        targetDegree = degree;
     }
 
     @Override
@@ -44,6 +43,9 @@ public class AutoAlign extends AutoCommand {
         double currentTicksRight = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
         
         double initialYaw = SensorInputControlSRX.getInstance().getYaw();
+        
+        direction = (targetDegree - initialYaw) < 0 ? -1 : 1;
+        targetDegree = Math.abs(targetDegree);
         
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(direction * (Math.toRadians(targetDegree - initialYaw) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(direction * (Math.toRadians(targetDegree -  initialYaw) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
