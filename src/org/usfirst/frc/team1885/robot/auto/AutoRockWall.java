@@ -38,12 +38,12 @@ public class AutoRockWall extends AutoCommand{
         }
             
         if (roll > 4.5) {
-                leftDriveSpeed = ROCK_SPEED_MED + (roll/50) * (.3);
-                rightDriveSpeed = ROCK_SPEED_MED + (roll/50) * (.3);
+                leftDriveSpeed = ROCK_SPEED_MED + (roll/50) * (.5);
+                rightDriveSpeed = ROCK_SPEED_MED + (roll/50) * (.5);
             }
          else if (roll < -4.5) {
-            leftDriveSpeed = ROCK_SPEED_MED - (-roll/50) * (.3);
-            rightDriveSpeed = ROCK_SPEED_MED - (-roll/50) * (.3);
+            leftDriveSpeed = ROCK_SPEED_MED - (-roll/50) * (.5);
+            rightDriveSpeed = ROCK_SPEED_MED - (-roll/50) * (.5);
         }
         else
         {

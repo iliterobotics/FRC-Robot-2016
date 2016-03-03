@@ -3,12 +3,11 @@ package org.usfirst.frc.team1885.robot.modules;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
-import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class ActiveIntake implements Module {
 
@@ -98,9 +97,10 @@ public class ActiveIntake implements Module {
 
     public void updateOutputs() {
 //        DriverStation.reportError("\nIntake Motor Speed " + intakeSpeed + "\nSolenoid State" + isIntaking, false);
-//        robotControl.updateIntakeMotor(intakeSpeed);
-//        robotControl.updateDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER,
-//                isIntaking);
+        robotControl.updateIntakeMotor(intakeSpeed);
+        robotControl.updateDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER,
+                isIntaking);
+        
     }
     @Override
     public void update() {

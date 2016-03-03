@@ -17,7 +17,7 @@ public class AutonomousRoutine {
     public static final double PITCH_CHANGE_ON_RAMP = 4.5; // NavX is sideways
     public static final double RAMPART_SPEED_MAX = 0.6;
     public static final double RAMPART_SPEED_MIN = 0.5;
-    public static final double START_DRIVE_SPEED = 0.5;
+    public static final double START_DRIVE_SPEED = -0.5;
 
     private DefenseType type;
     private int targetDefense;
@@ -27,22 +27,23 @@ public class AutonomousRoutine {
     private double delay = 0.005;
     private boolean isHigh;
     private int goal;
-    public static final double MOAT_CLEAR_SPEED = -0.75;
+    public static final double MOAT_CLEAR_SPEED = 0.9;
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
         robot = r;
         SensorInputControlSRX.getInstance().calibrateGyro();
 //        commands.add(new AutoCalibrateWheels(1));
-        DriverStation.reportError("Gyro Calibrated", false);
+        DriverStation.reportError("\nGyro Calibrated", false);
 
 
         // commands.add(new AutoDriveStraightDistance(-16 * 12, true));
-        // commands.add(new AutoAlign());
-        // commands.add(new AutoWait(5000));
-        // commands.add(new AutoAlign(5));
+//         commands.add(new AutoAlign(90));
+//         commands.add(new AutoWait(2000));
+//         commands.add(new AutoAlign());
 
-         getConfiguration();
+//         getConfiguration();
+        type = DefenseType.ROUGH_TERRAIN;
          initAutoBreach();
 //         autoMoveToShoot();
     }
@@ -74,8 +75,8 @@ public class AutonomousRoutine {
     // AutoAlign - realigns the robot to move in position to shoot
 
     public void getConfiguration() {
-        AutonomousConfig autoC = RobotAutonomousConfiguration
-                .pullConfiguration();
+        
+        AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
         type = DefenseType.values()[autoC.getDefense()];
         targetDefense = autoC.getPosition();
         delay = autoC.getDelay() / 1000.0; // time in seconds
@@ -94,14 +95,17 @@ public class AutonomousRoutine {
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAutoBreach() {
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+        if(type == DefenseType.MOAT)
+            commands.add(new AutoDriveStart(MOAT_CLEAR_SPEED));
+        else
+            commands.add(new AutoDriveStart(START_DRIVE_SPEED));
         commands.add(new AutoReachedDefense());
-        // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, ROCK WALL
+        // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, RAMPARTS
         switch (type) {
         case LOW_BAR:
             autoLowBar();
             break;
-        case PORTCULLIS:
+        case PORTCULLIS: 
             autoPortcullis();
             break;
         case CHEVAL_DE_FRISE:
@@ -110,11 +114,14 @@ public class AutonomousRoutine {
         case SALLYPORT:
             autoSally();
             break;
-        case RAMPARTS:
-            autoRamparts();
-            break;
         case DRAWBRIDGE:
             autoDrawbridge();
+            break;
+        case ROCK_WALL:
+            autoRockWall();
+            break;
+        case MOAT:
+            autoMoat();
             break;
         default:
             break;
@@ -233,7 +240,7 @@ public class AutonomousRoutine {
     public void autoLowBar() {
         double lowBarTravelDistance = 4.2 * 12; // subject to change from
         ActiveIntake.getInstance().intakeDown();
-        commands.add(new AutoDriveDistance(lowBarTravelDistance, .1));
+        commands.add(new AutoDriveDistance(-lowBarTravelDistance, .1));
     }
 
     /**
@@ -253,6 +260,15 @@ public class AutonomousRoutine {
 
     public void autoSally() {
 
+    }
+    
+    public void autoRockWall(){
+        commands.add(new AutoRockWall());
+    }
+    
+    public void autoMoat(){
+        commands.add(new AutoWait(1000));
+        commands.add(new AutoDriveStart(-START_DRIVE_SPEED));
     }
 
     /**
