@@ -11,6 +11,7 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.ModuleControl;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -25,7 +26,7 @@ import edu.wpi.first.wpilibj.SerialPort;
  *          mappings for the robot Also keeps track of ports for motors
  */
 public class RobotConfiguration {
-    public static final double WHEEL_DIAMETER = 7.93066677517361; //magic, needs to be configured every time
+    public static final double WHEEL_DIAMETER = 8.9; //magic, needs to be configured every time
     public static final int ARM_JOINT_A_PORT = 1; // 5 on real robot
     public static final int ARM_JOINT_B_PORT = 2; // 6 on real robot
     public static final double MAX_SPEED = .8;
@@ -109,7 +110,7 @@ public class RobotConfiguration {
         
         // Add Modules
         moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
-//        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
+        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
 //        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
 //        moduleControl.addModule(ModuleType.UTILITY_ARM, UtilityArm.getInstance());
     }

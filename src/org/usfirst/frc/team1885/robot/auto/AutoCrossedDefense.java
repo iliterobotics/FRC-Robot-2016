@@ -35,7 +35,7 @@ public class AutoCrossedDefense extends AutoCommand {
         sensorInputControl = SensorInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
         ERROR = 2.5;
-        WAIT_TIME = 0.15;
+        WAIT_TIME = 0.18;
         FLAT_ROLL = sensorInputControl.getInitRoll();
         FLAT_PITCH = sensorInputControl.getInitPitch();
     }
@@ -45,7 +45,8 @@ public class AutoCrossedDefense extends AutoCommand {
         DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
         
         startTime = System.currentTimeMillis();
-        leftDriveSpeed = rightDriveSpeed = -0.2;
+        leftDriveSpeed = DrivetrainControl.getInstance().getLeftDriveSpeed();
+        rightDriveSpeed = DrivetrainControl.getInstance().getRightDriveSpeed();
         return true;
     }
 

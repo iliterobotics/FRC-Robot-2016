@@ -12,14 +12,18 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 public class AutoCalibrateWheels extends AutoCommand{
 
     private final double P, I, D;
+    private final double WAIT, ERROR;
     private double initialTickRight, initialTickLeft;
     private double currentTickRight, currentTickLeft;
     private double rotations;
     private double yawChange;
     private double wheelDiameter;
+    private long timeLastCheck;
     RobotControlWithSRX robotControl;
     
     public AutoCalibrateWheels(double rotations){
+        WAIT = 1000;
+        ERROR = 20;
         robotControl = RobotControlWithSRX.getInstance();
         initialTickRight = initialTickLeft = currentTickRight = currentTickLeft = 0;
         yawChange = 0;
@@ -30,6 +34,7 @@ public class AutoCalibrateWheels extends AutoCommand{
         D = 0;
         this.rotations = rotations;
         this.wheelDiameter = 0;
+        timeLastCheck = System.currentTimeMillis();
     }
     
     @Override
@@ -58,13 +63,17 @@ public class AutoCalibrateWheels extends AutoCommand{
         currentTickLeft = robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get();
 //        DriverStation.reportError("\n Right:: " + (initialTickRight + 1024) + " Left:: " + (initialTickLeft + 1024), false);
 //        DriverStation.reportError("\nTime: " + System.currentTimeMillis() + " Current Ticks:: Left: " + currentTickLeft + " Right: " + currentTickRight + "  Initial Ticks:: Left: " + initialTickLeft + " Right: " + initialTickRight, false);
-        if(Math.abs(currentTickRight) - Math.abs(initialTickRight) >= (rotations * 1024) && Math.abs(Math.abs(currentTickLeft) - Math.abs(initialTickLeft)) >= (rotations * 1024)){
-          yawChange = SensorInputControlSRX.getInstance().getYaw();
-          wheelDiameter = (1.0 * Math.toRadians(yawChange) * AutoAlign.TURN_RADIUS) / Math.PI;
-//          wheelDiameter /= rotations;
-//          DriverStation.reportError("\nChange in Yaw: " + yawChange + "\nWheel Diameter" + wheelDiameter, false);
-          return true;  
+        if(withinRange(currentTickRight, currentTickLeft)){
+            if(System.currentTimeMillis() - timeLastCheck > WAIT){
+                yawChange = SensorInputControlSRX.getInstance().getYaw();
+              wheelDiameter = (1.0 * Math.toRadians(yawChange) * AutoAlign.TURN_RADIUS) / Math.PI;
+//              wheelDiameter /= rotations;
+              DriverStation.reportError("\nChange in Yaw: " + yawChange + "\nWheel Diameter" + wheelDiameter, false);
+              return true;  
+            }
 //          return false;
+        } else{
+            timeLastCheck = System.currentTimeMillis();
         }
         return false;
     }
@@ -77,6 +86,15 @@ public class AutoCalibrateWheels extends AutoCommand{
     @Override
     public void reset() {
         
+    }
+    
+    public boolean withinRange(double currentTickRight, double currentTickLeft){
+        if(Math.abs(currentTickRight) - Math.abs(initialTickRight) >= ((rotations * 1024) - ERROR) && Math.abs(currentTickRight) - Math.abs(initialTickRight) <= ((rotations * 1024) + ERROR)){
+            if(Math.abs(Math.abs(currentTickLeft) - Math.abs(initialTickLeft)) >= ((rotations * 1024) - ERROR) && Math.abs(Math.abs(currentTickLeft) - Math.abs(initialTickLeft)) <= ((rotations * 1024) + ERROR)){
+                return true;
+            }
+        }
+        return false;
     }
 
 }
