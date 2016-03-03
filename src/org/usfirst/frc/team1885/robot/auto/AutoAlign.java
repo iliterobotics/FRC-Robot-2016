@@ -20,8 +20,8 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class AutoAlign extends AutoCommand {
 
-    private final double ALIGNMENT_ERROR = 6;
-    private double targetDegree;
+    private final double ALIGNMENT_ERROR = 5;
+    private double targetDegree, absoluteTarget;
     private double direction;
     private SensorInputControlSRX sensorInputControl;
     public static final double TURN_RADIUS = 16;
@@ -37,6 +37,7 @@ public class AutoAlign extends AutoCommand {
     public AutoAlign(double degree) {
         sensorInputControl = SensorInputControlSRX.getInstance();
         targetDegree = degree;
+        absoluteTarget = (degree + 360) % 360;
     }
 
     @Override
@@ -49,7 +50,9 @@ public class AutoAlign extends AutoCommand {
         double initialYaw = SensorInputControlSRX.getInstance().getYaw();
         
         direction = (targetDegree - initialYaw) < 0 ? -1 : 1;
-        targetDegree = Math.abs(targetDegree) - initialYaw;
+        targetDegree = Math.abs(targetDegree - initialYaw);
+        
+        DriverStation.reportError("\n Direction:: " + direction + "  targetDegree:: " + targetDegree, false);
         
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
@@ -59,10 +62,10 @@ public class AutoAlign extends AutoCommand {
     @Override
     public boolean execute() {
         double yaw = (sensorInputControl.getYaw() + 360) % 360;
-        double difference = (yaw - targetDegree % 360);
-        
-        DriverStation.reportError("\n Degree to turn : " + targetDegree
-                + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
+        double difference = (yaw - absoluteTarget);
+
+//        DriverStation.reportError("\n Degree to turn : " + targetDegree
+//                + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
         
         if (Math.abs(difference) < ALIGNMENT_ERROR) {
             DriverStation.reportError("\nAligned.", false);
