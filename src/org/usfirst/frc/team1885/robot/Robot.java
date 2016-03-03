@@ -83,6 +83,7 @@ public class Robot extends SampleRobot {
             // New canbus code
             // driverInputControl.update();
             UtilityArm.getInstance().update();
+            UtilityArm.getInstance().updateOutputs();
             // sensorInputControl.update();
             Timer.delay(.005);
 

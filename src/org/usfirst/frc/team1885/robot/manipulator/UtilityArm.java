@@ -42,6 +42,8 @@ public class UtilityArm implements Module {
     private static final double DEGREE_MARGIN_ERR = 5 * CONVERSION_FACTOR;
     private final double DEAD_ZONE_X = .2;
     private final double DEAD_ZONE_Y = .2;
+    private final double INCREMENT_RATE = 1 / 12.0; // Rate at which xCoord and
+                                                    // yCoord are incremented
 
     private double jointAPosition; // storage for updating the A angle
     private double jointBPosition; // storage for updating the B angle
@@ -50,8 +52,10 @@ public class UtilityArm implements Module {
     private double aP, aI, aD; // values for the PID to move joint A
     private double bP, bI, bD; // values for the PID to move joint B
 
-    private double xCoord;
-    private double yCoord;
+    private double xCoord; // Current x Coordinate
+    private double yCoord; // Current y Coordinate
+    private double xModifier; // Current modifier value for xCoord
+    private double yModifier; // Current modifier value for yCoord
 
     private MotorState jointAState; // used for keeping track of the motor state
                                     // for arm A
@@ -105,8 +109,6 @@ public class UtilityArm implements Module {
     public void update() {
         // DriverStation.reportError("\nA Angle Value: " + aAngleVal
         // + " --- B Angle Val: " + bAngleVal, false);
-        double xModifier = 0;
-        double yModifier = 0;
 
         if (xCoord + xModifier < 9 && xCoord + xModifier > -15) {
             xCoord += xModifier;
@@ -116,11 +118,16 @@ public class UtilityArm implements Module {
         if (Math.abs(driverInputControl.getControllerThrottle()) > DEAD_ZONE_X
                 || Math.abs(driverInputControl
                         .getControllerTwist()) > DEAD_ZONE_Y) {
-            if (driverInputControl.getControllerThrottle() > DEAD_ZONE_X) {
-                xModifier = driverInputControl.getControllerThrottle() / 12;
+            if (Math.abs(
+                    driverInputControl.getControllerThrottle()) > DEAD_ZONE_X) {
+                xModifier = driverInputControl.getControllerThrottle()
+                        * INCREMENT_RATE;
             }
-            if (driverInputControl.getControllerTwist() > DEAD_ZONE_Y) {
-                yModifier = driverInputControl.getControllerTwist() / 12;
+            if (Math.abs(
+                    driverInputControl.getControllerTwist()) > DEAD_ZONE_Y) {
+                yModifier = driverInputControl.getControllerTwist()
+                        * INCREMENT_RATE;
+                // Up on joystick is negative
             }
             goTo(xCoord, yCoord);
         }
@@ -133,12 +140,6 @@ public class UtilityArm implements Module {
         DriverStation.reportError(
                 "X Coordinate: " + xCoord + " --- Y Coordinate: " + yCoord,
                 false);
-
-        // joystick stuff to put in later
-        // double joystick_x = ;
-        // double joystick_y = ;
-        // goTo(x + joystick_x, y + joysick_y);
-        updateOutputs();
     }
 
     @Override
@@ -248,7 +249,7 @@ public class UtilityArm implements Module {
         return isJointAFinished && isJointBFinished;
     }
 
-    public void resetPos() {
+    public void resetPos() { // Update to correct values
         jointAPosition = 100;
         jointBPosition = 90;
         xCoord = -2;
