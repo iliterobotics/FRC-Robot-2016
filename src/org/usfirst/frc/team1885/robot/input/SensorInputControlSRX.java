@@ -39,6 +39,7 @@ public class SensorInputControlSRX {
     private double INITIAL_POT_A_POSITION;
     private static double INITIAL_TWIST_POSITION;
     public static double INITIAL_TILT_POSITION;
+    
     private static final double POTENTIOMETER_CONVERSION_FACTOR = 1024.0 / 360;
     private Map<SensorType, Integer> ticks;
 
