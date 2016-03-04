@@ -37,8 +37,8 @@ public class SensorInputControlSRX {
 
     private double INITIAL_POT_B_POSITION;
     private double INITIAL_POT_A_POSITION;
-    private static double INITIAL_TWIST_POSITION;
-    public static double INITIAL_TILT_POSITION;
+    private double INITIAL_TWIST_POSITION;
+    private double INITIAL_TILT_POSITION;
     
     private static final double POTENTIOMETER_CONVERSION_FACTOR = 1024.0 / 360;
     private Map<SensorType, Integer> ticks;
@@ -114,6 +114,12 @@ public class SensorInputControlSRX {
     }
     public double getInitialPotBPostition() {
         return INITIAL_POT_B_POSITION;
+    }
+    public double getInitialTiltPosition() {
+        return INITIAL_TILT_POSITION;
+    }
+    public double getInitialTwistPosition() {
+        return INITIAL_TWIST_POSITION;
     }
     //Create navx
     public void createNavX(SerialPort.Port port) {
