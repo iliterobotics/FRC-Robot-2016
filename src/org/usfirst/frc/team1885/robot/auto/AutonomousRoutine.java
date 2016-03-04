@@ -42,9 +42,9 @@ public class AutonomousRoutine {
 //         commands.add(new AutoWait(2000));
 //         commands.add(new AutoAlign());
 
-//         getConfiguration();
-        type = DefenseType.ROUGH_TERRAIN;
-         initAutoBreach();
+         getConfiguration();
+        //type = DefenseType.ROUGH_TERRAIN;
+        // initAutoBreach();
 //         autoMoveToShoot();
     }
 
@@ -75,7 +75,6 @@ public class AutonomousRoutine {
     // AutoAlign - realigns the robot to move in position to shoot
 
     public void getConfiguration() {
-        
         AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
         type = DefenseType.values()[autoC.getDefense()];
         targetDefense = autoC.getPosition();
