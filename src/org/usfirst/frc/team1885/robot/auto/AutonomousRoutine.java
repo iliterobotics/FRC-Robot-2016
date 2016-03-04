@@ -18,7 +18,7 @@ public class AutonomousRoutine {
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
         robot = r;
-        drawbridge();
+        sallyPort();
     }
     public void execute() {
         int size = commands.size();
@@ -52,7 +52,32 @@ public class AutonomousRoutine {
     private final double Y_OVERSHOOT_DISTANCE = 2;
 
     public void sallyPort() {
+        // commands.add(); //Check to see if touching sallyport
+        double disXInit = 10;
+        double disYInit = 23;
+        commands.add(new AutoUtilityArm(-disXInit, disYInit));
+        double disXHangOver = 20;
+        double disYHangOver = 23;
+        commands.add(new AutoUtilityArm(-disXHangOver, disYHangOver));
+        commands.add(new AutoWait(300));
+        double disXGrab = 20;
+        double disYGrab = 12;
+        commands.add(new AutoUtilityArm(-disXGrab, disYGrab));
+        commands.add(new AutoWait(300));
+        // double disBack = ;
+        // commands.add(); //Drive backwards a certain distance
+        // commands.add(new AutoWait(300));
+        // commands.add(); //Do a 180
+        commands.add(new AutoUtilityArm());
+        // commands.add(); //Begin driving forward
+    }
 
+    public void doubleSallyPort() {
+        sallyPort();
+        // commands.add(); // Check to see if off ramp
+        // commands.add(); // Drive back over the ramp
+        // commands.add(); // Do a 180
+        // commands.add(); // Drive back over the ramp
     }
 
     public void drawbridge() {
