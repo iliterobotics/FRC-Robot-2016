@@ -8,6 +8,7 @@ import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 import org.usfirst.frc.team1885.robot.sensor.PressureSensor;
+import org.usfirst.frc.team1885.robot.sensor.RotarySwitchSensor;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -30,6 +31,7 @@ public class SensorInputControlSRX {
     private BuiltInAccelerometer bia;
     private AHRS navx;
     private PressureSensor pressureSensor;
+    private RotarySwitchSensor rotarySwitchSensor;
 
     public static final double DEADZONE = 0.1;
 
@@ -37,6 +39,7 @@ public class SensorInputControlSRX {
     private double INITIAL_POT_A_POSITION;
     private static double INITIAL_TWIST_POSITION;
     public static double INITIAL_TILT_POSITION;
+    
     private static final double POTENTIOMETER_CONVERSION_FACTOR = 1024.0 / 360;
     private Map<SensorType, Integer> ticks;
 
@@ -83,6 +86,7 @@ public class SensorInputControlSRX {
 //                RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
         
 //         DriverStation.reportError("\n\nZero Tilt:: " + getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
+        DriverStation.reportError("\n Position:: " + getRotaryPosition(), false);
     }
     //Create initial sensor readings
     public void init() {
@@ -223,5 +227,10 @@ public class SensorInputControlSRX {
     public double getPressure(){
         return pressureSensor.getPressure();
     }
-
+    public void addRotarySwitchSensor(int channel){
+        rotarySwitchSensor = new RotarySwitchSensor(channel);
+    }
+    public double getRotaryPosition(){
+        return rotarySwitchSensor.getPosition();
+    }
 }

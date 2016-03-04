@@ -92,6 +92,7 @@ public class RobotConfiguration {
         // Talon Sensors
         sensorInputControl.createNavX(SerialPort.Port.kMXP);
         sensorInputControl.addPressureSensor(0);
+        sensorInputControl.addRotarySwitchSensor(1);
                 // Drivetrain Encoders
         robotControl.addTalonSensor(RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
         robotControl.addTalonSensor(RobotMotorType.RIGHT_DRIVE, SensorType.RIGHT_ENCODER, 2);
@@ -115,3 +116,4 @@ public class RobotConfiguration {
 //        moduleControl.addModule(ModuleType.UTILITY_ARM, UtilityArm.getInstance());
     }
 }
+
