@@ -7,7 +7,9 @@ import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
+import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
+import dataclient.robotdata.autonomous.AutonomousConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -74,18 +76,18 @@ public class AutonomousRoutine {
 
     public void getConfiguration() {
         
-//        AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
-//        type = DefenseType.values()[autoC.getDefense()];
-//        targetDefense = autoC.getPosition();
-//        delay = autoC.getDelay() / 1000.0; // time in seconds
-//        isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
-//        goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
-//
-//        DriverStation.reportError(
-//                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
-//                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
-//                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
-//                false);
+        AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
+        type = DefenseType.values()[autoC.getDefense()];
+        targetDefense = autoC.getPosition();
+        delay = autoC.getDelay() / 1000.0; // time in seconds
+        isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
+        goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
+
+        DriverStation.reportError(
+                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
+                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
+                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
+                false);
     }
 
     /**
