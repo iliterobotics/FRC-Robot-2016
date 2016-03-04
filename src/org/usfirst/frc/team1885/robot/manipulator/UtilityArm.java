@@ -135,7 +135,7 @@ public class UtilityArm implements Module {
                     driverInputControl.getControllerTwist()) > DEAD_ZONE_Y) {
                 yModifier = driverInputControl.getControllerTwist()
                         * INCREMENT_RATE;
-                // Up on joystick is negative
+                // Up on joystick gives negative values
             }
             goTo(xCoord, yCoord);
         }
