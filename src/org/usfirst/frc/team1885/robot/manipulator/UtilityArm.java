@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.robot.manipulator;
 
+import java.sql.Driver;
+
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
@@ -40,6 +42,7 @@ public class UtilityArm implements Module {
     // of
     // arm B
     private static final double DEGREE_MARGIN_ERR = 5 * CONVERSION_FACTOR;
+    private static final double FRAME_LENGTH = 5;
     private final double DEAD_ZONE_X = .2;
     private final double DEAD_ZONE_Y = .2;
     private final double INCREMENT_RATE = 1 / 12.0; // Rate at which xCoord and
@@ -110,10 +113,17 @@ public class UtilityArm implements Module {
         // DriverStation.reportError("\nA Angle Value: " + aAngleVal
         // + " --- B Angle Val: " + bAngleVal, false);
 
-        if (xCoord + xModifier < 9 && xCoord + xModifier > -15) {
-            xCoord += xModifier;
-        }
+        // if (xCoord + xModifier < 9 && xCoord + xModifier > -15) {
+        // xCoord += xModifier;
+        // }
+        // if (yCoord + yModifier < 35 && yCoord + yModifier > -10) {
+        // yCoord -= yModifier;
+        // }
+
+        xCoord += xModifier;
         yCoord -= yModifier;
+
+        xModifier = yModifier = 0;
 
         if (Math.abs(driverInputControl.getControllerThrottle()) > DEAD_ZONE_X
                 || Math.abs(driverInputControl
@@ -157,6 +167,30 @@ public class UtilityArm implements Module {
      *            the y coordinate of the new end-point
      */
     public void goTo(double xEndPoint, double yEndPoint) {
+        if (xEndPoint < -15 - FRAME_LENGTH) {
+            xEndPoint = -15 - FRAME_LENGTH;
+        }
+        if (xEndPoint > 9) {
+            xEndPoint = 9;
+        }
+        if (yEndPoint > 35) {
+            yEndPoint = 35;
+        }
+        if (yEndPoint < -10) {
+            yEndPoint = -10;
+        }
+
+        DriverStation.reportError(
+                "\nyEndPoint Calculations: " + (Math.sqrt(
+                        (1 - (xEndPoint * xEndPoint) / (20 * 20)) * (5 * 5))),
+                false);
+
+        if (yEndPoint > 28 && (yEndPoint - 28) > Math
+                .sqrt((1 - (xEndPoint * xEndPoint) / (20 * 20)) * (5 * 5))) {
+            yEndPoint = 28 + (Math
+                    .sqrt((1 - (xEndPoint * xEndPoint) / (20 * 20)) * (5 * 5)));
+        }
+
         xCoord = xEndPoint;
         yCoord = yEndPoint;
 
