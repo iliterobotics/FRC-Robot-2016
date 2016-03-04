@@ -80,15 +80,15 @@ public class Robot extends SampleRobot {
         while (isOperatorControl() && isEnabled()) {
 //            //Update Inputs
             sensorInputControl.update();
-            driverInputControl.update();
+//            driverInputControl.update();
 //            //Update Module Data
-            for(Module m: modules) {
-                m.update();
-            }
+//            for(Module m: modules) {
+//                m.update();
+//            }
 //            //Update Module Outputs
-            for(Module m: modules) {
-                m.updateOutputs();
-            }
+//            for(Module m: modules) {
+//                m.updateOutputs();
+//            }
             Timer.delay(.005);
         }
     }
