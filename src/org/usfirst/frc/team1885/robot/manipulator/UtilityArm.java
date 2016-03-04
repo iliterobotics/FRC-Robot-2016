@@ -91,8 +91,10 @@ public class UtilityArm implements Module {
 
         this.jointAState = MotorState.OFF;
         this.jointBState = MotorState.OFF;
-        jointAPosition = 0;
-        jointBPosition = 0;
+        jointAPosition = 105; // Reset Position
+        jointBPosition = 105; // Reset Position
+        xCoord = -1; // Reset Coordinate
+        yCoord = 4; // Reset Coordinate
         driverInputControl = DriverInputControlSRX.getInstance();
     }
 
