@@ -12,6 +12,7 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import sun.security.x509.X400Address;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -32,20 +33,15 @@ public class UtilityArm implements Module {
                                                                  // to convert
                                                                  // from degrees
                                                                  // to ticks
-    public static final double DEFAULT_A_POSITION = 40 * CONVERSION_FACTOR;
-    // Starting
-    // tick
-    // amount
-    // of arm A
-    public static final double DEFAULT_B_POSITION = 40 * CONVERSION_FACTOR;
-    // Starting tick amount
-    // of
-    // arm B
     private static final double DEGREE_MARGIN_ERR = 5 * CONVERSION_FACTOR;
     private static final double FRAME_LENGTH = 5;
+    private final double BOUNDARY = 15;
+    private final double X_MAX_BACK_REACH = 9;
+    private final double Y_MAX_UP_REACH = 33;
+    private final double Y_MAX_DOWN_REACH = -10;
     private final double DEAD_ZONE_X = .2;
     private final double DEAD_ZONE_Y = .2;
-    private final double INCREMENT_RATE = 1 / 12.0; // Rate at which xCoord and
+    private final double INCREMENT_RATE = 1 / 10.0; // Rate at which xCoord and
                                                     // yCoord are incremented
 
     private double jointAPosition; // storage for updating the A angle
@@ -159,7 +155,11 @@ public class UtilityArm implements Module {
 
     /**
      * A simple down to earth equation for calculating the angles required to
-     * reach a point
+     * reach a point.
+     * 
+     * @see <a href=
+     *      "https://docs.google.com/drawings/d/1dR8t4AcUfh1KOq0hK-Sh3xFV05fgMqhl_l8BH47n6JQ/edit?usp=sharing"
+     *      >Arm Constraints, explained</a>
      * 
      * @param xEndPoint
      *            the x coordinate of the new end-point
@@ -167,37 +167,48 @@ public class UtilityArm implements Module {
      *            the y coordinate of the new end-point
      */
     public void goTo(double xEndPoint, double yEndPoint) {
-        if (xEndPoint < -15 - FRAME_LENGTH) {
-            xEndPoint = -15 - FRAME_LENGTH;
+        /*
+         * Explanation of if-statements:
+         * https://docs.google.com/drawings/d/1dR8t4AcUfh1KOq0hK-
+         * Sh3xFV05fgMqhl_l8BH47n6JQ/edit?usp=sharing
+         */
+
+        if (xEndPoint < -BOUNDARY - FRAME_LENGTH) {
+            xEndPoint = -BOUNDARY - FRAME_LENGTH;
         }
         if (xEndPoint > 9) {
             xEndPoint = 9;
         }
-        if (yEndPoint > 35) {
-            yEndPoint = 35;
+        if (yEndPoint > Y_MAX_UP_REACH) {
+            yEndPoint = Y_MAX_UP_REACH;
         }
-        if (yEndPoint < -10) {
-            yEndPoint = -10;
+        if (yEndPoint < Y_MAX_DOWN_REACH) {
+            yEndPoint = Y_MAX_DOWN_REACH;
+        }
+        if (yEndPoint < 3 && xEndPoint > -FRAME_LENGTH) {
+            xEndPoint = -5;
         }
 
-        DriverStation.reportError(
-                "\nyEndPoint Calculations: " + (Math.sqrt(
-                        (1 - (xEndPoint * xEndPoint) / (20 * 20)) * (5 * 5))),
-                false);
+        if (xEndPoint < 1 && xEndPoint > -1 && yEndPoint < 6) {
+            yEndPoint = 6;
+        }
 
-        if (yEndPoint > 28 && (yEndPoint - 28) > Math
-                .sqrt((1 - (xEndPoint * xEndPoint) / (20 * 20)) * (5 * 5))) {
-            yEndPoint = 28 + (Math
-                    .sqrt((1 - (xEndPoint * xEndPoint) / (20 * 20)) * (5 * 5)));
+        if (xEndPoint >= 1 / 45.0 && yEndPoint < 22
+                && yEndPoint < Math.sqrt(45 * (xEndPoint + 4.0 / 45)) + 1) {
+            xEndPoint = Math.pow((yEndPoint - 1), 2) / 45.0 - 4.0 / 45;
+        }
+
+        if (yEndPoint > 28 && (yEndPoint) > Math
+                .sqrt((1 - (xEndPoint * xEndPoint)
+                        / (Math.pow((BOUNDARY + FRAME_LENGTH), 2))) * (5 * 5))
+                + 28) {
+            yEndPoint = (Math.sqrt((1 - (xEndPoint * xEndPoint)
+                    / ((Math.pow((BOUNDARY + FRAME_LENGTH), 2)))) * (5 * 5)))
+                    + 28;
         }
 
         xCoord = xEndPoint;
         yCoord = yEndPoint;
-
-        if (xEndPoint > LENGTH_A - 2 && yEndPoint < LENGTH_B - 2) {
-            xEndPoint = LENGTH_A - 2;
-            yEndPoint = LENGTH_B - 2;
-        }
 
         double p = Math.sqrt((xEndPoint * xEndPoint) + (yEndPoint * yEndPoint));
         double k = ((p * p) + LENGTH_A * LENGTH_A - LENGTH_B * LENGTH_B)
@@ -283,11 +294,11 @@ public class UtilityArm implements Module {
         return isJointAFinished && isJointBFinished;
     }
 
-    public void resetPos() { // Update to correct values
-        jointAPosition = 100;
-        jointBPosition = 90;
-        xCoord = -2;
-        yCoord = 5;
+    public void resetPos() {
+        jointAPosition = 105;
+        jointBPosition = 105;
+        xCoord = -1; // An approximation
+        yCoord = 4; // An approximation
     }
 
 }
