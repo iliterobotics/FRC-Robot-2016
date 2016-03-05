@@ -30,8 +30,8 @@ public class Shooter implements Module {
     private static final double TILT_LIMIT_UPPER = 130;
     private static final double TILT_LIMIT_LOWER = 0;
     public static final double GEAR_RATIO_TWIST = 3.0 / 7;
-    private static final double TWIST_BOUND_RIGHT = (1024.0 / GEAR_RATIO_TWIST) / (360 / 45);
-    private static final double TWIST_BOUND_LEFT = -(1024.0 / GEAR_RATIO_TWIST) / (360 / 45);
+    private static final double TWIST_BOUND_RIGHT = -(1024.0 / GEAR_RATIO_TWIST) / (360 / 45);
+    private static final double TWIST_BOUND_LEFT = (1024.0 / GEAR_RATIO_TWIST) / (360 / 45);
     // public static final double GEAR_RATIO_TILT = 1.0 / 3;
     private double flywheelSpeedLeft;
     private MotorState leftState;
@@ -249,16 +249,17 @@ public class Shooter implements Module {
     }
     private boolean updateTwistPosition() {
         boolean isInPosition = true;
-        double currentAngle = sensorControl.getZeroedEncoder(SensorType.SHOOTER_TWIST_ENCODER);
+        if (sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER) >= 45) {
+            double currentAngle = sensorControl.getZeroedEncoder(SensorType.SHOOTER_TWIST_ENCODER);
 
-        this.relativeTwistAngle = this.boundTwist(this.relativeTwistAngle);
+            this.relativeTwistAngle = this.boundTwist(this.relativeTwistAngle);
 
-        this.twistPosition = (this.relativeTwistAngle + sensorControl.getInitialTwistPosition()) * (1024 / 360.0);
+            this.twistPosition = (this.relativeTwistAngle + sensorControl.getInitialTwistPosition()) * (1024 / 360.0);
 
-        isInPosition = (currentAngle > relativeTwistAngle - ANGLE_ERROR) && (currentAngle < relativeTwistAngle + ANGLE_ERROR);
+            isInPosition = (currentAngle > relativeTwistAngle - ANGLE_ERROR) && (currentAngle < relativeTwistAngle + ANGLE_ERROR);
 
-        updateTwist(twistPosition);
-
+            updateTwist(twistPosition);
+        }
         return isInPosition; 
     }
     /**
@@ -270,13 +271,9 @@ public class Shooter implements Module {
      */
     public double boundTwist(double twistInputAngle) {
         double realTwistAngle = twistInputAngle;
+        twistInputAngle = realTwistAngle > TWIST_BOUND_RIGHT ? TWIST_BOUND_RIGHT : twistInputAngle;
         
-        if( realTwistAngle > TWIST_BOUND_RIGHT ){
-            realTwistAngle = TWIST_BOUND_RIGHT;
-        }
-        if( realTwistAngle < TWIST_BOUND_LEFT ){
-            realTwistAngle = TWIST_BOUND_LEFT;
-        }
+        twistInputAngle = realTwistAngle < TWIST_BOUND_LEFT ? TWIST_BOUND_LEFT : twistInputAngle;
         
         return realTwistAngle;
     }
@@ -294,6 +291,7 @@ public class Shooter implements Module {
         rightState = leftState = MotorState.OFF;
         flywheelSpeedRight = flywheelSpeedLeft = 0;
         setToTiltValue(sensorControl.getInitialTiltPosition());
+        setToTwistValue(sensorControl.getInitialTwistPosition());
     }
     
     @Override
