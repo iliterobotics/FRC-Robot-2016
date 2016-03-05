@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.input;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -96,8 +97,7 @@ public class SensorInputControlSRX {
 //      INITIAL_POT_B_POSITION = rsrx.getSensor()
 //              .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
 //              * UtilityArm.CONVERSION_FACTOR;
-      INITIAL_TILT_POSITION = getAnalogGeneric(
-              SensorType.SHOOTER_TILT_POTENTIOMETER);
+      INITIAL_TILT_POSITION = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get();
       DriverStation.reportError("\nInit Tilt" + INITIAL_TILT_POSITION, false);
       INITIAL_TWIST_POSITION = getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER);
       DriverStation.reportError("\nInit Twist " + INITIAL_TWIST_POSITION, false);
