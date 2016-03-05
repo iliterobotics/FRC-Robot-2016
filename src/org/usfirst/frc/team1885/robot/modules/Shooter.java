@@ -19,6 +19,7 @@ public class Shooter implements Module {
     private static final int FLYWHEEL_MIN_SPEED = 29000;
     private static final double TILT_MOVEMENT_PROPORTION = 0.25;
     private static final double TWIST_MOVEMENT_PROPORTION = 0.15;
+    private static final double TILT_THRESHOLD = 45;
     private static Shooter instance;
     public static final double HIGH_GOAL_ANGLE = 130.0;
     public static final double LOW_GOAL_ANGLE = 12.0;
@@ -243,7 +244,7 @@ public class Shooter implements Module {
     public void updateTwist() {
         double userTwistDirection = driverInputControl.getShooterTwist();
 
-        if (sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER) >= 45)
+        if (sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER) >= TILT_THRESHOLD)
             this.relativeTwistAngle += userTwistDirection * TWIST_MOVEMENT_PROPORTION;
 
         updateTwistPosition();
