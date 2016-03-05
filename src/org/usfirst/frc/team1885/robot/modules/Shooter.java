@@ -218,15 +218,13 @@ public class Shooter implements Module {
      * @return the corrected angle to go to
      */
     public double boundTilt(double tiltInputAngle) {
-        double realTiltAngle = tiltInputAngle;
-
-        if (realTiltAngle > TILT_LIMIT_UPPER) {
-            realTiltAngle = TILT_LIMIT_UPPER;
+        if (tiltInputAngle > TILT_LIMIT_UPPER) {
+            tiltInputAngle = TILT_LIMIT_UPPER;
         }
-        if (realTiltAngle < TILT_LIMIT_LOWER) {
-            realTiltAngle = TILT_LIMIT_LOWER;
+        if (tiltInputAngle < TILT_LIMIT_LOWER) {
+            tiltInputAngle = TILT_LIMIT_LOWER;
         }
-        return realTiltAngle;
+        return tiltInputAngle;
     }
     public void updateTilt(double position) {
         if (position > 0) {
@@ -239,7 +237,7 @@ public class Shooter implements Module {
     }
     
     public void setToTwistValue(double angle){
-        relativeTwistAngle = angle / GEAR_RATIO_TWIST;
+        relativeTwistAngle = angle;
     }
     public void updateTwist() {
         double userTwistDirection = driverInputControl.getShooterTwist();
@@ -251,15 +249,18 @@ public class Shooter implements Module {
     }
     private boolean updateTwistPosition() {
         boolean isInPosition = true;
-        double currentAngle = sensorControl.getZeroedEncoder(SensorType.SHOOTER_TWIST_ENCODER);
+        
+        double currentAngle = sensorControl.getZeroedEncoder(SensorType.SHOOTER_TWIST_ENCODER) * GEAR_RATIO_TWIST;
 
         this.relativeTwistAngle = this.boundTwist(this.relativeTwistAngle);
 
-        this.twistPosition = (this.relativeTwistAngle + sensorControl.getInitialTwistPosition()) * (1024 / 360.0);
-
+        this.twistPosition = (this.relativeTwistAngle + sensorControl.getInitialTwistPosition());
+        this.twistPosition = (1024.0 / GEAR_RATIO_TWIST) / (360 / this.twistPosition);
+        
         isInPosition = (currentAngle > relativeTwistAngle - ANGLE_ERROR) && (currentAngle < relativeTwistAngle + ANGLE_ERROR);
 
-            updateTwist(twistPosition);
+        updateTwist(twistPosition);
+        
         return isInPosition; 
     }
     /**
@@ -270,12 +271,11 @@ public class Shooter implements Module {
      * @return the corrected angle to go to
      */
     public double boundTwist(double twistInputAngle) {
-        double realTwistAngle = twistInputAngle;
-        twistInputAngle = realTwistAngle > TWIST_BOUND_RIGHT ? TWIST_BOUND_RIGHT : twistInputAngle;
+        twistInputAngle = twistInputAngle > TWIST_BOUND_RIGHT ? TWIST_BOUND_RIGHT : twistInputAngle;
         
-        twistInputAngle = realTwistAngle < TWIST_BOUND_LEFT ? TWIST_BOUND_LEFT : twistInputAngle;
+        twistInputAngle = twistInputAngle < TWIST_BOUND_LEFT ? TWIST_BOUND_LEFT : twistInputAngle;
         
-        return realTwistAngle;
+        return twistInputAngle;
     }
     public void updateTwist(double position) {
         if (position > 0) {
@@ -308,7 +308,7 @@ public class Shooter implements Module {
 //         DriverStation.reportError("\n", false);
          //        RobotControlWithSRX.getInstance().updateFlywheelShooter(flywheelSpeedLeft, flywheelSpeedRight);
 //        RobotControlWithSRX.getInstance().updateShooterTilt(tiltPosition);
-//        RobotControlWithSRX.getInstance().updateShooterTwist(twistSpeed);
+//        RobotControlWithSRX.getInstance().updateShooterTwist(twistPosition);
 //        RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, isHeld);
         // DriverStation.reportError("\nContainer State:: " + isHeld, false);
         // // RobotControlWithSRX.getInstance()
