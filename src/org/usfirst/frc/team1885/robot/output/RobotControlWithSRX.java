@@ -133,8 +133,8 @@ public class RobotControlWithSRX {
     }
     public void updateFlywheelShooter(double flywheelSpeedLeft,
             double flywheelSpeedRight) {
-        talons.get(RobotMotorType.FLYWHEEL_LEFT).set(-flywheelSpeedLeft);
-        talons.get(RobotMotorType.FLYWHEEL_RIGHT).set(-flywheelSpeedRight);
+        talons.get(RobotMotorType.FLYWHEEL_LEFT).set(flywheelSpeedLeft);
+        talons.get(RobotMotorType.FLYWHEEL_RIGHT).set(flywheelSpeedRight);
     }
     public void updateIntakeMotors(double intakeLeftSpeed,
             double intakeRightSpeed) {

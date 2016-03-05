@@ -23,9 +23,9 @@ public class AutoShooterTwist extends AutoCommand{
 
     @Override
     public boolean execute() {
-        boolean completed = shooter.positionTwist();
+//        boolean completed = shooter.positionTwist();
 //        DriverStation.reportError("\nPositioning twist:" + completed, false);
-        return completed;
+        return true;
     }
 
     @Override

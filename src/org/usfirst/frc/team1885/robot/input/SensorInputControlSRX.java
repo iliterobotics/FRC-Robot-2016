@@ -86,7 +86,7 @@ public class SensorInputControlSRX {
 //                RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
         
 //         DriverStation.reportError("\n\nZero Tilt:: " + getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
-        DriverStation.reportError("\n Position:: " + getRotaryPosition(), false);
+//        DriverStation.reportError("\n Position:: " + getRotaryPosition(), false);
     }
     //Create initial sensor readings
     public void init() {
@@ -191,6 +191,8 @@ public class SensorInputControlSRX {
             return getAnalogGeneric(type) - INITIAL_POT_A_POSITION;
         case JOINT_B_POTENTIOMETER:
             return getAnalogGeneric(type) - INITIAL_POT_B_POSITION;
+        case SHOOTER_TILT_POTENTIOMETER:
+            return getAnalogGeneric(type) - INITIAL_TILT_POSITION;
         default:
             return getAnalogGeneric(type);
         }
