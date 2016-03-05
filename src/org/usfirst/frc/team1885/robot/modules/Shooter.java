@@ -243,23 +243,22 @@ public class Shooter implements Module {
     public void updateTwist() {
         double userTwistDirection = driverInputControl.getShooterTwist();
 
-        this.relativeTwistAngle += userTwistDirection * TWIST_MOVEMENT_PROPORTION;
+        if (sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER) >= 45)
+            this.relativeTwistAngle += userTwistDirection * TWIST_MOVEMENT_PROPORTION;
 
         updateTwistPosition();
     }
     private boolean updateTwistPosition() {
         boolean isInPosition = true;
-        if (sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER) >= 45) {
-            double currentAngle = sensorControl.getZeroedEncoder(SensorType.SHOOTER_TWIST_ENCODER);
+        double currentAngle = sensorControl.getZeroedEncoder(SensorType.SHOOTER_TWIST_ENCODER);
 
-            this.relativeTwistAngle = this.boundTwist(this.relativeTwistAngle);
+        this.relativeTwistAngle = this.boundTwist(this.relativeTwistAngle);
 
-            this.twistPosition = (this.relativeTwistAngle + sensorControl.getInitialTwistPosition()) * (1024 / 360.0);
+        this.twistPosition = (this.relativeTwistAngle + sensorControl.getInitialTwistPosition()) * (1024 / 360.0);
 
-            isInPosition = (currentAngle > relativeTwistAngle - ANGLE_ERROR) && (currentAngle < relativeTwistAngle + ANGLE_ERROR);
+        isInPosition = (currentAngle > relativeTwistAngle - ANGLE_ERROR) && (currentAngle < relativeTwistAngle + ANGLE_ERROR);
 
             updateTwist(twistPosition);
-        }
         return isInPosition; 
     }
     /**
