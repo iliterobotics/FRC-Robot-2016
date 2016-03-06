@@ -1,7 +1,5 @@
 package org.usfirst.frc.team1885.serverdata;
 
-import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
-
 import dataclient.DataServerWebClient;
 import dataclient.robotdata.vision.HighGoal;
 
@@ -20,12 +18,11 @@ public class ShooterDataClient {
         client.watch(highGoalData, updateData -> updateData());
     }
     
+    public HighGoal getData(){
+        return highGoalData;
+    }
     
     private void updateData(){
-        //TODO calculate tilt and twist
-        double tiltAngle = 0;
-        double twistAngle = 0;
-        RobotControlWithSRX.getInstance().updateShooterTilt(tiltAngle);
-        RobotControlWithSRX.getInstance().updateShooterTilt(twistAngle);
+        //TODO called whenever data is updated
     }
 }
