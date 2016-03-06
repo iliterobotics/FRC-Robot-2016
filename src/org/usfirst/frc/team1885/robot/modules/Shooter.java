@@ -207,10 +207,10 @@ public class Shooter implements Module {
 //        DriverStation.reportError("\nContained:: " + isHeld, false);
         updateShooter(flywheelSpeedLeft, flywheelSpeedRight);
     }
-    public void fire(){
+    public boolean fire(){
         initiateLaunch();
         lockAim();
-        launch();
+        return launch();
     }
     /**
      * Starts the flywheels, sets both motors to shooting speed
