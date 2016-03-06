@@ -6,7 +6,9 @@ import org.usfirst.frc.team1885.robot.modules.Shooter;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoShooterTilt extends AutoCommand {
+    private static final double ERROR = 0.5;
     private final double angle;
+    private double currentAngle;
     private Shooter shooter;
     
     public AutoShooterTilt(double angle) {
@@ -16,15 +18,15 @@ public class AutoShooterTilt extends AutoCommand {
     }
     @Override
     public boolean init() {
-        shooter.setToTiltValue(angle);
         return true;
     }
     @Override
     public boolean execute() {
-        boolean completed = shooter.updateTiltPosition();
-//        DriverStation.reportError("\nPositioning Shootr..." + completed, false);
-
-        return completed;
+        if(Math.abs(currentAngle - angle) <= ERROR){
+            return true;
+        }
+        currentAngle += Shooter.TILT_MOVEMENT_PROPORTION;
+        return false;
     }
     @Override
     public boolean updateOutputs() {
