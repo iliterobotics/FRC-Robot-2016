@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Shooter implements Module {
 
     private static final int FLYWHEEL_MIN_SPEED = 850;
-    private static final double TILT_MOVEMENT_PROPORTION = 0.45;
+    public static final double TILT_MOVEMENT_PROPORTION = 0.45;
     private static final double TWIST_MOVEMENT_PROPORTION = 0.15;
     private static final double TILT_THRESHOLD = 45;
     private static Shooter instance;
@@ -183,8 +183,6 @@ public class Shooter implements Module {
         isHeld = !OPEN;
 
         if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT)) {
-            initiateLaunch();
-            lockAim();
             fire();
         } else{
             lastLaunchCheck = System.currentTimeMillis();
@@ -208,6 +206,11 @@ public class Shooter implements Module {
         // false);
 //        DriverStation.reportError("\nContained:: " + isHeld, false);
         updateShooter(flywheelSpeedLeft, flywheelSpeedRight);
+    }
+    public boolean fire(){
+        initiateLaunch();
+        lockAim();
+        return launch();
     }
     /**
      * Starts the flywheels, sets both motors to shooting speed
@@ -236,7 +239,7 @@ public class Shooter implements Module {
      * Releases the container after a delay to allow the motors to speed up
      * @return true if the container is opened
      */
-    public boolean fire(){
+    public boolean launch(){
         if (System.currentTimeMillis() - lastLaunchCheck > FIRE_DELAY) {
             isHeld = OPEN;
             return true;

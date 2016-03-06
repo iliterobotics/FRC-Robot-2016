@@ -7,14 +7,14 @@ public class AutoShooterShoot extends AutoCommand {
    
     public boolean init() {
         shooter = shooter.getInstance();
-        shooter.reset();
         return false;
     }
 
     @Override
     public boolean execute() {
-        return true;
-        // return shooter.flywheelOutSpeed();
+        if(shooter.fire())
+            return true;
+        return false;
     }
 
     @Override
