@@ -37,8 +37,8 @@ public class RobotControlWithSRX {
     }
     private RobotControlWithSRX() {
         c = new Compressor(0);
-//        c.start();
-        c.stop();
+        c.start();
+//        c.stop();
         leftDrive = new ArrayList<CANTalon>();
         rightDrive = new ArrayList<CANTalon>();
         talons = new HashMap<RobotMotorType, CANTalon>();
