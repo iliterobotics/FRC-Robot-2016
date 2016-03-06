@@ -137,73 +137,44 @@ public class AutonomousRoutine {
         double firstMove = 0;
         double secondMove = 0;
         double align = 0;
-        if (goal == -1) { // Left Goal
-            switch (targetDefense) {
-            case 1:
-                firstTurn = 0;
-                secondMove = 6 * 12;
-                break;
-            case 2:
-                firstTurn = -25;
-                secondMove = 8.321 * 12;
-                break;
-            case 3:
-                firstTurn = -54.7;
-                secondMove = 10 * 12;
-                break;
-            case 4:
-                firstTurn = -64.35;
-                secondMove = 13.86 * 12;
-                break;
-            case 5:
-                firstTurn = -71.07;
-                secondMove = 18.5 * 12;
-                break;
-            default:
-                DriverStation.reportError("Invalid Target Defense", false);
+        if(goal == -1) { //Left Goal
+            switch(targetDefense) {
+            case 1: firstTurn = 0; secondMove = 6 * 12; break;
+            case 2: firstTurn = -25; secondMove = 8.321 * 12; break;
+            case 3: firstTurn = -54.7; secondMove = 10 * 12; break;
+            case 4: firstTurn = -64.35; secondMove = 13.86 * 12; break;
+            case 5: firstTurn = -71.07; secondMove = 18.5 * 12; break;
+            default: DriverStation.reportError("Invalid Target Defense", false);
             }
-            align = 58;
-        } else if (goal == 0) { // Center Goal
-            switch (targetDefense) {
-            case 1:
-                firstTurn = 90;
-                secondMove = 10 * 12;
-                break;
-            case 2:
-                firstTurn = 90;
-                secondMove = 6 * 12;
-                break;
-            case 3:
-                firstTurn = 90;
-                secondMove = 2 * 12;
-                break;
-            case 4:
-                firstTurn = -90;
-                secondMove = 2 * 12;
-                break;
-            case 5:
-                firstTurn = -90;
-                secondMove = 4 * 12;
-                break;
-            default:
-                DriverStation.reportError("Invalid Target Defense", false);
+            align = 180 + 58;
+        }
+        else if(goal == 0) { //Center Goal
+            switch(targetDefense) {
+            case 1: firstTurn = 90; secondMove = 11 * 12; break;
+            case 2: firstTurn = 90; secondMove = 7 * 12; break;
+            case 3: firstTurn = 90; secondMove = 3 * 12; break;
+            case 4: firstTurn = -90; secondMove = 1 * 12; break;
+            case 5: firstTurn = -90; secondMove = 3 * 12; break;
+            default: DriverStation.reportError("Invalid Target Defense", false);
             }
-            align = 0;
-        } else if (goal == 1) { // Right Goal
-            switch (targetDefense) {
-            case 1:
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            default:
-                DriverStation.reportError("Invalid Target Defense", false);
+            align = 180;
+        }
+        else if(goal == 1) { //Right Goal
+            switch(targetDefense) {
+            //DON'T DO 1!
+            case 1: firstTurn = 90; secondMove = 17 * 12; break; //Not done yet needs more commands
+            case 2: firstTurn = 57; secondMove = 15.5 * 12; break;
+            case 3: firstTurn = 45; secondMove = 12.5 * 12; break;
+            case 4: firstTurn = 30; secondMove = 10 * 12; break;
+            case 5: firstTurn = 0; secondMove = 9 * 12; break;
+            default: DriverStation.reportError("Invalid Target Defense", false);
             }
-            align = -58;
-        } else {
+            align = 180 - 58;
+        }
+        else {
             DriverStation.reportError("Invalid Goal Number", false);
         }
-        autoMoveToShoot(-firstMove, firstTurn, -secondMove, align);
+        autoMoveToShoot(firstMove, firstTurn, secondMove, align);
     }
 
     /**
