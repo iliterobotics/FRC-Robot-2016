@@ -9,7 +9,6 @@ import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
-import dataclient.robotdata.autonomous.AutonomousConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -173,6 +172,11 @@ public class AutonomousRoutine {
         }
         else {
             DriverStation.reportError("Invalid Goal Number", false);
+        }
+        if(type == DefenseType.PORTCULLIS || type == DefenseType.MOAT) {
+            firstMove = -firstMove;
+            secondMove = -secondMove;
+            align += 180;
         }
         autoMoveToShoot(firstMove, firstTurn, secondMove, align);
     }
