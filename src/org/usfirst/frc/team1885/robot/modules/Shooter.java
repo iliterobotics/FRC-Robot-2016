@@ -67,9 +67,16 @@ public class Shooter implements Module {
     private boolean reseting;
     private boolean twistDone;
 
-    private static final double TILT_P = 3;
-    private static final double TILT_I = 0.0001;
-    private static final double TILT_D = 0.0;
+    private static final double TILT_P_AUTO = 1.5;
+    private static final double TILT_I_AUTO = 0.002;
+    private static final double TILT_D_AUTO = 50;
+    
+    private boolean isAutoTilt;
+    private static final double AUTO_TILT_MARGIN = 4.0;
+    
+    private static final double TILT_P_MAN = 5;
+    private static final double TILT_I_MAN = 0.0001;
+    private static final double TILT_D_MAN = 0;
 
     private static final double TWIST_P = 0.7;
     private static final double TWIST_I = 0;
@@ -106,8 +113,8 @@ public class Shooter implements Module {
                 .changeControlMode(TalonControlMode.Position);
         talonList.get(RobotMotorType.SHOOTER_TILT)
                 .setFeedbackDevice(FeedbackDevice.AnalogPot);
-        talonList.get(RobotMotorType.SHOOTER_TILT).setPID(TILT_P, TILT_I,
-                TILT_D);
+        talonList.get(RobotMotorType.SHOOTER_TILT).setPID(TILT_P_MAN, TILT_I_MAN,
+                TILT_D_MAN);
         talonList.get(RobotMotorType.SHOOTER_TILT).reverseSensor(true);
 
         // Setting up Twist Talon
@@ -211,7 +218,7 @@ public class Shooter implements Module {
         // " Right:: " +
         // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).get(),
         // false);
-        DriverStation.reportError("\nContained:: " + isHeld, false);
+//        DriverStation.reportError("\nContained:: " + isHeld, false);
         updateShooter(flywheelSpeedLeft, flywheelSpeedRight);
     }
     public void updateShooter(double speedLeft, double speedRight) {
@@ -235,13 +242,32 @@ public class Shooter implements Module {
     }
     public void updateTilt() {
         int userTiltDirection = driverInputControl.getShooterTilt();
+        
+//        if(isAutoTilt){
+//            RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).setPID(TILT_P_AUTO, TILT_I_AUTO,
+//                    TILT_D_AUTO);   
+//            if(Math.abs((((RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get() - sensorControl.getInitialTiltPosition())/ (1024.0/360.0)) - this.relativeTiltAngle)) < AUTO_TILT_MARGIN){
+//                isAutoTilt = false;
+//            }
+//        } else{
+//            RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).setPID(TILT_P_MAN, TILT_I_MAN,
+//                    TILT_D_MAN);
+//        }
 
+        DriverStation.reportError("\n" + Math.abs((((RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get() - sensorControl.getInitialTiltPosition())/ (1024.0/360.0)) - this.relativeTiltAngle)), false);
+        DriverStation.reportError(" " + isAutoTilt, false);
         this.relativeTiltAngle += userTiltDirection * TILT_MOVEMENT_PROPORTION;
 
+        double currentAngle = RobotControlWithSRX.getInstance().getTalons()
+                .get(RobotMotorType.SHOOTER_TILT).get() / (1024/360.0);
+        
         updateTiltPosition();
     }
     public boolean updateTiltPosition() {
         boolean isInPosition = true;
+        if(driverInputControl.getPOVButton(RobotButtonType.AIM) > 0){
+            isAutoTilt = true;   
+        }
         if (driverInputControl.getPOVButton(RobotButtonType.AIM) == 90) {
             setToTiltValue(HIGH_GOAL_CAM_TILT);
         }
@@ -258,14 +284,14 @@ public class Shooter implements Module {
 
         this.tiltPosition = (this.relativeTiltAngle * (1024 / 360.0))
                 + sensorControl.getInitialTiltPosition();
-         DriverStation
-         .reportError(
-         "\ntiltPosition: " + tiltPosition
-         + "\nrelativeTiltAngle: " + relativeTiltAngle
-         + "\nCurrent Tilt:: "
-         + RobotControlWithSRX.getInstance().getTalons()
-         .get(RobotMotorType.SHOOTER_TILT).get(),
-         false);
+//         DriverStation
+//         .reportError(
+//         "\ntiltPosition: " + tiltPosition
+//         + "\nrelativeTiltAngle: " + relativeTiltAngle
+//         + "\nCurrent Tilt:: "
+//         + RobotControlWithSRX.getInstance().getTalons()
+//         .get(RobotMotorType.SHOOTER_TILT).get(),
+//         false);
         isInPosition = (currentAngle > relativeTiltAngle - ANGLE_ERROR)
                 && (currentAngle < relativeTiltAngle + ANGLE_ERROR);
 
@@ -314,7 +340,7 @@ public class Shooter implements Module {
 
         updateTwistPosition();
     }
-    private boolean updateTwistPosition() {
+    public boolean updateTwistPosition() {
         boolean isInPosition = true;
         double currentAngle = sensorControl.getZeroedEncoder(
                 SensorType.SHOOTER_TWIST_ENCODER) * GEAR_RATIO_TWIST;

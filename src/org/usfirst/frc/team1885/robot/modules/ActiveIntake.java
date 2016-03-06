@@ -26,7 +26,7 @@ public class ActiveIntake implements Module {
         driverInputControl = DriverInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
 
-        isIntaking = DoubleSolenoid.Value.kOff;
+        isIntaking = DoubleSolenoid.Value.kReverse;
         reset();
         previousIntakeToggle = false;
     }
