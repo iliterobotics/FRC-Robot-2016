@@ -213,16 +213,16 @@ public class AutonomousRoutine {
         ActiveIntake.getInstance().intakeDown();
         commands.add(new AutoDriveDistance(-lowBarTravelDistance, .1));
     }
+    
+    public void autoPortcullis(){
+        commands.add( new AutoPortcullis());
+    }
 
     /**
      * Controls processes for crossing the ramparts
      */
     public void autoRamparts() {
         commands.add(new AutoRamparts());
-    }
-
-    public void autoPortcullis() {
-
     }
 
     public void autoCheval() {

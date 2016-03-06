@@ -115,4 +115,7 @@ public class ActiveIntake implements Module {
     public void intakeDown(){
         isIntaking = DoubleSolenoid.Value.kReverse;
     }
+    public void setIntakeSpeed(double speed){
+        intakeSpeed = speed;
+    }
 }
