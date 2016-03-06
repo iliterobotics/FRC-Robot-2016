@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class ActiveIntake implements Module {
 
-    public static final double INTAKE_SPEED = 1;
+    public static final double INTAKE_SPEED = -1;
     private static ActiveIntake instance;
     private double intakeSpeed;
     private DoubleSolenoid.Value isIntaking;
@@ -26,7 +26,7 @@ public class ActiveIntake implements Module {
         driverInputControl = DriverInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
 
-        isIntaking = DoubleSolenoid.Value.kOff;
+        isIntaking = DoubleSolenoid.Value.kReverse;
         reset();
         previousIntakeToggle = false;
     }
@@ -36,7 +36,9 @@ public class ActiveIntake implements Module {
         }
         return instance;
     }
-
+    public void init(){
+        
+    }
     public void setMotorState(MotorState intakeState) {
         this.intakeState = intakeState;
     }
@@ -51,6 +53,7 @@ public class ActiveIntake implements Module {
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_IN))) {
                     intakeState = MotorState.REVERSE;
                     intakeSpeed = -INTAKE_SPEED;
+                    DriverStation.reportError("\nIntaking", false);
         }
 
         if ((driverInputControl.getButton(RobotButtonType.INTAKE_OUT))) {

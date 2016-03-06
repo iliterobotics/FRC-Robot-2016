@@ -3,6 +3,7 @@ package org.usfirst.frc.team1885.robot.input;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -37,8 +38,8 @@ public class SensorInputControlSRX {
 
     private double INITIAL_POT_B_POSITION;
     private double INITIAL_POT_A_POSITION;
-    private static double INITIAL_TWIST_POSITION;
-    public static double INITIAL_TILT_POSITION;
+    private double INITIAL_TWIST_POSITION;
+    private double INITIAL_TILT_POSITION;
     
     private static final double POTENTIOMETER_CONVERSION_FACTOR = 1024.0 / 360;
     private Map<SensorType, Integer> ticks;
@@ -86,7 +87,7 @@ public class SensorInputControlSRX {
 //                RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
         
 //         DriverStation.reportError("\n\nZero Tilt:: " + getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
-        DriverStation.reportError("\n Position:: " + getRotaryPosition(), false);
+//        DriverStation.reportError("\n Position:: " + getRotaryPosition(), false);
     }
     //Create initial sensor readings
     public void init() {
@@ -96,8 +97,7 @@ public class SensorInputControlSRX {
 //      INITIAL_POT_B_POSITION = rsrx.getSensor()
 //              .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
 //              * UtilityArm.CONVERSION_FACTOR;
-      INITIAL_TILT_POSITION = getAnalogGeneric(
-              SensorType.SHOOTER_TILT_POTENTIOMETER);
+      INITIAL_TILT_POSITION = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get();
       DriverStation.reportError("\nInit Tilt" + INITIAL_TILT_POSITION, false);
       INITIAL_TWIST_POSITION = getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER);
       DriverStation.reportError("\nInit Twist " + INITIAL_TWIST_POSITION, false);
@@ -114,6 +114,12 @@ public class SensorInputControlSRX {
     }
     public double getInitialPotBPostition() {
         return INITIAL_POT_B_POSITION;
+    }
+    public double getInitialTiltPosition() {
+        return INITIAL_TILT_POSITION;
+    }
+    public double getInitialTwistPosition() {
+        return INITIAL_TWIST_POSITION;
     }
     //Create navx
     public void createNavX(SerialPort.Port port) {
@@ -185,6 +191,8 @@ public class SensorInputControlSRX {
             return getAnalogGeneric(type) - INITIAL_POT_A_POSITION;
         case JOINT_B_POTENTIOMETER:
             return getAnalogGeneric(type) - INITIAL_POT_B_POSITION;
+        case SHOOTER_TILT_POTENTIOMETER:
+            return getAnalogGeneric(type) - INITIAL_TILT_POSITION;
         default:
             return getAnalogGeneric(type);
         }

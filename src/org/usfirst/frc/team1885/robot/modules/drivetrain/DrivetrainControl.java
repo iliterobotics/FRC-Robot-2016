@@ -62,6 +62,9 @@ public class DrivetrainControl implements Module {
         }
         return instance;
     }
+    public void init(){
+        
+    }
     public boolean getIsTurning() {
         return isTurning;
     }
