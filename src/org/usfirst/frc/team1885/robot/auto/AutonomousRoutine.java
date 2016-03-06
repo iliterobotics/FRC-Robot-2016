@@ -230,6 +230,7 @@ public class AutonomousRoutine {
         }
         else {
             autoShootBall(Shooter.HIGH_GOAL_ANGLE);
+            //commands.add(new AutoAimShooter());
         }
     }
 
