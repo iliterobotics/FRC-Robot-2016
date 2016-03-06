@@ -6,9 +6,9 @@ import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
-import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
+import dataclient.robotdata.autonomous.AutonomousConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -44,7 +44,7 @@ public class AutonomousRoutine {
          getConfiguration();
         //type = DefenseType.ROUGH_TERRAIN;
         // initAutoBreach();
-//         autoMoveToShoot();
+         autoMoveToShoot();
     }
 
     public void execute() {
@@ -55,7 +55,7 @@ public class AutonomousRoutine {
                 boolean commandState = currCommand.execute();
                 currCommand.updateOutputs();
                 if (commandState) {
-                     DriverStation.reportError( "\nfinished command " + commands.size(), false);
+                    DriverStation.reportError( "\nfinished command " + commands.size(), false);
                     commands.poll();
                 }
             } else {
@@ -197,7 +197,7 @@ public class AutonomousRoutine {
         commands.add(new AutoAlign(firstTurn));
         commands.add(new AutoDriveDistance(secondMove));
         commands.add(new AutoAlign(goalTurn));
-        //TODO line up to shoot with vision
+        /*
         if (!isHigh) {
             commands.add(new AutoDriveStart(START_DRIVE_SPEED));
             commands.add(new AutoCrossedDefense());
@@ -207,6 +207,7 @@ public class AutonomousRoutine {
             autoShootBall(Shooter.HIGH_GOAL_ANGLE);
             //commands.add(new AutoAimShooter());
         }
+        */
     }
 
     /**

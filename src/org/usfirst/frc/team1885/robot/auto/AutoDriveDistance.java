@@ -73,16 +73,18 @@ public class AutoDriveDistance extends AutoCommand {
 //                + differenceLeft + "\nDifference Right:: " + differenceRight,
 //                false);
 
-//         DriverStation.reportError(
-//         "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
-//         false);
-//         DriverStation.reportError(
-//         "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
-//         false);
+         DriverStation.reportError(
+         "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
+         false);
+         DriverStation.reportError(
+         "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
+         false);
+        
+        
         
         if (isRightFinished && isLeftFinished) {
-//            DriverStation.reportError(
-//                    "\nFinished traveling distance!", false);
+            DriverStation.reportError(
+                    "\nFinished traveling distance!", false);
             return true;
         }
         return false;
