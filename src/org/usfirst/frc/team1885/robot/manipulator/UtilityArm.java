@@ -66,7 +66,9 @@ public class UtilityArm implements Module {
         }
         return instance;
     }
-
+    public void init(){
+        
+    }
     @Override
     public void update() {
         // changeValues();

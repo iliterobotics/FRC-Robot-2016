@@ -10,6 +10,7 @@ import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.modules.ModuleControl;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -61,7 +62,7 @@ public class Robot extends SampleRobot {
             RobotConfiguration.configureRobot();
             //Initialize Sensor Values
             sensorInputControl.init();
-//            Shooter.getInstance().init();
+            Shooter.getInstance().init();
             DriverStation.reportError("\nRobot configured", false);
         } catch (Exception e) {
             DriverStation.reportError("\nRobot - Error configuring Robot", false);
