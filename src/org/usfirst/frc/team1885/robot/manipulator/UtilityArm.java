@@ -1,10 +1,7 @@
 package org.usfirst.frc.team1885.robot.manipulator;
 
-import java.sql.Driver;
-
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
@@ -12,7 +9,6 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import sun.security.x509.X400Address;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
@@ -35,7 +31,7 @@ public class UtilityArm implements Module {
                                                                  // to ticks
     private static final double DEGREE_MARGIN_ERR = 5 * CONVERSION_FACTOR;
     private static final double FRAME_LENGTH = 5;
-    private final double BOUNDARY = 15;
+    private final double BOUNDARY = 13;
     private final double X_MAX_BACK_REACH = 9;
     private final double Y_MAX_UP_REACH = 33;
     private final double Y_MAX_DOWN_REACH = -10;
@@ -178,8 +174,8 @@ public class UtilityArm implements Module {
         if (xEndPoint < -BOUNDARY - FRAME_LENGTH) {
             xEndPoint = -BOUNDARY - FRAME_LENGTH;
         }
-        if (xEndPoint > 9) {
-            xEndPoint = 9;
+        if (xEndPoint > X_MAX_BACK_REACH) {
+            xEndPoint = X_MAX_BACK_REACH;
         }
         if (yEndPoint > Y_MAX_UP_REACH) {
             yEndPoint = Y_MAX_UP_REACH;
