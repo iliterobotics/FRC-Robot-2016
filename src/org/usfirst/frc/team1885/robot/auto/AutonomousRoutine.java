@@ -146,7 +146,7 @@ public class AutonomousRoutine {
             case 5: firstTurn = -71.07; secondMove = 18.5 * 12; break;
             default: DriverStation.reportError("Invalid Target Defense", false);
             }
-            align = 58;
+            align = 180 + 58;
         }
         else if(goal == 0) { //Center Goal
             switch(targetDefense) {
@@ -157,7 +157,7 @@ public class AutonomousRoutine {
             case 5: firstTurn = -90; secondMove = 3 * 12; break;
             default: DriverStation.reportError("Invalid Target Defense", false);
             }
-            align = 0;
+            align = 180;
         }
         else if(goal == 1) { //Right Goal
             switch(targetDefense) {
@@ -169,12 +169,12 @@ public class AutonomousRoutine {
             case 5: firstTurn = 0; secondMove = 9 * 12; break;
             default: DriverStation.reportError("Invalid Target Defense", false);
             }
-            align = -58;
+            align = 180 - 58;
         }
         else {
             DriverStation.reportError("Invalid Goal Number", false);
         }
-        autoMoveToShoot(-firstMove, firstTurn, -secondMove, align);
+        autoMoveToShoot(firstMove, firstTurn, secondMove, align);
     }
 
     /**
