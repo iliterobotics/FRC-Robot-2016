@@ -59,7 +59,6 @@ public class RobotConfiguration {
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_RESET, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
 //        joystickButtonMap.addControllerButton(RobotButtonType.READY_HIGH, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
 //        joystickButtonMap.addControllerButton(RobotButtonType.READY_LOW, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
-//        joystickButtonMap.addControllerButton(RobotButtonType.AIM, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
         joystickButtonMap.addControllerButton(RobotButtonType.FIRE, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
                 // Active Intake Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_SOLENOID, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
@@ -69,7 +68,9 @@ public class RobotConfiguration {
         joystickButtonMap.addControllerButton(RobotButtonType.ARM_MOVE_Y, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kTwist));
         joystickButtonMap.addControllerButton(RobotButtonType.ARM_MOVE_X, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kThrottle));
         joystickButtonMap.addControllerButton(RobotButtonType.RESET_BUTTON, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 9));
-
+        joystickButtonMap.addControllerButton(RobotButtonType.AIM, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 0));
+        
+        
         // Talon Outputs for Robot
         robotControl.addTalonOutput(RobotMotorType.LEFT_DRIVE, 1);
         robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
