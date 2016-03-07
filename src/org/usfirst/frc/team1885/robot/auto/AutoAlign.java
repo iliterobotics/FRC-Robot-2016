@@ -20,9 +20,10 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public class AutoAlign extends AutoCommand {
 
-    private final double ALIGNMENT_ERROR = 5;
+    private final double ALIGNMENT_ERROR = 50; //TICKS
     private double targetDegree, absoluteTarget;
     private double direction;
+    private double tickGoalRight, tickGoalLeft;
     private SensorInputControlSRX sensorInputControl;
     public static final double TURN_RADIUS = 16;
     
@@ -54,8 +55,11 @@ public class AutoAlign extends AutoCommand {
         
         DriverStation.reportError("\n Direction:: " + direction + "  targetDegree:: " + targetDegree, false);
         
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
-        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
+        tickGoalLeft = direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft;
+        tickGoalRight = direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight;
+        
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(tickGoalLeft);
+        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(tickGoalRight);
         return true;
     }
 
@@ -67,7 +71,10 @@ public class AutoAlign extends AutoCommand {
 //        DriverStation.reportError("\n Degree to turn : " + targetDegree
 //                + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
         
-        if (Math.abs(difference) < ALIGNMENT_ERROR) {
+        double differenceLeft = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get() - tickGoalLeft;
+        double differenceRight = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get() - tickGoalRight;
+        
+        if (Math.abs(differenceLeft) < ALIGNMENT_ERROR && Math.abs(differenceRight) < ALIGNMENT_ERROR) {
             DriverStation.reportError("\nAligned.", false);
             this.reset();
             return true;

@@ -138,14 +138,14 @@ public class AutonomousRoutine {
         double align = 0;
         if(goal == -1) { //Left Goal
             switch(targetDefense) {
-            case 1: firstTurn = 0; secondMove = 6 * 12; break;
+            case 1: firstTurn = 0; secondMove =  6 * 12; break;
             case 2: firstTurn = -25; secondMove = 8.321 * 12; break;
             case 3: firstTurn = -54.7; secondMove = 10 * 12; break;
             case 4: firstTurn = -64.35; secondMove = 13.86 * 12; break;
             case 5: firstTurn = -71.07; secondMove = 18.5 * 12; break;
             default: DriverStation.reportError("Invalid Target Defense", false);
             }
-            align = 180 + 58;
+            align = 180 + 58 - 360;
         }
         else if(goal == 0) { //Center Goal
             switch(targetDefense) {
@@ -156,7 +156,7 @@ public class AutonomousRoutine {
             case 5: firstTurn = -90; secondMove = 3 * 12; break;
             default: DriverStation.reportError("Invalid Target Defense", false);
             }
-            align = 180;
+            align = -180;
         }
         else if(goal == 1) { //Right Goal
             switch(targetDefense) {
@@ -173,7 +173,7 @@ public class AutonomousRoutine {
         else {
             DriverStation.reportError("Invalid Goal Number", false);
         }
-        if(type == DefenseType.PORTCULLIS || type == DefenseType.MOAT) {
+        if(type != DefenseType.PORTCULLIS && type != DefenseType.MOAT) {
             firstMove = -firstMove;
             secondMove = -secondMove;
             align += 180;

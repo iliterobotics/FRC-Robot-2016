@@ -113,8 +113,8 @@ public class RobotConfiguration {
         
         // Add Modules
         moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
-        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
-        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
+//        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
+//        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
 //        moduleControl.addModule(ModuleType.UTILITY_ARM, UtilityArm.getInstance());
     }
 }
