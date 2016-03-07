@@ -73,16 +73,18 @@ public class AutoDriveDistance extends AutoCommand {
 //                + differenceLeft + "\nDifference Right:: " + differenceRight,
 //                false);
 
-//         DriverStation.reportError(
-//         "\nDisRight: " + disRight + ", initDisRight: " + initDisRight,
-//         false);
-//         DriverStation.reportError(
-//         "\ndisLeft: " + disLeft + ", initDisLeft: " + initDisLeft,
-//         false);
+         DriverStation.reportError(
+         "\nDisRight: " + robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get() + ", initDisRight: " + initDisRight,
+         false);
+         DriverStation.reportError(
+         "\ndisLeft: " + robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get() + ", initDisLeft: " + initDisLeft,
+         false);
+        
+        
         
         if (isRightFinished && isLeftFinished) {
-//            DriverStation.reportError(
-//                    "\nFinished traveling distance!", false);
+            DriverStation.reportError(
+                    "\nFinished traveling distance!", false);
             return true;
         }
         return false;

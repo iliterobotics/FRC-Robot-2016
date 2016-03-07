@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 public class Shooter implements Module {
 
     private static final int FLYWHEEL_MIN_SPEED = 850;
-    private static final double TILT_MOVEMENT_PROPORTION = 0.45;
+    public static final double TILT_MOVEMENT_PROPORTION = 0.45;
     private static final double TWIST_MOVEMENT_PROPORTION = 0.15;
     private static final double TILT_THRESHOLD = 45;
     private static Shooter instance;
@@ -183,21 +183,7 @@ public class Shooter implements Module {
         isHeld = !OPEN;
 
         if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT)) {
-            flywheelSpeedLeft = -SHOOTER_SPEED;
-            flywheelSpeedRight = -SHOOTER_SPEED;
-            if (this.relativeTiltAngle < LOW_GOAL_TILT_BOUND) {
-                setToTiltValue(LOW_GOAL_TILT);
-                ActiveIntake.getInstance().intakeUp();
-            } else if (this.relativeTiltAngle < HIGH_GOAL_INTAKE_TILT_BOUND) {
-                setToTiltValue(HIGH_GOAL_INTAKE_TILT);
-                ActiveIntake.getInstance().intakeDown();
-            } else {
-                setToTiltValue(HIGH_GOAL_CAM_TILT);
-            }
-            if (System.currentTimeMillis() - lastLaunchCheck > FIRE_DELAY) {
-                isHeld = OPEN;
-                // DriverStation.reportError("\nFire", false);
-            }
+            fire();
         } else{
             lastLaunchCheck = System.currentTimeMillis();
         }
@@ -220,6 +206,46 @@ public class Shooter implements Module {
         // false);
 //        DriverStation.reportError("\nContained:: " + isHeld, false);
         updateShooter(flywheelSpeedLeft, flywheelSpeedRight);
+    }
+    public boolean fire(){
+        initiateLaunch();
+        lockAim();
+        return launch();
+    }
+    /**
+     * Starts the flywheels, sets both motors to shooting speed
+     */
+    public void initiateLaunch(){
+        flywheelSpeedLeft = -SHOOTER_SPEED;
+        flywheelSpeedRight = -SHOOTER_SPEED;
+    }
+    /**
+     * Locks the aim to the closes set position: low goal, high goal toward intake, or high goal toward the battery
+     * @return the tilt angle being locked on to
+     */
+    public double lockAim(){
+        if (this.relativeTiltAngle < LOW_GOAL_TILT_BOUND) {
+            setToTiltValue(LOW_GOAL_TILT);
+            ActiveIntake.getInstance().intakeUp();
+        } else if (this.relativeTiltAngle < HIGH_GOAL_INTAKE_TILT_BOUND) {
+            setToTiltValue(HIGH_GOAL_INTAKE_TILT);
+            ActiveIntake.getInstance().intakeDown();
+        } else {
+            setToTiltValue(HIGH_GOAL_CAM_TILT);
+        }
+        return this.relativeTiltAngle;
+    }
+    /**
+     * Releases the container after a delay to allow the motors to speed up
+     * @return true if the container is opened
+     */
+    public boolean launch(){
+        if (System.currentTimeMillis() - lastLaunchCheck > FIRE_DELAY) {
+            isHeld = OPEN;
+            return true;
+            // DriverStation.reportError("\nFire", false);
+        }
+        return false;
     }
     public void updateShooter(double speedLeft, double speedRight) {
         if (speedLeft > 0) {
