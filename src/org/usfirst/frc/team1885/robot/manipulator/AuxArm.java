@@ -62,10 +62,10 @@ public class AuxArm implements Module {
     public void updateArm() {
         adjustPower();
         double aPosition = (SensorInputControlSRX.getInstance()
-                .getAnalogGeneric(SensorType.JOINT_A_POTENTIOMETER)
+                .getAnalogGeneric(SensorType.JOINT_A_CTRE_ABSOLUTE)
                 * CONVERSION_FACTOR);
         double bPosition = (SensorInputControlSRX.getInstance()
-                .getAnalogGeneric(SensorType.JOINT_B_POTENTIOMETER)
+                .getAnalogGeneric(SensorType.JOINT_B_CTRE_ABSOLUTE)
                 * CONVERSION_FACTOR);
         if (aPosition < JOINT_A_CLOCK_BOUND) {
             jointASpeed = STOP_POWER;
@@ -136,19 +136,19 @@ public class AuxArm implements Module {
 
     @Override
     public void updateOutputs() {
-        RobotControlWithSRX.getInstance().updateArmMotors(jointASpeed,
-                jointBSpeed);
+        RobotControlWithSRX.getInstance().updateArmMotors((int)jointASpeed,
+                (int)jointBSpeed);
     }
 
     private void adjustPower() {
         SensorInputControlSRX sensorInputControl = SensorInputControlSRX
                 .getInstance();
         double angleA = sensorInputControl.getAnalogGeneric(
-                SensorType.JOINT_A_POTENTIOMETER) * CONVERSION_FACTOR;
+                SensorType.JOINT_A_CTRE_ABSOLUTE) * CONVERSION_FACTOR;
         double zeroedA = angleA - sensorInputControl.getInitialPotAPostition();
         double angleB = zeroedA + 360
                 - (sensorInputControl.getAnalogGeneric(
-                        SensorType.JOINT_B_POTENTIOMETER) * CONVERSION_FACTOR
+                        SensorType.JOINT_B_CTRE_ABSOLUTE) * CONVERSION_FACTOR
                 - sensorInputControl.getInitialPotBPostition() + 190);
         double distanceB = // (LENGTH_B * (Math.cos(Math.toRadians(angleB))));
         -LENGTH_B;

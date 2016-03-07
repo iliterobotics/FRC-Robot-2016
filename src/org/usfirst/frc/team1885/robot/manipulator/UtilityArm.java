@@ -2,6 +2,7 @@ package org.usfirst.frc.team1885.robot.manipulator;
 
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
@@ -25,12 +26,14 @@ public class UtilityArm implements Module {
 
     public static final double LENGTH_A = 17.5; // length of arm A
     public static final double LENGTH_B = 18; // length of arm B
-    public static final double CONVERSION_FACTOR = 1024 / 360.0; // multiplier
-                                                                 // to convert
-                                                                 // from degrees
-                                                                 // to ticks
+    public static final double CONVERSION_FACTOR = (1024 * 4) / 360.0; // multiplier
+    // to convert
+    // from degrees
+    // to ticks
     private static final double DEGREE_MARGIN_ERR = 5 * CONVERSION_FACTOR;
     private static final double FRAME_LENGTH = 5;
+    private final double RESET_A_POSITION = -1700;
+    private final double RESET_B_POSITION = 100;
     private final double BOUNDARY = 13;
     private final double X_MAX_BACK_REACH = 9;
     private final double Y_MAX_UP_REACH = 33;
@@ -64,22 +67,25 @@ public class UtilityArm implements Module {
     private RobotControlWithSRX robotControl;
 
     protected UtilityArm() {
-        aP = 2.7;
-        aI = 0.00076;
-        aD = 2;
-        bP = 3.5;
-        bI = 0.0001;
-        bD = 2;
+        aP = .3; // 2.7
+        aI = 0.00026; // 0.00076
+        aD = 2; // 2
+        bP = .3; // 3.5
+        bI = 0; // 0.0001
+        bD = 1; // 2
 
         robotControl = RobotControlWithSRX.getInstance();
+
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A)
+                .setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B)
+                .setFeedbackDevice(FeedbackDevice.QuadEncoder);
+
         robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A)
                 .changeControlMode(TalonControlMode.Position);
         robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B)
                 .changeControlMode(TalonControlMode.Position);
-        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A)
-                .setFeedbackDevice(FeedbackDevice.AnalogPot);
-        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B)
-                .setFeedbackDevice(FeedbackDevice.AnalogPot);
+
         robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).setPID(aP, aI,
                 aD);
         robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).setPID(bP, bI,
@@ -87,8 +93,8 @@ public class UtilityArm implements Module {
 
         this.jointAState = MotorState.OFF;
         this.jointBState = MotorState.OFF;
-        jointAPosition = 105; // Reset Position
-        jointBPosition = 105; // Reset Position
+        jointAPosition = RESET_A_POSITION; // Reset Position
+        jointBPosition = RESET_B_POSITION; // Reset Position
         xCoord = -1; // Reset Coordinate
         yCoord = 4; // Reset Coordinate
         driverInputControl = DriverInputControlSRX.getInstance();
@@ -104,15 +110,15 @@ public class UtilityArm implements Module {
 
     @Override
     public void update() {
-        // DriverStation.reportError("\nA Angle Value: " + aAngleVal
-        // + " --- B Angle Val: " + bAngleVal, false);
-
-        // if (xCoord + xModifier < 9 && xCoord + xModifier > -15) {
-        // xCoord += xModifier;
-        // }
-        // if (yCoord + yModifier < 35 && yCoord + yModifier > -10) {
-        // yCoord -= yModifier;
-        // }
+        DriverStation
+                .reportError(
+                        "\n Joint A: "
+                                + RobotControlWithSRX.getInstance().getTalons()
+                                        .get(RobotMotorType.ARM_JOINT_A).get()
+                                + " --- Joint B: "
+                                + RobotControlWithSRX.getInstance().getTalons()
+                                        .get(RobotMotorType.ARM_JOINT_B).get(),
+                false);
 
         xCoord += xModifier;
         yCoord -= yModifier;
@@ -141,13 +147,17 @@ public class UtilityArm implements Module {
             DriverStation.reportError("\nReseting...", false);
         }
 
-        DriverStation.reportError(
-                "X Coordinate: " + xCoord + " --- Y Coordinate: " + yCoord,
-                false);
+        // DriverStation.reportError(
+        // "X Coordinate: " + xCoord + " --- Y Coordinate: " + yCoord,
+        // false);
     }
 
     @Override
     public void updateOutputs() {
+        DriverStation.reportError(
+                "\n Moving to JointAPosition: " + jointAPosition
+                        + " --- Moving to JointBPosition: " + jointBPosition,
+                false);
         robotControl.updateArmMotors(jointAPosition, jointBPosition);
     }
 
@@ -253,8 +263,8 @@ public class UtilityArm implements Module {
 
         jointBDegree += jointADegree;
 
-        // DriverStation.reportError("\nJoint A Degree 2: " + jointADegree
-        // + " --Joint B Degree 2: " + jointBDegree, false);
+        DriverStation.reportError("\nJoint A Degree 2: " + jointADegree
+                + " --Joint B Degree 2: " + jointBDegree, false);
 
         jointAPosition = jointADegree * CONVERSION_FACTOR
                 + SensorInputControlSRX.getInstance().INITIAL_POT_A_POSITION;
@@ -269,8 +279,6 @@ public class UtilityArm implements Module {
         // + SensorInputControlSRX
         // .getInstance().INITIAL_POT_B_POSITION,
         // false);
-
-        robotControl.updateArmMotors(jointAPosition, jointBPosition);
     }
 
     /**
@@ -293,8 +301,8 @@ public class UtilityArm implements Module {
     }
 
     public void resetPos() {
-        jointAPosition = 105;
-        jointBPosition = 105;
+        jointAPosition = RESET_A_POSITION;
+        jointBPosition = RESET_B_POSITION;
         xCoord = -1; // An approximation
         yCoord = 4; // An approximation
     }

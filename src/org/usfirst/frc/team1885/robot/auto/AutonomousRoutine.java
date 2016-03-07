@@ -72,14 +72,6 @@ public class AutonomousRoutine {
         // commands.add(); //Begin driving forward
     }
 
-    public void doubleSallyPort() {
-        sallyPort();
-        // commands.add(); // Check to see if off ramp
-        // commands.add(); // Drive back over the ramp
-        // commands.add(); // Do a 180
-        // commands.add(); // Drive back over the ramp
-    }
-
     public void drawbridge() {
         double disXInit = 0;
         double disYInit = 30 + Y_OVERSHOOT_DISTANCE; // Initialize arm position

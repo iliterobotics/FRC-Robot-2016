@@ -87,9 +87,11 @@ public class SensorInputControlSRX {
     }
     public void init() {
         INITIAL_POT_A_POSITION = rsrx.getSensor()
-                .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw();
+                .get(SensorType.JOINT_A_CTRE_ABSOLUTE).getEncPosition();
         INITIAL_POT_B_POSITION = rsrx.getSensor()
-                .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw();
+                .get(SensorType.JOINT_B_CTRE_ABSOLUTE).getEncPosition();
+        DriverStation.reportError("\nINIT_POT_A: " + INITIAL_POT_A_POSITION
+                + " --- INIT_POT_B: " + INITIAL_POT_B_POSITION, false);
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
@@ -105,16 +107,13 @@ public class SensorInputControlSRX {
         rsrx.getSensor().get(type).setEncPosition(pos);
     }
     public double getAnalogGeneric(SensorType type) {
-        switch (type) {
-        default:
-            return rsrx.getSensor().get(type).getAnalogInRaw();
-        }
+        return rsrx.getSensor().get(type).getAnalogInRaw();
     }
     public double getZeroedPotentiometer(SensorType type) {
         switch (type) {
-        case JOINT_A_POTENTIOMETER:
+        case JOINT_A_CTRE_ABSOLUTE:
             return getAnalogGeneric(type) - INITIAL_POT_A_POSITION;
-        case JOINT_B_POTENTIOMETER:
+        case JOINT_B_CTRE_ABSOLUTE:
             return getAnalogGeneric(type) - INITIAL_POT_B_POSITION;
         default:
             return getAnalogGeneric(type);
