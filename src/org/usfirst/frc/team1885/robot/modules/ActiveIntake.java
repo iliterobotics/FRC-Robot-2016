@@ -11,6 +11,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class ActiveIntake implements Module {
 
+    public static final double LOWER_COLLISION_BOUND = 20;
+    public static final double UPPER_COLLISION_BOUND = 60;
     public static final double INTAKE_SPEED = -1;
     private static ActiveIntake instance;
     private double intakeSpeed;
@@ -70,14 +72,9 @@ public class ActiveIntake implements Module {
             isIntaking = isIntaking == intakeUp ? intakeDown : intakeUp;
         }
         previousIntakeToggle = driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID);
-//        if (driverInputControl.getButton(RobotButtonType.READY_LOW)
-//                && System.currentTimeMillis() >= counter + delay) {
-//            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, true);
-//        }
-//        if (driverInputControl.getButton(RobotButtonType.READY_HIGH)
-//                && System.currentTimeMillis() >= counter + delay) {
-//            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, false);
-//        }
+        if(Shooter.getInstance().getRelativeTilt() > LOWER_COLLISION_BOUND || Shooter.getInstance().getRelativeTilt() < UPPER_COLLISION_BOUND){
+            isIntaking = intakeDown;
+        }
         updateIntake(intakeSpeed);
     }
     public void updateIntake(double intakeSpeed) {
@@ -95,9 +92,6 @@ public class ActiveIntake implements Module {
         intakeSpeed = 0;
         isIntaking = intakeUp;        
         updateOutputs();
-    }
-    public void listenLowGoal() {
-        
     }
 
     public void updateOutputs() {

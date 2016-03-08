@@ -19,9 +19,6 @@ public class AutoShooterTilt extends AutoCommand {
     @Override
     public boolean init() {
         currentAngle = Shooter.getInstance().getRelativeTilt();
-        if((currentAngle < shooterTiltThreshold && angle > shooterTiltThreshold) || (currentAngle > shooterTiltThreshold && angle < shooterTiltThreshold)){
-            ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
-        }
         return true;
     }
     @Override
