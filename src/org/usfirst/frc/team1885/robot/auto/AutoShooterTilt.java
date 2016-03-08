@@ -26,12 +26,13 @@ public class AutoShooterTilt extends AutoCommand {
             return true;
         }
         currentAngle += Shooter.TILT_MOVEMENT_PROPORTION;
-        Shooter.getInstance().setToTiltValue(currentAngle);
+        shooter.setToTiltValue(currentAngle);
         return false;
     }
     @Override
     public boolean updateOutputs() {
-        // TODO Auto-generated method stub
+        shooter.update();
+        shooter.updateOutputs();
         return false;
     }
     @Override
