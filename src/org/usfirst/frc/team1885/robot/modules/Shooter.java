@@ -69,7 +69,6 @@ public class Shooter implements Module {
     
     private boolean isAutoTilt;
     private AutoShooterTilt autoShooterTilt;
-    private static final double AUTO_TILT_MARGIN = 1.0;
     
     private static final double TILT_P = 5;
     private static final double TILT_I = 0.0001;
@@ -188,7 +187,7 @@ public class Shooter implements Module {
             flywheelSpeedLeft = SHOOTER_SPEED * INTAKE_PROP;
             flywheelSpeedRight = SHOOTER_SPEED * INTAKE_PROP;
             isHeld = OPEN;
-            setToTiltValue(13);
+            setToTiltValue(LOW_GOAL_TILT);
             updateTiltPosition();
         }
 
