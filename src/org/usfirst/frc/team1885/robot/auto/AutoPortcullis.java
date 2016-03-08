@@ -15,7 +15,7 @@ public class AutoPortcullis extends AutoCommand {
         halfWay = new AutoDriveDistance(HALF_DISTANCE, .1);
         secondHalf = new AutoDriveDistance(HALF_DISTANCE, .1);
         RobotControlWithSRX.getInstance().updateIntakeMotor(ActiveIntake.INTAKE_SPEED);
-        ActiveIntake.getInstance().intakeDown();
+        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeUp);
         
         
         return false;
@@ -24,7 +24,8 @@ public class AutoPortcullis extends AutoCommand {
     @Override
     public boolean execute() {
         if( halfWay.execute()){
-            RobotControlWithSRX.getInstance().updateIntakeMotor(0);
+           RobotControlWithSRX.getInstance().updateIntakeMotor(0);
+           ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
            secondHalf.execute();
            return true;
         }

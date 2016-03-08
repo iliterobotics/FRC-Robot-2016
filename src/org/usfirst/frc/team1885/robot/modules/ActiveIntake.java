@@ -21,12 +21,14 @@ public class ActiveIntake implements Module {
     private double counter;
     private boolean previousIntakeToggle;
     private static final double delay = 1000;
+    public static final DoubleSolenoid.Value intakeUp = DoubleSolenoid.Value.kReverse;
+    public static final DoubleSolenoid.Value intakeDown = DoubleSolenoid.Value.kForward;
 
     private ActiveIntake() {
         driverInputControl = DriverInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
 
-        isIntaking = DoubleSolenoid.Value.kReverse;
+        isIntaking = intakeUp;
         reset();
         previousIntakeToggle = false;
     }
@@ -65,7 +67,7 @@ public class ActiveIntake implements Module {
 //        DriverStation.reportError("Solenoid State " + isIntaking + "\n", false);
         if (driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)
                 && !previousIntakeToggle ) {
-            isIntaking = isIntaking == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
+            isIntaking = isIntaking == intakeUp ? intakeDown : intakeUp;
         }
         previousIntakeToggle = driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID);
 //        if (driverInputControl.getButton(RobotButtonType.READY_LOW)
@@ -91,7 +93,7 @@ public class ActiveIntake implements Module {
     public void reset() {
         this.intakeState = MotorState.OFF;
         intakeSpeed = 0;
-        isIntaking = DoubleSolenoid.Value.kForward;        
+        isIntaking = intakeUp;        
         updateOutputs();
     }
     public void listenLowGoal() {
@@ -109,11 +111,8 @@ public class ActiveIntake implements Module {
     public void update() {
         updateIntake();
     }
-    public void intakeUp(){
-       isIntaking = DoubleSolenoid.Value.kForward;
-    }
-    public void intakeDown(){
-        isIntaking = DoubleSolenoid.Value.kReverse;
+    public void setIntakeSolenoid(DoubleSolenoid.Value input){
+        isIntaking = input;
     }
     public void setIntakeSpeed(double speed){
         intakeSpeed = speed;

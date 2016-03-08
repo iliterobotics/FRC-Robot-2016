@@ -215,7 +215,7 @@ public class AutonomousRoutine {
      */
     public void autoLowBar() {
         double lowBarTravelDistance = 4.2 * 12; // subject to change from
-        ActiveIntake.getInstance().intakeDown();
+        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
         commands.add(new AutoDriveDistance(-lowBarTravelDistance, .1));
     }
     
