@@ -2,6 +2,7 @@ package org.usfirst.frc.team1885.robot.modules;
 
 import java.util.Map;
 
+import org.usfirst.frc.team1885.robot.auto.AutoShooterTilt;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
@@ -14,7 +15,6 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.DriverStation;
 
 //TODO add @depricated tags (or alternate documentation) to all methods no longer being used
 public class Shooter implements Module {
@@ -66,17 +66,14 @@ public class Shooter implements Module {
 
     private boolean reseting;
     private boolean twistDone;
-
-    private static final double TILT_P_AUTO = 1.5;
-    private static final double TILT_I_AUTO = 0.002;
-    private static final double TILT_D_AUTO = 50;
     
     private boolean isAutoTilt;
-    private static final double AUTO_TILT_MARGIN = 4.0;
+    private AutoShooterTilt autoShooterTilt;
+    private static final double AUTO_TILT_MARGIN = 1.0;
     
-    private static final double TILT_P_MAN = 5;
-    private static final double TILT_I_MAN = 0.0001;
-    private static final double TILT_D_MAN = 0;
+    private static final double TILT_P = 5;
+    private static final double TILT_I = 0.0001;
+    private static final double TILT_D = 0;
 
     private static final double TWIST_P = 0.7;
     private static final double TWIST_I = 0;
@@ -90,6 +87,7 @@ public class Shooter implements Module {
     private double tiltPosition;
     private double relativeTwistAngle;
     private double twistPosition;
+    private boolean isAiming; //checks if we are using autonomous to aim
 
     public static Shooter getInstance() {
         if (instance == null) {
@@ -113,8 +111,8 @@ public class Shooter implements Module {
                 .changeControlMode(TalonControlMode.Position);
         talonList.get(RobotMotorType.SHOOTER_TILT)
                 .setFeedbackDevice(FeedbackDevice.AnalogPot);
-        talonList.get(RobotMotorType.SHOOTER_TILT).setPID(TILT_P_MAN, TILT_I_MAN,
-                TILT_D_MAN);
+        talonList.get(RobotMotorType.SHOOTER_TILT).setPID(TILT_P, TILT_I,
+                TILT_D);
         talonList.get(RobotMotorType.SHOOTER_TILT).reverseSensor(true);
 
         // Setting up Twist Talon
@@ -142,14 +140,13 @@ public class Shooter implements Module {
         talonList.get(RobotMotorType.FLYWHEEL_RIGHT).setPID(SPIN_P, SPIN_I,
                 SPIN_D);
         lastLaunchCheck = System.currentTimeMillis();
+        isAutoTilt = false;
+        autoShooterTilt = new AutoShooterTilt(LOW_GOAL_TILT);
         // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).configEncoderCodesPerRev(1024);
     }
 
     public void init() {
-        //THIS IS UGLY DONT INITIALIZE RELATIVE TILT ANGLE
-//        relativeTiltAngle = sensorControl.getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER);
-        TILT_LIMIT_LOWER = sensorControl.getInitialTiltPosition() / 1024.0
-                / 360;
+        TILT_LIMIT_LOWER = sensorControl.getInitialTiltPosition() / 1024.0 / 360;
         TILT_LIMIT_UPPER = TILT_LIMIT_LOWER + STATIC_TILT_LIMIT_UPPER;
 
     }
@@ -263,45 +260,37 @@ public class Shooter implements Module {
             rightState = MotorState.OFF;
         }
     }
+    public double getRelativeTilt(){
+        return relativeTiltAngle;
+    }
     public void setToTiltValue(double angle) {
         relativeTiltAngle = angle;
     }
     public void updateTilt() {
         int userTiltDirection = driverInputControl.getShooterTilt();
-        
-//        if(isAutoTilt){
-//            RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).setPID(TILT_P_AUTO, TILT_I_AUTO,
-//                    TILT_D_AUTO);   
-//            if(Math.abs((((RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get() - sensorControl.getInitialTiltPosition())/ (1024.0/360.0)) - this.relativeTiltAngle)) < AUTO_TILT_MARGIN){
-//                isAutoTilt = false;
-//            }
-//        } else{
-//            RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).setPID(TILT_P_MAN, TILT_I_MAN,
-//                    TILT_D_MAN);
-//        }
 
-        DriverStation.reportError("\n" + Math.abs((((RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get() - sensorControl.getInitialTiltPosition())/ (1024.0/360.0)) - this.relativeTiltAngle)), false);
-        DriverStation.reportError(" " + isAutoTilt, false);
+//        DriverStation.reportError("\n" + Math.abs((((RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get() - sensorControl.getInitialTiltPosition())/ (1024.0/360.0)) - this.relativeTiltAngle)), false);
+//        DriverStation.reportError(" " + isAutoTilt, false);
+        isAutoTilt = userTiltDirection == 0 ? true : false;
         this.relativeTiltAngle += userTiltDirection * TILT_MOVEMENT_PROPORTION;
-
-        double currentAngle = RobotControlWithSRX.getInstance().getTalons()
-                .get(RobotMotorType.SHOOTER_TILT).get() / (1024/360.0);
         
         updateTiltPosition();
     }
     public boolean updateTiltPosition() {
         boolean isInPosition = true;
-        if(driverInputControl.getPOVButton(RobotButtonType.AIM) > 0){
-            isAutoTilt = true;   
+        int input = driverInputControl.getPOVButton(RobotButtonType.AIM);
+        if(input > 0){
+            isAutoTilt = true;  
+            switch(input){
+                case 90: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_CAM_TILT); break;
+                case 180: autoShooterTilt = new AutoShooterTilt(LOW_GOAL_TILT); break;
+                case 270: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_INTAKE_TILT); break;
+                default:
+            }
+            autoShooterTilt.init();
         }
-        if (driverInputControl.getPOVButton(RobotButtonType.AIM) == 90) {
-            setToTiltValue(HIGH_GOAL_CAM_TILT);
-        }
-        if (driverInputControl.getPOVButton(RobotButtonType.AIM) == 180) {
-            setToTiltValue(LOW_GOAL_TILT);
-        }
-        if (driverInputControl.getPOVButton(RobotButtonType.AIM) == 270) {
-            setToTiltValue(HIGH_GOAL_INTAKE_TILT);
+        if(isAutoTilt){
+            isAutoTilt = autoShooterTilt.execute();
         }
         double currentAngle = sensorControl
                 .getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER);
