@@ -268,7 +268,7 @@ public class UtilityArm implements Module {
 
         jointAPosition = jointADegree * CONVERSION_FACTOR
                 + SensorInputControlSRX.getInstance().INITIAL_POT_A_POSITION;
-        jointBPosition = jointBDegree * CONVERSION_FACTOR
+        jointBPosition = -1 * jointBDegree * CONVERSION_FACTOR
                 + SensorInputControlSRX.getInstance().INITIAL_POT_B_POSITION;
 
         // DriverStation
