@@ -34,7 +34,7 @@ public class AutoShooterTilt extends AutoCommand {
     @Override
     public boolean updateOutputs() {
         ModuleControl.getInstance().updateIntakeShooter();
-        ModuleControl.getInstance().updateIntakeShooterOutputs());
+        ModuleControl.getInstance().updateIntakeShooterOutputs();
         return false;
     }
     @Override
