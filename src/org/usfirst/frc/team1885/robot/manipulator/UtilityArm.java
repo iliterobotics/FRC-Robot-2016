@@ -30,7 +30,7 @@ public class UtilityArm implements Module {
     // to convert
     // from degrees
     // to ticks
-    private static final double DEGREE_MARGIN_ERR = 5 * CONVERSION_FACTOR;
+    private static final double POSITION_MARGIN_ERR = 5 * CONVERSION_FACTOR;
     private static final double FRAME_LENGTH = 5;
     private final double RESET_A_POSITION;
     private final double RESET_B_POSITION;
@@ -69,10 +69,10 @@ public class UtilityArm implements Module {
     protected UtilityArm() {
         aP = .5; // 2.7
         aI = 0.00035; // 0.00076
-        aD = 1; // 2
+        aD = 50; // 2
         bP = .5; // 3.5
         bI = 0.00065; // 0.0001
-        bD = 2; // 2
+        bD = 50; // 2
 
         robotControl = RobotControlWithSRX.getInstance();
 
@@ -170,7 +170,7 @@ public class UtilityArm implements Module {
      */
     public void goTo(double xEndPoint, double yEndPoint) {
         /*
-         * Explanation of if-statements:
+         * Explanation of if-statements (exact numbers may change):
          * https://docs.google.com/drawings/d/1dR8t4AcUfh1KOq0hK-
          * Sh3xFV05fgMqhl_l8BH47n6JQ/edit?usp=sharing
          */
@@ -212,8 +212,8 @@ public class UtilityArm implements Module {
         xCoord = xEndPoint;
         yCoord = yEndPoint;
 
-        DriverStation.reportError(
-                "\n Going to: (" + xCoord + ", " + yCoord + ")", false);
+        // DriverStation.reportError(
+        // "\n Going to: (" + xCoord + ", " + yCoord + ")", false);
 
         double p = Math.sqrt((xEndPoint * xEndPoint) + (yEndPoint * yEndPoint));
         double k = ((p * p) + LENGTH_A * LENGTH_A - LENGTH_B * LENGTH_B)
@@ -260,8 +260,8 @@ public class UtilityArm implements Module {
 
         jointBDegree += jointADegree;
 
-        DriverStation.reportError("\nJoint A Degree 2: " + jointADegree
-                + " --Joint B Degree 2: " + jointBDegree, false);
+        // DriverStation.reportError("\nJoint A Degree 2: " + jointADegree
+        // + " --Joint B Degree 2: " + jointBDegree, false);
 
         jointAPosition = jointADegree * CONVERSION_FACTOR
                 + SensorInputControlSRX.getInstance().INITIAL_POT_A_POSITION;
@@ -287,10 +287,10 @@ public class UtilityArm implements Module {
     public boolean isFinished() {
         boolean isJointAFinished = Math.abs(
                 robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).get()
-                        - jointAPosition) < DEGREE_MARGIN_ERR;
+                        - jointAPosition) < POSITION_MARGIN_ERR;
         boolean isJointBFinished = Math.abs(
                 robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).get()
-                        - jointBPosition) < DEGREE_MARGIN_ERR;
+                        - jointBPosition) < POSITION_MARGIN_ERR;
         // DriverStation.reportError(
         // "\nisFinished: " + (isJointAFinished && isJointBFinished),
         // false);

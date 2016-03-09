@@ -10,6 +10,7 @@ public class AutoUtilityArm extends AutoCommand {
     private boolean reset = false;
 
     public AutoUtilityArm() {
+        this(0, 0);
         reset = true;
     }
 
@@ -24,7 +25,7 @@ public class AutoUtilityArm extends AutoCommand {
         if (!reset) {
             uArm.goTo(xDistance, yDistance);
         } else {
-            uArm.resetPos();
+            reset();
         }
         return true;
     }
@@ -32,6 +33,7 @@ public class AutoUtilityArm extends AutoCommand {
     @Override
     public boolean execute() {
         uArm.update();
+        uArm.updateOutputs();
         return uArm.isFinished();
     }
 

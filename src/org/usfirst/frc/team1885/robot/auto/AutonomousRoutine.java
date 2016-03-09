@@ -18,7 +18,7 @@ public class AutonomousRoutine {
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
         robot = r;
-        sallyPort();
+        drawbridge();
     }
     public void execute() {
         int size = commands.size();
@@ -30,16 +30,16 @@ public class AutonomousRoutine {
                 currCommand.updateOutputs();
                 if (commandState) {
                     commands.poll();
-                    // DriverStation.reportError("\nJoint A Position: "
-                    // + SensorInputControlSRX.getInstance()
-                    // .getAnalogGeneric(
-                    // SensorType.JOINT_A_POTENTIOMETER)
-                    // + " --- Joint B Position: "
-                    // + SensorInputControlSRX.getInstance()
-                    // .getAnalogGeneric(
-                    // SensorType.JOINT_B_POTENTIOMETER)
-                    // + "\n Finished Command #"
-                    // + (size - commands.size()), false);
+                    DriverStation.reportError("\nJoint A Position: "
+                            + SensorInputControlSRX.getInstance()
+                                    .getAnalogGeneric(
+                                            SensorType.JOINT_A_CTRE_ABSOLUTE)
+                            + " --- Joint B Position: "
+                            + SensorInputControlSRX.getInstance()
+                                    .getAnalogGeneric(
+                                            SensorType.JOINT_B_CTRE_ABSOLUTE)
+                            + "\n Finished Command #"
+                            + (size - commands.size()), false);
                 }
             } else {
                 currCommand.setInit(currCommand.init());
