@@ -222,10 +222,10 @@ public class Shooter implements Module {
     public double lockAim(){
         if (this.relativeTiltAngle < LOW_GOAL_TILT_BOUND) {
             setToTiltValue(LOW_GOAL_TILT);
-            ActiveIntake.getInstance().intakeUp();
+            ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeUp);
         } else if (this.relativeTiltAngle < HIGH_GOAL_INTAKE_TILT_BOUND) {
             setToTiltValue(HIGH_GOAL_INTAKE_TILT);
-            ActiveIntake.getInstance().intakeDown();
+            ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
         } else {
             setToTiltValue(HIGH_GOAL_CAM_TILT);
         }
