@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
+import org.usfirst.frc.team1885.robot.modules.ModuleControl;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 
 import edu.wpi.first.wpilibj.DriverStation;
@@ -32,8 +33,8 @@ public class AutoShooterTilt extends AutoCommand {
     }
     @Override
     public boolean updateOutputs() {
-        shooter.update();
-        shooter.updateOutputs();
+        ModuleControl.getInstance().updateIntakeShooter();
+        ModuleControl.getInstance().updateIntakeShooterOutputs());
         return false;
     }
     @Override
