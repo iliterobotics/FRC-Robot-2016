@@ -10,12 +10,9 @@ public class AutoShooterTilt extends AutoCommand {
     private static final double shooterTiltThreshold = 50;
     private static final double ERROR = 0.5;
     private final double angle;
-    private double currentAngle;
-    private Shooter shooter;
-    
+    private double currentAngle;    
     public AutoShooterTilt(double angle) {
         this.angle = angle;
-        shooter = Shooter.getInstance();
     }
     @Override
     public boolean init() {
@@ -28,7 +25,7 @@ public class AutoShooterTilt extends AutoCommand {
             return true;
         }
         currentAngle += Shooter.TILT_MOVEMENT_PROPORTION;
-        shooter.setToTiltValue(currentAngle);
+        Shooter.getInstance().setToTiltValue(currentAngle);
         return false;
     }
     @Override

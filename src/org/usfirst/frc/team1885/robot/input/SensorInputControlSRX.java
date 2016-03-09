@@ -99,7 +99,7 @@ public class SensorInputControlSRX {
 //              * UtilityArm.CONVERSION_FACTOR;
       INITIAL_TILT_POSITION = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get();
       DriverStation.reportError("\nInit Tilt" + INITIAL_TILT_POSITION, false);
-      INITIAL_TWIST_POSITION = getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER);
+      INITIAL_TWIST_POSITION = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).get();
       DriverStation.reportError("\nInit Twist " + INITIAL_TWIST_POSITION, false);
   }
     public double getInitPitch() {
@@ -200,9 +200,9 @@ public class SensorInputControlSRX {
     public double getZeroedEncoder(SensorType type) {
         switch(type) {
         case SHOOTER_TWIST_ENCODER:
-            return getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER) - INITIAL_TWIST_POSITION;
+            return rsrx.getTalons().get(RobotMotorType.SHOOTER_TWIST).get() - INITIAL_TWIST_POSITION;
         default:
-            return getEncoderPos(SensorType.SHOOTER_TWIST_ENCODER);
+            return rsrx.getTalons().get(RobotMotorType.SHOOTER_TWIST).get();
         }
     }
     public boolean digitalLimitSwitch(SensorType type) {
