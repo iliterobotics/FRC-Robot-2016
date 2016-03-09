@@ -24,16 +24,16 @@ public class UtilityArm implements Module {
 
     private static UtilityArm instance;
 
-    public static final double LENGTH_A = 17.5; // length of arm A
-    public static final double LENGTH_B = 18; // length of arm B
+    public static final double LENGTH_A = 18; // length of arm A
+    public static final double LENGTH_B = 18.5; // length of arm B
     public static final double CONVERSION_FACTOR = (1024 * 4) / 360.0; // multiplier
     // to convert
     // from degrees
     // to ticks
     private static final double DEGREE_MARGIN_ERR = 5 * CONVERSION_FACTOR;
     private static final double FRAME_LENGTH = 5;
-    private final double RESET_A_POSITION = -1700;
-    private final double RESET_B_POSITION = 100;
+    private final double RESET_A_POSITION;
+    private final double RESET_B_POSITION;
     private final double BOUNDARY = 13;
     private final double X_MAX_BACK_REACH = 9;
     private final double Y_MAX_UP_REACH = 33;
@@ -67,12 +67,12 @@ public class UtilityArm implements Module {
     private RobotControlWithSRX robotControl;
 
     protected UtilityArm() {
-        aP = .3; // 2.7
-        aI = 0.00026; // 0.00076
-        aD = 2; // 2
-        bP = .3; // 3.5
-        bI = 0; // 0.0001
-        bD = 1; // 2
+        aP = .5; // 2.7
+        aI = 0.00035; // 0.00076
+        aD = 1; // 2
+        bP = .5; // 3.5
+        bI = 0.00065; // 0.0001
+        bD = 2; // 2
 
         robotControl = RobotControlWithSRX.getInstance();
 
@@ -93,6 +93,10 @@ public class UtilityArm implements Module {
 
         this.jointAState = MotorState.OFF;
         this.jointBState = MotorState.OFF;
+        RESET_A_POSITION = SensorInputControlSRX
+                .getInstance().INITIAL_POT_A_POSITION;
+        RESET_B_POSITION = SensorInputControlSRX
+                .getInstance().INITIAL_POT_B_POSITION;
         jointAPosition = RESET_A_POSITION; // Reset Position
         jointBPosition = RESET_B_POSITION; // Reset Position
         xCoord = -1; // Reset Coordinate
@@ -110,16 +114,6 @@ public class UtilityArm implements Module {
 
     @Override
     public void update() {
-        DriverStation
-                .reportError(
-                        "\n Joint A: "
-                                + RobotControlWithSRX.getInstance().getTalons()
-                                        .get(RobotMotorType.ARM_JOINT_A).get()
-                                + " --- Joint B: "
-                                + RobotControlWithSRX.getInstance().getTalons()
-                                        .get(RobotMotorType.ARM_JOINT_B).get(),
-                false);
-
         xCoord += xModifier;
         yCoord -= yModifier;
 
@@ -217,6 +211,9 @@ public class UtilityArm implements Module {
 
         xCoord = xEndPoint;
         yCoord = yEndPoint;
+
+        DriverStation.reportError(
+                "\n Going to: (" + xCoord + ", " + yCoord + ")", false);
 
         double p = Math.sqrt((xEndPoint * xEndPoint) + (yEndPoint * yEndPoint));
         double k = ((p * p) + LENGTH_A * LENGTH_A - LENGTH_B * LENGTH_B)

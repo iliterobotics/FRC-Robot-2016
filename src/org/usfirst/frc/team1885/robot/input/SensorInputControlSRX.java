@@ -86,12 +86,16 @@ public class SensorInputControlSRX {
         return navx.getRoll();
     }
     public void init() {
-        INITIAL_POT_A_POSITION = rsrx.getSensor()
-                .get(SensorType.JOINT_A_CTRE_ABSOLUTE).getEncPosition();
-        INITIAL_POT_B_POSITION = rsrx.getSensor()
-                .get(SensorType.JOINT_B_CTRE_ABSOLUTE).getEncPosition();
-        DriverStation.reportError("\nINIT_POT_A: " + INITIAL_POT_A_POSITION
-                + " --- INIT_POT_B: " + INITIAL_POT_B_POSITION, false);
+        INITIAL_POT_A_POSITION = rsrx.getTalons()
+                .get(RobotMotorType.ARM_JOINT_A).getEncPosition();
+        INITIAL_POT_B_POSITION = rsrx.getTalons()
+                .get(RobotMotorType.ARM_JOINT_B).getEncPosition();
+        DriverStation.reportError("\nINIT_POT_A: "
+                + rsrx.getTalons().get(RobotMotorType.ARM_JOINT_A)
+                        .getEncPosition()
+                + " --- INIT_POT_B: " + rsrx.getTalons()
+                        .get(RobotMotorType.ARM_JOINT_B).getEncPosition(),
+                false);
     }
     public double getCurrent(int channel) {
         return PDP.getCurrent(channel);
