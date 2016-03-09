@@ -16,7 +16,7 @@ public class AutonomousRoutine {
     public static final double PITCH_CHANGE_ON_RAMP = 4.5; // NavX is sideways
     public static final double RAMPART_SPEED_MAX = 0.6;
     public static final double RAMPART_SPEED_MIN = 0.5;
-    public static final double START_DRIVE_SPEED = -0.5;
+    public static final double START_DRIVE_SPEED = 0.5;
 
     private DefenseType type;
     private int targetDefense;
@@ -26,7 +26,7 @@ public class AutonomousRoutine {
     private double delay = 0.005;
     private boolean isHigh;
     private int goal;
-    public static final double MOAT_CLEAR_SPEED = 0.9;
+    public static final double CLEAR_SPEED = -1;
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
@@ -36,18 +36,18 @@ public class AutonomousRoutine {
         DriverStation.reportError("\nGyro Calibrated", false);
 
 
-        // commands.add(new AutoDriveStraightDistance(-16 * 12, true));
-//         commands.add(new AutoAlign(90));
+//         commands.add(new AutoDriveDistance(3 * 12));
+//         commands.add(new AutoAlign(360));
 //         commands.add(new AutoWait(2000));
 //         commands.add(new AutoAlign());
-
          getConfiguration();
-        //type = DefenseType.ROUGH_TERRAIN;
-        // initAutoBreach();
+         type = DefenseType.LOW_BAR;
+         initAutoBreach();
          autoMoveToShoot();
     }
 
     public void execute() {
+        int commandNum = 0;
         while (!commands.isEmpty() && robot.isEnabled()
                 && robot.isAutonomous()) {
             AutoCommand currCommand = commands.peek();
@@ -55,7 +55,8 @@ public class AutonomousRoutine {
                 boolean commandState = currCommand.execute();
                 currCommand.updateOutputs();
                 if (commandState) {
-                    DriverStation.reportError( "\nfinished command " + commands.size(), false);
+                    DriverStation.reportError( "\nfinished command " + commandNum, false);
+                    commandNum++;
                     commands.poll();
                 }
             } else {
@@ -93,12 +94,16 @@ public class AutonomousRoutine {
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAutoBreach() {
-        if(type == DefenseType.MOAT)
-            commands.add(new AutoDriveStart(MOAT_CLEAR_SPEED));
-        else
+        if(type == DefenseType.MOAT || type == DefenseType.RAMPARTS){
+            commands.add(new AutoDriveStart(CLEAR_SPEED));
+        } else if(type == DefenseType.PORTCULLIS || type == DefenseType.LOW_BAR){
+            commands.add(new AutoDriveStart(-START_DRIVE_SPEED));
+        }
+        else{
             commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+        }
         commands.add(new AutoReachedDefense());
-        // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, RAMPARTS
+        // DEFAULT CASE IS FOR: ROUGH TERRAIN and RAMPARTS
         switch (type) {
         case LOW_BAR:
             autoLowBar();
@@ -173,7 +178,7 @@ public class AutonomousRoutine {
         else {
             DriverStation.reportError("Invalid Goal Number", false);
         }
-        if(type != DefenseType.PORTCULLIS && type != DefenseType.MOAT) {
+        if(type != DefenseType.PORTCULLIS && type != DefenseType.MOAT && type != DefenseType.LOW_BAR && type != DefenseType.RAMPARTS) {
             firstMove = -firstMove;
             secondMove = -secondMove;
             align += 180;
@@ -214,9 +219,9 @@ public class AutonomousRoutine {
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
-        double lowBarTravelDistance = 4.2 * 12; // subject to change from
+        double lowBarTravelDistance = 4.5 * 12; // subject to change from
         ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
-        commands.add(new AutoDriveDistance(-lowBarTravelDistance, .1));
+        commands.add(new AutoDriveDistance(lowBarTravelDistance, .2));
     }
     
     public void autoPortcullis(){
@@ -264,7 +269,7 @@ public class AutonomousRoutine {
      */
     public void autoShootBall(double angle) {
         commands.add(new AutoShooterTilt(angle));
-        commands.add(new AutoShooterShoot());
+        commands.add(new AutoShoot());
         //TODO vision to twist for more accurate
         
     }

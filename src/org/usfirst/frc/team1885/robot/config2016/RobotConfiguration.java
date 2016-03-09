@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.SerialPort;
  *          mappings for the robot Also keeps track of ports for motors
  */
 public class RobotConfiguration {
-    public static final double WHEEL_DIAMETER = 8.9; //magic, needs to be configured every time
+    public static final double WHEEL_DIAMETER = 8.914666748046875; //magic, needs to be configured every time
     public static final int ARM_JOINT_A_PORT = 1; // 5 on real robot
     public static final int ARM_JOINT_B_PORT = 2; // 6 on real robot
     public static final double MAX_SPEED = .8;
@@ -114,7 +114,7 @@ public class RobotConfiguration {
         // Add Modules
         moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
         moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
-        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
+//        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
 //        moduleControl.addModule(ModuleType.UTILITY_ARM, UtilityArm.getInstance());
     }
 }

@@ -8,7 +8,7 @@ public class AutoPortcullis extends AutoCommand {
     SensorInputControlSRX sensorControl;
     AutoDriveDistance halfWay; 
     AutoDriveDistance secondHalf;
-    public static final double HALF_DISTANCE = 4.2 * 12 / 2;
+    public static final double HALF_DISTANCE = -4.2 * 12 / 2;
 
     @Override
     public boolean init() {

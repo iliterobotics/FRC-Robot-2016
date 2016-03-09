@@ -9,14 +9,10 @@ public class AutoAimShooter extends AutoCommand {
 
     private static final double HIGHGOAL_MIDPOINT = 97; //inches for midpoint of high goal
     
-    private Shooter shooter;
     private ShooterDataClient sdc;
     private HighGoal hg;
     
     public AutoAimShooter() {
-        shooter = Shooter.getInstance();
-        shooter.reset();
-        
         sdc = ShooterDataClient.startShooterDataClient();
         hg = sdc.getData();
     }
@@ -24,27 +20,27 @@ public class AutoAimShooter extends AutoCommand {
     @Override
     public boolean init() {
         double distance = hg.getDistance();
-        double azimuth = hg.getAngleOfElevation();
+        double azimuth = hg.getAzimuth();
         
         double tiltAngle = 180 - Math.toDegrees(Math.asin(HIGHGOAL_MIDPOINT / distance));
-        shooter.setToTiltValue(tiltAngle);
+        Shooter.getInstance().setToTiltValue(tiltAngle);
         
-        shooter.setToTwistValue(azimuth);        
+        Shooter.getInstance().setToTwistValue(azimuth);        
         
         return true;
     }
 
     @Override
     public boolean execute() {
-        boolean tiltCompleted = shooter.updateTiltPosition();
-        boolean twistCompleted = shooter.updateTwistPosition();
+        boolean tiltCompleted = Shooter.getInstance().updateTilt();
+        boolean twistCompleted = Shooter.getInstance().updateTwist();
         
         return tiltCompleted && twistCompleted;
     }
 
     @Override
     public boolean updateOutputs() {
-        // TODO Auto-generated method stub
+        Shooter.getInstance().updateOutputs();
         return false;
     }
 

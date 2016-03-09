@@ -106,6 +106,7 @@ public class ActiveIntake implements Module {
         updateIntake();
     }
     public void setIntakeSolenoid(DoubleSolenoid.Value input){
+        DriverStation.reportError("\n Intake Position" + input, false);
         isIntaking = input;
     }
     public void setIntakeSpeed(double speed){

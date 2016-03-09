@@ -2,6 +2,7 @@ package org.usfirst.frc.team1885.robot.modules;
 
 import java.util.Map;
 
+import org.usfirst.frc.team1885.robot.auto.AutoAimShooter;
 import org.usfirst.frc.team1885.robot.auto.AutoShooterTilt;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
@@ -13,9 +14,9 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 
 //TODO add @depricated tags (or alternate documentation) to all methods no longer being used
 public class Shooter implements Module {
@@ -45,8 +46,11 @@ public class Shooter implements Module {
     private final static double HIGH_GOAL_INTAKE_TILT = 56;
     private final static double HIGH_GOAL_CAM_TILT = 138;
     public static final double GEAR_RATIO_TWIST = 3.0 / 7;
-    private static final double TWIST_BOUND_RIGHT = -45;
-    private static final double TWIST_BOUND_LEFT = 45;
+    private static final double TWIST_LEVEL_THRESHOLD = 60; //tilt degree at which the bounds of the twist are changed
+    private static final double TWIST_BOUND_HIGH_RIGHT = -45;
+    private static final double TWIST_BOUND_HIGH_LEFT = 45;
+    private static final double TWIST_BOUND_LOW_RIGHT = -30;
+    private static final double TWIST_BOUND_LOW_LEFT = 30;
     // public static final double GEAR_RATIO_TILT = 1.0 / 3;
     private double flywheelSpeedLeft;
     private MotorState leftState;
@@ -85,7 +89,8 @@ public class Shooter implements Module {
     private double tiltPosition;
     private double relativeTwistAngle;
     private double twistPosition;
-    private boolean isAiming; //checks if we are using autonomous to aim
+    private boolean isAiming; //checks if we are using autonomous to aim - using camera vision
+    private AutoAimShooter autoAimShooter;
 
     public static Shooter getInstance() {
         if (instance == null) {
@@ -146,6 +151,7 @@ public class Shooter implements Module {
         TILT_LIMIT_LOWER = sensorControl.getInitialTiltPosition() / 1024.0 / 360;
         TILT_LIMIT_UPPER = TILT_LIMIT_LOWER + STATIC_TILT_LIMIT_UPPER;
         autoShooterTilt = new AutoShooterTilt(LOW_GOAL_TILT);
+        autoAimShooter = new AutoAimShooter();
         this.twistPosition = sensorControl.getInitialTwistPosition();
     }
     // Get telemetry data
@@ -264,15 +270,16 @@ public class Shooter implements Module {
     public void setToTiltValue(double angle) {
         relativeTiltAngle = angle;
     }
-    public void updateTilt() {
+    public boolean updateTilt() {
         int userTiltDirection = driverInputControl.getShooterTilt();
 
 //        DriverStation.reportError("\n" + Math.abs((((RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get() - sensorControl.getInitialTiltPosition())/ (1024.0/360.0)) - this.relativeTiltAngle)), false);
 //        DriverStation.reportError(" " + isAutoTilt, false);
         isAutoTilt = userTiltDirection == 0 ? true : false;
+        isAiming = userTiltDirection == 0 ? true : false;
         this.relativeTiltAngle += userTiltDirection * TILT_MOVEMENT_PROPORTION;
         
-        updateTiltPosition();
+        return updateTiltPosition();
     }
     public boolean updateTiltPosition() {
         boolean isInPosition = true;
@@ -280,7 +287,7 @@ public class Shooter implements Module {
         if(input > 0){
             isAutoTilt = true;  
             switch(input){
-                case 90: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_CAM_TILT); break;
+                case 90: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_CAM_TILT); isAiming = true; break;
                 case 180: autoShooterTilt = new AutoShooterTilt(LOW_GOAL_TILT); break;
                 case 270: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_INTAKE_TILT); break;
                 default:
@@ -289,6 +296,9 @@ public class Shooter implements Module {
         }
         if(isAutoTilt){
             isAutoTilt = autoShooterTilt.execute();
+        }
+        if(isAiming && !isAutoTilt){
+//            autoAimShooter.execute();
         }
         double currentAngle = sensorControl
                 .getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER);
@@ -343,7 +353,7 @@ public class Shooter implements Module {
     public void setToTwistValue(double angle) {
         relativeTwistAngle = angle;
     }
-    public void updateTwist() {
+    public boolean updateTwist() {
         double userTwistDirection = driverInputControl.getShooterTwist();
 
         if (sensorControl.getZeroedPotentiometer(
@@ -351,7 +361,7 @@ public class Shooter implements Module {
             this.relativeTwistAngle += userTwistDirection
                     * TWIST_MOVEMENT_PROPORTION;
 //            DriverStation.reportError("\nUpdating Twist:: " + this.relativeTwistAngle, false);
-        updateTwistPosition();
+        return updateTwistPosition();
     }
     public boolean updateTwistPosition() {
         boolean isInPosition = true;
@@ -379,11 +389,19 @@ public class Shooter implements Module {
      * @return the corrected angle to go to
      */
     public double boundTwist(double twistInputAngle) {
-        twistInputAngle = twistInputAngle < TWIST_BOUND_RIGHT ? TWIST_BOUND_RIGHT
-                : twistInputAngle;
+        if(this.relativeTiltAngle > TWIST_LEVEL_THRESHOLD){
+            twistInputAngle = twistInputAngle < TWIST_BOUND_HIGH_RIGHT ? TWIST_BOUND_HIGH_RIGHT
+                    : twistInputAngle;
 
-        twistInputAngle = twistInputAngle > TWIST_BOUND_LEFT ? TWIST_BOUND_LEFT
-                : twistInputAngle;
+            twistInputAngle = twistInputAngle > TWIST_BOUND_HIGH_LEFT ? TWIST_BOUND_HIGH_LEFT
+                    : twistInputAngle;
+        } else{
+            twistInputAngle = twistInputAngle < TWIST_BOUND_LOW_RIGHT ? TWIST_BOUND_LOW_RIGHT
+                    : twistInputAngle;
+
+            twistInputAngle = twistInputAngle > TWIST_BOUND_LOW_LEFT ? TWIST_BOUND_LOW_LEFT
+                    : twistInputAngle;
+        }
         DriverStation.reportError("\nInput:: " + twistInputAngle + "  Real Angle:: " + twistInputAngle, false);
         return twistInputAngle;
     }
@@ -395,6 +413,12 @@ public class Shooter implements Module {
         } else {
             twistState = MotorState.OFF;
         }
+    }
+    
+    public void resetPosition(){
+        isAutoTilt = true;
+        autoShooterTilt = new AutoShooterTilt(0);
+        setToTwistValue(sensorControl.getInitialTwistPosition());
     }
 
     public void reset() {

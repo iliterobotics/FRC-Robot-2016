@@ -27,8 +27,8 @@ public class AutoCalibrateWheels extends AutoCommand{
         robotControl = RobotControlWithSRX.getInstance();
         initialTickRight = initialTickLeft = currentTickRight = currentTickLeft = 0;
         yawChange = 0;
-        P = 2.0;
-        I = 0.001;
+        P = 0.7;
+        I = 0.0005;
 //        P = 0.5;
 //        I = 0.0000;
         D = 0;
@@ -62,7 +62,7 @@ public class AutoCalibrateWheels extends AutoCommand{
         currentTickRight = robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
         currentTickLeft = robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get();
 //        DriverStation.reportError("\n Right:: " + (initialTickRight + 1024) + " Left:: " + (initialTickLeft + 1024), false);
-//        DriverStation.reportError("\nTime: " + System.currentTimeMillis() + " Current Ticks:: Left: " + currentTickLeft + " Right: " + currentTickRight + "  Initial Ticks:: Left: " + initialTickLeft + " Right: " + initialTickRight, false);
+        DriverStation.reportError("\nLeft: " + (currentTickLeft - initialTickLeft) + " Right: " + (currentTickRight - initialTickRight), false);
         if(withinRange(currentTickRight, currentTickLeft)){
             if(System.currentTimeMillis() - timeLastCheck > WAIT){
                 yawChange = SensorInputControlSRX.getInstance().getYaw();
@@ -89,7 +89,7 @@ public class AutoCalibrateWheels extends AutoCommand{
     }
     
     public boolean withinRange(double currentTickRight, double currentTickLeft){
-        if(Math.abs(currentTickRight) - Math.abs(initialTickRight) >= ((rotations * 1024) - ERROR) && Math.abs(currentTickRight) - Math.abs(initialTickRight) <= ((rotations * 1024) + ERROR)){
+        if(Math.abs(Math.abs(currentTickRight) - Math.abs(initialTickRight)) >= ((rotations * 1024) - ERROR) && Math.abs(Math.abs(currentTickRight) - Math.abs(initialTickRight)) <= ((rotations * 1024) + ERROR)){
             if(Math.abs(Math.abs(currentTickLeft) - Math.abs(initialTickLeft)) >= ((rotations * 1024) - ERROR) && Math.abs(Math.abs(currentTickLeft) - Math.abs(initialTickLeft)) <= ((rotations * 1024) + ERROR)){
                 return true;
             }

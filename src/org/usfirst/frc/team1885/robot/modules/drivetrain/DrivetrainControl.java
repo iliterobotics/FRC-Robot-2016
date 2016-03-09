@@ -199,8 +199,6 @@ public class DrivetrainControl implements Module {
         case Position:
             robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).setPID(positionP, positionI, positionD);
             robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).setPID(positionP, positionI, positionD);
-            robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).set(SensorInputControlSRX.getInstance().getEncoderPos(SensorType.LEFT_ENCODER));
-            robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).set(SensorInputControlSRX.getInstance().getEncoderPos(SensorType.LEFT_ENCODER));
             break;
         default:
         }
