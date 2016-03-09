@@ -105,13 +105,13 @@ public class Shooter implements Module {
                 .getInstance().getTalons();
 
         // Setting up Tilt Talon
-//        talonList.get(RobotMotorType.SHOOTER_TILT)
-//                .changeControlMode(TalonControlMode.Position);
-//        talonList.get(RobotMotorType.SHOOTER_TILT)
-//                .setFeedbackDevice(FeedbackDevice.AnalogPot);
-//        talonList.get(RobotMotorType.SHOOTER_TILT).setPID(TILT_P, TILT_I,
-//                TILT_D);
-//        talonList.get(RobotMotorType.SHOOTER_TILT).reverseSensor(true);
+        talonList.get(RobotMotorType.SHOOTER_TILT)
+                .changeControlMode(TalonControlMode.Position);
+        talonList.get(RobotMotorType.SHOOTER_TILT)
+                .setFeedbackDevice(FeedbackDevice.AnalogPot);
+        talonList.get(RobotMotorType.SHOOTER_TILT).setPID(TILT_P, TILT_I,
+                TILT_D);
+        talonList.get(RobotMotorType.SHOOTER_TILT).reverseSensor(true);
 
         // Setting up Twist Talon
         talonList.get(RobotMotorType.SHOOTER_TWIST)
@@ -122,30 +122,30 @@ public class Shooter implements Module {
                 TWIST_D);
 
         // Setting up Flywheel Left Talon
-        // talonList.get(RobotMotorType.FLYWHEEL_LEFT).changeControlMode(TalonControlMode.Speed);
-        // talonList.get(RobotMotorType.FLYWHEEL_LEFT).setFeedbackDevice(FeedbackDevice.QuadEncoder);
-//        talonList.get(RobotMotorType.FLYWHEEL_LEFT)
-//                .changeControlMode(TalonControlMode.PercentVbus);
-//        talonList.get(RobotMotorType.FLYWHEEL_LEFT).setPID(SPIN_P, SPIN_I,
-//                SPIN_D);
-                // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).configEncoderCodesPerRev(1024);
+         talonList.get(RobotMotorType.FLYWHEEL_LEFT).changeControlMode(TalonControlMode.Speed);
+         talonList.get(RobotMotorType.FLYWHEEL_LEFT).setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        talonList.get(RobotMotorType.FLYWHEEL_LEFT)
+                .changeControlMode(TalonControlMode.PercentVbus);
+        talonList.get(RobotMotorType.FLYWHEEL_LEFT).setPID(SPIN_P, SPIN_I,
+                SPIN_D);
+//                 RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).configEncoderCodesPerRev(1024);
 
         // Setting up Flywheel Right Talon
-        // talonList.get(RobotMotorType.FLYWHEEL_RIGHT).changeControlMode(TalonControlMode.Speed);
-        // talonList.get(RobotMotorType.FLYWHEEL_RIGHT).setFeedbackDevice(FeedbackDevice.QuadEncoder);
-//        talonList.get(RobotMotorType.FLYWHEEL_RIGHT)
-//                .changeControlMode(TalonControlMode.PercentVbus);
-//        talonList.get(RobotMotorType.FLYWHEEL_RIGHT).setPID(SPIN_P, SPIN_I,
-//                SPIN_D);
-//        lastLaunchCheck = System.currentTimeMillis();
+         talonList.get(RobotMotorType.FLYWHEEL_RIGHT).changeControlMode(TalonControlMode.Speed);
+         talonList.get(RobotMotorType.FLYWHEEL_RIGHT).setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        talonList.get(RobotMotorType.FLYWHEEL_RIGHT)
+                .changeControlMode(TalonControlMode.PercentVbus);
+        talonList.get(RobotMotorType.FLYWHEEL_RIGHT).setPID(SPIN_P, SPIN_I,
+                SPIN_D);
+        lastLaunchCheck = System.currentTimeMillis();
         isAutoTilt = false;
         // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).configEncoderCodesPerRev(1024);
     }
 
     public void init() {
-//        TILT_LIMIT_LOWER = sensorControl.getInitialTiltPosition() / 1024.0 / 360;
-//        TILT_LIMIT_UPPER = TILT_LIMIT_LOWER + STATIC_TILT_LIMIT_UPPER;
-//        autoShooterTilt = new AutoShooterTilt(LOW_GOAL_TILT);
+        TILT_LIMIT_LOWER = sensorControl.getInitialTiltPosition() / 1024.0 / 360;
+        TILT_LIMIT_UPPER = TILT_LIMIT_LOWER + STATIC_TILT_LIMIT_UPPER;
+        autoShooterTilt = new AutoShooterTilt(LOW_GOAL_TILT);
         this.twistPosition = sensorControl.getInitialTwistPosition();
     }
     // Get telemetry data
@@ -346,8 +346,8 @@ public class Shooter implements Module {
     public void updateTwist() {
         double userTwistDirection = driverInputControl.getShooterTwist();
 
-//        if (sensorControl.getZeroedPotentiometer(
-//                SensorType.SHOOTER_TILT_POTENTIOMETER) >= TILT_THRESHOLD)
+        if (sensorControl.getZeroedPotentiometer(
+                SensorType.SHOOTER_TILT_POTENTIOMETER) >= TILT_THRESHOLD)
             this.relativeTwistAngle += userTwistDirection
                     * TWIST_MOVEMENT_PROPORTION;
 //            DriverStation.reportError("\nUpdating Twist:: " + this.relativeTwistAngle, false);
@@ -356,7 +356,7 @@ public class Shooter implements Module {
     public boolean updateTwistPosition() {
         boolean isInPosition = true;
         double currentAngle = sensorControl.getZeroedEncoder(
-                SensorType.SHOOTER_TWIST_ENCODER);
+                SensorType.SHOOTER_TWIST_ENCODER) / (4096 / 360.0);
 
         this.relativeTwistAngle = this.boundTwist(this.relativeTwistAngle);
 
@@ -425,13 +425,13 @@ public class Shooter implements Module {
         // FLYWHEEL_MIN_SPEED, false);
         // RobotControlWithSRX.getInstance().updateFlywheelShooter(flywheelSpeedLeft
         // * FLYWHEEL_MIN_SPEED, flywheelSpeedRight * FLYWHEEL_MIN_SPEED);
-//        RobotControlWithSRX.getInstance()
-//                .updateFlywheelShooter(flywheelSpeedLeft, flywheelSpeedRight);
-//        RobotControlWithSRX.getInstance().updateShooterTilt(tiltPosition);
+        RobotControlWithSRX.getInstance()
+                .updateFlywheelShooter(flywheelSpeedLeft, flywheelSpeedRight);
+        RobotControlWithSRX.getInstance().updateShooterTilt(tiltPosition);
          RobotControlWithSRX.getInstance().updateShooterTwist(twistPosition);
 //         DriverStation.reportError("\nIntended Position:: " + twistPosition + " Actual Position" + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).get(), false);
-//         RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER,
-//         isHeld);
+         RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER,
+         isHeld);
         // DriverStation.reportError("\nContainer State:: " + isHeld, false);
         // // RobotControlWithSRX.getInstance()
         // // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,
