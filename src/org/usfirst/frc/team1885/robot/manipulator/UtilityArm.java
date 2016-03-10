@@ -322,6 +322,8 @@ public class UtilityArm implements Module {
     public void resetPos() {
         jointAPosition = RESET_A_POSITION;
         jointBPosition = RESET_B_POSITION;
+        jointADegree = RESET_A_POSITION / CONVERSION_FACTOR;
+        jointBDegree = RESET_B_POSITION / CONVERSION_FACTOR;
         xCoord = -1; // An approximation
         yCoord = 4; // An approximation
     }
@@ -335,7 +337,7 @@ public class UtilityArm implements Module {
 
     public double getCurrentDegreeB() {
         double degree = 0;
-        degree = (robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).get()
+        degree = (-1 * robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).get()
                 + RESET_B_POSITION) / CONVERSION_FACTOR;
         return degree;
     }
