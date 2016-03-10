@@ -5,12 +5,9 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
-import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
-import org.usfirst.frc.team1885.robot.modules.ModuleControl;
-import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -41,9 +38,9 @@ public class Robot extends SampleRobot {
     private double delayTime = 1;// Input time in seconds
     public static final double AUTO_CYCLE_TIME = 0.05;
 
-    //Output Control
+    // Output Control
     private RobotControlWithSRX robotControl;
-    //InputControl
+    // InputControl
     private DriverInputControlSRX driverInputControl;
     private SensorInputControlSRX sensorInputControl;
     // Module Control
@@ -70,7 +67,6 @@ public class Robot extends SampleRobot {
 //        Initialize Modules
         modules = ModuleControl.getInstance().getModules();
         DriverStation.reportError("\nRobot Intialized", false);
-    }
 
     /**
      * Runs the motors with tank steering.
@@ -79,15 +75,15 @@ public class Robot extends SampleRobot {
         DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
         DriverStation.reportError("\nBeginning Operator Control", false);
         while (isOperatorControl() && isEnabled()) {
-//            //Update Inputs
+            // //Update Inputs
             sensorInputControl.update();
             driverInputControl.update();
-//            //Update Module Data
-            for(Module m: modules) {
+            // //Update Module Data
+            for (Module m : modules) {
                 m.update();
             }
-//            //Update Module Outputs
-            for(Module m: modules) {
+            // //Update Module Outputs
+            for (Module m : modules) {
                 m.updateOutputs();
             }
             Timer.delay(.005);
@@ -98,5 +94,4 @@ public class Robot extends SampleRobot {
         AutonomousRoutine ar = new AutonomousRoutine(this);
         ar.execute();
     }
-    
 }

@@ -6,14 +6,13 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoUtilityArm extends AutoCommand {
 
-    private static final double RESET_X = 0;
-    private static final double RESET_Y = .1;
-
     private UtilityArm uArm;
     private double xDistance, yDistance;
+    private boolean reset = false;
 
     public AutoUtilityArm() {
-        this(RESET_X, RESET_Y);
+        this(0, 0);
+        reset = true;
     }
 
     public AutoUtilityArm(double x, double y) {
@@ -24,10 +23,10 @@ public class AutoUtilityArm extends AutoCommand {
 
     @Override
     public boolean init() {
-        if (xDistance == RESET_X && yDistance == RESET_Y) {
-            uArm.resetPos();
-        } else {
+        if (!reset) {
             uArm.goTo(xDistance, yDistance);
+        } else {
+            reset();
         }
         return true;
     }
@@ -35,16 +34,13 @@ public class AutoUtilityArm extends AutoCommand {
     @Override
     public boolean execute() {
         uArm.update();
-        // DriverStation.reportError(
-        // uArm.isFinished() ? "\nFinished!" : "\nNot Finished...", false);
-//        DriverStation.reportError(
-//                " moving to (" + xDistance + ", " + yDistance + ")", false);
+        uArm.updateOutputs();
         return uArm.isFinished();
     }
 
     @Override
     public boolean updateOutputs() {
-        uArm.updateOutputs();
+        // Done for us in UtilityArm
         return false;
     }
 
