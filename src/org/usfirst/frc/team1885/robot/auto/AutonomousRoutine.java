@@ -6,6 +6,7 @@ import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
 import dataclient.robotdata.autonomous.AutonomousConfig;
@@ -40,10 +41,10 @@ public class AutonomousRoutine {
 //         commands.add(new AutoAlign(360));
 //         commands.add(new AutoWait(2000));
 //         commands.add(new AutoAlign());
-         getConfiguration();
-         type = DefenseType.LOW_BAR;
-         initAutoBreach();
-         autoMoveToShoot();
+//         getConfiguration();
+//         initAutoBreach();
+//         autoMoveToShoot();
+        autoShootBallCam();
     }
 
     public void execute() {
@@ -213,6 +214,7 @@ public class AutonomousRoutine {
             //commands.add(new AutoAimShooter());
         }
         */
+        autoShootBallCam();
     }
 
     /**
@@ -272,6 +274,13 @@ public class AutonomousRoutine {
         commands.add(new AutoShoot());
         //TODO vision to twist for more accurate
         
+    }
+    
+    public void autoShootBallCam(){
+        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_ANGLE));
+//        commands.add(new AutoShooterInitiate());
+        commands.add(new AutoAimShooter());
+        commands.add(new AutoShoot());
     }
 
     

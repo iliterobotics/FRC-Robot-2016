@@ -24,7 +24,10 @@ public class AutoShooterTilt extends AutoCommand {
         if(Math.abs(currentAngle - angle) <= ERROR){
             return true;
         }
-        currentAngle += Shooter.TILT_MOVEMENT_PROPORTION;
+        if(currentAngle < angle)
+            currentAngle += Shooter.TILT_MOVEMENT_PROPORTION;
+        else
+           currentAngle -= Shooter.TILT_MOVEMENT_PROPORTION;
         Shooter.getInstance().setToTiltValue(currentAngle);
         return false;
     }

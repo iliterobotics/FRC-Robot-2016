@@ -56,6 +56,7 @@ public class RobotConfiguration {
         joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_OUT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_UP, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_DOWN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
+        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kY));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TWIST_LEFT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TWIST_RIGHT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_RESET, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
@@ -63,7 +64,7 @@ public class RobotConfiguration {
 //        joystickButtonMap.addControllerButton(RobotButtonType.READY_LOW, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
         joystickButtonMap.addControllerButton(RobotButtonType.FIRE, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
                 // Active Intake Joystick Mappings
-        joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_SOLENOID, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
+        joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_SOLENOID, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
         joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 5));
         joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_OUT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
                 // Arm Joystick Mappings
@@ -112,9 +113,9 @@ public class RobotConfiguration {
 //        robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
         
         // Add Modules
-        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
+//        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
         moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
-//        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
+        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
 //        moduleControl.addModule(ModuleType.UTILITY_ARM, UtilityArm.getInstance());
     }
 }
