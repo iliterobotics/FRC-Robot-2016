@@ -147,20 +147,20 @@ public class UtilityArm implements Module {
                 // Up on joystick gives negative values
             }
             goTo(xCoord, yCoord);
-            status.setDestX(xCoord);
-            status.setDestY(yCoord);
-            status.setAlpha(jointADegree);
-            status.setBeta(jointBDegree);
-            try {
-                status.push();
-            } catch (IOException e) {
-                DriverStation.reportError("CANT CONNECT", false);
-            }
         }
 
         if (driverInputControl.isResetButtonDown()) {
             resetPos();
             DriverStation.reportError("\nReseting...", false);
+        }
+        status.setDestX(xCoord);
+        status.setDestY(yCoord);
+        status.setAlpha(getCurrentDegreeA());
+        status.setBeta(getCurrentDegreeB());
+        try {
+            status.push();
+        } catch (IOException e) {
+            DriverStation.reportError("CANT CONNECT", false);
         }
 
         // DriverStation.reportError(
