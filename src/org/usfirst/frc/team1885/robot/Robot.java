@@ -54,9 +54,6 @@ public class Robot extends SampleRobot {
     public Robot() {
         //Initialize Output Control
         robotControl = RobotControlWithSRX.getInstance();
-        robotControl.set(0, true);
-        robotControl.enablePWM(0, .25);
-        robotControl.setPWMRate(0, .1);
         //Initialize Input Control
         driverInputControl = DriverInputControlSRX.getInstance();
         sensorInputControl = SensorInputControlSRX.getInstance();
@@ -85,7 +82,7 @@ public class Robot extends SampleRobot {
             //Update Inputs
             sensorInputControl.update();
             driverInputControl.update();
-            robotControl.pulse(0,100);
+            robotControl.wipeRainbow();
             //Update Module Data
             for(Module m: modules) {
                 m.update();
