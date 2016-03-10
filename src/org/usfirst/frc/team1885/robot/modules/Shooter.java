@@ -301,7 +301,7 @@ public class Shooter implements Module {
             isAutoTilt = !autoShooterTilt.execute();
         }
         if(isAiming){
-//            autoAimShooter.execute();
+//            isAiming = !autoAimShooter.execute();
             setToTwistValue(45);
         }
         double currentAngle = sensorControl
