@@ -304,4 +304,18 @@ public class UtilityArm implements Module {
         yCoord = 4; // An approximation
     }
 
+    public double getCurrentDegreeA() {
+        double degree = 0;
+        degree = (robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).get()
+                + RESET_A_POSITION) / CONVERSION_FACTOR;
+        return degree;
+    }
+
+    public double getCurrentDegreeB() {
+        double degree = 0;
+        degree = (robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).get()
+                + RESET_B_POSITION) / CONVERSION_FACTOR;
+        return degree;
+    }
+
 }
