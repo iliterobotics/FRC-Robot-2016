@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.robot.manipulator;
 
+import java.io.IOException;
+
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
@@ -8,6 +10,8 @@ import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import dataclient.DataServerWebClient;
+import dataclient.robotdata.arm.ArmStatus;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -65,8 +69,17 @@ public class UtilityArm implements Module {
 
     private DriverInputControlSRX driverInputControl;
     private RobotControlWithSRX robotControl;
-
+    private ArmStatus status;
+    
     protected UtilityArm() {
+        DataServerWebClient client = new DataServerWebClient("http://172.22.11.1:8083");
+        status = new ArmStatus(client);
+        try {
+            client.pushSchema(status.getSchema());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        
         aP = .5; // 2.7
         aI = 0.00035; // 0.00076
         aD = 50; // 2
@@ -134,6 +147,15 @@ public class UtilityArm implements Module {
                 // Up on joystick gives negative values
             }
             goTo(xCoord, yCoord);
+            status.setDestX(xCoord);
+            status.setDestY(yCoord);
+            status.setAlpha(jointADegree);
+            status.setBeta(jointBDegree);
+            try {
+                status.push();
+            } catch (IOException e) {
+                DriverStation.reportError("CANT CONNECT", false);
+            }
         }
 
         if (driverInputControl.isResetButtonDown()) {
