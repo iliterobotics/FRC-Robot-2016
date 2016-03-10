@@ -1,17 +1,13 @@
 package org.usfirst.frc.team1885.robot.manipulator;
 
-import java.io.IOException;
-
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.common.type.SelectedDefenseBreach;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import dataclient.DataServerWebClient;
-import dataclient.robotdata.arm.ArmStatus;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -64,22 +60,19 @@ public class UtilityArm implements Module {
     private MotorState jointBState; // used for keeping track of the motor state
                                     // for arm B
 
-    double aAngleVal = 0;
-    double bAngleVal = 0;
+    private SelectedDefenseBreach selectedDefense;
 
     private DriverInputControlSRX driverInputControl;
     private RobotControlWithSRX robotControl;
-    private ArmStatus status;
-    
+    // private ArmStatus status;
+
     protected UtilityArm() {
-        DataServerWebClient client = new DataServerWebClient("http://172.22.11.1:8083");
-        status = new ArmStatus(client);
-        try {
-            client.pushSchema(status.getSchema());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        
+        /*
+         * DataServerWebClient client = new DataServerWebClient(
+         * "http://172.22.11.1:8083"); status = new ArmStatus(client); try {
+         * client.pushSchema(status.getSchema()); } catch (IOException e) {
+         * e.printStackTrace(); }
+         */
         aP = .5; // 2.7
         aI = 0.00035; // 0.00076
         aD = 50; // 2
@@ -104,6 +97,7 @@ public class UtilityArm implements Module {
         robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).setPID(bP, bI,
                 bD);
 
+        selectedDefense = SelectedDefenseBreach.NONE;
         this.jointAState = MotorState.OFF;
         this.jointBState = MotorState.OFF;
         RESET_A_POSITION = SensorInputControlSRX
@@ -135,6 +129,7 @@ public class UtilityArm implements Module {
         if (Math.abs(driverInputControl.getControllerThrottle()) > DEAD_ZONE_X
                 || Math.abs(driverInputControl
                         .getControllerTwist()) > DEAD_ZONE_Y) {
+            selectedDefense = SelectedDefenseBreach.NONE;
             if (Math.abs(
                     driverInputControl.getControllerThrottle()) > DEAD_ZONE_X) {
                 xModifier = driverInputControl.getControllerThrottle()
@@ -153,16 +148,12 @@ public class UtilityArm implements Module {
             resetPos();
             DriverStation.reportError("\nReseting...", false);
         }
-        status.setDestX(xCoord);
-        status.setDestY(yCoord);
-        status.setAlpha(getCurrentDegreeA());
-        status.setBeta(getCurrentDegreeB());
-        try {
-            status.push();
-        } catch (IOException e) {
-            DriverStation.reportError("CANT CONNECT", false);
-        }
-
+        /*
+         * status.setDestX(xCoord); status.setDestY(yCoord);
+         * status.setAlpha(getCurrentDegreeA());
+         * status.setBeta(getCurrentDegreeB()); try { status.push(); } catch
+         * (IOException e) { DriverStation.reportError("CANT CONNECT", false); }
+         */
         // DriverStation.reportError(
         // "X Coordinate: " + xCoord + " --- Y Coordinate: " + yCoord,
         // false);
@@ -170,10 +161,10 @@ public class UtilityArm implements Module {
 
     @Override
     public void updateOutputs() {
-        DriverStation.reportError(
-                "\n Moving to JointAPosition: " + jointAPosition
-                        + " --- Moving to JointBPosition: " + jointBPosition,
-                false);
+        // DriverStation.reportError(
+        // "\n Moving to JointAPosition: " + jointAPosition
+        // + " --- Moving to JointBPosition: " + jointBPosition,
+        // false);
         robotControl.updateArmMotors(jointAPosition, jointBPosition);
     }
 
@@ -337,7 +328,8 @@ public class UtilityArm implements Module {
 
     public double getCurrentDegreeB() {
         double degree = 0;
-        degree = (-1 * robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).get()
+        degree = (-1
+                * robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).get()
                 + RESET_B_POSITION) / CONVERSION_FACTOR;
         return degree;
     }

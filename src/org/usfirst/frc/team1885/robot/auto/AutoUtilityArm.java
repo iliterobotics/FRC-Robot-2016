@@ -25,8 +25,9 @@ public class AutoUtilityArm extends AutoCommand {
         if (!reset) {
             uArm.goTo(xDistance, yDistance);
         } else {
-            reset();
+            uArm.resetPos();
         }
+        DriverStation.reportError("\nInit-ing", false);
         return true;
     }
 
