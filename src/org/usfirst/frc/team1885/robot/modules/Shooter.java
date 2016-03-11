@@ -302,7 +302,8 @@ public class Shooter implements Module {
         }
         if(isAiming){
 //            isAiming = !autoAimShooter.execute();
-            setToTwistValue(45);
+//            setToTwistValue(45);
+            isAiming = false;
         }
         double currentAngle = sensorControl
                 .getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER);
@@ -311,14 +312,14 @@ public class Shooter implements Module {
 
         this.tiltPosition = (this.relativeTiltAngle * (1024 / 360.0))
                 + sensorControl.getInitialTiltPosition();
-         DriverStation
-         .reportError(
-         "\ntiltPosition: " + tiltPosition
-         + "\nrelativeTiltAngle: " + relativeTiltAngle
-         + "\nCurrent Tilt:: "
-         + RobotControlWithSRX.getInstance().getTalons()
-         .get(RobotMotorType.SHOOTER_TILT).get(),
-         false);
+//         DriverStation
+//         .reportError(
+//         "\ntiltPosition: " + tiltPosition
+//         + "\nrelativeTiltAngle: " + relativeTiltAngle
+//         + "\nCurrent Tilt:: "
+//         + RobotControlWithSRX.getInstance().getTalons()
+//         .get(RobotMotorType.SHOOTER_TILT).get(),
+//         false);
         isInPosition = (currentAngle > relativeTiltAngle - ANGLE_ERROR)
                 && (currentAngle < relativeTiltAngle + ANGLE_ERROR);
 
