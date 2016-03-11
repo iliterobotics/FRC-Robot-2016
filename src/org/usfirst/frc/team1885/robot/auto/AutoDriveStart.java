@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.common.PID;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;

@@ -9,6 +9,7 @@ import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
+import dataclient.robotdata.autonomous.AutonomousConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
@@ -46,7 +47,7 @@ public class AutonomousRoutine {
          autoMoveToShoot();
 //        autoShootBallCam();
         }
-         }
+     }
 
     public void execute() {
         int commandNum = 0;

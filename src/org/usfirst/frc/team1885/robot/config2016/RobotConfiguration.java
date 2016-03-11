@@ -11,8 +11,9 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
-import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
+import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.ModuleControl;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -111,8 +112,8 @@ public class RobotConfiguration {
 //        robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
 //        robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
         
-        // Add Modules
-//        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
+        // Add Module 
+        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
         moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
         moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
 //        moduleControl.addModule(ModuleType.UTILITY_ARM, UtilityArm.getInstance());
