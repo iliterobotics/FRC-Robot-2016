@@ -3,35 +3,34 @@ package org.usfirst.frc.team1885.robot.auto;
 import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.Robot;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
-import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
+import org.usfirst.frc.team1885.robot.common.type.SelectedDefenseBreach;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine {
     private Robot robot;
     private LinkedList<AutoCommand> commands, drawbridgeCommands,
-            sallyPortCommands, chivalCommands;
+            sallyPortCommands, chevalCommands;
     private static final double delay = 0.005;
 
-    public AutonomousRoutine(Robot r) {
+    public AutonomousRoutine() {
         commands = new LinkedList<AutoCommand>();
         drawbridgeCommands = new LinkedList<AutoCommand>();
         sallyPortCommands = new LinkedList<AutoCommand>();
-        chivalCommands = new LinkedList<AutoCommand>();
-        robot = r;
+        chevalCommands = new LinkedList<AutoCommand>();
+        emptyDrawbridgeCommands();
+        emptySallyPortCommands();
+        emptyChevalCommands();
         fillDrawbridgeCommands();
         fillSallyPortCommands();
-        fillChivalCommands();
+        fillChevalCommands();
+    }
 
-        sallyPort();
-        commands.add(new AutoWait(2000));
-        sallyPort();
+    public AutonomousRoutine(Robot r) {
+        this();
+        robot = r;
     }
     public void execute() {
-        int size = commands.size();
         while (!commands.isEmpty() && robot.isEnabled()
                 && robot.isAutonomous()) {
             AutoCommand currCommand = commands.peek();
@@ -52,6 +51,8 @@ public class AutonomousRoutine {
     private final double Y_OVERSHOOT_DISTANCE = 2;
 
     public void sallyPort() {
+        emptySallyPortCommands();
+        fillSallyPortCommands();
         // commands.add(); //Check to see if touching sallyport
         commands.add(sallyPortCommands.get(0));
         commands.add(new AutoWait(300));
@@ -68,6 +69,8 @@ public class AutonomousRoutine {
     }
 
     public void drawbridge() {
+        emptyDrawbridgeCommands();
+        fillDrawbridgeCommands();
         commands.add(drawbridgeCommands.get(0));
         commands.add(new AutoWait(100));
         commands.add(drawbridgeCommands.get(1));
@@ -103,6 +106,9 @@ public class AutonomousRoutine {
         drawbridgeCommands
                 .add(new AutoUtilityArm(-disXCompactArm, disYCompactArm));
     }
+    public void emptyDrawbridgeCommands() {
+        drawbridgeCommands.clear();
+    }
     public void fillSallyPortCommands() {
         double disXInit = 10;
         double disYInit = 23;
@@ -115,7 +121,30 @@ public class AutonomousRoutine {
         sallyPortCommands.add(new AutoUtilityArm(-disXGrab, disYGrab));
         sallyPortCommands.add(new AutoUtilityArm());
     }
-    public void fillChivalCommands() {
+    public void emptySallyPortCommands() {
+        sallyPortCommands.clear();
+    }
+    public void fillChevalCommands() {
 
+    }
+    public void emptyChevalCommands() {
+        chevalCommands.clear();
+    }
+    public LinkedList<AutoCommand> getCommands(SelectedDefenseBreach sdb) {
+        switch (sdb) {
+        case SALLYPORT:
+            emptySallyPortCommands();
+            fillSallyPortCommands();
+            return sallyPortCommands;
+        case DRAWBRIDGE:
+            emptyDrawbridgeCommands();
+            fillDrawbridgeCommands();
+            return drawbridgeCommands;
+        case CHEVAL_DE_FRISE:
+            emptyChevalCommands();
+            fillChevalCommands();
+            return chevalCommands;
+        }
+        return null;
     }
 }

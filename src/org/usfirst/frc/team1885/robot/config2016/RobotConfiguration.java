@@ -21,7 +21,13 @@ public class RobotConfiguration {
 		
 		JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_MOVE_Y, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kTwist ) );
         JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.ARM_MOVE_X, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, Joystick.AxisType.kZ) );
-        JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.RESET_BUTTON, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 9));
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.RESET_BUTTON, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 9));
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.DRAWBRIDGE_BREACH, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 1));
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.SALLYPORT_BREACH, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 2));
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.CHEVAL_BREACH, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 3));
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INCREMENT_BREACH_UP, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 6));
+        JoystickButtonMap.getInstance().addControllerButton( RobotButtonType.INCREMENT_BREACH_DOWN, new JoystickButtonMatch( RobotJoystickType.CONTROLLER, 8));
+        
         
         
         JoystickButtonMap.getInstance().addControllerButton(RobotButtonType.INCREMENT_ARM_LEFT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));

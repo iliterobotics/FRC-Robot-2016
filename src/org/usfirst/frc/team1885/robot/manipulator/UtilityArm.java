@@ -1,6 +1,11 @@
 package org.usfirst.frc.team1885.robot.manipulator;
 
+import java.util.LinkedList;
+
+import org.usfirst.frc.team1885.robot.auto.AutoCommand;
+import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
+import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SelectedDefenseBreach;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
@@ -61,6 +66,9 @@ public class UtilityArm implements Module {
                                     // for arm B
 
     private SelectedDefenseBreach selectedDefense;
+    private int defenseStep;
+    private AutonomousRoutine ar;
+    private LinkedList<AutoCommand> myCommands;
 
     private DriverInputControlSRX driverInputControl;
     private RobotControlWithSRX robotControl;
@@ -98,6 +106,10 @@ public class UtilityArm implements Module {
                 bD);
 
         selectedDefense = SelectedDefenseBreach.NONE;
+        defenseStep = 0;
+        ar = new AutonomousRoutine();
+        myCommands = new LinkedList<AutoCommand>();
+
         this.jointAState = MotorState.OFF;
         this.jointBState = MotorState.OFF;
         RESET_A_POSITION = SensorInputControlSRX
@@ -130,6 +142,7 @@ public class UtilityArm implements Module {
                 || Math.abs(driverInputControl
                         .getControllerTwist()) > DEAD_ZONE_Y) {
             selectedDefense = SelectedDefenseBreach.NONE;
+            defenseStep = 0;
             if (Math.abs(
                     driverInputControl.getControllerThrottle()) > DEAD_ZONE_X) {
                 xModifier = driverInputControl.getControllerThrottle()
@@ -144,10 +157,36 @@ public class UtilityArm implements Module {
             goTo(xCoord, yCoord);
         }
 
+        if (driverInputControl.getButton(RobotButtonType.DRAWBRIDGE_BREACH)) {
+            selectedDefense = SelectedDefenseBreach.DRAWBRIDGE;
+        } else if (driverInputControl
+                .getButton(RobotButtonType.SALLYPORT_BREACH)) {
+            selectedDefense = SelectedDefenseBreach.SALLYPORT;
+        } else if (driverInputControl
+                .getButton(RobotButtonType.CHEVAL_BREACH)) {
+            selectedDefense = SelectedDefenseBreach.CHEVAL_DE_FRISE;
+        }
+
+        myCommands = ar.getCommands(selectedDefense);
+
+        if (driverInputControl.getButton(RobotButtonType.INCREMENT_BREACH_UP)
+                && myCommands != null && defenseStep < myCommands.size()) {
+            myCommands.get(defenseStep).init();
+            defenseStep++;
+        } else if (driverInputControl
+                .getButton(RobotButtonType.INCREMENT_BREACH_DOWN)
+                && myCommands != null && defenseStep > 0) {
+            defenseStep--;
+            myCommands.get(defenseStep).init();
+        }
+
         if (driverInputControl.isResetButtonDown()) {
+            selectedDefense = SelectedDefenseBreach.NONE;
+            defenseStep = 0;
             resetPos();
             DriverStation.reportError("\nReseting...", false);
         }
+
         /*
          * status.setDestX(xCoord); status.setDestY(yCoord);
          * status.setAlpha(getCurrentDegreeA());
