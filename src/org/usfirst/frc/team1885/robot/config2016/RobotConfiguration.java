@@ -11,9 +11,8 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
-import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
+import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
 import org.usfirst.frc.team1885.robot.modules.ModuleControl;
-import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -105,9 +104,9 @@ public class RobotConfiguration {
         robotControl.addTalonSensor(RobotMotorType.SHOOTER_TILT, SensorType.SHOOTER_TILT_POTENTIOMETER, 10);
         robotControl.addTalonSensor(RobotMotorType.SHOOTER_TWIST, SensorType.SHOOTER_TWIST_ENCODER, 11);
                 // Utility Arm potentiometers
-        robotControl.addTalonSensor(RobotMotorType.ARM_JOINT_B, SensorType.JOINT_B_POTENTIOMETER, ARM_JOINT_B_PORT);
-        robotControl.addTalonSensor(RobotMotorType.ARM_JOINT_A, SensorType.JOINT_A_POTENTIOMETER, ARM_JOINT_A_PORT);
-        
+        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.ARM_JOINT_A, SensorType.JOINT_A_CTRE_ABSOLUTE, 1);
+        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.ARM_JOINT_B, SensorType.JOINT_B_CTRE_ABSOLUTE, 2);
+
         //Set Feedback Devices for PID
 //        robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
 //        robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -117,6 +116,5 @@ public class RobotConfiguration {
         moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
         moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
 //        moduleControl.addModule(ModuleType.UTILITY_ARM, UtilityArm.getInstance());
-    }
+	}
 }
-

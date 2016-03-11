@@ -1,18 +1,24 @@
 package org.usfirst.frc.team1885.robot.manipulator;
 
+import java.io.IOException;
+
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
-import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import dataclient.DataServerWebClient;
+import dataclient.robotdata.arm.ArmStatus;
+import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * @author ILITE Robotics
- * @version 2/12/2016
+ * @version 2/25/2016
  * 
  *          UtilityArm is the code for the side arm of the 2016 Stronghold Robot
  *          The arm features a double jointed system with a potentiometer and
@@ -22,40 +28,93 @@ public class UtilityArm implements Module {
 
     private static UtilityArm instance;
 
-    public static final double LENGTH_A = 17.5;
-    public static final double LENGTH_B = 18;
-    public static final double CONVERSION_FACTOR = 360.0 / 1024;
-    private static final double MOTOR_SPEED_A = .3;
-    private static final double MOTOR_SPEED_B = .6;
-    private static final double DEGREE_MARGIN_E = 6;
-    private static final double JOY_DEADZONE = .1;
-    private static final double JOY_CHANGE = .005;
+    public static final double LENGTH_A = 18; // length of arm A
+    public static final double LENGTH_B = 18.5; // length of arm B
+    public static final double CONVERSION_FACTOR = (1024 * 4) / 360.0; // multiplier
+    // to convert
+    // from degrees
+    // to ticks
+    private static final double POSITION_MARGIN_ERR = 5 * CONVERSION_FACTOR;
+    private static final double FRAME_LENGTH = 5;
+    private final double RESET_A_POSITION;
+    private final double RESET_B_POSITION;
+    private final double BOUNDARY = 13;
+    private final double X_MAX_BACK_REACH = 9;
+    private final double Y_MAX_UP_REACH = 33;
+    private final double Y_MAX_DOWN_REACH = -10;
+    private final double DEAD_ZONE_X = .2;
+    private final double DEAD_ZONE_Y = .2;
+    private final double INCREMENT_RATE = 1 / 10.0; // Rate at which xCoord and
+                                                    // yCoord are incremented
 
-    private double jointASpeed; // speed that joint A will go at
-    private double jointBSpeed; // speed that joint B will go at
-    private double jointAAngle; // storage for updating the A angle
-    private double jointBAngle; // storage for updating the B angle
-    private double xDirection; // what direction the system needs to move in
-    private double yDirection; // what direction the system needs to move in
+    private double jointAPosition; // storage for updating the A angle
+    private double jointBPosition; // storage for updating the B angle
+    private double jointADegree;
+    private double jointBDegree;
+    private double aP, aI, aD; // values for the PID to move joint A
+    private double bP, bI, bD; // values for the PID to move joint B
 
-    private double goingToX;
-    private double goingToY;
+    private double xCoord; // Current x Coordinate
+    private double yCoord; // Current y Coordinate
+    private double xModifier; // Current modifier value for xCoord
+    private double yModifier; // Current modifier value for yCoord
 
-    @SuppressWarnings("unused")
-    private MotorState jointAState;
-    @SuppressWarnings("unused")
-    private MotorState jointBState;
-    private SensorInputControlSRX sensorInputControl;
+    private MotorState jointAState; // used for keeping track of the motor state
+                                    // for arm A
+    private MotorState jointBState; // used for keeping track of the motor state
+                                    // for arm B
+
+    double aAngleVal = 0;
+    double bAngleVal = 0;
+
     private DriverInputControlSRX driverInputControl;
+    private RobotControlWithSRX robotControl;
+    private ArmStatus status;
 
     protected UtilityArm() {
+        DataServerWebClient client = new DataServerWebClient(
+                "http://172.22.11.1:8083");
+        status = new ArmStatus(client);
+        try {
+            client.pushSchema(status.getSchema());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        aP = .5; // 2.7
+        aI = 0.00035; // 0.00076
+        aD = 50; // 2
+        bP = .5; // 3.5
+        bI = 0.00065; // 0.0001
+        bD = 50; // 2
+
+        robotControl = RobotControlWithSRX.getInstance();
+
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A)
+                .setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B)
+                .setFeedbackDevice(FeedbackDevice.QuadEncoder);
+
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A)
+                .changeControlMode(TalonControlMode.Position);
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B)
+                .changeControlMode(TalonControlMode.Position);
+
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).setPID(aP, aI,
+                aD);
+        robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).setPID(bP, bI,
+                bD);
+
         this.jointAState = MotorState.OFF;
         this.jointBState = MotorState.OFF;
-        jointAAngle = getAngleA();
-        jointBAngle = getAngleB();
-        xDirection = 0;
-        yDirection = 0;
-        sensorInputControl = SensorInputControlSRX.getInstance();
+        RESET_A_POSITION = SensorInputControlSRX.getInstance()
+                .getInitialPotAPostition();
+        RESET_B_POSITION = SensorInputControlSRX.getInstance()
+                .getInitialPotBPostition();
+        jointAPosition = RESET_A_POSITION; // Reset Position
+        jointBPosition = RESET_B_POSITION; // Reset Position
+        xCoord = -1; // Reset Coordinate
+        yCoord = 4; // Reset Coordinate
         driverInputControl = DriverInputControlSRX.getInstance();
     }
 
@@ -66,157 +125,133 @@ public class UtilityArm implements Module {
         }
         return instance;
     }
-    public void init(){
-        
+    public void init() {
+
     }
     @Override
     public void update() {
-        // changeValues();
+        xCoord += xModifier;
+        yCoord -= yModifier;
+
+        xModifier = yModifier = 0;
+
+        if (Math.abs(driverInputControl.getControllerThrottle()) > DEAD_ZONE_X
+                || Math.abs(driverInputControl
+                        .getControllerTwist()) > DEAD_ZONE_Y) {
+            if (Math.abs(
+                    driverInputControl.getControllerThrottle()) > DEAD_ZONE_X) {
+                xModifier = driverInputControl.getControllerThrottle()
+                        * INCREMENT_RATE;
+            }
+            if (Math.abs(
+                    driverInputControl.getControllerTwist()) > DEAD_ZONE_Y) {
+                yModifier = driverInputControl.getControllerTwist()
+                        * INCREMENT_RATE;
+                // Up on joystick gives negative values
+            }
+            goTo(xCoord, yCoord);
+        }
+
         if (driverInputControl.isResetButtonDown()) {
             resetPos();
+            DriverStation.reportError("\nReseting...", false);
         }
-        if (driverInputControl.isButtonDown(RobotButtonType.INCREMENT_ARM_UP)) {
-            goTo(-20, 10);
+        status.setDestX(xCoord);
+        status.setDestY(yCoord);
+        status.setAlpha(getCurrentDegreeA());
+        status.setBeta(getCurrentDegreeB());
+        try {
+            status.push();
+        } catch (IOException e) {
+            DriverStation.reportError("CANT CONNECT", false);
         }
-        // DriverStation.reportError("desired A angle:" + jointAAngle + "\n",
+
+        // DriverStation.reportError(
+        // "X Coordinate: " + xCoord + " --- Y Coordinate: " + yCoord,
         // false);
-        // DriverStation.reportError("desired B angle:" + jointBAngle + "\n",
-        // false);
-        // DriverStation.reportError("current A angle:" + getAngleA() + "\n",
-        // false);
-        // DriverStation.reportError("current B angle:" + getAngleB() + "\n",
-        // false);
-        // DriverStation.reportError("\n\nX Distance = " + getDistanceX(),
-        // false);
-        // DriverStation.reportError("\nY Distance = " + getDistanceY(), false);
     }
 
     @Override
     public void updateOutputs() {
-        if (jointAAngle - getAngleA() > DEGREE_MARGIN_E) {
-            jointASpeed = MOTOR_SPEED_A;
-        } else if (jointAAngle - getAngleA() < -DEGREE_MARGIN_E) {
-            jointASpeed = -MOTOR_SPEED_A;
-        } else {
-            jointASpeed = 0;
-        }
-        if (jointBAngle - getAngleB() > DEGREE_MARGIN_E) {
-            jointBSpeed = -MOTOR_SPEED_B;
-        } else if (jointBAngle - getAngleB() < -DEGREE_MARGIN_E) {
-            jointBSpeed = MOTOR_SPEED_B;
-        } else {
-            jointBSpeed = 0;
-        }
-        RobotControlWithSRX.getInstance().updateArmMotors(jointASpeed,
-                jointBSpeed);
+        DriverStation.reportError(
+                "\n Moving to JointAPosition: " + jointAPosition
+                        + " --- Moving to JointBPosition: " + jointBPosition,
+                false);
+        robotControl.updateArmMotors(jointAPosition, jointBPosition);
     }
 
-    /*
-     * Gets x position for the end-point of the utility arm with respect to the
-     * base joint in inches
-     */
-    public double getDistanceX() {
-        double distanceB = (LENGTH_B * (Math.cos(Math.toRadians(getAngleB()))));
-        double distanceA = (LENGTH_A * (Math.cos(Math.toRadians(getAngleA()))));
-        return distanceA + distanceB;
-    }
-
-    /*
-     * Gets y position for the end-point of the utility arm with respect to the
-     * base joint in inches
-     */
-    public double getDistanceY() {
-        double distanceB = (LENGTH_B * (Math.sin(Math.toRadians(getAngleB()))));
-        double distanceA = (LENGTH_A * (Math.sin(Math.toRadians(getAngleA()))));
-        return distanceA + distanceB;
-    }
-
-    /*
-     * Gets angle in degrees for the bottom joint going clockwise from 0
-     */
-    public double getAngleA() {
-        sensorInputControl = SensorInputControlSRX.getInstance();
-        double angleA = sensorInputControl.getAnalogGeneric(
-                SensorType.JOINT_A_POTENTIOMETER) * CONVERSION_FACTOR;
-        double zeroedA = angleA - sensorInputControl.getInitialPotAPostition();
-        return zeroedA;
-    }
-
-    /*
-     * Gets angle in degrees for the top joint going clockwise from 0
-     */
-    public double getAngleB() {
-        double angleA = getAngleA();
-        double angleB = angleA + 360
-                - (sensorInputControl.getAnalogGeneric(
-                        SensorType.JOINT_B_POTENTIOMETER) * CONVERSION_FACTOR
-                - sensorInputControl.getInitialPotBPostition() + 190);
-        return angleB;
-    }
-
-    /*
-     * Finds the conversion from the joystick throttle value to x movement in
-     * inches
-     */
-    public double getJoystickXConversion() {
-        double throttle = driverInputControl.getControllerThrottle();
-        if (throttle > JOY_DEADZONE) {
-            return xDirection = JOY_CHANGE * Math.abs(throttle);
-        } else if (throttle < -JOY_DEADZONE) {
-            return xDirection = -JOY_CHANGE * Math.abs(throttle);
-        } else {
-            return xDirection = 0.0;
-        }
-    }
-
-    /*
-     * Finds the conversion from the joystick twist value to y movement in
-     * inches
-     */
-    public double getJoystickYConversion() {
-        double twist = driverInputControl.getControllerTwist();
-        if (twist > JOY_DEADZONE) {
-            return yDirection = -JOY_CHANGE * Math.abs(twist);
-        } else if (twist < -JOY_DEADZONE) {
-            return yDirection = JOY_CHANGE * Math.abs(twist);
-        } else {
-            return yDirection = 0.0;
-        }
-    }
     /**
      * A simple down to earth equation for calculating the angles required to
-     * reach a point
+     * reach a point.
      * 
-     * @param x
+     * @see <a href=
+     *      "https://docs.google.com/drawings/d/1dR8t4AcUfh1KOq0hK-Sh3xFV05fgMqhl_l8BH47n6JQ/edit?usp=sharing"
+     *      >Arm Constraints, explained</a>
+     * 
+     * @param xEndPoint
      *            the x coordinate of the new end-point
-     * @param y
+     * @param yEndPoint
      *            the y coordinate of the new end-point
      */
-    public void goTo(double x, double y) {
+    public void goTo(double xEndPoint, double yEndPoint) {
+        /*
+         * Explanation of if-statements (exact numbers may change):
+         * https://docs.google.com/drawings/d/1dR8t4AcUfh1KOq0hK-
+         * Sh3xFV05fgMqhl_l8BH47n6JQ/edit?usp=sharing
+         */
 
-        if (x > LENGTH_A - 2 && y < LENGTH_B - 2) {
-            x = LENGTH_A - 2;
-            y = LENGTH_B - 2;
+        if (xEndPoint < -BOUNDARY - FRAME_LENGTH) {
+            xEndPoint = -BOUNDARY - FRAME_LENGTH;
         }
-        else if (x < -15 + -6) {
-            x = -15 + -6;
+        if (xEndPoint > X_MAX_BACK_REACH) {
+            xEndPoint = X_MAX_BACK_REACH;
         }
-        //TODO create function of arc of the max distance the arm may go from the hard stop
-                //need to find how we want to limit it inside the circle
+        if (yEndPoint > Y_MAX_UP_REACH) {
+            yEndPoint = Y_MAX_UP_REACH;
+        }
+        if (yEndPoint < Y_MAX_DOWN_REACH) {
+            yEndPoint = Y_MAX_DOWN_REACH;
+        }
+        if (yEndPoint < 3 && xEndPoint > -FRAME_LENGTH) {
+            xEndPoint = -5;
+        }
 
-        double p = Math.sqrt((x * x) + (y * y));
+        if (xEndPoint < 1 && xEndPoint > -1 && yEndPoint < 6) {
+            yEndPoint = 6;
+        }
+
+        if (xEndPoint >= 1 / 45.0 && yEndPoint < 22
+                && yEndPoint < Math.sqrt(45 * (xEndPoint + 4.0 / 45)) + 1) {
+            xEndPoint = Math.pow((yEndPoint - 1), 2) / 45.0 - 4.0 / 45;
+        }
+        if (yEndPoint > 28 && (yEndPoint) > Math
+                .sqrt((1 - (xEndPoint * xEndPoint)
+                        / (Math.pow((BOUNDARY + FRAME_LENGTH), 2))) * (5 * 5))
+                + 28) {
+            yEndPoint = (Math.sqrt((1 - (xEndPoint * xEndPoint)
+                    / ((Math.pow((BOUNDARY + FRAME_LENGTH), 2)))) * (5 * 5)))
+                    + 28;
+        }
+
+        xCoord = xEndPoint;
+        yCoord = yEndPoint;
+
+        // DriverStation.reportError(
+        // "\n Going to: (" + xCoord + ", " + yCoord + ")", false);
+
+        double p = Math.sqrt((xEndPoint * xEndPoint) + (yEndPoint * yEndPoint));
         double k = ((p * p) + LENGTH_A * LENGTH_A - LENGTH_B * LENGTH_B)
                 / (2 * p);
 
-        double x1 = (x * k) / p
-                + (y / p) * Math.sqrt(LENGTH_A * LENGTH_A - k * k);
-        double y1 = (y * k) / p
-                - (x / p) * Math.sqrt(LENGTH_A * LENGTH_A - k * k);
+        double x1 = (xEndPoint * k) / p
+                + (yEndPoint / p) * Math.sqrt(LENGTH_A * LENGTH_A - k * k);
+        double y1 = (yEndPoint * k) / p
+                - (xEndPoint / p) * Math.sqrt(LENGTH_A * LENGTH_A - k * k);
 
-        double x2 = (x * k) / p
-                - (y / p) * Math.sqrt(LENGTH_A * LENGTH_A - k * k);
-        double y2 = (y * k) / p
-                + (x / p) * Math.sqrt(LENGTH_A * LENGTH_A - k * k);
+        double x2 = (xEndPoint * k) / p
+                - (yEndPoint / p) * Math.sqrt(LENGTH_A * LENGTH_A - k * k);
+        double y2 = (yEndPoint * k) / p
+                + (xEndPoint / p) * Math.sqrt(LENGTH_A * LENGTH_A - k * k);
 
         double finaly = 0;
         double finalx = 0;
@@ -228,118 +263,86 @@ public class UtilityArm implements Module {
             finalx = x1;
         }
 
-        // DriverStation.reportError("\nfinalX:" + finalx, false);
-        // DriverStation.reportError("\nfinalY:" + finaly, false);
-        //
-        // DriverStation.reportError("\ntanA:" + finalx / finaly, false);
-        // DriverStation.reportError("\ntanB:" + (y - finaly) / (x - finalx),
+        jointADegree = Math.toDegrees(Math.atan2(finaly, finalx));
+
+        double transformedX = (xEndPoint - finalx);
+        double transformedY = (yEndPoint - finaly);
+        jointBDegree = Math.toDegrees(Math.atan2(transformedY, transformedX));
+
+        // DriverStation.reportError("\nJoint A Degree: " + jointADegree
+        // + " --Joint B Degree: " + jointBDegree, false);
+
+        jointBDegree = 180 - jointBDegree;
+
+        if (jointBDegree > 350 - jointADegree) {
+            jointBDegree = jointBDegree % 360 - 360;
+        }
+
+        if (jointBDegree < -jointADegree + 10) {
+            jointBDegree = -jointADegree + 10;
+        }
+
+        jointBDegree += jointADegree;
+
+        // DriverStation.reportError("\nJoint A Degree 2: " + jointADegree
+        // + " --Joint B Degree 2: " + jointBDegree, false);
+
+        jointAPosition = jointADegree * CONVERSION_FACTOR
+                + SensorInputControlSRX.getInstance().getInitialPotAPostition();
+        jointBPosition = -1 * jointBDegree * CONVERSION_FACTOR
+                + SensorInputControlSRX.getInstance().getInitialPotBPostition();
+
+        // DriverStation
+        // .reportError(
+        // "\nJoint A Position: " + jointAPosition
+        // + " --Joint B Position: " + jointBPosition
+        // + "Initial B Pot: "
+        // + SensorInputControlSRX
+        // .getInstance().INITIAL_POT_B_POSITION,
         // false);
-
-        jointAAngle = Math.toDegrees(Math.atan2(finaly, finalx));
-
-        double transformedX = (x - finalx);
-        double transformedY = (y - finaly);
-        jointBAngle = Math.toDegrees(Math.atan2(transformedY, transformedX));
-        if (jointBAngle < 0) {
-            jointBAngle += 360;
-        }
-
-        if (jointAAngle < 0) {
-            jointAAngle = 0;
-        }
-        if (jointAAngle > 180) {
-            jointAAngle = 180;
-        }
-        if (jointBAngle > (180 + jointAAngle) - 10) {
-            jointBAngle = (180 + jointAAngle) - 10;
-        }
-        if (jointBAngle < jointAAngle) {
-            jointBAngle = jointAAngle;
-        }
-
-        // DriverStation.reportError("\nJointAAngle:" + jointAAngle, false);
-        // DriverStation.reportError("\nJointBAngle:" + jointBAngle, false);
-
-        goingToX = x;
-        goingToY = y;
-
     }
 
-    /*
-     * Takes the change in x and y movement and converts them to angular change
+    /**
+     * Method for autonomous use to determine if the arm has moved to position
+     * 
+     * @return Returns boolean whether or not the arm has reached the proper
+     *         angles within a margin of error
      */
-    public void changeValues() {
-        // change in Y
-        double origA = jointAAngle;
-        double origB = jointBAngle;
-
-        double changeX = getJoystickXConversion();
-        double changeY = getJoystickYConversion();
-
-        if (driverInputControl.isButtonDown(RobotButtonType.INCREMENT_ARM_UP)) {
-            changeY = 0.2;
-        }
-        if (driverInputControl
-                .isButtonDown(RobotButtonType.INCREMENT_ARM_DOWN)) {
-            changeY = -0.2;
-        }
-        if (driverInputControl
-                .isButtonDown(RobotButtonType.INCREMENT_ARM_LEFT)) {
-            changeX = -0.2;
-        }
-        if (driverInputControl
-                .isButtonDown(RobotButtonType.INCREMENT_ARM_RIGHT)) {
-            changeX = 0.2;
-        }
-
-        double sinY;
-        if (Math.abs(changeY) >= Math.abs(changeX)) {
-            sinY = Math.sin(Math.toRadians(origB)) + changeY;
-            if (sinY <= 1 && sinY >= -1) {
-                jointBAngle = 180 - Math.toDegrees(Math.asin(sinY));
-                double cosX = Math.cos(Math.toRadians(origA))
-                        - (Math.cos(Math.toRadians(jointBAngle))
-                                - Math.cos(Math.toRadians(origB)));
-                // DriverStation.reportError("cos: " + cosX + "\n", false);
-                // DriverStation.reportError("sin: " + sinY + "\n", false);
-                if (cosX >= -1 && cosX <= 1) {
-                    // TODO set cosx to the limit that it is passing
-                    jointAAngle = Math.toDegrees(Math.acos(cosX));
-                }
-            }
-        } else {
-            // change in X
-            origA = jointAAngle;
-            origB = jointBAngle;
-            double cosX = Math.cos(Math.toRadians(origA)) + changeX;
-            if (cosX >= -1 && cosX <= 1) {
-                jointAAngle = Math.toDegrees(Math.acos(cosX));
-                sinY = Math.sin(Math.toRadians(origB))
-                        - (Math.sin(Math.toRadians(jointAAngle))
-                                - Math.cos(Math.toRadians(origA)));
-                if (sinY <= 1 && sinY >= -1) {
-                    jointBAngle = 180 - Math.toDegrees(Math.asin(sinY));
-                }
-            }
-        }
-        if (jointBAngle > 170 + jointAAngle) {
-            jointBAngle = 170 + jointAAngle;
-        }
-        else if (jointBAngle < jointAAngle) {
-            jointBAngle = jointAAngle;
-        }
-    }
     public boolean isFinished() {
-        boolean isJointAFinished = jointAAngle - getAngleA() < DEGREE_MARGIN_E
-                && jointAAngle - getAngleA() > -DEGREE_MARGIN_E;
-        boolean isJointBFinished = jointBAngle - getAngleB() < DEGREE_MARGIN_E
-                && jointBAngle - getAngleB() > -DEGREE_MARGIN_E;
-
+        boolean isJointAFinished = Math.abs(
+                robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).get()
+                        - jointAPosition) < POSITION_MARGIN_ERR;
+        boolean isJointBFinished = Math.abs(
+                robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).get()
+                        - jointBPosition) < POSITION_MARGIN_ERR;
+        // DriverStation.reportError(
+        // "\nisFinished: " + (isJointAFinished && isJointBFinished),
+        // false);
         return isJointAFinished && isJointBFinished;
     }
+
     public void resetPos() {
-        jointAAngle = 0;
-        jointBAngle = 170;
+        jointAPosition = RESET_A_POSITION;
+        jointBPosition = RESET_B_POSITION;
+        jointADegree = RESET_A_POSITION / CONVERSION_FACTOR;
+        jointBDegree = RESET_B_POSITION / CONVERSION_FACTOR;
+        xCoord = -1; // An approximation
+        yCoord = 4; // An approximation
+    }
+
+    public double getCurrentDegreeA() {
+        double degree = 0;
+        degree = (robotControl.getTalons().get(RobotMotorType.ARM_JOINT_A).get()
+                + RESET_A_POSITION) / CONVERSION_FACTOR;
+        return degree;
+    }
+
+    public double getCurrentDegreeB() {
+        double degree = 0;
+        degree = (-1
+                * robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).get()
+                + RESET_B_POSITION) / CONVERSION_FACTOR;
+        return degree;
     }
 
 }

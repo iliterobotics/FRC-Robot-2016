@@ -40,7 +40,7 @@ public class SensorInputControlSRX {
     private double INITIAL_POT_A_POSITION;
     private double INITIAL_TWIST_POSITION;
     private double INITIAL_TILT_POSITION;
-    
+
     private static final double POTENTIOMETER_CONVERSION_FACTOR = 1024.0 / 360;
     private Map<SensorType, Integer> ticks;
 
@@ -74,42 +74,48 @@ public class SensorInputControlSRX {
          * " --- Left Encoder Value:: " +
          * getEncoderDistance(SensorType.LEFT_ENCODER), false);
          */
-        
-//         Encoder values testing
-         
-//         DriverStation.reportError("\nRight Encoder Value::" +
-//         getEncoderDistance(SensorType.RIGHT_ENCODER) +
-//         " --- Left Encoder Value:: " +
-//         getEncoderDistance(SensorType.LEFT_ENCODER), false);
-//        DriverStation.reportError("\nLeft Encoder Value::" +
-//                RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get() +
-//                " --- Right Encoder Value:: " +
-//                RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
-        
-//         DriverStation.reportError("\n\nZero Tilt:: " + getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
-//        DriverStation.reportError("\n Position:: " + getRotaryPosition(), false);
+        // Encoder values testing
+
+        // DriverStation.reportError("\nRight Encoder Value::" +
+        // getEncoderDistance(SensorType.RIGHT_ENCODER) +
+        // " --- Left Encoder Value:: " +
+        // getEncoderDistance(SensorType.LEFT_ENCODER), false);
+        // DriverStation.reportError("\nLeft Encoder Value::" +
+        // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get()
+        // +
+        // " --- Right Encoder Value:: " +
+        // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get(),
+        // false);
+
+        // DriverStation.reportError("\n\nZero Tilt:: " +
+        // getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER),
+        // false);
+        // DriverStation.reportError("\n Position:: " + getRotaryPosition(),
+        // false);
     }
-    //Create initial sensor readings
+    // Create initial sensor readings
     public void init() {
-//      INITIAL_POT_A_POSITION = rsrx.getSensor()
-//              .get(SensorType.JOINT_A_POTENTIOMETER).getAnalogInRaw()
-//              * UtilityArm.CONVERSION_FACTOR;
-//      INITIAL_POT_B_POSITION = rsrx.getSensor()
-//              .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
-//              * UtilityArm.CONVERSION_FACTOR;
-//      INITIAL_TILT_POSITION = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get();
-        INITIAL_TILT_POSITION = -getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER);
-      DriverStation.reportError("\nInit Tilt" + INITIAL_TILT_POSITION, false);
-      INITIAL_TWIST_POSITION = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).get();
-      DriverStation.reportError("\nInit Twist " + INITIAL_TWIST_POSITION, false);
-  }
+        INITIAL_POT_A_POSITION = rsrx.getTalons()
+                .get(RobotMotorType.ARM_JOINT_A).getEncPosition();
+        INITIAL_POT_B_POSITION = rsrx.getTalons()
+                .get(RobotMotorType.ARM_JOINT_B).getEncPosition();
+        // INITIAL_TILT_POSITION =
+        // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get();
+        INITIAL_TILT_POSITION = -getAnalogGeneric(
+                SensorType.SHOOTER_TILT_POTENTIOMETER);
+        DriverStation.reportError("\nInit Tilt" + INITIAL_TILT_POSITION, false);
+        INITIAL_TWIST_POSITION = RobotControlWithSRX.getInstance().getTalons()
+                .get(RobotMotorType.SHOOTER_TWIST).get();
+        DriverStation.reportError("\nInit Twist " + INITIAL_TWIST_POSITION,
+                false);
+    }
     public double getInitPitch() {
         return INITIAL_PITCH;
     }
     public double getInitRoll() {
         return INITIAL_ROLL;
     }
-    //Get intial reading value
+    // Get intial reading value
     public double getInitialPotAPostition() {
         return INITIAL_POT_A_POSITION;
     }
@@ -122,14 +128,14 @@ public class SensorInputControlSRX {
     public double getInitialTwistPosition() {
         return INITIAL_TWIST_POSITION;
     }
-    //Create navx
+    // Create navx
     public void createNavX(SerialPort.Port port) {
         navx = new AHRS(port);
     }
     public AHRS getNavX() {
         return navx;
     }
-    //Calibrate navx
+    // Calibrate navx
     public void calibrateGyro() {
         navx.zeroYaw();
         Timer.delay(.3); // Time needed to calibrate gyro
@@ -137,7 +143,7 @@ public class SensorInputControlSRX {
         INITIAL_ROLL = navx.getRoll();
         DriverStation.reportError("\nGyro Calibrated at: " + getYaw(), false);
     }
-    //Get gyro values
+    // Get gyro values
     public double getPitch() {
         return navx.getPitch();
     }
@@ -154,17 +160,17 @@ public class SensorInputControlSRX {
     public double getPDPTemperature() {
         return PDP.getTemperature();
     }
-    //Get analog values
     public double getAnalogGeneric(SensorType type) {
-         return rsrx.getSensor().get(type).getAnalogInRaw();
+        return rsrx.getSensor().get(type).getAnalogInRaw();
     }
     public double getAnalogInPosition(SensorType type) {
         return rsrx.getSensor().get(type).getAnalogInPosition();
     }
-    //Get encoder values
+    // Get encoder values
     public int getEncoderPos(SensorType type) {
         return rsrx.getSensor().get(type).getEncPosition();
     }
+
     public int getEncoderVelocity(SensorType type) {
         return rsrx.getSensor().get(type).getEncVelocity();
     }
@@ -172,14 +178,15 @@ public class SensorInputControlSRX {
         return rsrx.getSensor().get(type).getPulseWidthPosition();
     }
     public double getEncoderDistance(SensorType type) {
-        if(type == SensorType.LEFT_ENCODER){
+        if (type == SensorType.LEFT_ENCODER) {
             return -RobotConfiguration.WHEEL_DIAMETER * Math.PI
-                    * rsrx.getSensor().get(type).getEncPosition() / TICKS_IN_360;
+                    * rsrx.getSensor().get(type).getEncPosition()
+                    / TICKS_IN_360;
         }
         return RobotConfiguration.WHEEL_DIAMETER * Math.PI
                 * rsrx.getSensor().get(type).getEncPosition() / TICKS_IN_360;
     }
-    //Get zeroed value relative to the initial reading
+    // Get zeroed value relative to the initial reading
     public double getZeroedPotentiometer(SensorType type) {
         switch (type) {
         case JOINT_A_POTENTIOMETER:
@@ -193,9 +200,10 @@ public class SensorInputControlSRX {
         }
     }
     public double getZeroedEncoder(SensorType type) {
-        switch(type) {
+        switch (type) {
         case SHOOTER_TWIST_ENCODER:
-            return rsrx.getTalons().get(RobotMotorType.SHOOTER_TWIST).get() - INITIAL_TWIST_POSITION;
+            return rsrx.getTalons().get(RobotMotorType.SHOOTER_TWIST).get()
+                    - INITIAL_TWIST_POSITION;
         default:
             return rsrx.getTalons().get(RobotMotorType.SHOOTER_TWIST).get();
         }
@@ -203,7 +211,7 @@ public class SensorInputControlSRX {
     public boolean digitalLimitSwitch(SensorType type) {
         return rsrx.getSensor().get(type).isFwdLimitSwitchClosed();
     }
-    //Add specialized sensors
+    // Add specialized sensors
     public void addLidarSensor(Port port) {
         ls = new LidarSensor(port);
     }
@@ -217,7 +225,6 @@ public class SensorInputControlSRX {
     public BuiltInAccelerometer getAccelerometer() {
         return bia;
     }
-    
     public void addPressureSensor(int channel) {
         pressureSensor = new PressureSensor(channel);
     }
@@ -227,13 +234,16 @@ public class SensorInputControlSRX {
     public double getPressureVoltage() {
         return pressureSensor.getVoltage();
     }
-    public double getPressure(){
+    public double getPressure() {
         return pressureSensor.getPressure();
     }
-    public void addRotarySwitchSensor(int channel){
+    public void addRotarySwitchSensor(int channel) {
         rotarySwitchSensor = new RotarySwitchSensor(channel);
     }
-    public double getRotaryPosition(){
+    public double getRotaryPosition() {
         return rotarySwitchSensor.getPosition();
+    }
+    public void resetEncoder(SensorType type) {
+        rsrx.getSensor().get(type).setEncPosition(0);
     }
 }
