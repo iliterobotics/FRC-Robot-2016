@@ -18,6 +18,14 @@ public class AutonomousRoutine {
         drawbridgeCommands = new LinkedList<AutoCommand>();
         sallyPortCommands = new LinkedList<AutoCommand>();
         chevalCommands = new LinkedList<AutoCommand>();
+    }
+
+    public AutonomousRoutine(Robot r) {
+        this();
+        robot = r;
+    }
+
+    public void init() {
         emptyDrawbridgeCommands();
         emptySallyPortCommands();
         emptyChevalCommands();
@@ -26,10 +34,6 @@ public class AutonomousRoutine {
         fillChevalCommands();
     }
 
-    public AutonomousRoutine(Robot r) {
-        this();
-        robot = r;
-    }
     public void execute() {
         while (!commands.isEmpty() && robot.isEnabled()
                 && robot.isAutonomous()) {

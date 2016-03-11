@@ -150,6 +150,7 @@ public class Robot extends SampleRobot {
 
     public void autonomous() {
         AutonomousRoutine ar = new AutonomousRoutine(this);
+        ar.init();
         ar.execute();
     }
 }

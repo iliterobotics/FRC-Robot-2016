@@ -67,8 +67,9 @@ public class UtilityArm implements Module {
 
     private SelectedDefenseBreach selectedDefense;
     private int defenseStep;
-    private AutonomousRoutine ar;
+    private static AutonomousRoutine ar;
     private LinkedList<AutoCommand> myCommands;
+    private boolean preIncUp, preIncDown;
 
     private DriverInputControlSRX driverInputControl;
     private RobotControlWithSRX robotControl;
@@ -126,7 +127,11 @@ public class UtilityArm implements Module {
     // TODO singletons cause memory leaks
     public static UtilityArm getInstance() {
         if (instance == null) {
+            DriverStation.reportError(
+                    "\nNo instance of UtilityArm, creating...", false);
             instance = new UtilityArm();
+            DriverStation.reportError("\nUtilityArm instance created.", false);
+            ar.init();
         }
         return instance;
     }
@@ -157,28 +162,38 @@ public class UtilityArm implements Module {
             goTo(xCoord, yCoord);
         }
 
-        if (driverInputControl.getButton(RobotButtonType.DRAWBRIDGE_BREACH)) {
+        if (driverInputControl.getButton(RobotButtonType.DRAWBRIDGE_BREACH)
+                && selectedDefense != SelectedDefenseBreach.DRAWBRIDGE) {
             selectedDefense = SelectedDefenseBreach.DRAWBRIDGE;
+            defenseStep = 0;
         } else if (driverInputControl
-                .getButton(RobotButtonType.SALLYPORT_BREACH)) {
+                .getButton(RobotButtonType.SALLYPORT_BREACH)
+                && selectedDefense != SelectedDefenseBreach.SALLYPORT) {
             selectedDefense = SelectedDefenseBreach.SALLYPORT;
-        } else if (driverInputControl
-                .getButton(RobotButtonType.CHEVAL_BREACH)) {
+            defenseStep = 0;
+        } else if (driverInputControl.getButton(RobotButtonType.CHEVAL_BREACH)
+                && selectedDefense != SelectedDefenseBreach.CHEVAL_DE_FRISE) {
             selectedDefense = SelectedDefenseBreach.CHEVAL_DE_FRISE;
+            defenseStep = 0;
         }
 
         myCommands = ar.getCommands(selectedDefense);
 
         if (driverInputControl.getButton(RobotButtonType.INCREMENT_BREACH_UP)
-                && myCommands != null && defenseStep < myCommands.size()) {
+                && myCommands != null && defenseStep < myCommands.size()
+                && !preIncUp) {
             myCommands.get(defenseStep).init();
             defenseStep++;
         } else if (driverInputControl
                 .getButton(RobotButtonType.INCREMENT_BREACH_DOWN)
-                && myCommands != null && defenseStep > 0) {
+                && myCommands != null && defenseStep > 0 && !preIncDown) {
             defenseStep--;
             myCommands.get(defenseStep).init();
         }
+        preIncUp = driverInputControl
+                .getButton(RobotButtonType.INCREMENT_BREACH_UP);
+        preIncDown = driverInputControl
+                .getButton(RobotButtonType.INCREMENT_BREACH_DOWN);
 
         if (driverInputControl.isResetButtonDown()) {
             selectedDefense = SelectedDefenseBreach.NONE;
