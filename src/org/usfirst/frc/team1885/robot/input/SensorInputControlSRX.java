@@ -97,7 +97,8 @@ public class SensorInputControlSRX {
 //      INITIAL_POT_B_POSITION = rsrx.getSensor()
 //              .get(SensorType.JOINT_B_POTENTIOMETER).getAnalogInRaw()
 //              * UtilityArm.CONVERSION_FACTOR;
-      INITIAL_TILT_POSITION = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get();
+//      INITIAL_TILT_POSITION = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get();
+        INITIAL_TILT_POSITION = -getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER);
       DriverStation.reportError("\nInit Tilt" + INITIAL_TILT_POSITION, false);
       INITIAL_TWIST_POSITION = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).get();
       DriverStation.reportError("\nInit Twist " + INITIAL_TWIST_POSITION, false);
@@ -155,13 +156,7 @@ public class SensorInputControlSRX {
     }
     //Get analog values
     public double getAnalogGeneric(SensorType type) {
-        switch (type) {
-        case SHOOTER_TILT_POTENTIOMETER:
-            return rsrx.getSensor().get(type).getAnalogInRaw()
-                    / POTENTIOMETER_CONVERSION_FACTOR;
-        default:
-            return rsrx.getSensor().get(type).getAnalogInRaw();
-        }
+         return rsrx.getSensor().get(type).getAnalogInRaw();
     }
     public double getAnalogInPosition(SensorType type) {
         return rsrx.getSensor().get(type).getAnalogInPosition();

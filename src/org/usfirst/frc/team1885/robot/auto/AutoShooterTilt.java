@@ -21,6 +21,7 @@ public class AutoShooterTilt extends AutoCommand {
     }
     @Override
     public boolean execute() {
+        currentAngle = Shooter.getInstance().getRelativeTilt();
         if(Math.abs(currentAngle - angle) <= ERROR){
             return true;
         }

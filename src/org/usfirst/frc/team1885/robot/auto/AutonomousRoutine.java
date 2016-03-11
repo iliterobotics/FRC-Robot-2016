@@ -42,12 +42,12 @@ public class AutonomousRoutine {
 //         commands.add(new AutoAlign(360));
 //         commands.add(new AutoWait(2000));
 //         commands.add(new AutoAlign());
-//         getConfiguration();
-//         if(!doesNothing) {
-//         initAutoBreach();
-//         autoMoveToShoot();
-        autoShootBallCam();
-//        }
+         getConfiguration();
+         if(!doesNothing) {
+         initAutoBreach();
+         autoMoveToShoot();
+//        autoShootBallCam();
+        }
     }
 
     public void execute() {

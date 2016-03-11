@@ -20,12 +20,15 @@ public class AutoAimShooter extends AutoCommand {
     @Override
     public boolean init() {
         double distance = hg.getDistance();
-        double azimuth = hg.getAzimuth();
+        double twistAngle = hg.getAzimuth();
         
         double tiltAngle = 180 - Math.toDegrees(Math.asin(HIGHGOAL_MIDPOINT / distance));
+        if(twistAngle > 180){
+            twistAngle -= 360;
+        }
         Shooter.getInstance().setToTiltValue(tiltAngle);
         
-        Shooter.getInstance().setToTwistValue(azimuth);        
+        Shooter.getInstance().setToTwistValue(twistAngle);        
         
         return true;
     }

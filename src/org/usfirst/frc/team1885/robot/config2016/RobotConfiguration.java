@@ -52,7 +52,7 @@ public class RobotConfiguration {
                 // Drivetrain Control Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.GEAR_SHIFT, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 5));
                 // Shooter Joystick Mappings
-        joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_IN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 5));
+        joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_IN, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 2));
         joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_OUT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_UP, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_DOWN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
@@ -65,8 +65,8 @@ public class RobotConfiguration {
         joystickButtonMap.addControllerButton(RobotButtonType.FIRE, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
                 // Active Intake Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_SOLENOID, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
-        joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 5));
-        joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_OUT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
+        joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 2));
+        joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_OUT, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 3));
                 // Arm Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.ARM_MOVE_Y, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kTwist));
         joystickButtonMap.addControllerButton(RobotButtonType.ARM_MOVE_X, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kThrottle));
