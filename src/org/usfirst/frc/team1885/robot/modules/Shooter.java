@@ -364,7 +364,7 @@ public class Shooter implements Module {
         relativeTwistAngle = angle;
     }
     public boolean updateTwist() {
-        double userTwistDirection = driverInputControl.getShooterTwist();
+        double userTwistDirection = 0/*driverInputControl.getShooterTwist()*/;
         
             this.relativeTwistAngle += userTwistDirection
                     * TWIST_MOVEMENT_PROPORTION;
