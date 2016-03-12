@@ -276,6 +276,8 @@ public class Shooter implements Module {
         int userTiltDirection = driverInputControl.getShooterTilt();
 //        DriverStation.reportError("\n" + Math.abs((((RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get() - sensorControl.getInitialTiltPosition())/ (1024.0/360.0)) - this.relativeTiltAngle)), false);
 //        DriverStation.reportError(" " + isAutoTilt, false);
+//        double testValue = driverInputControl.getPressureButton(RobotButtonType.SHOOTER_TILT);
+//        DriverStation.reportError("\n" + testValue, false);
         if(isAutoTilt)
             isAutoTilt = userTiltDirection == 0;
         if(isAiming)
@@ -290,7 +292,8 @@ public class Shooter implements Module {
         if(input > 0){
             isAutoTilt = true;  
             switch(input){
-                case 90: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_CAM_TILT); isAiming = true; break;
+                case 0: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_CAM_TILT); isAiming = true; break;
+                case 90: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_CAM_TILT); break;
                 case 180: autoShooterTilt = new AutoShooterTilt(LOW_GOAL_TILT); break;
                 case 270: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_INTAKE_TILT); break;
                 default:
