@@ -28,6 +28,7 @@ public class AutonomousRoutine {
     private boolean isHigh;
     private int goal;
     private boolean doesNothing;
+    private boolean isShooting;
     public static final double CLEAR_SPEED = -1;
 
     public AutonomousRoutine(Robot r) {
@@ -41,12 +42,14 @@ public class AutonomousRoutine {
 //         commands.add(new AutoAlign(360));
 //         commands.add(new AutoWait(2000));
 //         commands.add(new AutoAlign());
-         getConfiguration();
-         if(!doesNothing) {
-         initAutoBreach();
-         autoMoveToShoot();
-//        autoShootBallCam();
-        }
+//         getConfiguration();
+//         if(!doesNothing) {
+//             initAutoBreach();
+//             if(isShooting) {
+//                autoMoveToShoot();
+////              autoShootBallCam();
+//             }
+//         }
      }
 
     public void execute() {
@@ -85,6 +88,7 @@ public class AutonomousRoutine {
         isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
         goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
         doesNothing = autoC.doesNothing();
+        isShooting = autoC.isShooting();
 
         DriverStation.reportError(
                 "\n\ndefense#:" + autoC.getDefense() + "defense:" + type

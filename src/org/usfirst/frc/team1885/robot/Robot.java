@@ -75,6 +75,7 @@ public class Robot extends SampleRobot {
     /**
      * Runs the motors with tank steering.
      */
+    @Override
     public void operatorControl() {
         DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
         DriverStation.reportError("\nBeginning Operator Control", false);
@@ -94,6 +95,7 @@ public class Robot extends SampleRobot {
         }
     }
 
+    @Override
     public void autonomous() {
         AutonomousRoutine ar = new AutonomousRoutine(this);
         ar.execute();

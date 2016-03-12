@@ -14,6 +14,7 @@ public enum RobotButtonType {
 	ARM_JOINT_B_COUNTER, 
 	GEAR_SHIFT,
     FLYWHEEL_IN,
+    FLYWHEEL_INTAKE_IN,
     FLYWHEEL_OUT,
 	ARM_MOVE_X,
 	ARM_MOVE_Y,

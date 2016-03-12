@@ -29,7 +29,7 @@ public class Shooter implements Module {
     public static final double LOW_GOAL_ANGLE = 12.0;
     public static final double ANGLE_ERROR = 1;
     public static final int TICK_ERROR = 10;
-    public static final double SHOOTER_SPEED = 1;
+    public static final double SHOOTER_SPEED = .9;
     private static final boolean OPEN = false;
     private long lastLaunchCheck;
     private static final double FIRE_DELAY = 2000;
@@ -190,9 +190,9 @@ public class Shooter implements Module {
         } else{
             lastLaunchCheck = System.currentTimeMillis();
         }
-        if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_IN)) {
-            flywheelSpeedLeft = SHOOTER_SPEED * INTAKE_PROP;
-            flywheelSpeedRight = SHOOTER_SPEED * INTAKE_PROP;
+        if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_IN) || driverInputControl.getButton(RobotButtonType.FLYWHEEL_INTAKE_IN)) {
+            flywheelSpeedLeft = INTAKE_PROP;
+            flywheelSpeedRight = INTAKE_PROP;
             isHeld = OPEN;
             setToTiltValue(LOW_GOAL_TILT);
             updateTiltPosition();

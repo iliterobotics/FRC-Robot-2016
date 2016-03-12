@@ -35,16 +35,16 @@ public class UtilityArm implements Module {
     // from degrees
     // to ticks
     private static final double POSITION_MARGIN_ERR = 5 * CONVERSION_FACTOR;
-    private static final double FRAME_LENGTH = 5;
+    private static final double FRAME_LENGTH = 0;
     private final double RESET_A_POSITION;
     private final double RESET_B_POSITION;
-    private final double BOUNDARY = 13;
-    private final double X_MAX_BACK_REACH = 9;
-    private final double Y_MAX_UP_REACH = 33;
-    private final double Y_MAX_DOWN_REACH = -10;
-    private final double DEAD_ZONE_X = .2;
-    private final double DEAD_ZONE_Y = .2;
-    private final double INCREMENT_RATE = 1 / 10.0; // Rate at which xCoord and
+    private static final double BOUNDARY = 13;
+    private static final double X_MAX_BACK_REACH = 9;
+    private static final double Y_MAX_UP_REACH = 33;
+    private static final double Y_MAX_DOWN_REACH = -10;
+    private static final double DEAD_ZONE_X = .2;
+    private static final double DEAD_ZONE_Y = .2;
+    private static final double INCREMENT_RATE = 1 / 10.0; // Rate at which xCoord and
                                                     // yCoord are incremented
 
     private double jointAPosition; // storage for updating the A angle

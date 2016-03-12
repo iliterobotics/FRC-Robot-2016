@@ -11,6 +11,7 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.ModuleControl;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
@@ -52,7 +53,8 @@ public class RobotConfiguration {
                 // Drivetrain Control Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.GEAR_SHIFT, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 3));
                 // Shooter Joystick Mappings
-        joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_IN, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 2));
+        joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_IN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 5));
+        joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 2));
         joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_OUT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_UP, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_DOWN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
