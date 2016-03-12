@@ -36,7 +36,7 @@ public class Shooter implements Module {
     private static final double INTAKE_PROP = 0.7;
     public static final double TWIST_SPEED = .3;
     public static final double TILT_SPEED = .2;
-    private static final double STATIC_TILT_LIMIT_UPPER = 140;
+    private static final double STATIC_TILT_LIMIT_UPPER = 130;
     private double TILT_LIMIT_UPPER;
     private double TILT_LIMIT_LOWER;
     private final static double LOW_GOAL_TILT_BOUND = 30;
@@ -150,7 +150,7 @@ public class Shooter implements Module {
     }
 
     public void init() {
-        TILT_LIMIT_LOWER = sensorControl.getInitialTiltPosition() / 1024.0 / 360;
+        TILT_LIMIT_LOWER = 0;
         TILT_LIMIT_UPPER = TILT_LIMIT_LOWER + STATIC_TILT_LIMIT_UPPER;
         autoShooterTilt = new AutoShooterTilt(LOW_GOAL_TILT);
         autoAimShooter = new AutoAimShooter();
@@ -315,14 +315,14 @@ public class Shooter implements Module {
 
         this.tiltPosition = (this.relativeTiltAngle * (1024 / 360.0))
                 + sensorControl.getInitialTiltPosition();
-//         DriverStation
-//         .reportError(
-//         "\ntiltPosition: " + tiltPosition
-//         + "\nrelativeTiltAngle: " + relativeTiltAngle
-//         + "\nCurrent Tilt:: "
-//         + RobotControlWithSRX.getInstance().getTalons()
-//         .get(RobotMotorType.SHOOTER_TILT).get(),
-//         false);
+         DriverStation
+         .reportError(
+         "\ntiltPosition: " + tiltPosition
+         + "\nrelativeTiltAngle: " + relativeTiltAngle
+         + "\nCurrent Tilt:: "
+         + RobotControlWithSRX.getInstance().getTalons()
+         .get(RobotMotorType.SHOOTER_TILT).get(),
+         false);
         isInPosition = (currentAngle > relativeTiltAngle - ANGLE_ERROR)
                 && (currentAngle < relativeTiltAngle + ANGLE_ERROR);
 
