@@ -11,5 +11,6 @@ public enum DefenseType {
     SALLYPORT,
     ROCK_WALL,
     ROUGH_TERRAIN,
-    LOW_BAR
+    LOW_BAR,
+    NONE
 }
