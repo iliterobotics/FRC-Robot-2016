@@ -40,10 +40,10 @@ public class Shooter implements Module {
     private double TILT_LIMIT_UPPER;
     private double TILT_LIMIT_LOWER;
     private final static double LOW_GOAL_TILT_BOUND = 30;
-    private final static double LOW_GOAL_TILT = 13;
-    private final static double HIGH_GOAL_INTAKE_TILT_BOUND = 80;
-    private final static double HIGH_GOAL_INTAKE_TILT = 56;
-    private final static double HIGH_GOAL_CAM_TILT = 138;
+    public final static double LOW_GOAL_TILT = 13;
+    public final static double HIGH_GOAL_INTAKE_TILT_BOUND = 80;
+    public final static double HIGH_GOAL_INTAKE_TILT = 56;
+    public final static double HIGH_GOAL_CAM_TILT = 138;
     private final static double TILT_THRESHOLD = 50;
     public final static double LOWER_TILT_COLLISION = 20;
     public final static double UPPER_TILT_COLLISION = 90;
