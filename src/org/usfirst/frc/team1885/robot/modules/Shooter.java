@@ -33,7 +33,7 @@ public class Shooter implements Module {
     private static final boolean OPEN = false;
     private long lastLaunchCheck;
     private static final double FIRE_DELAY = 2000;
-    private static final double INTAKE_PROP = 0.5;
+    private static final double INTAKE_PROP = 0.7;
     public static final double TWIST_SPEED = .3;
     public static final double TILT_SPEED = .2;
     private static final double STATIC_TILT_LIMIT_UPPER = 140;

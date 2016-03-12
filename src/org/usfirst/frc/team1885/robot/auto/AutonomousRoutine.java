@@ -42,12 +42,14 @@ public class AutonomousRoutine {
 //         commands.add(new AutoAlign(360));
 //         commands.add(new AutoWait(2000));
 //         commands.add(new AutoAlign());
-//         getConfiguration();
-//         if(!doesNothing) {
-//             initAutoBreach();
+         getConfiguration();
+//         type = DefenseType.MOAT;
+         if(!doesNothing) {
+             initAutoBreach();
+         }
 //             if(isShooting) {
 //                autoMoveToShoot();
-////              autoShootBallCam();
+//              autoShootBallCam();
 //             }
 //         }
      }
@@ -82,6 +84,7 @@ public class AutonomousRoutine {
     public void getConfiguration() {
         AutonomousConfig autoC = RobotAutonomousConfiguration
                 .pullConfiguration();
+        DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
         type = DefenseType.values()[autoC.getDefense()];
         targetDefense = autoC.getPosition();
         delay = autoC.getDelay() / 1000.0; // time in seconds
