@@ -462,7 +462,7 @@ public class Shooter implements Module {
         RobotControlWithSRX.getInstance()
                 .updateFlywheelShooter(flywheelSpeedLeft, flywheelSpeedRight);
         RobotControlWithSRX.getInstance().updateShooterTilt(tiltPosition);
-         RobotControlWithSRX.getInstance().updateShooterTwist(twistPosition);
+//         RobotControlWithSRX.getInstance().updateShooterTwist(twistPosition);
 //         DriverStation.reportError("\nIntended Position:: " + twistPosition + " Actual Position" + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).get(), false);
          RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, isHeld);
         // DriverStation.reportError("\nContainer State:: " + isHeld, false);
