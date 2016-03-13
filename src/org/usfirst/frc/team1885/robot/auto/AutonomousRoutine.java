@@ -43,13 +43,13 @@ public class AutonomousRoutine {
 //         commands.add(new AutoWait(2000));
 //         commands.add(new AutoAlign());
          getConfiguration();
-//         type = DefenseType.MOAT;
-         if(!doesNothing) {
-             initAutoBreach();
-         }
-         if(isHigh){
-             prepareHighGoal();
-         }
+////         type = DefenseType.MOAT;
+//         if(!doesNothing) {
+//             initAutoBreach();
+//         }
+//         if(isHigh){
+//             prepareHighGoal();
+//         }
 //             if(isShooting) {
 //                autoMoveToShoot();
 //              autoShootBallCam();

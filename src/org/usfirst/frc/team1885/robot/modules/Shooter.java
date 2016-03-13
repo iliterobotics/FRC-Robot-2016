@@ -185,11 +185,14 @@ public class Shooter implements Module {
         flywheelSpeedLeft = flywheelSpeedRight = 0;
         isHeld = !OPEN;
 
-        if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT)) {
-            fire();
-        } else{
-            lastLaunchCheck = System.currentTimeMillis();
+        if(driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT)){
+            initiateLaunch();
         }
+        if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT) && driverInputControl.getButton(RobotButtonType.SHOOTER_LAUNCH)) {
+            launchManualOverride();
+        } //else{
+//            lastLaunchCheck = System.currentTimeMillis();
+//        }
         if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_IN) || driverInputControl.getButton(RobotButtonType.FLYWHEEL_INTAKE_IN)) {
             flywheelSpeedLeft = INTAKE_PROP;
             flywheelSpeedRight = INTAKE_PROP;
@@ -249,6 +252,10 @@ public class Shooter implements Module {
             // DriverStation.reportError("\nFire", false);
         }
         return false;
+    }
+    public boolean launchManualOverride(){
+        isHeld = OPEN;
+        return true;
     }
     public void updateShooter(double speedLeft, double speedRight) {
         if (speedLeft > 0) {
@@ -315,14 +322,14 @@ public class Shooter implements Module {
 
         this.tiltPosition = (this.relativeTiltAngle * (1024 / 360.0))
                 + sensorControl.getInitialTiltPosition();
-         DriverStation
-         .reportError(
-         "\ntiltPosition: " + tiltPosition
-         + "\nrelativeTiltAngle: " + relativeTiltAngle
-         + "\nCurrent Tilt:: "
-         + RobotControlWithSRX.getInstance().getTalons()
-         .get(RobotMotorType.SHOOTER_TILT).get(),
-         false);
+//         DriverStation
+//         .reportError(
+//         "\ntiltPosition: " + tiltPosition
+//         + "\nrelativeTiltAngle: " + relativeTiltAngle
+//         + "\nCurrent Tilt:: "
+//         + RobotControlWithSRX.getInstance().getTalons()
+//         .get(RobotMotorType.SHOOTER_TILT).get(),
+//         false);
         isInPosition = (currentAngle > relativeTiltAngle - ANGLE_ERROR)
                 && (currentAngle < relativeTiltAngle + ANGLE_ERROR);
 

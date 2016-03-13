@@ -16,6 +16,7 @@ public enum RobotButtonType {
     FLYWHEEL_IN,
     FLYWHEEL_INTAKE_IN,
     FLYWHEEL_OUT,
+    SHOOTER_LAUNCH,
 	ARM_MOVE_X,
 	ARM_MOVE_Y,
 	RESET_BUTTON, 
