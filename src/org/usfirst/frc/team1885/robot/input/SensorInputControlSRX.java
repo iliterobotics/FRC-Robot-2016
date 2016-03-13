@@ -56,6 +56,7 @@ public class SensorInputControlSRX {
         ticks = new HashMap<SensorType, Integer>();
     }
     public void update() {
+//        DriverStation.reportError("\nDefense Position" + SensorInputControlSRX.getInstance().getRotaryPosition(), false);
         // StringBuilder output = new StringBuilder();
         // output.append("\nLeft Flywheel Velocity: " +
         // getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));

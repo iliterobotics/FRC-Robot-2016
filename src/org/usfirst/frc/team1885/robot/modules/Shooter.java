@@ -199,6 +199,9 @@ public class Shooter implements Module {
             flywheelSpeedLeft = INTAKE_PROP;
             flywheelSpeedRight = INTAKE_PROP;
             isHeld = OPEN;
+            if(driverInputControl.getButton(RobotButtonType.FLYWHEEL_INTAKE_IN)){
+                setToTiltValue(LOW_GOAL_TILT);
+            }
         }
 
         // DriverStation.reportError("\n Left Speed:: " + flywheelSpeedLeft + "

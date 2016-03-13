@@ -104,8 +104,8 @@ public class AutonomousRoutine {
 //                false);
 //        } catch(Exception e){
             DriverStation.reportError("\nDefense Position" + SensorInputControlSRX.getInstance().getRotaryPosition(), false);
-            if(SensorInputControlSRX.getInstance().getRotaryPosition() < 3){
-                type = DefenseType.NONE;
+            if(SensorInputControlSRX.getInstance().getRotaryPosition() >= 9){
+                doesNothing = true;
             } else{
                 type = DefenseType.MOAT;
 //            }
