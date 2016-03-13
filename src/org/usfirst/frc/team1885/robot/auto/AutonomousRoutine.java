@@ -44,9 +44,9 @@ public class AutonomousRoutine {
 //         commands.add(new AutoAlign());
          getConfiguration();
 ////         type = DefenseType.MOAT;
-//         if(!doesNothing) {
-//             initAutoBreach();
-//         }
+         if(!doesNothing) {
+             initAutoBreach();
+         }
 //         if(isHigh){
 //             prepareHighGoal();
 //         }
@@ -85,22 +85,31 @@ public class AutonomousRoutine {
     // AutoAlign - realigns the robot to move in position to shoot
 
     public void getConfiguration() {
-        AutonomousConfig autoC = RobotAutonomousConfiguration
-                .pullConfiguration();
-        DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
-        type = DefenseType.values()[autoC.getDefense()];
-        targetDefense = autoC.getPosition();
-        delay = autoC.getDelay() / 1000.0; // time in seconds
-        isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
-        goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
-        doesNothing = autoC.doesNothing();
-        isShooting = autoC.isShooting();
-
-        DriverStation.reportError(
-                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
-                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
-                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
-                false);
+//        try{
+//        AutonomousConfig autoC = RobotAutonomousConfiguration
+//                .pullConfiguration();
+//        DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
+//        type = DefenseType.values()[autoC.getDefense()];
+//        targetDefense = autoC.getPosition();
+//        delay = autoC.getDelay() / 1000.0; // time in seconds
+//        isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
+//        goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
+//        doesNothing = autoC.doesNothing();
+//        isShooting = autoC.isShooting();
+//
+//        DriverStation.reportError(
+//                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
+//                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
+//                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
+//                false);
+//        } catch(Exception e){
+            DriverStation.reportError("\nDefense Position" + SensorInputControlSRX.getInstance().getRotaryPosition(), false);
+            if(SensorInputControlSRX.getInstance().getRotaryPosition() < 3){
+                type = DefenseType.NONE;
+            } else{
+                type = DefenseType.MOAT;
+//            }
+        }
     }
 
     /**

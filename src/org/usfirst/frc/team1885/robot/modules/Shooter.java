@@ -2,7 +2,6 @@ package org.usfirst.frc.team1885.robot.modules;
 
 import java.util.Map;
 
-import org.usfirst.frc.team1885.robot.auto.AutoAimShooter;
 import org.usfirst.frc.team1885.robot.auto.AutoShooterTilt;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
@@ -12,7 +11,9 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
+import org.usfirst.frc.team1885.serverdata.ShooterDataClient;
 
+import dataclient.robotdata.vision.HighGoal;
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
@@ -29,7 +30,7 @@ public class Shooter implements Module {
     public static final double LOW_GOAL_ANGLE = 12.0;
     public static final double ANGLE_ERROR = 1;
     public static final int TICK_ERROR = 10;
-    public static final double SHOOTER_SPEED = .9;
+    public static final double SHOOTER_SPEED = .6;
     private static final boolean OPEN = false;
     private long lastLaunchCheck;
     private static final double FIRE_DELAY = 2000;
@@ -44,6 +45,7 @@ public class Shooter implements Module {
     public final static double HIGH_GOAL_INTAKE_TILT_BOUND = 80;
     public final static double HIGH_GOAL_INTAKE_TILT = 56;
     public final static double HIGH_GOAL_CAM_TILT = 138;
+    private static final double HIGHGOAL_MIDPOINT = 97;
     private final static double TILT_THRESHOLD = 50;
     public final static double LOWER_TILT_COLLISION = 20;
     public final static double UPPER_TILT_COLLISION = 90;
@@ -92,8 +94,8 @@ public class Shooter implements Module {
     private double relativeTwistAngle;
     private double twistPosition;
     private boolean isAiming; //checks if we are using autonomous to aim - using camera vision
-    private AutoAimShooter autoAimShooter;
-
+    private HighGoal hg;
+    
     public static Shooter getInstance() {
         if (instance == null) {
             instance = new Shooter();
@@ -146,6 +148,7 @@ public class Shooter implements Module {
                 SPIN_D);
         lastLaunchCheck = System.currentTimeMillis();
         isAutoTilt = false;
+        hg = ShooterDataClient.startShooterDataClient().getData();
         // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).configEncoderCodesPerRev(1024);
     }
 
@@ -153,7 +156,6 @@ public class Shooter implements Module {
         TILT_LIMIT_LOWER = 0;
         TILT_LIMIT_UPPER = TILT_LIMIT_LOWER + STATIC_TILT_LIMIT_UPPER;
         autoShooterTilt = new AutoShooterTilt(LOW_GOAL_TILT);
-        autoAimShooter = new AutoAimShooter();
         this.twistPosition = sensorControl.getInitialTwistPosition();
     }
     // Get telemetry data
@@ -197,8 +199,6 @@ public class Shooter implements Module {
             flywheelSpeedLeft = INTAKE_PROP;
             flywheelSpeedRight = INTAKE_PROP;
             isHeld = OPEN;
-            setToTiltValue(LOW_GOAL_TILT);
-            updateTiltPosition();
         }
 
         // DriverStation.reportError("\n Left Speed:: " + flywheelSpeedLeft + "
@@ -237,7 +237,12 @@ public class Shooter implements Module {
             setToTiltValue(HIGH_GOAL_INTAKE_TILT);
             ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
         } else {
-            setToTiltValue(HIGH_GOAL_CAM_TILT);
+            if(!isAiming){
+                setToTiltValue(HIGH_GOAL_CAM_TILT);
+            } else{
+                setToTwistValue(getTwistAimLock());
+                setToTiltValue(getTiltAimLock());
+            }
         }
         return this.relativeTiltAngle;
     }
@@ -296,13 +301,14 @@ public class Shooter implements Module {
     public boolean updateTiltPosition() {
         boolean isInPosition = true;
         int input = driverInputControl.getPOVButton(RobotButtonType.AIM);
-        if(input > 0){
+        if(input >= 0){
             isAutoTilt = true;  
             switch(input){
-                case 0: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_CAM_TILT); isAiming = true; break;
-                case 90: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_CAM_TILT); break;
-                case 180: autoShooterTilt = new AutoShooterTilt(LOW_GOAL_TILT); break;
-                case 270: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_INTAKE_TILT); break;
+                case 0: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_CAM_TILT); isAiming = true; 
+                DriverStation.reportError("\nAIMING", false);break;
+                case 90: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_CAM_TILT);isAiming = false; break;
+                case 180: autoShooterTilt = new AutoShooterTilt(LOW_GOAL_TILT); isAiming = false; break;
+                case 270: autoShooterTilt = new AutoShooterTilt(HIGH_GOAL_INTAKE_TILT); isAiming = false; break;
                 default:
             }
             autoShooterTilt.init();
@@ -311,9 +317,10 @@ public class Shooter implements Module {
             isAutoTilt = !autoShooterTilt.execute();
         }
         if(isAiming){
-//            isAiming = !autoAimShooter.execute();
-//            setToTwistValue(45);
-            isAiming = false;
+            autoShooterTilt = new AutoShooterTilt(getTwistAimLock());
+            setToTiltValue(getTiltAimLock());
+        } else {
+            setToTwistValue(0);
         }
         double currentAngle = sensorControl
                 .getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER);
@@ -456,10 +463,9 @@ public class Shooter implements Module {
     }
 
     public void updateOutputs() {
-        // DriverStation.reportError("\n Tilt Position: " + tiltPosition,
-        // false);
-        // DriverStation.reportError("\nTo Tilt Angle: " +
-        // relativeTiltAngle,false);
+//         DriverStation.reportError("\n Tilt Position: " + tiltPosition, false);
+//         DriverStation.reportError(" To Tilt Angle: " + relativeTiltAngle,false);
+//         DriverStation.reportError(" Aiming:: " + isAiming, false);
         // DriverStation.reportError("\n Raw Pot: " +
         // sensorControl.getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER),
         // false);
@@ -479,5 +485,20 @@ public class Shooter implements Module {
         // // RobotControlWithSRX.getInstance()
         // // .updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER,
         // // kickerState);
+    }
+    
+    public double getTwistAimLock(){
+        double twistAngle = hg.getAzimuth();
+          
+          if(twistAngle > 180){
+              twistAngle -= 360;
+          }
+          return hg.isGoalFound() ? twistAngle : this.relativeTwistAngle; 
+    }
+    public double getTiltAimLock(){
+        double distance = hg.getDistance();
+        double tiltAngle = distance != 0 ? 180 - Math.toDegrees(Math.asin(HIGHGOAL_MIDPOINT / distance)) : this.relativeTiltAngle;
+        DriverStation.reportError("\n Distance: " + distance + "tiltAngle: " + tiltAngle + " Found: " + hg.isGoalFound(), false);
+        return hg.isGoalFound() ? tiltAngle : this.relativeTiltAngle;
     }
 }
