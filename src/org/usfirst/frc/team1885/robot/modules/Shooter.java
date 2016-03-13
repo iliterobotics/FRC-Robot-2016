@@ -190,7 +190,7 @@ public class Shooter implements Module {
         if(driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT)){
             initiateLaunch();
         }
-        if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT) && driverInputControl.getButton(RobotButtonType.SHOOTER_LAUNCH)) {
+        if (driverInputControl.getButton(RobotButtonType.SHOOTER_LAUNCH)) {
             launchManualOverride();
         } //else{
 //            lastLaunchCheck = System.currentTimeMillis();
