@@ -47,7 +47,7 @@ public class AutonomousRoutine {
              initAutoBreach();
              if(isShooting) {
                  autoMoveToShoot();
-//                   autoShootBallCam();
+                 autoShootBallCam();
               }
          }
      }
@@ -104,6 +104,8 @@ public class AutonomousRoutine {
             } else{
                 doesNothing = false;
                 isShooting = true;
+                isHigh = true;
+                goal = 0;
                 type = DefenseType.MOAT;
             }
         }
@@ -284,7 +286,6 @@ public class AutonomousRoutine {
             //commands.add(new AutoAimShooter());
         }
         */
-        autoShootBallCam();
     }
 
     /**
@@ -321,19 +322,19 @@ public class AutonomousRoutine {
     }
 
     /**
-     * Controls processes required for locating the high and low goal and
-     * shooting
+     * Controls processes required for locating the high and low goal and shooting
      * 
-     * @param true
-     *            = high goal; false = low goal
+     * @param angle angle to position the shooter tilt
      */
     public void autoShootBall(double angle) {
         commands.add(new AutoShooterTilt(angle));
         commands.add(new AutoShoot());
-        //TODO vision to twist for more accurate
         
     }
     
+    /**
+     * Controls processes for shooting in the high goal using camera vision
+     */
     public void autoShootBallCam(){
         commands.add(new AutoShooterAim());
         commands.add(new AutoShoot());
