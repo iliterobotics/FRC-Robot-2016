@@ -14,7 +14,6 @@ public class AutoAdjustIntake extends AutoCommand{
     
     @Override
     public boolean init() {
-        ActiveIntake.getInstance().setIntakeSolenoid(this.intakeState);
         return true;
     }
 
