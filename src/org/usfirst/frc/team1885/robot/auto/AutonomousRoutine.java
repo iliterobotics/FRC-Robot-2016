@@ -158,7 +158,7 @@ public class AutonomousRoutine {
     }
     
     public void prepareHighGoal(){
-        commands.add(new AutoAdjustIntake());
+        commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
         commands.add(new AutoWait(1000));
         commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_INTAKE_TILT));
     }
