@@ -71,12 +71,12 @@ public class AutoCrossedDefense extends AutoCommand {
         } else {
             startTime = System.currentTimeMillis();
         }
+        DrivetrainControl.getInstance().update(leftDriveSpeed, rightDriveSpeed);
         return false;
     }
 
     @Override
     public boolean updateOutputs() {
-        DrivetrainControl.getInstance().update(leftDriveSpeed, rightDriveSpeed);
         DrivetrainControl.getInstance().updateOutputs();
         return false;
     }
