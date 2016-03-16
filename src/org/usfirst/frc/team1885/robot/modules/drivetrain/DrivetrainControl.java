@@ -34,7 +34,7 @@ public class DrivetrainControl implements Module {
     public static final double NUDGE_POWER = 0.15;
     public static final double NUDGE_POWER_TURN = 0.75;
     private static DrivetrainControl instance;
-    private boolean isLowGear;
+    private boolean gear;
 
     private static final double speedP = .25;
     private static final double speedI = 0.0;
@@ -43,13 +43,16 @@ public class DrivetrainControl implements Module {
     private static final double positionP = 2;
     private static final double positionI = 0.0001;
     private static final double positionD = 0;
+    
+    public static final boolean HIGH_GEAR = true;
+    public static final boolean LOW_GEAR = false;
 
     private DrivetrainControl(final double d, final double m) {
         maxSpeed = m;
         diameter = d;
         circumference = Math.PI * (diameter);
         driveMode = DriveMode.TANK;
-        isLowGear = true;
+        gear = HIGH_GEAR;
         driverInput = DriverInputControlSRX.getInstance();
         robotSRX = RobotControlWithSRX.getInstance();
 
@@ -106,9 +109,9 @@ public class DrivetrainControl implements Module {
         if (DriverInputControlSRX.getInstance()
                 .getButton(RobotButtonType.GEAR_SHIFT)) {
             maxSpeed = 15.0;
-            isLowGear = false;
+            gear = LOW_GEAR;
         } else {
-            isLowGear = true;
+            gear = HIGH_GEAR;
         }
     }
 
@@ -224,6 +227,6 @@ public class DrivetrainControl implements Module {
 //                        "\nSpeed:: Left: " + -leftDriveSpeed + " Right: " + rightDriveSpeed, false);
 //        DriverStation.reportError("\nOutput Value:: Left: " + robotSRX.getTalons().get(RobotMotorType.LEFT_DRIVE).get() + " Right: " + robotSRX.getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
         RobotControlWithSRX.getInstance()
-                .updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, isLowGear);
+                .updateSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, gear);
     }
 }

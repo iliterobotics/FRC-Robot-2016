@@ -56,7 +56,8 @@ public class SensorInputControlSRX {
         ticks = new HashMap<SensorType, Integer>();
     }
     public void update() {
-//        DriverStation.reportError("\nDefense Position" + SensorInputControlSRX.getInstance().getRotaryPosition(), false);
+        // DriverStation.reportError("\nDefense Position" +
+        // SensorInputControlSRX.getInstance().getRotaryPosition(), false);
         // StringBuilder output = new StringBuilder();
         // output.append("\nLeft Flywheel Velocity: " +
         // getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER));
@@ -93,6 +94,15 @@ public class SensorInputControlSRX {
         // false);
         // DriverStation.reportError("\n Position:: " + getRotaryPosition(),
         // false);
+        
+        /* Encoder values for arm joints */
+        
+//        DriverStation.reportError("\nPot A Value: "
+//                + rsrx.getTalons().get(RobotMotorType.ARM_JOINT_A).get(),
+//                false);
+//        DriverStation.reportError("\nPot B Value: "
+//                + rsrx.getTalons().get(RobotMotorType.ARM_JOINT_B).get(),
+//                false);
     }
     // Create initial sensor readings
     public void init() {
@@ -246,5 +256,11 @@ public class SensorInputControlSRX {
     }
     public void resetEncoder(SensorType type) {
         rsrx.getSensor().get(type).setEncPosition(0);
+    }
+    public double getInitPotBPos() {
+        return INITIAL_POT_B_POSITION;
+    }
+    public double getInitPotAPos() {
+        return INITIAL_POT_A_POSITION;
     }
 }

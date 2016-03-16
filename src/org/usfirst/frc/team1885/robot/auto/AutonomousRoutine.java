@@ -117,6 +117,7 @@ public class AutonomousRoutine {
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAutoBreach() {
+        
         if(type == DefenseType.MOAT || type == DefenseType.RAMPARTS){
             commands.add(new AutoDriveStart(CLEAR_SPEED));
         } else if(type == DefenseType.PORTCULLIS || type == DefenseType.LOW_BAR){

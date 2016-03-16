@@ -35,17 +35,18 @@ public class UtilityArm implements Module {
     // from degrees
     // to ticks
     private static final double POSITION_MARGIN_ERR = 5 * CONVERSION_FACTOR;
-    private static final double FRAME_LENGTH = 0;
+    private static final double FRAME_LENGTH = 5;
     private final double RESET_A_POSITION;
     private final double RESET_B_POSITION;
-    private static final double BOUNDARY = 13;
+    private static final double BOUNDARY = 8;
     private static final double X_MAX_BACK_REACH = 9;
     private static final double Y_MAX_UP_REACH = 33;
     private static final double Y_MAX_DOWN_REACH = -10;
     private static final double DEAD_ZONE_X = .2;
     private static final double DEAD_ZONE_Y = .2;
-    private static final double INCREMENT_RATE = 1 / 10.0; // Rate at which xCoord and
-                                                    // yCoord are incremented
+    private static final double INCREMENT_RATE = 1 / 10.0; // Rate at which
+                                                           // xCoord and
+    // yCoord are incremented
 
     private double jointAPosition; // storage for updating the A angle
     private double jointBPosition; // storage for updating the B angle
@@ -292,14 +293,12 @@ public class UtilityArm implements Module {
         jointBPosition = -1 * jointBDegree * CONVERSION_FACTOR
                 + SensorInputControlSRX.getInstance().getInitialPotBPostition();
 
-        // DriverStation
-        // .reportError(
-        // "\nJoint A Position: " + jointAPosition
-        // + " --Joint B Position: " + jointBPosition
-        // + "Initial B Pot: "
-        // + SensorInputControlSRX
-        // .getInstance().INITIAL_POT_B_POSITION,
-        // false);
+//        DriverStation.reportError("\nJoint A Position: " + jointAPosition
+//                + " --Joint B Position: " + jointBPosition + "Initial A Pot: "
+//                + SensorInputControlSRX.getInstance().getInitialPotAPostition()
+//                + "Initial B Pot: "
+//                + SensorInputControlSRX.getInstance().getInitialPotBPostition(),
+//                false);
     }
 
     /**
