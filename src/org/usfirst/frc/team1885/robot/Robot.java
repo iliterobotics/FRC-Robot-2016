@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
 import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
+import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
@@ -84,6 +85,14 @@ public class Robot extends SampleRobot {
             // driverInputControl.update();
             UtilityArm.getInstance().update();
             UtilityArm.getInstance().updateOutputs();
+            DriverStation.reportError(
+                    "\nArm Joint A Pot: "
+                            + RobotControlWithSRX.getInstance().getTalons()
+                                    .get(RobotMotorType.ARM_JOINT_A).get()
+                            + "\nArm Joint B Pot: "
+                            + RobotControlWithSRX.getInstance().getTalons()
+                                    .get(RobotMotorType.ARM_JOINT_B).get(),
+                    false);
             // sensorInputControl.update();
             Timer.delay(.005);
 
