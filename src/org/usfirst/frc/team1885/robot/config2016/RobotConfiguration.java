@@ -133,6 +133,7 @@ public class RobotConfiguration {
         sensorInputControl.createNavX(SerialPort.Port.kMXP);
         sensorInputControl.addPressureSensor(0);
         sensorInputControl.addRotarySwitchSensor(1);
+        sensorInputControl.addBeamSensor(0);
         // Drivetrain Encoders
         robotControl.addTalonSensor(RobotMotorType.LEFT_DRIVE,
                 SensorType.LEFT_ENCODER, 1);
@@ -160,10 +161,9 @@ public class RobotConfiguration {
         // robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
 
         // Add Module
-        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
-        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
-        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
-        // moduleControl.addModule(ModuleType.UTILITY_ARM,
-        // UtilityArm.getInstance());
+//        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
+//        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
+//        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
+//        moduleControl.addModule(ModuleType.UTILITY_ARM, FUtilityArm.getInstance());
     }
 }
