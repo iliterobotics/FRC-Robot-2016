@@ -6,6 +6,7 @@ import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
 import dataclient.robotdata.autonomous.AutonomousConfig;
@@ -16,7 +17,7 @@ public class AutonomousRoutine {
     public static final double PITCH_CHANGE_ON_RAMP = 4.5; // NavX is sideways
     public static final double RAMPART_SPEED_MAX = 0.6;
     public static final double RAMPART_SPEED_MIN = 0.5;
-    public static final double START_DRIVE_SPEED = -0.5;
+    public static final double START_DRIVE_SPEED = 0.5;
 
     private DefenseType type;
     private int targetDefense;
@@ -26,7 +27,9 @@ public class AutonomousRoutine {
     private double delay = 0.005;
     private boolean isHigh;
     private int goal;
-    public static final double MOAT_CLEAR_SPEED = 0.9;
+    private boolean doesNothing;
+    private boolean isShooting;
+    public static final double CLEAR_SPEED = -1;
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
@@ -35,18 +38,27 @@ public class AutonomousRoutine {
         // commands.add(new AutoCalibrateWheels(1));
         DriverStation.reportError("\nGyro Calibrated", false);
 
-        // commands.add(new AutoDriveStraightDistance(-16 * 12, true));
-        // commands.add(new AutoAlign(90));
-        // commands.add(new AutoWait(2000));
-        // commands.add(new AutoAlign());
-
-        getConfiguration();
-        // type = DefenseType.ROUGH_TERRAIN;
-        // initAutoBreach();
-        autoMoveToShoot();
-    }
+//         commands.add(new AutoDriveDistance(3 * 12));
+//         commands.add(new AutoAlign(360));
+//         commands.add(new AutoWait(2000));
+//         commands.add(new AutoAlign());
+         getConfiguration();
+////         type = DefenseType.MOAT;
+         if(!doesNothing) {
+             initAutoBreach();
+         }
+//         if(isHigh){
+//             prepareHighGoal();
+//         }
+//             if(isShooting) {
+//                autoMoveToShoot();
+//              autoShootBallCam();
+//             }
+//         }
+     }
 
     public void execute() {
+        int commandNum = 0;
         while (!commands.isEmpty() && robot.isEnabled()
                 && robot.isAutonomous()) {
             AutoCommand currCommand = commands.peek();
@@ -54,8 +66,8 @@ public class AutonomousRoutine {
                 boolean commandState = currCommand.execute();
                 currCommand.updateOutputs();
                 if (commandState) {
-                    DriverStation.reportError(
-                            "\nfinished command " + commands.size(), false);
+                    DriverStation.reportError( "\nfinished command " + commandNum, false);
+                    commandNum++;
                     commands.poll();
                 }
             } else {
@@ -73,19 +85,31 @@ public class AutonomousRoutine {
     // AutoAlign - realigns the robot to move in position to shoot
 
     public void getConfiguration() {
-        AutonomousConfig autoC = RobotAutonomousConfiguration
-                .pullConfiguration();
-        type = DefenseType.values()[autoC.getDefense()];
-        targetDefense = autoC.getPosition();
-        delay = autoC.getDelay() / 1000.0; // time in seconds
-        isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
-        goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
-
-        DriverStation.reportError(
-                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
-                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
-                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
-                false);
+//        try{
+//        AutonomousConfig autoC = RobotAutonomousConfiguration
+//                .pullConfiguration();
+//        DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
+//        type = DefenseType.values()[autoC.getDefense()];
+//        targetDefense = autoC.getPosition();
+//        delay = autoC.getDelay() / 1000.0; // time in seconds
+//        isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
+//        goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
+//        doesNothing = autoC.doesNothing();
+//        isShooting = autoC.isShooting();
+//
+//        DriverStation.reportError(
+//                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
+//                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
+//                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
+//                false);
+//        } catch(Exception e){
+            DriverStation.reportError("\nDefense Position" + SensorInputControlSRX.getInstance().getRotaryPosition(), false);
+            if(SensorInputControlSRX.getInstance().getRotaryPosition() >= 9){
+                doesNothing = true;
+            } else{
+                type = DefenseType.MOAT;
+//            }
+        }
     }
 
     /**
@@ -93,12 +117,17 @@ public class AutonomousRoutine {
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAutoBreach() {
-        if (type == DefenseType.MOAT)
-            commands.add(new AutoDriveStart(MOAT_CLEAR_SPEED));
-        else
+        
+        if(type == DefenseType.MOAT || type == DefenseType.RAMPARTS){
+            commands.add(new AutoDriveStart(CLEAR_SPEED));
+        } else if(type == DefenseType.PORTCULLIS || type == DefenseType.LOW_BAR){
+            commands.add(new AutoDriveStart(-START_DRIVE_SPEED));
+        }
+        else{
             commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+        }
         commands.add(new AutoReachedDefense());
-        // DEFAULT CASE IS FOR: MOAT, ROUGH TERRAIN, RAMPARTS
+        // DEFAULT CASE IS FOR: ROUGH TERRAIN and RAMPARTS
         switch (type) {
         case LOW_BAR:
             autoLowBar();
@@ -126,7 +155,12 @@ public class AutonomousRoutine {
         }
         commands.add(new AutoCrossedDefense());
         commands.add(new AutoAlign());
-
+    }
+    
+    public void prepareHighGoal(){
+        commands.add(new AutoAdjustIntake());
+        commands.add(new AutoWait(1000));
+        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_INTAKE_TILT));
     }
 
     public void autoMoveToShoot() {
@@ -218,7 +252,7 @@ public class AutonomousRoutine {
         } else {
             DriverStation.reportError("Invalid Goal Number", false);
         }
-        if (type != DefenseType.PORTCULLIS && type != DefenseType.MOAT) {
+        if(type != DefenseType.PORTCULLIS && type != DefenseType.MOAT && type != DefenseType.LOW_BAR && type != DefenseType.RAMPARTS) {
             firstMove = -firstMove;
             secondMove = -secondMove;
             align += 180;
@@ -243,21 +277,26 @@ public class AutonomousRoutine {
         commands.add(new AutoDriveDistance(secondMove));
         commands.add(new AutoAlign(goalTurn));
         /*
-         * if (!isHigh) { commands.add(new AutoDriveStart(START_DRIVE_SPEED));
-         * commands.add(new AutoCrossedDefense());
-         * autoShootBall(Shooter.LOW_GOAL_ANGLE); } else {
-         * autoShootBall(Shooter.HIGH_GOAL_ANGLE); //commands.add(new
-         * AutoAimShooter()); }
-         */
-    }
+        if (!isHigh) {
+            commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+            commands.add(new AutoCrossedDefense());
+            autoShootBall(Shooter.LOW_GOAL_ANGLE);
+        }
+        else {
+            autoShootBall(Shooter.HIGH_GOAL_ANGLE);
+            //commands.add(new AutoAimShooter());
+        }
+        */
+        autoShootBallCam();
+        }
 
     /**
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
-        double lowBarTravelDistance = 4.2 * 12; // subject to change from
-        ActiveIntake.getInstance().intakeDown();
-        commands.add(new AutoDriveDistance(-lowBarTravelDistance, .1));
+        double lowBarTravelDistance = 4.5 * 12; // subject to change from
+        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
+        commands.add(new AutoDriveDistance(lowBarTravelDistance, .2));
     }
 
     public void autoPortcullis() {
@@ -293,9 +332,16 @@ public class AutonomousRoutine {
      */
     public void autoShootBall(double angle) {
         commands.add(new AutoShooterTilt(angle));
-        commands.add(new AutoShooterShoot());
-        // TODO vision to twist for more accurate
-
+        commands.add(new AutoShoot());
+        //TODO vision to twist for more accurate
+        
+    }
+    
+    public void autoShootBallCam(){
+        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_ANGLE));
+//        commands.add(new AutoShooterInitiate());
+        commands.add(new AutoAimShooter());
+        commands.add(new AutoShoot());
     }
 
     public void autoWheelie() {

@@ -141,4 +141,8 @@ public class RobotControlWithSRX {
     public void gearShift(boolean gear) {
         singleSolenoids.get(RobotPneumaticType.GEAR_SHIFT).set(gear);
     }
+    public void updateArmMotors(double jointAPosition, double jointBPosition) {
+        talons.get(RobotMotorType.ARM_JOINT_A).set(jointAPosition);
+        talons.get(RobotMotorType.ARM_JOINT_B).set(jointBPosition);
+    }
 }

@@ -2,19 +2,22 @@ package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 
-public class AutoShooterShoot extends AutoCommand {
-    private Shooter shooter;
-   
+public class AutoShooterInitiate extends AutoCommand{
+
+    public AutoShooterInitiate(){
+        
+    }
+    
+    @Override
     public boolean init() {
-        shooter = shooter.getInstance();
-        return false;
+        Shooter.getInstance().initiateLaunch();
+        return true;
     }
 
     @Override
     public boolean execute() {
-        if(shooter.fire())
-            return true;
-        return false;
+        Shooter.getInstance().updateOutputs();
+        return true;
     }
 
     @Override
@@ -28,4 +31,5 @@ public class AutoShooterShoot extends AutoCommand {
         // TODO Auto-generated method stub
         
     }
+
 }

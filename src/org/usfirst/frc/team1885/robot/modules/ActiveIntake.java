@@ -21,14 +21,17 @@ public class ActiveIntake implements Module {
     private double counter;
     private boolean previousIntakeToggle;
     private static final double delay = 1000;
+    public static final DoubleSolenoid.Value intakeUp = DoubleSolenoid.Value.kForward;
+    public static final DoubleSolenoid.Value intakeDown = DoubleSolenoid.Value.kReverse;
 
     private ActiveIntake() {
         driverInputControl = DriverInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
 
-        isIntaking = DoubleSolenoid.Value.kReverse;
+        isIntaking = intakeUp;
         reset();
         previousIntakeToggle = false;
+        DriverStation.reportError("" + isDown(), false);
     }
     public static ActiveIntake getInstance() {
         if (instance == null) {
@@ -62,20 +65,15 @@ public class ActiveIntake implements Module {
         }
 //        DriverStation.reportError("Solenoid Button State " + driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID) 
 //        + "\n", false);
-//        DriverStation.reportError("Solenoid State " + isIntaking + "\n", false);
+//        DriverStation.reportError("  Solenoid State " + isIntaking + "\n", false);
         if (driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID)
                 && !previousIntakeToggle ) {
-            isIntaking = isIntaking == DoubleSolenoid.Value.kForward ? DoubleSolenoid.Value.kReverse : DoubleSolenoid.Value.kForward;
+            isIntaking = isIntaking == intakeUp ? intakeDown : intakeUp;
         }
         previousIntakeToggle = driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID);
-//        if (driverInputControl.getButton(RobotButtonType.READY_LOW)
-//                && System.currentTimeMillis() >= counter + delay) {
-//            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, true);
-//        }
-//        if (driverInputControl.getButton(RobotButtonType.READY_HIGH)
-//                && System.currentTimeMillis() >= counter + delay) {
-//            robotControl.updateSingleSolenoid(RobotPneumaticType.INTAKE_SETTER, false);
-//        }
+        if(Shooter.getInstance().getRelativeTilt() > Shooter.LOWER_TILT_COLLISION && Shooter.getInstance().getRelativeTilt() < Shooter.UPPER_TILT_COLLISION){
+            isIntaking = intakeDown;
+        }
         updateIntake(intakeSpeed);
     }
     public void updateIntake(double intakeSpeed) {
@@ -91,11 +89,8 @@ public class ActiveIntake implements Module {
     public void reset() {
         this.intakeState = MotorState.OFF;
         intakeSpeed = 0;
-        isIntaking = DoubleSolenoid.Value.kForward;        
+        isIntaking = intakeUp;        
         updateOutputs();
-    }
-    public void listenLowGoal() {
-        
     }
 
     public void updateOutputs() {
@@ -109,13 +104,14 @@ public class ActiveIntake implements Module {
     public void update() {
         updateIntake();
     }
-    public void intakeUp(){
-       isIntaking = DoubleSolenoid.Value.kForward;
-    }
-    public void intakeDown(){
-        isIntaking = DoubleSolenoid.Value.kReverse;
+    public void setIntakeSolenoid(DoubleSolenoid.Value input){
+//        DriverStation.reportError("\n Intake Position" + input, false);
+        isIntaking = input;
     }
     public void setIntakeSpeed(double speed){
         intakeSpeed = speed;
+    }
+    public boolean isDown(){
+        return isIntaking == intakeDown;
     }
 }

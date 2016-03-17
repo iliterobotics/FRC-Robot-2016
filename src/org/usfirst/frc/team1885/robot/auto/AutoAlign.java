@@ -51,8 +51,14 @@ public class AutoAlign extends AutoCommand {
         double initialYaw = SensorInputControlSRX.getInstance().getYaw();
         
         direction = (targetDegree - initialYaw) < 0 ? -1 : 1;
+        DriverStation.reportError("\nPure Target:: " + targetDegree, false);
         targetDegree = Math.abs(targetDegree - initialYaw);
-        
+        if(targetDegree > 180){
+            targetDegree -= 360;
+        }
+        if(targetDegree < -180){
+            targetDegree += 360;
+        }
         DriverStation.reportError("\n Direction:: " + direction + "  targetDegree:: " + targetDegree, false);
         
         tickGoalLeft = direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft;

@@ -8,8 +8,11 @@ import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
+import org.usfirst.frc.team1885.robot.modules.ModuleControl;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
+import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -67,10 +70,12 @@ public class Robot extends SampleRobot {
 //        Initialize Modules
         modules = ModuleControl.getInstance().getModules();
         DriverStation.reportError("\nRobot Intialized", false);
+    }
 
     /**
      * Runs the motors with tank steering.
      */
+    @Override
     public void operatorControl() {
         DrivetrainControl.getInstance().setControlMode(TalonControlMode.Speed);
         DriverStation.reportError("\nBeginning Operator Control", false);
@@ -90,6 +95,7 @@ public class Robot extends SampleRobot {
         }
     }
 
+    @Override
     public void autonomous() {
         AutonomousRoutine ar = new AutonomousRoutine(this);
         ar.execute();

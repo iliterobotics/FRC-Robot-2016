@@ -62,6 +62,8 @@ public class AutoDriveDistance extends AutoCommand {
         disLeft = (robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get() - initDisLeft) / DrivetrainControl.TICKS_IN_ROTATION * (Math.PI * RobotConfiguration.WHEEL_DIAMETER);
         disRight = (robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get() - initDisRight) / DrivetrainControl.TICKS_IN_ROTATION * (Math.PI * RobotConfiguration.WHEEL_DIAMETER);
 
+//        DriverStation.reportError("\nLeft:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get() + " Right:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
+        
         differenceLeft = disLeft - distance;
         differenceRight = disRight + distance;
 
@@ -73,12 +75,12 @@ public class AutoDriveDistance extends AutoCommand {
 //                + differenceLeft + "\nDifference Right:: " + differenceRight,
 //                false);
 
-         DriverStation.reportError(
-         "\nDisRight: " + robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get() + ", initDisRight: " + initDisRight,
-         false);
-         DriverStation.reportError(
-         "\ndisLeft: " + robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get() + ", initDisLeft: " + initDisLeft,
-         false);
+//         DriverStation.reportError(
+//         "\nDisRight: " + robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get() + ", initDisRight: " + initDisRight,
+//         false);
+//         DriverStation.reportError(
+//         "\ndisLeft: " + robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get() + ", initDisLeft: " + initDisLeft,
+//         false);
         
         
         
