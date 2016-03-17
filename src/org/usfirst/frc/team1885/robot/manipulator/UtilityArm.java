@@ -143,20 +143,21 @@ public class UtilityArm implements Module {
 
         xModifier = yModifier = 0;
 
-        if (Math.abs(driverInputControl.getControllerThrottle()) > DEAD_ZONE_X
-                || Math.abs(driverInputControl
-                        .getControllerTwist()) > DEAD_ZONE_Y) {
+        if (Math.abs(driverInputControl
+                .getPressureButton(RobotButtonType.ARM_MOVE_X)) > DEAD_ZONE_X
+                || Math.abs(driverInputControl.getPressureButton(
+                        RobotButtonType.ARM_MOVE_Y)) > DEAD_ZONE_Y) {
             selectedDefense = SelectedDefenseBreach.NONE;
             defenseStep = 0;
-            if (Math.abs(
-                    driverInputControl.getControllerThrottle()) > DEAD_ZONE_X) {
-                xModifier = driverInputControl.getControllerThrottle()
-                        * INCREMENT_RATE;
+            if (Math.abs(driverInputControl.getPressureButton(
+                    RobotButtonType.ARM_MOVE_X)) > DEAD_ZONE_X) {
+                xModifier = driverInputControl.getPressureButton(
+                        RobotButtonType.ARM_MOVE_X) * INCREMENT_RATE;
             }
-            if (Math.abs(
-                    driverInputControl.getControllerTwist()) > DEAD_ZONE_Y) {
-                yModifier = driverInputControl.getControllerTwist()
-                        * INCREMENT_RATE;
+            if (Math.abs(driverInputControl.getPressureButton(
+                    RobotButtonType.ARM_MOVE_Y)) > DEAD_ZONE_Y) {
+                yModifier = driverInputControl.getPressureButton(
+                        RobotButtonType.ARM_MOVE_Y) * INCREMENT_RATE;
                 // Up on joystick gives negative values
             }
             goTo(xCoord, yCoord);
