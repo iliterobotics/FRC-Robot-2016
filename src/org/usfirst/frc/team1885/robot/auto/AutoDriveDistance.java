@@ -89,6 +89,7 @@ public class AutoDriveDistance extends AutoCommand {
         if (isRightFinished && isLeftFinished) {
             DriverStation.reportError(
                     "\nFinished traveling distance!", false);
+            Shooter.getInstance().update();
             return true;
         }
         return false;

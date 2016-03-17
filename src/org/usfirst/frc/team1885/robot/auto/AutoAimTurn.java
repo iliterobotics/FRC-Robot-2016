@@ -32,7 +32,7 @@ public class AutoAimTurn extends AutoCommand{
     public boolean updateOutputs() {
         align.updateOutputs();
         tilt.updateOutputs();
-        return false;
+        return true;
     }
 
     @Override
