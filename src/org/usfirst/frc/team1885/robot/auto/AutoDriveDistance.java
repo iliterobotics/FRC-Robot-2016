@@ -51,12 +51,12 @@ public class AutoDriveDistance extends AutoCommand {
         robotControl = RobotControlWithSRX.getInstance();
         this.distance = distance;
         P = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).getP();
-        Shooter.getInstance().launchManualOverride();
     }
     
     public AutoDriveDistance(double distance, double P){
         this(distance);
         this.P = P;
+        Shooter.getInstance().launchManualOverride();
     }
 
     @Override
