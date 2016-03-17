@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1885.robot.modules;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.robot.auto.AutoShooterTilt;
@@ -15,7 +16,6 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.serverdata.ShooterDataClient;
 
 import dataclient.robotdata.vision.HighGoal;
-import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDeviceStatus;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
@@ -24,15 +24,16 @@ import edu.wpi.first.wpilibj.DriverStation;
 //TODO add @depricated tags (or alternate documentation) to all methods no longer being used
 public class Shooter implements Module {
 
-    private static final int FLYWHEEL_MIN_SPEED = 850;
-    public static final double TILT_MOVEMENT_PROPORTION = 0.45;
+    private static final int FLYWHEEL_MIN_LAUNCH_SPEED = 850;
+    public static final double TILT_MOVEMENT_PROPORTION = 0.5;
     public static final double TWIST_MOVEMENT_PROPORTION = 4;
     private static Shooter instance;
     public static final double HIGH_GOAL_ANGLE = 130.0;
     public static final double LOW_GOAL_ANGLE = 12.0;
     public static final double ANGLE_ERROR = 1;
     public static final int TICK_ERROR = 10;
-    public static final double SHOOTER_SPEED = .6;
+    public double shooterSpeed;
+    private static double [] shooterSpeedTable = {0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6};
     private static final boolean OPEN = false;
     private long lastLaunchCheck;
     private static final double FIRE_DELAY = 2000;
@@ -80,7 +81,7 @@ public class Shooter implements Module {
     private AutoShooterTilt autoShooterTilt;
     private AutoShooterTwist autoShooterTwist;
     
-    private static final double TILT_P = 5;
+    private static final double TILT_P = 6;
     private static final double TILT_I = 0.0001;
     private static final double TILT_D = 0;
 
@@ -112,6 +113,7 @@ public class Shooter implements Module {
 
         driverInputControl = DriverInputControlSRX.getInstance();
         containerState = !OPEN;
+        shooterSpeed = shooterSpeedTable[0];
 
         // Setting up Tilt Talon
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).changeControlMode(TalonControlMode.Position);
@@ -209,8 +211,8 @@ public class Shooter implements Module {
      * Starts the flywheels, sets both motors to shooting speed
      */
     public void initiateLaunch(){
-        flywheelSpeedLeft = -SHOOTER_SPEED;
-        flywheelSpeedRight = -SHOOTER_SPEED;
+        flywheelSpeedLeft = -shooterSpeed;
+        flywheelSpeedRight = -shooterSpeed;
     }
     /**
      * Locks the aim to the closes set position: low goal, high goal toward intake, or high goal toward the battery
@@ -226,6 +228,7 @@ public class Shooter implements Module {
      * @return true if the container is opened
      */
     public boolean launch(){
+//        if(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER) >= (FLYWHEEL_MIN_LAUNCH_SPEED * shooterSpeed)){
         if (System.currentTimeMillis() - lastLaunchCheck > FIRE_DELAY) {
             containerState = OPEN;
             return true;
@@ -453,8 +456,7 @@ public class Shooter implements Module {
         // DriverStation.reportError("\n", false);
         // DriverStation.reportError("\n Left Output:: " + flywheelSpeedLeft * FLYWHEEL_MIN_SPEED + " Right Output:: " + flywheelSpeedRight * FLYWHEEL_MIN_SPEED, false);
         // RobotControlWithSRX.getInstance().updateFlywheelShooter(flywheelSpeedLeft * FLYWHEEL_MIN_SPEED, flywheelSpeedRight * FLYWHEEL_MIN_SPEED);
-        RobotControlWithSRX.getInstance()
-                .updateFlywheelShooter(flywheelSpeedLeft, flywheelSpeedRight);
+        RobotControlWithSRX.getInstance().updateFlywheelShooter(flywheelSpeedLeft, flywheelSpeedRight);
         RobotControlWithSRX.getInstance().updateShooterTilt(tiltPosition);
 //         RobotControlWithSRX.getInstance().updateShooterTwist(twistPosition);
 //         DriverStation.reportError("\nIntended Position:: " + twistPosition + " Actual Position" + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).get(), false);
@@ -473,6 +475,7 @@ public class Shooter implements Module {
     public double getTiltAimLock(){
         double distance = hg.getDistance();
         double tiltAngle = distance != 0 ? 180 - Math.toDegrees(Math.asin(HIGHGOAL_MIDPOINT / distance)) : this.relativeTiltAngle;
+        shooterSpeed = shooterSpeedTable[(int)(Math.sqrt((HIGHGOAL_MIDPOINT * HIGHGOAL_MIDPOINT) + (distance * distance)))];
         DriverStation.reportError("\n Distance: " + distance + "tiltAngle: " + tiltAngle + " Found: " + hg.isGoalFound(), false);
         return hg.isGoalFound() ? tiltAngle : this.relativeTiltAngle;
     }

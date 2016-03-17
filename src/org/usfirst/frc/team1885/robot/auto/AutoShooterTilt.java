@@ -7,7 +7,7 @@ import org.usfirst.frc.team1885.robot.modules.Shooter;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoShooterTilt extends AutoCommand {
-    private static final double ERROR = 0.5;
+    private static final double ERROR = 1;
     private final double angle;
     private double currentAngle;    
     public AutoShooterTilt(double angle) {

@@ -109,6 +109,7 @@ public class AutonomousRoutine {
                 goal = 0;
                 type = DefenseType.MOAT;
             }
+//            type = DefenseType.values()[(int)SensorInputControlSRX.getInstance().getRotaryPosition()];
         }
     }
 
