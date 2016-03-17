@@ -133,6 +133,7 @@ public class RobotConfiguration {
         sensorInputControl.createNavX(SerialPort.Port.kMXP);
         sensorInputControl.addPressureSensor(0);
         sensorInputControl.addRotarySwitchSensor(1);
+        sensorInputControl.addBeamSensor(0);
         // Drivetrain Encoders
         robotControl.addTalonSensor(RobotMotorType.LEFT_DRIVE,
                 SensorType.LEFT_ENCODER, 1);
