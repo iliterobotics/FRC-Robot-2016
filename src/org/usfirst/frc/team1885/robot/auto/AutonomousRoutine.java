@@ -251,9 +251,11 @@ public class AutonomousRoutine {
         } else {
             DriverStation.reportError("Invalid Goal Number", false);
         }
-        firstMove = -firstMove;
-        secondMove = -secondMove;
-        align += 180;
+        if(type != DefenseType.PORTCULLIS){
+            firstMove = -firstMove;
+            secondMove = -secondMove;
+            align += 180;
+        }
         autoMoveToShoot(firstMove, firstTurn, secondMove, align);
     }
 
