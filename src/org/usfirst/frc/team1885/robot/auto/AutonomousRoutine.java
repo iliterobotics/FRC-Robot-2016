@@ -15,9 +15,9 @@ import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine {
     public static final double PITCH_CHANGE_ON_RAMP = 4.5; // NavX is sideways
-    public static final double RAMPART_SPEED_MAX = 0.6;
-    public static final double RAMPART_SPEED_MIN = 0.5;
-    public static final double START_DRIVE_SPEED = 0.5;
+    public static final double RAMPART_SPEED_MAX = -0.6;
+    public static final double RAMPART_SPEED_MIN = -0.5;
+    public static final double START_DRIVE_SPEED = -0.5;
 
     private DefenseType type;
     private int targetDefense;
@@ -119,7 +119,7 @@ public class AutonomousRoutine {
         
         if(type == DefenseType.MOAT || type == DefenseType.RAMPARTS){
             commands.add(new AutoDriveStart(CLEAR_SPEED));
-        } else if(type == DefenseType.PORTCULLIS || type == DefenseType.LOW_BAR){
+        } else if(type == DefenseType.PORTCULLIS){
             commands.add(new AutoDriveStart(-START_DRIVE_SPEED));
         }
         else{
@@ -250,11 +250,6 @@ public class AutonomousRoutine {
             align = 180 - 58;
         } else {
             DriverStation.reportError("Invalid Goal Number", false);
-        }
-        if(type != DefenseType.PORTCULLIS && type != DefenseType.MOAT && type != DefenseType.LOW_BAR && type != DefenseType.RAMPARTS) {
-            firstMove = -firstMove;
-            secondMove = -secondMove;
-            align += 180;
         }
         autoMoveToShoot(firstMove, firstTurn, secondMove, align);
     }
