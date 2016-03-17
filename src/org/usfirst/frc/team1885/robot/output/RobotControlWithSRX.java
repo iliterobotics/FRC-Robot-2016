@@ -8,18 +8,17 @@ import java.util.Map;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class RobotControlWithSRX {
+    public static final int TACLIGHT_CHANNEL = 0;
     public static RobotControlWithSRX instance;
     private List<CANTalon> leftDrive;
     private List<CANTalon> rightDrive;
@@ -28,6 +27,7 @@ public class RobotControlWithSRX {
     private Map<RobotPneumaticType, Solenoid> singleSolenoids;
     private Map<RobotPneumaticType, DoubleSolenoid> doubleSolenoids;
     private Compressor c;
+    private Relay taclight;
 
     public static synchronized RobotControlWithSRX getInstance() {
         if (instance == null) {
@@ -45,6 +45,7 @@ public class RobotControlWithSRX {
         sensors = new HashMap<SensorType, CANTalon>();
         singleSolenoids = new HashMap<RobotPneumaticType, Solenoid>();
         doubleSolenoids = new HashMap<RobotPneumaticType, DoubleSolenoid>();
+        taclight = new Relay(TACLIGHT_CHANNEL);
     }
     // Add outputs
     public void addTalonOutput(RobotMotorType type, int port) {
@@ -144,5 +145,8 @@ public class RobotControlWithSRX {
     public void updateArmMotors(double jointAPosition, double jointBPosition) {
         talons.get(RobotMotorType.ARM_JOINT_A).set(jointAPosition);
         talons.get(RobotMotorType.ARM_JOINT_B).set(jointBPosition);
+    }
+    public void setTaclight(boolean state) {
+        taclight.set(state ? Relay.Value.kOn : Relay.Value.kOff);
     }
 }
