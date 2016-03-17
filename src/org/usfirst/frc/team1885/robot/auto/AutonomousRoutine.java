@@ -46,8 +46,9 @@ public class AutonomousRoutine {
          if(!doesNothing) {
              initAutoBreach();
              if(isShooting) {
-                 autoMoveToShoot();
-                 autoShootBallCam();
+//                 autoMoveToShoot();
+                 prepareHighGoal();
+//                 autoShootBallCam();
               }
          }
      }
@@ -159,7 +160,7 @@ public class AutonomousRoutine {
     public void prepareHighGoal(){
         commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
         commands.add(new AutoWait(1000));
-        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_INTAKE_TILT));
+        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_CAM_TILT));
     }
 
     public void autoMoveToShoot() {

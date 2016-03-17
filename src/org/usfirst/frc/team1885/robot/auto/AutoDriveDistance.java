@@ -4,6 +4,7 @@ import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -50,6 +51,7 @@ public class AutoDriveDistance extends AutoCommand {
         robotControl = RobotControlWithSRX.getInstance();
         this.distance = distance;
         P = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).getP();
+        Shooter.getInstance().launchManualOverride();
     }
     
     public AutoDriveDistance(double distance, double P){
@@ -94,7 +96,7 @@ public class AutoDriveDistance extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-        //no outputs to update, controlled by SRX PID
+        Shooter.getInstance().updateOutputs();
         return false;
     }
 
