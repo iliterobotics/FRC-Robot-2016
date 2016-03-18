@@ -86,7 +86,7 @@ public class RobotConfiguration {
                 RobotButtonType.SHOOTER_TWIST_RIGHT,
                 new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
         joystickButtonMap.addControllerButton(RobotButtonType.FIRE,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
+                new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 1));
         joystickButtonMap.addControllerButton(RobotButtonType.TACTICAL_LIGHT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
         // Active Intake Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_SOLENOID,
