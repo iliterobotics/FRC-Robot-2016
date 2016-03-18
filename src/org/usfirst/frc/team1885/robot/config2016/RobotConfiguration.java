@@ -116,8 +116,8 @@ public class RobotConfiguration {
         robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
         robotControl.addTalonOutput(RobotMotorType.LEFT_DRIVE, 3);
         robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
-        robotControl.addTalonOutput(RobotMotorType.ARM_JOINT_A, 5);
         robotControl.addTalonOutput(RobotMotorType.ARM_JOINT_A, 6);
+        robotControl.addTalonOutput(RobotMotorType.ARM_JOINT_B, 5);
         robotControl.addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
         robotControl.addTalonOutput(RobotMotorType.FLYWHEEL_LEFT, 8);
         robotControl.addTalonOutput(RobotMotorType.FLYWHEEL_RIGHT, 9);
@@ -128,6 +128,7 @@ public class RobotConfiguration {
         robotControl.addDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
         robotControl.addSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, 2);
         robotControl.addSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, 4);
+        robotControl.addSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER, 3);
 
         // Talon Sensors
         sensorInputControl.createNavX(SerialPort.Port.kMXP);
@@ -161,9 +162,9 @@ public class RobotConfiguration {
         // robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
 
         // Add Module
-//        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
-//        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
-//        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
+        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
+        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
+        moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
 //        moduleControl.addModule(ModuleType.UTILITY_ARM, FUtilityArm.getInstance());
     }
 }

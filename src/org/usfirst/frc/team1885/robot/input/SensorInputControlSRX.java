@@ -106,7 +106,7 @@ public class SensorInputControlSRX {
 //                + rsrx.getTalons().get(RobotMotorType.ARM_JOINT_B).get(),
 //                false);
         
-        DriverStation.reportError("\nBeam Sensor Value " + getBeam(), false);
+//        DriverStation.reportError("\nBeam Sensor Value " + getBeam(), false);
     }
     // Create initial sensor readings
     public void init() {
