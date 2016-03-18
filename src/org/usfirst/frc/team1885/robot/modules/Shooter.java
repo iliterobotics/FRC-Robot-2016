@@ -118,7 +118,7 @@ public class Shooter implements Module {
 
         driverInputControl = DriverInputControlSRX.getInstance();
         containerState = !OPEN;
-        kickerState = !containerState;
+        kickerState = containerState;
         shooterSpeed = shooterSpeedTable[0];
 
         // Setting up Tilt Talon
@@ -204,9 +204,10 @@ public class Shooter implements Module {
             }
         }
         
-        kickerState = !containerState;
+        kickerState = containerState;
         
         if(driverInputControl.getButton(RobotButtonType.TACTICAL_LIGHT)){
+            DriverStation.reportError("\n TACTICAL LIGHT ON", false);
             tacticalLightState = Relay.Value.kOn;
         }
 
