@@ -4,6 +4,7 @@ package org.usfirst.frc.team1885.robot.config2016;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
 import org.usfirst.frc.team1885.robot.common.type.ModuleType;
+import org.usfirst.frc.team1885.robot.common.type.RelayType;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
@@ -84,14 +85,9 @@ public class RobotConfiguration {
         joystickButtonMap.addControllerButton(
                 RobotButtonType.SHOOTER_TWIST_RIGHT,
                 new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
-        // joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_RESET,
-        // new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
-        // joystickButtonMap.addControllerButton(RobotButtonType.READY_HIGH, new
-        // JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
-        // joystickButtonMap.addControllerButton(RobotButtonType.READY_LOW, new
-        // JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
         joystickButtonMap.addControllerButton(RobotButtonType.FIRE,
                 new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
+        joystickButtonMap.addControllerButton(RobotButtonType.TACTICAL_LIGHT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
         // Active Intake Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_SOLENOID,
                 new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 1));
@@ -129,12 +125,15 @@ public class RobotConfiguration {
         robotControl.addSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, 2);
         robotControl.addSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, 4);
         robotControl.addSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER, 3);
+        
+        // Relays
+        robotControl.addRelay(RelayType.TACTICAL_LIGHT, 0);
 
-        // Talon Sensors
+        // Sensors
         sensorInputControl.createNavX(SerialPort.Port.kMXP);
         sensorInputControl.addPressureSensor(0);
         sensorInputControl.addRotarySwitchSensor(1);
-        sensorInputControl.addBeamSensor(0);
+        sensorInputControl.addBeamSensor(2);
         // Drivetrain Encoders
         robotControl.addTalonSensor(RobotMotorType.LEFT_DRIVE,
                 SensorType.LEFT_ENCODER, 1);

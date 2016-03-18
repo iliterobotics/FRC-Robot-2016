@@ -6,6 +6,7 @@ import java.util.Map;
 import org.usfirst.frc.team1885.robot.auto.AutoShooterTilt;
 import org.usfirst.frc.team1885.robot.auto.AutoShooterTwist;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
+import org.usfirst.frc.team1885.robot.common.type.RelayType;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
@@ -20,6 +21,7 @@ import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDeviceStatus;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Relay;
 
 //TODO add @depricated tags (or alternate documentation) to all methods no longer being used
 public class Shooter implements Module {
@@ -30,6 +32,7 @@ public class Shooter implements Module {
     private static Shooter instance;
     public static final double HIGH_GOAL_ANGLE = 130.0;
     public static final double LOW_GOAL_ANGLE = 12.0;
+    public static final double BATTER_SHOT_ANGLE = 120.0;
     public static final double ANGLE_ERROR = 1;
     public static final int TICK_ERROR = 10;
     public double shooterSpeed;
@@ -100,6 +103,7 @@ public class Shooter implements Module {
     private double twistPosition;
     private boolean isAiming; //checks if we are using autonomous to aim - using camera vision
     private HighGoal hg;
+    private Relay.Value tacticalLightState;
     
     public static Shooter getInstance() {
         if (instance == null) {
@@ -143,6 +147,7 @@ public class Shooter implements Module {
         lastLaunchCheck = System.currentTimeMillis();
         isAutoTilt = false;
         hg = ShooterDataClient.startShooterDataClient().getData();
+        tacticalLightState = Relay.Value.kOff;
         // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).configEncoderCodesPerRev(1024);
     }
 
@@ -177,7 +182,8 @@ public class Shooter implements Module {
     public void updateShooter() {
         // TODO modify values after testing for direction
          DriverStation.reportError("\nRight Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER) + "Left Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER),false);
-
+ 
+        tacticalLightState = Relay.Value.kOff;
         flywheelSpeedLeft = flywheelSpeedRight = 0;
         containerState = !OPEN;
 
@@ -199,6 +205,10 @@ public class Shooter implements Module {
         }
         
         kickerState = !containerState;
+        
+        if(driverInputControl.getButton(RobotButtonType.TACTICAL_LIGHT)){
+            tacticalLightState = Relay.Value.kOn;
+        }
 
 //        DriverStation.reportError("\n Left Speed:: " + flywheelSpeedLeft + "Right Speed:: " + flywheelSpeedRight, false);
 //        DriverStation.reportError("\n\n Left:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).get() + " Right:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).get(), false);
@@ -466,6 +476,7 @@ public class Shooter implements Module {
 //         DriverStation.reportError("\nIntended Position:: " + twistPosition + " Actual Position" + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).get(), false);
         RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, containerState);
         RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER, kickerState);
+        RobotControlWithSRX.getInstance().getRelays().get(RelayType.TACTICAL_LIGHT).set(tacticalLightState);
         // DriverStation.reportError("\nContainer State:: " + isHeld, false);
     }
     
@@ -481,9 +492,10 @@ public class Shooter implements Module {
     public double getTiltAimLock(){
         double distance = hg.getDistance();
         double tiltAngle = distance != 0 ? 180 - Math.toDegrees(Math.asin(HIGHGOAL_MIDPOINT / distance)) : this.relativeTiltAngle;
-//        shooterSpeed = shooterSpeedTable[((int)(Math.sqrt((HIGHGOAL_MIDPOINT * HIGHGOAL_MIDPOINT) + (distance * distance)))) / 12];
+        int horizontalDistance = ((int)(Math.sqrt((distance * distance) - (HIGHGOAL_MIDPOINT * HIGHGOAL_MIDPOINT)))) / 12;
+//        shooterSpeed = shooterSpeedTable[ (horizontalDistance > 0 && horizontalDistance < shooterSpeedTable.length) ? 0 : horizontalDistance];
 //        DriverStation.reportError("\n Distance: " + distance + "tiltAngle: " + tiltAngle + " Found: " + hg.isGoalFound(), false);
-        return hg.isGoalFound() ? tiltAngle : 120;
+        return hg.isGoalFound() ? tiltAngle : BATTER_SHOT_ANGLE;
     }
     public boolean isGoalFound(){
         return hg.isGoalFound();
