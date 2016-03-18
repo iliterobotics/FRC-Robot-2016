@@ -29,7 +29,7 @@ public class AutonomousRoutine {
     private int goal;
     private boolean doesNothing;
     private boolean isShooting;
-    public static final double CLEAR_SPEED = -1;
+    public static final double CLEAR_SPEED = 1;
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
@@ -43,18 +43,14 @@ public class AutonomousRoutine {
 //         commands.add(new AutoWait(2000));
 //         commands.add(new AutoAlign());
          getConfiguration();
-////         type = DefenseType.MOAT;
          if(!doesNothing) {
              initAutoBreach();
+             if(isShooting) {
+//                 autoMoveToShoot();
+                 prepareHighGoal();
+//                 autoShootBallCam();
+              }
          }
-//         if(isHigh){
-//             prepareHighGoal();
-//         }
-//             if(isShooting) {
-//                autoMoveToShoot();
-//              autoShootBallCam();
-//             }
-//         }
      }
 
     public void execute() {
@@ -85,30 +81,35 @@ public class AutonomousRoutine {
     // AutoAlign - realigns the robot to move in position to shoot
 
     public void getConfiguration() {
-//        try{
-//        AutonomousConfig autoC = RobotAutonomousConfiguration
-//                .pullConfiguration();
-//        DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
-//        type = DefenseType.values()[autoC.getDefense()];
-//        targetDefense = autoC.getPosition();
-//        delay = autoC.getDelay() / 1000.0; // time in seconds
-//        isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
-//        goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
-//        doesNothing = autoC.doesNothing();
-//        isShooting = autoC.isShooting();
-//
-//        DriverStation.reportError(
-//                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
-//                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
-//                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
-//                false);
-//        } catch(Exception e){
-            DriverStation.reportError("\nDefense Position" + SensorInputControlSRX.getInstance().getRotaryPosition(), false);
+        try{
+        AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
+        DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
+        type = DefenseType.values()[autoC.getDefense()];
+        targetDefense = autoC.getPosition();
+        delay = autoC.getDelay() / 1000.0; // time in seconds
+        isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
+        goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
+        doesNothing = autoC.doesNothing();
+        isShooting = autoC.isShooting();
+
+        DriverStation.reportError(
+                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
+                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
+                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
+                false);
+        } catch(Exception e){
+            DriverStation.reportError("\nFailed to retrieve config from server\nDefense Position" + SensorInputControlSRX.getInstance().getRotaryPosition(), false);
             if(SensorInputControlSRX.getInstance().getRotaryPosition() >= 9){
                 doesNothing = true;
+                isShooting = false;
             } else{
+                doesNothing = false;
+                isShooting = true;
+                isHigh = true;
+                goal = 0;
                 type = DefenseType.MOAT;
-//            }
+            }
+//            type = DefenseType.values()[(int)SensorInputControlSRX.getInstance().getRotaryPosition()];
         }
     }
 
@@ -120,7 +121,7 @@ public class AutonomousRoutine {
         
         if(type == DefenseType.MOAT || type == DefenseType.RAMPARTS){
             commands.add(new AutoDriveStart(CLEAR_SPEED));
-        } else if(type == DefenseType.PORTCULLIS || type == DefenseType.LOW_BAR){
+        } else if(type == DefenseType.PORTCULLIS){
             commands.add(new AutoDriveStart(-START_DRIVE_SPEED));
         }
         else{
@@ -158,9 +159,9 @@ public class AutonomousRoutine {
     }
     
     public void prepareHighGoal(){
-        commands.add(new AutoAdjustIntake());
+        commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
         commands.add(new AutoWait(1000));
-        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_INTAKE_TILT));
+        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_CAM_TILT));
     }
 
     public void autoMoveToShoot() {
@@ -252,7 +253,7 @@ public class AutonomousRoutine {
         } else {
             DriverStation.reportError("Invalid Goal Number", false);
         }
-        if(type != DefenseType.PORTCULLIS && type != DefenseType.MOAT && type != DefenseType.LOW_BAR && type != DefenseType.RAMPARTS) {
+        if(type != DefenseType.PORTCULLIS){
             firstMove = -firstMove;
             secondMove = -secondMove;
             align += 180;
@@ -275,7 +276,7 @@ public class AutonomousRoutine {
         commands.add(new AutoDriveDistance(firstMove));
         commands.add(new AutoAlign(firstTurn));
         commands.add(new AutoDriveDistance(secondMove));
-        commands.add(new AutoAlign(goalTurn));
+        commands.add(new AutoAimTurn(goalTurn));
         /*
         if (!isHigh) {
             commands.add(new AutoDriveStart(START_DRIVE_SPEED));
@@ -287,8 +288,7 @@ public class AutonomousRoutine {
             //commands.add(new AutoAimShooter());
         }
         */
-        autoShootBallCam();
-        }
+    }
 
     /**
      * Controls processes for passing the low bar
@@ -324,23 +324,21 @@ public class AutonomousRoutine {
     }
 
     /**
-     * Controls processes required for locating the high and low goal and
-     * shooting
+     * Controls processes required for locating the high and low goal and shooting
      * 
-     * @param true
-     *            = high goal; false = low goal
+     * @param angle angle to position the shooter tilt
      */
     public void autoShootBall(double angle) {
         commands.add(new AutoShooterTilt(angle));
         commands.add(new AutoShoot());
-        //TODO vision to twist for more accurate
         
     }
     
+    /**
+     * Controls processes for shooting in the high goal using camera vision
+     */
     public void autoShootBallCam(){
-        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_ANGLE));
-//        commands.add(new AutoShooterInitiate());
-        commands.add(new AutoAimShooter());
+        commands.add(new AutoShooterAim());
         commands.add(new AutoShoot());
     }
 

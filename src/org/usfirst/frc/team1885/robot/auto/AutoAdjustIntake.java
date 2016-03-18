@@ -6,15 +6,20 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 
 public class AutoAdjustIntake extends AutoCommand{
 
+    DoubleSolenoid.Value intakeState;
+    
+    public AutoAdjustIntake(DoubleSolenoid.Value intakeState){
+        this.intakeState = intakeState;
+    }
+    
     @Override
     public boolean init() {
-        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
         return true;
     }
 
     @Override
     public boolean execute() {
-        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
+        ActiveIntake.getInstance().setIntakeSolenoid(this.intakeState);
         ActiveIntake.getInstance().updateOutputs();
         // TODO Auto-generated method stub
         return true;

@@ -4,6 +4,7 @@ package org.usfirst.frc.team1885.robot.config2016;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMap;
 import org.usfirst.frc.team1885.robot.common.type.JoystickButtonMatch;
 import org.usfirst.frc.team1885.robot.common.type.ModuleType;
+import org.usfirst.frc.team1885.robot.common.type.RelayType;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotJoystickType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
@@ -84,14 +85,9 @@ public class RobotConfiguration {
         joystickButtonMap.addControllerButton(
                 RobotButtonType.SHOOTER_TWIST_RIGHT,
                 new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
-        // joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_RESET,
-        // new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
-        // joystickButtonMap.addControllerButton(RobotButtonType.READY_HIGH, new
-        // JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
-        // joystickButtonMap.addControllerButton(RobotButtonType.READY_LOW, new
-        // JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
         joystickButtonMap.addControllerButton(RobotButtonType.FIRE,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
+                new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 1));
+        joystickButtonMap.addControllerButton(RobotButtonType.TACTICAL_LIGHT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
         // Active Intake Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_SOLENOID,
                 new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 1));
@@ -116,8 +112,8 @@ public class RobotConfiguration {
         robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
         robotControl.addTalonOutput(RobotMotorType.LEFT_DRIVE, 3);
         robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
-        robotControl.addTalonOutput(RobotMotorType.ARM_JOINT_A, 5);
         robotControl.addTalonOutput(RobotMotorType.ARM_JOINT_A, 6);
+        robotControl.addTalonOutput(RobotMotorType.ARM_JOINT_B, 5);
         robotControl.addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
         robotControl.addTalonOutput(RobotMotorType.FLYWHEEL_LEFT, 8);
         robotControl.addTalonOutput(RobotMotorType.FLYWHEEL_RIGHT, 9);
@@ -128,11 +124,16 @@ public class RobotConfiguration {
         robotControl.addDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER, 0);
         robotControl.addSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, 2);
         robotControl.addSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, 4);
+        robotControl.addSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER, 3);
+        
+        // Relays
+        robotControl.addRelay(RelayType.TACTICAL_LIGHT, 0);
 
-        // Talon Sensors
+        // Sensors
         sensorInputControl.createNavX(SerialPort.Port.kMXP);
         sensorInputControl.addPressureSensor(0);
         sensorInputControl.addRotarySwitchSensor(1);
+        sensorInputControl.addBeamSensor(2);
         // Drivetrain Encoders
         robotControl.addTalonSensor(RobotMotorType.LEFT_DRIVE,
                 SensorType.LEFT_ENCODER, 1);
@@ -160,12 +161,9 @@ public class RobotConfiguration {
         // robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
 
         // Add Module
-        moduleControl.addModule(ModuleType.DRIVE_TRAIN,
-                DrivetrainControl.getInstance());
-        moduleControl.addModule(ModuleType.ACTIVE_INTAKE,
-                ActiveIntake.getInstance());
+        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
+        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
         moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
-        // moduleControl.addModule(ModuleType.UTILITY_ARM,
-        // UtilityArm.getInstance());
+//        moduleControl.addModule(ModuleType.UTILITY_ARM, FUtilityArm.getInstance());
     }
 }

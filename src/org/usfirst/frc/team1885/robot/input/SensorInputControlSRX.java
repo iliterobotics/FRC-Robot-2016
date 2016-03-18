@@ -7,6 +7,7 @@ import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
+import org.usfirst.frc.team1885.robot.sensor.BeamSensor;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
 import org.usfirst.frc.team1885.robot.sensor.PressureSensor;
 import org.usfirst.frc.team1885.robot.sensor.RotarySwitchSensor;
@@ -33,6 +34,7 @@ public class SensorInputControlSRX {
     private AHRS navx;
     private PressureSensor pressureSensor;
     private RotarySwitchSensor rotarySwitchSensor;
+    private BeamSensor beamSensor;
 
     public static final double DEADZONE = 0.1;
 
@@ -103,6 +105,8 @@ public class SensorInputControlSRX {
 //        DriverStation.reportError("\nPot B Value: "
 //                + rsrx.getTalons().get(RobotMotorType.ARM_JOINT_B).get(),
 //                false);
+        
+//        DriverStation.reportError("\nBeam Sensor Value " + getBeam(), false);
     }
     // Create initial sensor readings
     public void init() {
@@ -253,6 +257,12 @@ public class SensorInputControlSRX {
     }
     public double getRotaryPosition() {
         return rotarySwitchSensor.getPosition();
+    }
+    public void addBeamSensor(int channel) {
+        beamSensor = new BeamSensor(channel);
+    }
+    public boolean getBeam() {
+        return beamSensor.get();
     }
     public void resetEncoder(SensorType type) {
         rsrx.getSensor().get(type).setEncPosition(0);

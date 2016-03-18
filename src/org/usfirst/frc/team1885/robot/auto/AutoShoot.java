@@ -5,7 +5,7 @@ import org.usfirst.frc.team1885.robot.modules.Shooter;
 public class AutoShoot extends AutoCommand {
    
     public boolean init() {
-        return false;
+        return true;
     }
 
     @Override
@@ -17,6 +17,7 @@ public class AutoShoot extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
+        Shooter.getInstance().update();
         Shooter.getInstance().updateOutputs();
         return false;
     }
