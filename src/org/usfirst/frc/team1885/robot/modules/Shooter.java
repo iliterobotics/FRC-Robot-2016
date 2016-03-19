@@ -27,7 +27,7 @@ import edu.wpi.first.wpilibj.Relay;
 public class Shooter implements Module {
 
     private static final int FLYWHEEL_MIN_LAUNCH_SPEED = 850;
-    public static final double TILT_MOVEMENT_PROPORTION = 0.5;
+    public static final double TILT_MOVEMENT_PROPORTION = 0.6;
     public static final double TWIST_MOVEMENT_PROPORTION = 4;
     private static Shooter instance;
     public static final double HIGH_GOAL_ANGLE = 130.0;
@@ -105,6 +105,9 @@ public class Shooter implements Module {
     private HighGoal hg;
     private Relay.Value tacticalLightState;
     
+    private long kickTime;
+    private static final long KICK_TIME = 500;
+    
     public static Shooter getInstance() {
         if (instance == null) {
             instance = new Shooter();
@@ -148,6 +151,7 @@ public class Shooter implements Module {
         isAutoTilt = false;
         hg = ShooterDataClient.startShooterDataClient().getData();
         tacticalLightState = Relay.Value.kOff;
+        kickTime = System.currentTimeMillis();
         // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).configEncoderCodesPerRev(1024);
     }
 
@@ -181,7 +185,7 @@ public class Shooter implements Module {
     // updates shooter fly wheels
     public void updateShooter() {
         // TODO modify values after testing for direction
-         DriverStation.reportError("\nRight Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER) + "Left Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER),false);
+//         DriverStation.reportError("\nRight Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER) + "Left Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER),false);
  
         tacticalLightState = Relay.Value.kOff;
         flywheelSpeedLeft = flywheelSpeedRight = 0;
@@ -200,15 +204,26 @@ public class Shooter implements Module {
             flywheelSpeedRight = INTAKE_PROP;
             containerState = OPEN;
             if(driverInputControl.getButton(RobotButtonType.FLYWHEEL_INTAKE_IN)){
-                setToTiltValue(LOW_GOAL_TILT);
+                autoShooterTilt = new AutoShooterTilt(LOW_GOAL_TILT);
+                isAutoTilt = true;
+                isAiming = false;
             }
         }
         
-        kickerState = containerState;
+        kickerState = !OPEN;
+        if(driverInputControl.getButton(RobotButtonType.SHOOTER_LAUNCH)){
+            if(System.currentTimeMillis() - kickTime > KICK_TIME){
+                kickerState = OPEN;
+            }
+        } else{
+            kickTime = System.currentTimeMillis();
+        }
         
         if(driverInputControl.getButton(RobotButtonType.TACTICAL_LIGHT)){
             DriverStation.reportError("\n TACTICAL LIGHT ON", false);
-            tacticalLightState = Relay.Value.kOn;
+            tacticalLightState = Relay.Value.kForward;
+        }else{
+            DriverStation.reportError("\n TACTICAL LIGHT OFF", false);
         }
 
 //        DriverStation.reportError("\n Left Speed:: " + flywheelSpeedLeft + "Right Speed:: " + flywheelSpeedRight, false);
@@ -286,7 +301,7 @@ public class Shooter implements Module {
 //          DriverStation.reportError(" " + isAutoTilt, false);
 //          double userTiltDirection = driverInputControl.getPressureButton(RobotButtonType.SHOOTER_TILT);
 //          DriverStation.reportError("\n" + testValue, false);
-            DriverStation.reportError("\n tilt: " + this.relativeTiltAngle, false);
+//            DriverStation.reportError("\n tilt: " + this.relativeTiltAngle, false);
             if(isAutoTilt) {
                 isAutoTilt = userTiltDirection == 0;
             }
@@ -317,7 +332,7 @@ public class Shooter implements Module {
             }
             autoShooterTilt.init();
         }
-        if(isAutoTilt){
+        if(isAutoTilt && !isAiming){
             isAutoTilt = !autoShooterTilt.execute();
         }
         if(isAiming){
@@ -334,7 +349,7 @@ public class Shooter implements Module {
 
         this.tiltPosition = (this.relativeTiltAngle * (1024 / 360.0))
                 + sensorControl.getInitialTiltPosition();
-//        DriverStation.reportError "\ntiltPosition: " + tiltPosition + "\nrelativeTiltAngle: " + relativeTiltAngle + "\nCurrent Tilt:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get(), false);
+//        DriverStation.reportError("\ntiltPosition: " + tiltPosition + "  relativeTiltAngle: " + relativeTiltAngle + "  Current Tilt:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get(), false);
        
         isInPosition = (currentAngle > relativeTiltAngle - ANGLE_ERROR) && (currentAngle < relativeTiltAngle + ANGLE_ERROR);
 
