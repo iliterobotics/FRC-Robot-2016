@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1885.serverdata;
 
 public class ServerInformation {
-    public static final String DEFAULT_LAPTOP_WEB_ADDRESS = "http://" + "ilite-drive.local" + ":5800";
+    private static final int PORT = 5800;
+    public static final String LAPTOP_HOSTNAME_ADDRESS = "http://" +    "ilite-drive.local" + ':' + PORT;
+    public static final String DEFAULT_LAPTOP_WEB_ADDRESS = "http://" + "10.18.85.20" +       ':' + PORT;
 }
