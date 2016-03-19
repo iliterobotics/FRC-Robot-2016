@@ -29,6 +29,7 @@ public class AutonomousRoutine {
     private int goal;
     private boolean doesNothing;
     private boolean isShooting;
+    private boolean manualOverride;
     public static final double CLEAR_SPEED = 1;
 
     public AutonomousRoutine(Robot r) {
@@ -81,35 +82,40 @@ public class AutonomousRoutine {
     // AutoAlign - realigns the robot to move in position to shoot
 
     public void getConfiguration() {
-        try{
-        AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
-        DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
-        type = DefenseType.values()[autoC.getDefense()];
-        targetDefense = autoC.getPosition();
-        delay = autoC.getDelay() / 1000.0; // time in seconds
-        isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
-        goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
-        doesNothing = autoC.doesNothing();
-        isShooting = autoC.isShooting();
+//        try{
+        if((int)(SensorInputControlSRX.getInstance().getRotaryPosition()) >= 5){
+            doesNothing = true;
+            isShooting = false;
+            manualOverride = false;
+        } else{
+            manualOverride = true;
+            doesNothing = false;
+            isShooting = true;
+            goal = 0;
+            type = DefenseType.MOAT;
+            DriverStation.reportError("Running Moat with Manual Override", false);
+        }
+        if(!manualOverride){
+            AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
+            if(autoC != null){
+                DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
+                type = DefenseType.values()[autoC.getDefense()];
+                targetDefense = autoC.getPosition();
+                delay = autoC.getDelay() / 1000.0; // time in seconds
+                isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
+                goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
+                doesNothing = autoC.doesNothing();
+                isShooting = autoC.isShooting();
 
-        DriverStation.reportError(
-                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
-                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
-                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
-                false);
-        } catch(Exception e){
+                DriverStation.reportError(
+                    "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
+                            + "\ntargetDefense:" + targetDefense + "\ndelay:"
+                            + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
+                    false);
+        }
+        } else{
             DriverStation.reportError("\nFailed to retrieve config from server\nDefense Position" + SensorInputControlSRX.getInstance().getRotaryPosition(), false);
-            if(SensorInputControlSRX.getInstance().getRotaryPosition() >= 9){
-                doesNothing = true;
-                isShooting = false;
-            } else{
-                doesNothing = false;
-                isShooting = false;
-                isHigh = false;
-                goal = 0;
-                type = DefenseType.MOAT;
-            }
-//            type = DefenseType.values()[(int)SensorInputControlSRX.getInstance().getRotaryPosition()];
+//            doesNothing = true;
         }
     }
 
@@ -152,7 +158,8 @@ public class AutonomousRoutine {
             break;
         }
         commands.add(new AutoCrossedDefense());
-        commands.add(new AutoAlign());
+        commands.add(new AutoDriveStart(0));
+//        commands.add(new AutoAlign());
     }
     
     public void prepareHighGoal(){
@@ -317,7 +324,7 @@ public class AutonomousRoutine {
 
     public void autoMoat() {
         commands.add(new AutoWait(1000));
-        commands.add(new AutoDriveStart(-START_DRIVE_SPEED));
+        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
     }
 
     /**

@@ -37,10 +37,10 @@ public class UtilityArm implements Module {
     private static final double FRAME_LENGTH = 5;
     private final double RESET_A_POSITION;
     private final double RESET_B_POSITION;
-    private final double BOUNDARY = 8;
-    private final double X_MAX_BACK_REACH = 7;
+    private final double BOUNDARY = 6;
+    private final double X_MAX_BACK_REACH = 9;
     private final double Y_MAX_UP_REACH = 33;
-    private final double Y_MAX_DOWN_REACH = -6;
+    private final double Y_MAX_DOWN_REACH = -5;
     private final double DEAD_ZONE_X = .2;
     private final double DEAD_ZONE_Y = .2;
     private final double INCREMENT_RATE = 1 / 10.0; // Rate at which xCoord and
@@ -248,11 +248,11 @@ public class UtilityArm implements Module {
             yEndPoint = Y_MAX_DOWN_REACH;
         }
         if (yEndPoint < 3 && xEndPoint > -FRAME_LENGTH) {
-            xEndPoint = -5;
+            xEndPoint = -FRAME_LENGTH;
         }
 
-        if (xEndPoint < 1 && xEndPoint > -1 && yEndPoint < 6) {
-            yEndPoint = 6;
+        if (xEndPoint < 1 && xEndPoint > -1 && yEndPoint < 4) {
+            yEndPoint = 4;
         }
 
         if (xEndPoint >= 1 / 45.0 && yEndPoint < 22

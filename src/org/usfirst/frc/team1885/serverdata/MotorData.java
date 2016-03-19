@@ -40,7 +40,7 @@ public class MotorData implements Runnable{
     
     public MotorData(){
         running = true;
-        client = new DataServerWebClient(ServerInformation.DEFAULT_LAPTOP_WEB_ADDRESS);
+        client = new DataServerWebClient(ServerInformation.LAPTOP_IP_ADDRESS);
         motors = new HashMap<RobotMotorType, Motor>();
         RobotControlWithSRX.getInstance().getTalons().entrySet().forEach(entry -> motors.put(entry.getKey(), new Motor(entry.getKey(), client)));
     }

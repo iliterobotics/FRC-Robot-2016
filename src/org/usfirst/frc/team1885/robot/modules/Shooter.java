@@ -37,6 +37,7 @@ public class Shooter implements Module {
     public static final int TICK_ERROR = 10;
     public double shooterSpeed;
     private static double [] shooterSpeedTable = {0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6};
+    private static final double BALL_FACTOR = 1.0;
     private static final boolean OPEN = false;
     private long lastLaunchCheck;
     private static final double FIRE_DELAY = 2000;
@@ -220,10 +221,10 @@ public class Shooter implements Module {
         }
         
         if(driverInputControl.getButton(RobotButtonType.TACTICAL_LIGHT)){
-            DriverStation.reportError("\n TACTICAL LIGHT ON", false);
+//            DriverStation.reportError("\n TACTICAL LIGHT ON", false);
             tacticalLightState = Relay.Value.kForward;
         }else{
-            DriverStation.reportError("\n TACTICAL LIGHT OFF", false);
+//            DriverStation.reportError("\n TACTICAL LIGHT OFF", false);
         }
 
 //        DriverStation.reportError("\n Left Speed:: " + flywheelSpeedLeft + "Right Speed:: " + flywheelSpeedRight, false);
@@ -509,8 +510,9 @@ public class Shooter implements Module {
         double distance = hg.getDistance();
         double tiltAngle = distance != 0 ? 180 - Math.toDegrees(Math.asin(HIGHGOAL_MIDPOINT / distance)) : this.relativeTiltAngle;
         int horizontalDistance = ((int)(Math.sqrt((distance * distance) - (HIGHGOAL_MIDPOINT * HIGHGOAL_MIDPOINT)))) / 12;
-//        shooterSpeed = shooterSpeedTable[ (horizontalDistance > 0 && horizontalDistance < shooterSpeedTable.length) ? 0 : horizontalDistance];
-//        DriverStation.reportError("\n Distance: " + distance + "tiltAngle: " + tiltAngle + " Found: " + hg.isGoalFound(), false);
+//        shooterSpeed = shooterSpeedTable[ (horizontalDistance < 0 && horizontalDistance >= shooterSpeedTable.length) ? 0 : horizontalDistance];
+//        shooterSpeed *= BALL_FACTOR;
+        //        DriverStation.reportError("\n Distance: " + distance + "tiltAngle: " + tiltAngle + " Found: " + hg.isGoalFound(), false);
         return hg.isGoalFound() ? tiltAngle : BATTER_SHOT_ANGLE;
     }
     public boolean isGoalFound(){

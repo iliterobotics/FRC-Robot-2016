@@ -137,12 +137,12 @@ public class DriverInputControlSRX {
     }
     public double getControllerTwist() {
         return this.getJoystick(RobotJoystickType.CONTROLLER)
-                .getAxis(AxisType.kThrottle);
+                .getAxis(AxisType.kTwist);
     }
 
     public double getControllerThrottle() {
         return this.getJoystick(RobotJoystickType.CONTROLLER)
-                .getAxis(AxisType.kTwist);
+                .getAxis(AxisType.kThrottle);
     }
 
     public boolean isResetButtonDown() {

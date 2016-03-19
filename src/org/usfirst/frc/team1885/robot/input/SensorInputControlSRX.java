@@ -94,8 +94,7 @@ public class SensorInputControlSRX {
         // DriverStation.reportError("\n\nZero Tilt:: " +
         // getZeroedPotentiometer(SensorType.SHOOTER_TILT_POTENTIOMETER),
         // false);
-        // DriverStation.reportError("\n Position:: " + getRotaryPosition(),
-        // false);
+         DriverStation.reportError("\nRotary Position:: " + getRotaryPosition(), false);
         
         /* Encoder values for arm joints */
         
