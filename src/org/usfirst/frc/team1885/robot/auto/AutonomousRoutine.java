@@ -104,8 +104,8 @@ public class AutonomousRoutine {
                 isShooting = false;
             } else{
                 doesNothing = false;
-                isShooting = true;
-                isHigh = true;
+                isShooting = false;
+                isHigh = false;
                 goal = 0;
                 type = DefenseType.MOAT;
             }
@@ -118,7 +118,7 @@ public class AutonomousRoutine {
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAutoBreach() {
-        
+        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeUp); // intake should always start up
         if(type == DefenseType.MOAT || type == DefenseType.RAMPARTS){
             commands.add(new AutoDriveStart(CLEAR_SPEED));
         } else if(type == DefenseType.PORTCULLIS){
@@ -144,9 +144,6 @@ public class AutonomousRoutine {
             break;
         case DRAWBRIDGE:
             autoDrawbridge();
-            break;
-        case ROCK_WALL:
-            autoRockWall();
             break;
         case MOAT:
             autoMoat();
