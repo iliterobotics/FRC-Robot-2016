@@ -18,11 +18,11 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
  */
 public class AutoCrossedDefense extends AutoCommand {
 
-    private final double ERROR; // Margin of error for Pitch and Roll
+    private final static double ERROR = 2.5; // Margin of error for Pitch and Roll
     private final double FLAT_PITCH;// Initial Pitch of robot on creation of
                                     // class
     private final double FLAT_ROLL;// Initial Roll of robot on creation of class
-    private final double WAIT_TIME;// Time (in seconds) the robot must be
+    private final static double WAIT_TIME = 0.250;// Time (in seconds) the robot must be
                                    // 'flat' to be considered on flat ground
 
     private SensorInputControlSRX sensorInputControl;
@@ -34,8 +34,6 @@ public class AutoCrossedDefense extends AutoCommand {
     public AutoCrossedDefense() {
         sensorInputControl = SensorInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
-        ERROR = 2.5;
-        WAIT_TIME = 0.18;
         FLAT_ROLL = sensorInputControl.getInitRoll();
         FLAT_PITCH = sensorInputControl.getInitPitch();
     }

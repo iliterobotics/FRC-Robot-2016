@@ -114,7 +114,7 @@ public class AutonomousRoutine {
                     false);
         }
         } else{
-            DriverStation.reportError("\nFailed to retrieve config from server\nDefense Position" + SensorInputControlSRX.getInstance().getRotaryPosition(), false);
+            DriverStation.reportError("\nFailed to retrieve config from server", false);
 //            doesNothing = true;
         }
     }

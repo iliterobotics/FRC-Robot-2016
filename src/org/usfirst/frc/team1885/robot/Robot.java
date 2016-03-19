@@ -97,7 +97,11 @@ public class Robot extends SampleRobot {
 
     @Override
     public void autonomous() {
+        try {
         AutonomousRoutine ar = new AutonomousRoutine(this);
         ar.execute();
+        } catch(Throwable e) {
+            DriverStation.reportError("MY ERROR", true);
+        }
     }
 }
