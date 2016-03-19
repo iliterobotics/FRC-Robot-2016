@@ -1,17 +1,16 @@
 package org.usfirst.frc.team1885.robot.manipulator;
 
-import java.io.IOException;
+import java.util.LinkedList;
 
+import org.usfirst.frc.team1885.robot.auto.AutoCommand;
+import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import dataclient.DataServerWebClient;
-import dataclient.robotdata.arm.ArmStatus;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -38,15 +37,14 @@ public class UtilityArm implements Module {
     private static final double FRAME_LENGTH = 5;
     private final double RESET_A_POSITION;
     private final double RESET_B_POSITION;
-    private static final double BOUNDARY = 8;
-    private static final double X_MAX_BACK_REACH = 9;
-    private static final double Y_MAX_UP_REACH = 33;
-    private static final double Y_MAX_DOWN_REACH = -10;
-    private static final double DEAD_ZONE_X = .2;
-    private static final double DEAD_ZONE_Y = .2;
-    private static final double INCREMENT_RATE = 1 / 10.0; // Rate at which
-                                                           // xCoord and
-    // yCoord are incremented
+    private final double BOUNDARY = 8;
+    private final double X_MAX_BACK_REACH = 7;
+    private final double Y_MAX_UP_REACH = 33;
+    private final double Y_MAX_DOWN_REACH = -6;
+    private final double DEAD_ZONE_X = .2;
+    private final double DEAD_ZONE_Y = .2;
+    private final double INCREMENT_RATE = 1 / 10.0; // Rate at which xCoord and
+                                                    // yCoord are incremented
 
     private double jointAPosition; // storage for updating the A angle
     private double jointBPosition; // storage for updating the B angle
@@ -65,23 +63,23 @@ public class UtilityArm implements Module {
     private MotorState jointBState; // used for keeping track of the motor state
                                     // for arm B
 
-    double aAngleVal = 0;
-    double bAngleVal = 0;
+    // private SelectedDefenseBreach selectedDefense;
+    private int defenseStep;
+    private static AutonomousRoutine ar;
+    private LinkedList<AutoCommand> myCommands;
+    private boolean preIncUp, preIncDown;
 
     private DriverInputControlSRX driverInputControl;
     private RobotControlWithSRX robotControl;
-    private ArmStatus status;
+    // private ArmStatus status;
 
     protected UtilityArm() {
-        DataServerWebClient client = new DataServerWebClient(
-                "http://172.22.11.1:8083");
-        status = new ArmStatus(client);
-        try {
-            client.pushSchema(status.getSchema());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        /*
+         * DataServerWebClient client = new DataServerWebClient(
+         * "http://172.22.11.1:8083"); status = new ArmStatus(client); try {
+         * client.pushSchema(status.getSchema()); } catch (IOException e) {
+         * e.printStackTrace(); }
+         */
         aP = .5; // 2.7
         aI = 0.00035; // 0.00076
         aD = 50; // 2
@@ -106,6 +104,11 @@ public class UtilityArm implements Module {
         robotControl.getTalons().get(RobotMotorType.ARM_JOINT_B).setPID(bP, bI,
                 bD);
 
+        // selectedDefense = SelectedDefenseBreach.NONE;
+        defenseStep = 0;
+        // ar = new AutonomousRoutine();
+        myCommands = new LinkedList<AutoCommand>();
+
         this.jointAState = MotorState.OFF;
         this.jointBState = MotorState.OFF;
         RESET_A_POSITION = SensorInputControlSRX.getInstance()
@@ -122,51 +125,82 @@ public class UtilityArm implements Module {
     // TODO singletons cause memory leaks
     public static UtilityArm getInstance() {
         if (instance == null) {
+            DriverStation.reportError(
+                    "\nNo instance of UtilityArm, creating...", false);
             instance = new UtilityArm();
+            DriverStation.reportError("\nUtilityArm instance created.", false);
+            // ar.init();
         }
         return instance;
     }
-    public void init() {
 
+    public void init(){
+        
     }
+    
     @Override
     public void update() {
         xCoord += xModifier;
-        yCoord -= yModifier;
+        yCoord += yModifier;
 
         xModifier = yModifier = 0;
 
-        if (Math.abs(driverInputControl.getControllerThrottle()) > DEAD_ZONE_X
+        if (Math.abs(driverInputControl.getControllerTwist()) > DEAD_ZONE_X
                 || Math.abs(driverInputControl
-                        .getControllerTwist()) > DEAD_ZONE_Y) {
+                        .getControllerThrottle()) > DEAD_ZONE_Y) {
+            // selectedDefense = SelectedDefenseBreach.NONE;
+            defenseStep = 0;
             if (Math.abs(
-                    driverInputControl.getControllerThrottle()) > DEAD_ZONE_X) {
-                xModifier = driverInputControl.getControllerThrottle()
+                    driverInputControl.getControllerTwist()) > DEAD_ZONE_X) {
+                xModifier = driverInputControl.getControllerTwist()
                         * INCREMENT_RATE;
             }
             if (Math.abs(
-                    driverInputControl.getControllerTwist()) > DEAD_ZONE_Y) {
-                yModifier = driverInputControl.getControllerTwist()
+                    driverInputControl.getControllerThrottle()) > DEAD_ZONE_Y) {
+                yModifier = -1 * driverInputControl.getControllerThrottle()
                         * INCREMENT_RATE;
                 // Up on joystick gives negative values
             }
             goTo(xCoord, yCoord);
         }
-
+        /*
+         * if (driverInputControl.getButton(RobotButtonType.DRAWBRIDGE_BREACH)
+         * && selectedDefense != SelectedDefenseBreach.DRAWBRIDGE) {
+         * selectedDefense = SelectedDefenseBreach.DRAWBRIDGE; defenseStep = 0;
+         * } else if (driverInputControl
+         * .getButton(RobotButtonType.SALLYPORT_BREACH) && selectedDefense !=
+         * SelectedDefenseBreach.SALLYPORT) { selectedDefense =
+         * SelectedDefenseBreach.SALLYPORT; defenseStep = 0; } else if
+         * (driverInputControl.getButton(RobotButtonType.CHEVAL_BREACH) &&
+         * selectedDefense != SelectedDefenseBreach.CHEVAL_DE_FRISE) {
+         * selectedDefense = SelectedDefenseBreach.CHEVAL_DE_FRISE; defenseStep
+         * = 0; }
+         * 
+         * myCommands = ar.getCommands(selectedDefense);
+         * 
+         * if (driverInputControl.getButton(RobotButtonType.INCREMENT_BREACH_UP)
+         * && myCommands != null && defenseStep < myCommands.size() &&
+         * !preIncUp) { myCommands.get(defenseStep).init(); defenseStep++; }
+         * else if (driverInputControl
+         * .getButton(RobotButtonType.INCREMENT_BREACH_DOWN) && myCommands !=
+         * null && defenseStep > 0 && !preIncDown) { defenseStep--;
+         * myCommands.get(defenseStep).init(); } preIncUp = driverInputControl
+         * .getButton(RobotButtonType.INCREMENT_BREACH_UP); preIncDown =
+         * driverInputControl .getButton(RobotButtonType.INCREMENT_BREACH_DOWN);
+         */
         if (driverInputControl.isResetButtonDown()) {
+            // selectedDefense = SelectedDefenseBreach.NONE;
+            defenseStep = 0;
             resetPos();
             DriverStation.reportError("\nReseting...", false);
         }
-        status.setDestX(xCoord);
-        status.setDestY(yCoord);
-        status.setAlpha(getCurrentDegreeA());
-        status.setBeta(getCurrentDegreeB());
-        try {
-            status.push();
-        } catch (IOException e) {
-            DriverStation.reportError("CANT CONNECT", false);
-        }
 
+        /*
+         * status.setDestX(xCoord); status.setDestY(yCoord);
+         * status.setAlpha(getCurrentDegreeA());
+         * status.setBeta(getCurrentDegreeB()); try { status.push(); } catch
+         * (IOException e) { DriverStation.reportError("CANT CONNECT", false); }
+         */
         // DriverStation.reportError(
         // "X Coordinate: " + xCoord + " --- Y Coordinate: " + yCoord,
         // false);
@@ -174,10 +208,10 @@ public class UtilityArm implements Module {
 
     @Override
     public void updateOutputs() {
-        DriverStation.reportError(
-                "\n Moving to JointAPosition: " + jointAPosition
-                        + " --- Moving to JointBPosition: " + jointBPosition,
-                false);
+        // DriverStation.reportError(
+        // "\n Moving to JointAPosition: " + jointAPosition
+        // + " --- Moving to JointBPosition: " + jointBPosition,
+        // false);
         robotControl.updateArmMotors(jointAPosition, jointBPosition);
     }
 
@@ -225,6 +259,7 @@ public class UtilityArm implements Module {
                 && yEndPoint < Math.sqrt(45 * (xEndPoint + 4.0 / 45)) + 1) {
             xEndPoint = Math.pow((yEndPoint - 1), 2) / 45.0 - 4.0 / 45;
         }
+
         if (yEndPoint > 28 && (yEndPoint) > Math
                 .sqrt((1 - (xEndPoint * xEndPoint)
                         / (Math.pow((BOUNDARY + FRAME_LENGTH), 2))) * (5 * 5))
@@ -293,12 +328,14 @@ public class UtilityArm implements Module {
         jointBPosition = -1 * jointBDegree * CONVERSION_FACTOR
                 + SensorInputControlSRX.getInstance().getInitialPotBPostition();
 
-//        DriverStation.reportError("\nJoint A Position: " + jointAPosition
-//                + " --Joint B Position: " + jointBPosition + "Initial A Pot: "
-//                + SensorInputControlSRX.getInstance().getInitialPotAPostition()
-//                + "Initial B Pot: "
-//                + SensorInputControlSRX.getInstance().getInitialPotBPostition(),
-//                false);
+        // DriverStation
+        // .reportError(
+        // "\nJoint A Position: " + jointAPosition
+        // + " --Joint B Position: " + jointBPosition
+        // + "Initial B Pot: "
+        // + SensorInputControlSRX
+        // .getInstance().INITIAL_POT_B_POSITION,
+        // false);
     }
 
     /**
