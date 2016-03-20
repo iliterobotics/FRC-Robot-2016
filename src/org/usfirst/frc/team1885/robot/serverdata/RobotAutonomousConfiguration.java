@@ -7,99 +7,99 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.InetAddress;
+import java.nio.file.Files;
+import java.nio.file.OpenOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.util.concurrent.ExecutionException;
 
 import org.json.JSONObject;
 import org.usfirst.frc.team1885.serverdata.ServerInformation;
+
+import com.sun.xml.internal.bind.api.impl.NameConverter.Standard;
 
 import dataclient.DataServerWebClient;
 import dataclient.robotdata.autonomous.AutonomousConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class RobotAutonomousConfiguration {
-    
-    private static File mDebugFile = new File("/home/lvuser/robotOutput.txt");
-
     public static AutonomousConfig pullConfiguration() {
         return pullConfiguration(ServerInformation.LAPTOP_IP_ADDRESS);
     }
-    
+
     private static AutonomousConfig pullConfiguration(String URL){
-        FileOutputStream fos = null;
-        BufferedWriter bos = null;
-        try {
-             fos = new  FileOutputStream(mDebugFile);
-             bos = new  BufferedWriter(new OutputStreamWriter(fos));
-        } catch (FileNotFoundException e1) {
-            e1.printStackTrace();
-            DriverStation.reportError("NO LOG FILE FOUND", false);
-        }
-        debugStatement(bos, "trying url:" + URL);
-        
-        debugStatement(bos, "My URL= " + URL);
-        DataServerWebClient client = new DataServerWebClient(URL);
-        AutonomousConfig config = new AutonomousConfig(client, 0, 0, 0, 0);
-        config.setDoingNothing(true);
-        config.setShooting(false);
-        try {
+        AutonomousConfig config = null;
+        debugStatement(null, "Entering pullConfiguraton");
+        Path path = Paths.get("/robotOutput.txt");
+        try (BufferedWriter writer = Files.newBufferedWriter(path,StandardOpenOption.APPEND, StandardOpenOption.WRITE)) {
+            InetAddress byAddress = InetAddress.getByAddress(new byte [] {10,18,85,5});
+            boolean reachable = byAddress.isReachable(500);
+            debugStatement(writer, "Is address reachable " + reachable,null); 
+            debugStatement(writer, "trying url:" + URL, null);
+            DataServerWebClient client = new DataServerWebClient(URL);
+            config = new AutonomousConfig(client, 0, 0, 0, 0);
+            config.setDoingNothing(true);
+            config.setShooting(false);
+            JSONObject direct = client.getDirect(config.getCollection(), config.getID());
+            if(direct == null) {
+                debugStatement(writer, "NO DIRECT");
+            }
             JSONObject data = client.getDirect(config.getCollection(), config.getID()).getJSONArray("docs").getJSONObject(0);
             if(data == null){
-                debugStatement(bos, "My URL= " + URL + " FAILED");
+                debugStatement(writer, "My URL= " + URL + " FAILED");
                 DriverStation.reportError("Webserver unavailable!", false);
                 if(URL.equals(ServerInformation.LAPTOP_IP_ADDRESS)){
-                    return pullConfiguration(ServerInformation.LAPTOP_HOSTNAME_ADDRESS);
-                }
-                else{
-                    return null;
+                    
+                    config =  pullConfiguration(ServerInformation.LAPTOP_HOSTNAME_ADDRESS);
+                } else {
+                    debugStatement(writer, "DATA FROM SERVER IS NULL!");
+                    config = null;
                 }
             }
             else{
                 DriverStation.reportError("Json:" + data.toString(), false);
-                debugStatement(bos, "My URL= " + URL + " SUCCEEDED!");
+                debugStatement(writer, "My URL= " + URL + " SUCCEEDED!");
                 config.update(data);
             }
-        } catch (Exception e) {
-            DriverStation.reportError("error reading autonomousconfig", true);
-            DriverStation.reportError("Error type:" + e.getClass(), false);
-            debugStatement(bos, "CAUGHT EXCEPTON: !"+  e.getClass());
-            e.printStackTrace();
-            try {
-                e.printStackTrace(new PrintWriter(mDebugFile));
-            } catch (FileNotFoundException e1) {
-                e1.printStackTrace();
-            }
+        } catch(Throwable e) {
+            debugStatement(null, "Caught exception: ",e);
         } finally {
-            if(bos != null) {
-                try {
-                    bos.close();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
-            if(fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-            }
+            debugStatement(null, "Finished pulling configuation= ! " + config);
         }
+        
         return config;        
     }
 
     private static void debugStatement(BufferedWriter bos, String string) {
-        DriverStation.reportError(string, false);
+        debugStatement(bos, string, null);
+        
+    }
+
+    private static void debugStatement(BufferedWriter bos, String string, Throwable e2) {
+        StringBuilder output = new StringBuilder();
+        output.append(string);
+        if(e2 != null) {
+            StringWriter sw = new StringWriter();
+            PrintWriter pw = new PrintWriter(sw);
+            e2.printStackTrace(pw);
+            output.append("\n");
+            output.append(sw.toString());
+        }
+
+        DriverStation.reportError(output.toString(), false);
         if(bos != null) {
             try {
-                bos.write(string);
+                bos.write(output.toString());
                 bos.newLine();
                 bos.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-        
+
     }
 
 }

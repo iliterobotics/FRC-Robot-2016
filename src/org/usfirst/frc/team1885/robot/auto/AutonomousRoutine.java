@@ -44,6 +44,11 @@ public class AutonomousRoutine {
 //         commands.add(new AutoWait(2000));
 //         commands.add(new AutoAlign());
          getConfiguration();
+         try{
+             getServerConfig();
+         } catch(Throwable t){
+             
+         }
          if(!doesNothing) {
              initAutoBreach();
              if(isShooting) {
@@ -96,27 +101,31 @@ public class AutonomousRoutine {
             DriverStation.reportError("Running Moat with Manual Override", false);
         }
         if(!manualOverride){
-            AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
-            if(autoC != null){
-                DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
-                type = DefenseType.values()[autoC.getDefense()];
-                targetDefense = autoC.getPosition();
-                delay = autoC.getDelay() / 1000.0; // time in seconds
-                isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
-                goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
-                doesNothing = autoC.doesNothing();
-                isShooting = autoC.isShooting();
-
-                DriverStation.reportError(
-                    "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
-                            + "\ntargetDefense:" + targetDefense + "\ndelay:"
-                            + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
-                    false);
-        }
+//            getServerConfig();
         } else{
             DriverStation.reportError("\nFailed to retrieve config from server", false);
 //            doesNothing = true;
         }
+    }
+
+    public void getServerConfig(){
+        AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
+//        if(autoC != null){
+//            DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
+//            type = DefenseType.values()[autoC.getDefense()];
+//            targetDefense = autoC.getPosition();
+//            delay = autoC.getDelay() / 1000.0; // time in seconds
+//            isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
+//            goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
+//            doesNothing = autoC.doesNothing();
+//            isShooting = autoC.isShooting();
+//
+//            DriverStation.reportError(
+//                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
+//                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
+//                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
+//                false);
+//        }
     }
 
     /**
