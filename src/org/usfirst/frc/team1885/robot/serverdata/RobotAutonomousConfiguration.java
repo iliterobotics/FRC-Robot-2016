@@ -1,25 +1,17 @@
 package org.usfirst.frc.team1885.robot.serverdata;
 
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.InetAddress;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import java.util.concurrent.ExecutionException;
 
 import org.json.JSONObject;
 import org.usfirst.frc.team1885.serverdata.ServerInformation;
-
-import com.sun.xml.internal.bind.api.impl.NameConverter.Standard;
 
 import dataclient.DataServerWebClient;
 import dataclient.robotdata.autonomous.AutonomousConfig;

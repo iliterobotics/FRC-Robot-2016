@@ -36,7 +36,7 @@ public class Shooter implements Module {
     public static final double ANGLE_ERROR = 1;
     public static final int TICK_ERROR = 10;
     public double shooterSpeed;
-    private static double [] shooterSpeedTable = {0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6};
+    private static double [] shooterSpeedTable = {0.57,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6,0.6};
     private static final double BALL_FACTOR = 1.0;
     private static final boolean OPEN = false;
     private long lastLaunchCheck;
@@ -48,7 +48,7 @@ public class Shooter implements Module {
     private double TILT_LIMIT_UPPER;
     private double TILT_LIMIT_LOWER;
     private final static double LOW_GOAL_TILT_BOUND = 30;
-    public final static double LOW_GOAL_TILT = 13;
+    public final static double LOW_GOAL_TILT = 10;
     public final static double HIGH_GOAL_INTAKE_TILT_BOUND = 80;
     public final static double HIGH_GOAL_INTAKE_TILT = 56;
     public final static double HIGH_GOAL_CAM_TILT = 138;
@@ -86,7 +86,7 @@ public class Shooter implements Module {
     private AutoShooterTilt autoShooterTilt;
     private AutoShooterTwist autoShooterTwist;
     
-    private static final double TILT_P = 6;
+    private static final double TILT_P = 7;
     private static final double TILT_I = 0.0001;
     private static final double TILT_D = 0;
 
