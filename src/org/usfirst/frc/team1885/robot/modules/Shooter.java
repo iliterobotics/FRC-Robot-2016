@@ -518,4 +518,7 @@ public class Shooter implements Module {
     public boolean isGoalFound(){
         return hg.isGoalFound();
     }
+    public double getDistanceToGoal(){
+        return hg.getDistance();
+    }
 }
