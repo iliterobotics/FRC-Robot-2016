@@ -191,6 +191,7 @@ public class Shooter implements Module {
         tacticalLightState = Relay.Value.kOff;
         flywheelSpeedLeft = flywheelSpeedRight = 0;
         containerState = !OPEN;
+        kickerState = !OPEN;
 
         if(driverInputControl.getButton(RobotButtonType.FLYWHEEL_OUT)){
             initiateLaunch();
@@ -209,16 +210,7 @@ public class Shooter implements Module {
                 isAutoTilt = true;
                 isAiming = false;
             }
-        }
-        
-        kickerState = !OPEN;
-        if(driverInputControl.getButton(RobotButtonType.SHOOTER_LAUNCH)){
-            if(System.currentTimeMillis() - kickTime > KICK_TIME){
-                kickerState = OPEN;
-            }
-        } else{
-            kickTime = System.currentTimeMillis();
-        }
+        }        
         
         if(driverInputControl.getButton(RobotButtonType.TACTICAL_LIGHT)){
 //            DriverStation.reportError("\n TACTICAL LIGHT ON", false);
@@ -258,17 +250,23 @@ public class Shooter implements Module {
      * @return true if the container is opened
      */
     public boolean launch(){
-//        if(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER) >= (FLYWHEEL_MIN_LAUNCH_SPEED * shooterSpeed)){
+//        if(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER) >= (FLYWHEEL_MIN_LAUNCH_SPEED * shooterSpeed)){ //adjusts min launch speed according to what we decide launching speed is, only waits for flywheel to rev up
         if (System.currentTimeMillis() - lastLaunchCheck > FIRE_DELAY) {
-            containerState = OPEN;
-            return true;
+            return launchManualOverride();
             // DriverStation.reportError("\nFire", false);
         }
         return false;
     }
     public boolean launchManualOverride(){
         containerState = OPEN;
-        return true;
+        if(driverInputControl.getButton(RobotButtonType.SHOOTER_LAUNCH)){
+            if(System.currentTimeMillis() - kickTime > KICK_TIME){
+                kickerState = OPEN;
+            }
+        } else{
+            kickTime = System.currentTimeMillis();
+        }
+        return kickerState;
     }
     public void updateShooter(double speedLeft, double speedRight) {
         if (speedLeft > 0) {
