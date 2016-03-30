@@ -201,6 +201,11 @@ public class Shooter implements Module {
         } //else{
 //            lastLaunchCheck = System.currentTimeMillis();
 //        }
+        
+        if(containerState != OPEN){
+            kickTime = System.currentTimeMillis();
+        }
+        
         if (driverInputControl.getButton(RobotButtonType.FLYWHEEL_IN) || driverInputControl.getButton(RobotButtonType.FLYWHEEL_INTAKE_IN)) {
             flywheelSpeedLeft = INTAKE_PROP;
             flywheelSpeedRight = INTAKE_PROP;
@@ -259,12 +264,8 @@ public class Shooter implements Module {
     }
     public boolean launchManualOverride(){
         containerState = OPEN;
-        if(driverInputControl.getButton(RobotButtonType.SHOOTER_LAUNCH)){
-            if(System.currentTimeMillis() - kickTime > KICK_TIME){
-                kickerState = OPEN;
-            }
-        } else{
-            kickTime = System.currentTimeMillis();
+        if(System.currentTimeMillis() - kickTime > KICK_TIME){
+            kickerState = OPEN;
         }
         return kickerState;
     }
