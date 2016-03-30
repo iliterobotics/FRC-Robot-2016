@@ -88,7 +88,7 @@ public class AutonomousRoutine {
 
     public void getConfiguration() {
 //        try{
-        if((int)(SensorInputControlSRX.getInstance().getRotaryPosition()) >= 5){
+        if((int)(SensorInputControlSRX.getInstance().getRotaryPosition()) >= 5){ //do nothing case
             doesNothing = true;
             isShooting = false;
             manualOverride = false;
@@ -101,10 +101,10 @@ public class AutonomousRoutine {
             DriverStation.reportError("Running Moat with Manual Override", false);
         }
         if(!manualOverride){
-//            getServerConfig();
+            getServerConfig();
         } else{
             DriverStation.reportError("\nFailed to retrieve config from server", false);
-//            doesNothing = true;
+            doesNothing = true;
         }
     }
 
@@ -143,7 +143,7 @@ public class AutonomousRoutine {
             commands.add(new AutoDriveStart(START_DRIVE_SPEED));
         }
         commands.add(new AutoReachedDefense());
-        // DEFAULT CASE IS FOR: ROUGH TERRAIN and RAMPARTS
+        // DEFAULT CASE calls autoMoat which is sufficient for moat, ramparts, rough terrain, rock wall
         switch (type) {
         case LOW_BAR:
             autoLowBar();
@@ -160,21 +160,29 @@ public class AutonomousRoutine {
         case DRAWBRIDGE:
             autoDrawbridge();
             break;
-        case MOAT:
-            autoMoat();
-            break;
-        default:
+        default: autoMoat();
             break;
         }
         commands.add(new AutoCrossedDefense());
-        commands.add(new AutoDriveStart(0));
-//        commands.add(new AutoAlign());
+        commands.add(new AutoAlign());
     }
     
     public void prepareHighGoal(){
         commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
         commands.add(new AutoWait(1000));
         commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_CAM_TILT));
+    }
+    
+    public void autoShootWithCam(){
+        commands.add(new AutoFindHighGoal());
+        commands.add(new AutoLineUpHighGoal());
+        prepareHighGoal();
+        autoShootHighGoal();
+    }
+    
+    public void autoShootHighGoal(){
+        commands.add(new AutoShooterAim());
+        commands.add(new AutoShoot());
     }
 
     public void autoMoveToShoot() {
