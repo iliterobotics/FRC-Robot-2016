@@ -42,69 +42,41 @@ public class RobotConfiguration {
      */
     public static void configureRobot() {
         RobotControlWithSRX robotControl = RobotControlWithSRX.getInstance();
-        DriverInputControlSRX driverInputControl = DriverInputControlSRX
-                .getInstance();
-        SensorInputControlSRX sensorInputControl = SensorInputControlSRX
-                .getInstance();
+        DriverInputControlSRX driverInputControl = DriverInputControlSRX.getInstance();
+        SensorInputControlSRX sensorInputControl = SensorInputControlSRX.getInstance();
         JoystickButtonMap joystickButtonMap = JoystickButtonMap.getInstance();
         ModuleControl moduleControl = ModuleControl.getInstance();
 
         // Add JoystickType Configurations
-        driverInputControl.addJoystick(RobotJoystickType.LEFT_DRIVE,
-                new Joystick(0));
-        driverInputControl.addJoystick(RobotJoystickType.RIGHT_DRIVE,
-                new Joystick(1));
-        driverInputControl.addJoystick(RobotJoystickType.CONTROLLER,
-                new Joystick(2));
+        driverInputControl.addJoystick(RobotJoystickType.LEFT_DRIVE, new Joystick(0));
+        driverInputControl.addJoystick(RobotJoystickType.RIGHT_DRIVE, new Joystick(1));
+        driverInputControl.addJoystick(RobotJoystickType.CONTROLLER, new Joystick(2));
 
         // Add Joystick Button Mappings
         // Drivetrain Control Joystick Mappings
-        joystickButtonMap.addControllerButton(RobotButtonType.GEAR_SHIFT,
-                new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 3));
+        joystickButtonMap.addControllerButton(RobotButtonType.GEAR_SHIFT, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 3));
         // Shooter Joystick Mappings
-        joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_IN,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 5));
-        joystickButtonMap.addControllerButton(
-                RobotButtonType.FLYWHEEL_INTAKE_IN,
-                new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 2));
-        joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_OUT,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
-        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_LAUNCH,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
-        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_UP,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
-        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_DOWN,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
-        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER,
-                        Joystick.AxisType.kY));
-        joystickButtonMap.addControllerButton(
-                RobotButtonType.SHOOTER_TWIST_LEFT,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
-        joystickButtonMap.addControllerButton(
-                RobotButtonType.SHOOTER_TWIST_RIGHT,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
-        joystickButtonMap.addControllerButton(RobotButtonType.FIRE,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
+        joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_IN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 5));
+        joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 2));
+        joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_OUT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
+        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_LAUNCH, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
+        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_UP, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
+        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_DOWN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
+        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kY));
+        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TWIST_LEFT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
+        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TWIST_RIGHT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
+        joystickButtonMap.addControllerButton(RobotButtonType.FIRE, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
         joystickButtonMap.addControllerButton(RobotButtonType.TACTICAL_LIGHT, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 1));
         // Active Intake Joystick Mappings
-        joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_SOLENOID,
-                new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 1));
-        joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_IN,
-                new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 2));
-        joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_OUT,
-                new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 3));
+        joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_SOLENOID, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 1));
+        joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 2));
+        joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_OUT, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 3));
+        joystickButtonMap.addControllerButton(RobotButtonType.CDF_DROPPER, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 2));
         // Arm Joystick Mappings
-        joystickButtonMap.addControllerButton(RobotButtonType.ARM_MOVE_Y,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER,
-                        Joystick.AxisType.kTwist));
-        joystickButtonMap.addControllerButton(RobotButtonType.ARM_MOVE_X,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER,
-                        Joystick.AxisType.kThrottle));
-        joystickButtonMap.addControllerButton(RobotButtonType.RESET_BUTTON,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 9));
-        joystickButtonMap.addControllerButton(RobotButtonType.AIM,
-                new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 0));
+        joystickButtonMap.addControllerButton(RobotButtonType.ARM_MOVE_Y, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kTwist));
+        joystickButtonMap.addControllerButton(RobotButtonType.ARM_MOVE_X, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kThrottle));
+        joystickButtonMap.addControllerButton(RobotButtonType.RESET_BUTTON, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 9));
+        joystickButtonMap.addControllerButton(RobotButtonType.AIM, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 0));
 
         // Talon Outputs for Robot
         robotControl.addTalonOutput(RobotMotorType.LEFT_DRIVE, 1);
@@ -124,7 +96,8 @@ public class RobotConfiguration {
         robotControl.addSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, 2);
         robotControl.addSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, 4);
         robotControl.addSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER, 3);
-        
+        robotControl.addSingleSolenoid(RobotPneumaticType.CDF_DROPPER, 5);
+
         // Relays
         robotControl.addRelay(RelayType.TACTICAL_LIGHT, 0);
 
@@ -134,30 +107,16 @@ public class RobotConfiguration {
         sensorInputControl.addRotarySwitchSensor(1);
         sensorInputControl.addBeamSensor(2);
         // Drivetrain Encoders
-        robotControl.addTalonSensor(RobotMotorType.LEFT_DRIVE,
-                SensorType.LEFT_ENCODER, 1);
-        robotControl.addTalonSensor(RobotMotorType.RIGHT_DRIVE,
-                SensorType.RIGHT_ENCODER, 2);
+        robotControl.addTalonSensor(RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
+        robotControl.addTalonSensor(RobotMotorType.RIGHT_DRIVE, SensorType.RIGHT_ENCODER, 2);
         // Shooter Encoders and Potentiometer
-        robotControl.addTalonSensor(RobotMotorType.FLYWHEEL_LEFT,
-                SensorType.FLYWHEEL_LEFT_ENCODER, 8);
-        robotControl.addTalonSensor(RobotMotorType.FLYWHEEL_RIGHT,
-                SensorType.FLYWHEEL_RIGHT_ENCODER, 9);
-        robotControl.addTalonSensor(RobotMotorType.SHOOTER_TILT,
-                SensorType.SHOOTER_TILT_POTENTIOMETER, 10);
-        robotControl.addTalonSensor(RobotMotorType.SHOOTER_TWIST,
-                SensorType.SHOOTER_TWIST_ENCODER, 11);
+        robotControl.addTalonSensor(RobotMotorType.FLYWHEEL_LEFT, SensorType.FLYWHEEL_LEFT_ENCODER, 8);
+        robotControl.addTalonSensor(RobotMotorType.FLYWHEEL_RIGHT, SensorType.FLYWHEEL_RIGHT_ENCODER, 9);
+        robotControl.addTalonSensor(RobotMotorType.SHOOTER_TILT, SensorType.SHOOTER_TILT_POTENTIOMETER, 10);
+        robotControl.addTalonSensor(RobotMotorType.SHOOTER_TWIST, SensorType.SHOOTER_TWIST_ENCODER, 11);
         // Utility Arm potentiometers
-        RobotControlWithSRX.getInstance().addTalonSensor(
-                RobotMotorType.ARM_JOINT_A, SensorType.JOINT_A_CTRE_ABSOLUTE,
-                1);
-        RobotControlWithSRX.getInstance().addTalonSensor(
-                RobotMotorType.ARM_JOINT_B, SensorType.JOINT_B_CTRE_ABSOLUTE,
-                2);
-
-        // Set Feedback Devices for PID
-        // robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
-        // robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).setFeedbackDevice(FeedbackDevice.QuadEncoder);
+        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.ARM_JOINT_A, SensorType.JOINT_A_CTRE_ABSOLUTE, 1);
+        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.ARM_JOINT_B, SensorType.JOINT_B_CTRE_ABSOLUTE, 2);
 
         // Add Module
         moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
