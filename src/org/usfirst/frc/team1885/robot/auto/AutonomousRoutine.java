@@ -7,6 +7,7 @@ import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
+import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
 import dataclient.robotdata.autonomous.AutonomousConfig;
@@ -87,7 +88,6 @@ public class AutonomousRoutine {
     // AutoAlign - realigns the robot to move in position to shoot
 
     public void getConfiguration() {
-//        try{
         if((int)(SensorInputControlSRX.getInstance().getRotaryPosition()) >= 5){ //do nothing case
             doesNothing = true;
             isShooting = false;
@@ -98,11 +98,14 @@ public class AutonomousRoutine {
             isShooting = true;
             goal = 0;
             type = DefenseType.MOAT;
+//            type = DefenseType.values()[(int)(SensorInputControlSRX.getInstance().getRotaryPosition())];
             DriverStation.reportError("Running Moat with Manual Override", false);
         }
-        if(!manualOverride){
-            getServerConfig();
-        } else{
+        try{
+            if(!manualOverride){
+                getServerConfig();
+            }
+        }catch (Throwable t){
             DriverStation.reportError("\nFailed to retrieve config from server", false);
             doesNothing = true;
         }
@@ -110,22 +113,22 @@ public class AutonomousRoutine {
 
     public void getServerConfig(){
         AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
-//        if(autoC != null){
-//            DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
-//            type = DefenseType.values()[autoC.getDefense()];
-//            targetDefense = autoC.getPosition();
-//            delay = autoC.getDelay() / 1000.0; // time in seconds
-//            isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
-//            goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
-//            doesNothing = autoC.doesNothing();
-//            isShooting = autoC.isShooting();
-//
-//            DriverStation.reportError(
-//                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
-//                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
-//                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
-//                false);
-//        }
+        if(autoC != null){
+            DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
+            type = DefenseType.values()[autoC.getDefense()];
+            targetDefense = autoC.getPosition();
+            delay = autoC.getDelay() / 1000.0; // time in seconds
+            isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
+            goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
+            doesNothing = autoC.doesNothing();
+            isShooting = autoC.isShooting();
+
+            DriverStation.reportError(
+                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
+                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
+                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
+                false);
+        }
     }
 
     /**
@@ -154,6 +157,8 @@ public class AutonomousRoutine {
         case CHEVAL_DE_FRISE:
             autoCheval();
             break;
+        case RAMPARTS: DrivetrainControl.getInstance().setLowGear();
+        case ROCK_WALL: DrivetrainControl.getInstance().setLowGear();
         default: autoMoat();
             break;
         }
@@ -164,13 +169,13 @@ public class AutonomousRoutine {
     public void prepareHighGoal(){
         commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
         commands.add(new AutoWait(1000));
-        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_CAM_TILT));
+        commands.add(new AutoShooterTilt(Shooter.STATIC_TILT_LIMIT_UPPER));
     }
     
     public void autoShootWithCam(){
+        prepareHighGoal();
         commands.add(new AutoFindHighGoal());
         commands.add(new AutoLineUpHighGoal());
-        prepareHighGoal();
         autoShootHighGoal();
     }
     
@@ -311,6 +316,7 @@ public class AutonomousRoutine {
     public void autoLowBar() {
         double lowBarTravelDistance = 4.5 * 12; // subject to change from
         ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
+        DrivetrainControl.getInstance().setLowGear();
         commands.add(new AutoDriveDistance(lowBarTravelDistance, .2));
     }
 

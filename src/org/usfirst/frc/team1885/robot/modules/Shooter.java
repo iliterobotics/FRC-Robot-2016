@@ -1,8 +1,5 @@
 package org.usfirst.frc.team1885.robot.modules;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.usfirst.frc.team1885.robot.auto.AutoShooterTilt;
 import org.usfirst.frc.team1885.robot.auto.AutoShooterTwist;
 import org.usfirst.frc.team1885.robot.common.type.MotorState;
@@ -18,7 +15,6 @@ import org.usfirst.frc.team1885.serverdata.ShooterDataClient;
 
 import dataclient.robotdata.vision.HighGoal;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
-import edu.wpi.first.wpilibj.CANTalon.FeedbackDeviceStatus;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Relay;
@@ -44,7 +40,7 @@ public class Shooter implements Module {
     private static final double INTAKE_PROP = 0.7;
     public static final double TWIST_SPEED = .3;
     public static final double TILT_SPEED = .2;
-    private static final double STATIC_TILT_LIMIT_UPPER = 130;
+    public static final double STATIC_TILT_LIMIT_UPPER = 130.0;
     private double TILT_LIMIT_UPPER;
     private double TILT_LIMIT_LOWER;
     private final static double LOW_GOAL_TILT_BOUND = 30;
