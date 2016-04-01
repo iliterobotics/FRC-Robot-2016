@@ -119,8 +119,8 @@ public class RobotConfiguration {
         RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.ARM_JOINT_B, SensorType.JOINT_B_CTRE_ABSOLUTE, 2);
 
         // Add Module
-        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
-        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
+//        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
+//        moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
         moduleControl.addModule(ModuleType.SHOOTER, Shooter.getInstance());
     }
 }
