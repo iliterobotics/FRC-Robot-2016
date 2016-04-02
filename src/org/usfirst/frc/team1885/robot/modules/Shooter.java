@@ -54,7 +54,7 @@ public class Shooter implements Module {
     public final static double UPPER_TILT_COLLISION = 90;
     public static final double GEAR_RATIO_TWIST = 3.0 / 7;
     private static final double TWIST_LEVEL_THRESHOLD = 90; //tilt degree at which the bounds of the twist are changed
-    private static final double TWIST_BOUND_HIGH_RIGHT = -40;
+    private static final double TWIST_BOUND_HIGH_RIGHT = -37;
     private static final double TWIST_BOUND_HIGH_LEFT = 33;
     private static final double TWIST_BOUND_LOW_RIGHT = -30;
     private static final double TWIST_BOUND_LOW_LEFT = 30;
