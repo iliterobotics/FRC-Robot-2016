@@ -30,7 +30,7 @@ public class AutoShooterAim extends AutoCommand {
             backup = new AutoDriveStart(0);
             
             double tilt = Shooter.getInstance().getTiltAimLock();
-            double twist = Shooter.getInstance().getTwistAimLock();
+            double twist = Shooter.getInstance().getTwistAimLockX();
         
             shooterTilt = new AutoShooterTilt(tilt);
             shooterTwist = new AutoShooterTwist(twist);

@@ -233,7 +233,7 @@ public class Shooter implements Module {
      */
     public double lockAim(){
         autoShooterTilt = new AutoShooterTilt(getTiltAimLock());
-        autoShooterTwist = new AutoShooterTwist(getTwistAimLock());
+        autoShooterTwist = new AutoShooterTwist(getTwistAimLockX());
         return this.relativeTiltAngle;
     }
     /**
@@ -321,7 +321,7 @@ public class Shooter implements Module {
         }
         if(isAiming){
             autoShooterTilt = new AutoShooterTilt(getTiltAimLock());
-            autoShooterTwist = new AutoShooterTwist(getTwistAimLock());
+            autoShooterTwist = new AutoShooterTwist(getTwistAimLockX());
             autoShooterTilt.execute();
             autoShooterTwist.execute();
         } else {
@@ -480,8 +480,14 @@ public class Shooter implements Module {
         // DriverStation.reportError("\nContainer State:: " + isHeld, false);
     }
     
-    public double getTwistAimLock(){
-        double twistAngle = hg.getAzimuth();
+    /**
+     * Method to get the azimuth in the X direction, where the goal is located
+     * @return
+     *  the twist angle, if the goal is found, or the relative angle if it's not 
+     *  (In degrees).
+     */
+    public double getTwistAimLockX(){
+        double twistAngle = hg.getAzimuthX();
           
           if(twistAngle > 180){
               twistAngle -= 360;

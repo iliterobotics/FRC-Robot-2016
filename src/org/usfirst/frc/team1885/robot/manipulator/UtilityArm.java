@@ -76,11 +76,7 @@ public class UtilityArm implements Module {
         DataServerWebClient client = new DataServerWebClient(
                 "http://172.22.11.1:8083");
         status = new ArmStatus(client);
-        try {
-            client.pushSchema(status.getSchema());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        client.pushSchema(status.getSchema());
 
         aP = .5; // 2.7
         aI = 0.00035; // 0.00076
