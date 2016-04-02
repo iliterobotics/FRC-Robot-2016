@@ -22,9 +22,9 @@ import edu.wpi.first.wpilibj.Relay;
 //TODO add @depricated tags (or alternate documentation) to all methods no longer being used
 public class Shooter implements Module {
 
-    private static final int FLYWHEEL_MIN_LAUNCH_SPEED = 775;
-    public static final double TILT_MOVEMENT_PROPORTION = 0.4;
-    public static final double TWIST_MOVEMENT_PROPORTION = 4;
+    private static final int FLYWHEEL_MAX_SPEED = 775;
+    public static final double TILT_MOVEMENT_PROPORTION = 0.6;
+    public static final double TWIST_MOVEMENT_PROPORTION = 0.8;
     private static Shooter instance;
     public static final double HIGH_GOAL_ANGLE = 130.0;
     public static final double LOW_GOAL_ANGLE = 12.0;
@@ -55,7 +55,7 @@ public class Shooter implements Module {
     public static final double GEAR_RATIO_TWIST = 3.0 / 7;
     private static final double TWIST_LEVEL_THRESHOLD = 90; //tilt degree at which the bounds of the twist are changed
     private static final double TWIST_BOUND_HIGH_RIGHT = -40;
-    private static final double TWIST_BOUND_HIGH_LEFT = 40;
+    private static final double TWIST_BOUND_HIGH_LEFT = 33;
     private static final double TWIST_BOUND_LOW_RIGHT = -30;
     private static final double TWIST_BOUND_LOW_LEFT = 30;
     // public static final double GEAR_RATIO_TILT = 1.0 / 3;
@@ -133,14 +133,14 @@ public class Shooter implements Module {
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).setPID(TWIST_P, TWIST_I, TWIST_D);
 
         // Setting up Flywheel Left Talon
-         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).changeControlMode(TalonControlMode.Speed);
+//         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).changeControlMode(TalonControlMode.Speed);
          RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).setFeedbackDevice(FeedbackDevice.QuadEncoder);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).changeControlMode(TalonControlMode.PercentVbus);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).setPID(SPIN_P, SPIN_I, SPIN_D);
 //                 RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).configEncoderCodesPerRev(1024);
 
         // Setting up Flywheel Right Talon
-         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).changeControlMode(TalonControlMode.Speed);
+//         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).changeControlMode(TalonControlMode.Speed);
          RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).setFeedbackDevice(FeedbackDevice.QuadEncoder);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).changeControlMode(TalonControlMode.PercentVbus);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).setPID(SPIN_P, SPIN_I, SPIN_D);
@@ -182,7 +182,7 @@ public class Shooter implements Module {
     // updates shooter fly wheels
     public void updateShooter() {
         // TODO modify values after testing for direction
-//         DriverStation.reportError("\nRight Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER) + "Left Encoder:: " + sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_LEFT_ENCODER),false);
+//         DriverStation.reportError("\nRight Encoder:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).getEncVelocity() + "Left Encoder:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).getEncVelocity(),false);
  
         tacticalLightState = Relay.Value.kOff;
         flywheelSpeedLeft = flywheelSpeedRight = 0;
@@ -259,8 +259,8 @@ public class Shooter implements Module {
         return false;
     }
     public boolean launchManualOverride(){
-        DriverStation.reportError("\n Necessary Speed:: " + (FLYWHEEL_MIN_LAUNCH_SPEED * shooterSpeed), false);
-        if(Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER)) >= (FLYWHEEL_MIN_LAUNCH_SPEED * shooterSpeed)){ //adjusts min launch speed according to what we decide launching speed is, only waits for flywheel to rev up
+        DriverStation.reportError("\n Necessary Speed:: " + (FLYWHEEL_MAX_SPEED * shooterSpeed), false);
+        if(Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER)) >= (FLYWHEEL_MAX_SPEED * shooterSpeed)){ //adjusts min launch speed according to what we decide launching speed is, only waits for flywheel to rev up
             containerState = OPEN;
             if(System.currentTimeMillis() - kickTime > KICK_TIME){
                 kickerState = OPEN;
@@ -300,7 +300,7 @@ public class Shooter implements Module {
 //          DriverStation.reportError("\n" + Math.abs((((RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get() - sensorControl.getInitialTiltPosition())/ (1024.0/360.0)) - this.relativeTiltAngle)), false);
 //          DriverStation.reportError(" " + isAutoTilt, false);
 //          double userTiltDirection = driverInputControl.getPressureButton(RobotButtonType.SHOOTER_TILT);
-          DriverStation.reportError("\n Theoretical Tilt: " + this.relativeTiltAngle + "  Actual Tilt: " + (RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get() /*- sensorControl.getInitialTiltPosition()) * (360.0 / 1024*/), false);
+//          DriverStation.reportError("\n Theoretical Tilt: " + this.relativeTiltAngle + "  Actual Tilt: " + (RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get() /*- sensorControl.getInitialTiltPosition()) * (360.0 / 1024*/), false);
             if(isAutoTilt) {
                 isAutoTilt = userTiltDirection == 0;
             }
@@ -484,11 +484,11 @@ public class Shooter implements Module {
         // DriverStation.reportError("\n Raw Pot: " + sensorControl.getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
         // DriverStation.reportError("\n", false);
 //         DriverStation.reportError("\n Left Output:: " + flywheelSpeedLeft * FLYWHEEL_MIN_SPEED + " Right Output:: " + flywheelSpeedRight * FLYWHEEL_MIN_SPEED, false);
-        // RobotControlWithSRX.getInstance().updateFlywheelShooter(flywheelSpeedLeft * FLYWHEEL_MIN_SPEED, flywheelSpeedRight * FLYWHEEL_MIN_SPEED);
+//         RobotControlWithSRX.getInstance().updateFlywheelShooter(flywheelSpeedLeft * FLYWHEEL_MAX_SPEED, flywheelSpeedRight * FLYWHEEL_MAX_SPEED);
         RobotControlWithSRX.getInstance().updateFlywheelShooter(flywheelSpeedLeft, flywheelSpeedRight);
         RobotControlWithSRX.getInstance().updateShooterTilt(tiltPosition);
         RobotControlWithSRX.getInstance().updateShooterTwist(twistPosition);
-         DriverStation.reportError("\nIntended Position:: " + this.relativeTwistAngle + " Actual Position" + (RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition() - sensorControl.getInitialTwistPosition()) * (360.0/4096) * (3.0 / 7) + " Ticks: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition(), false);
+        DriverStation.reportError("\nIntended Position:: " + this.relativeTwistAngle + " Actual Position" + (RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition() - sensorControl.getInitialTwistPosition()) * (360.0/4096) * (3.0 / 7) + " Ticks: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition(), false);
         RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, containerState);
         RobotControlWithSRX.getInstance().updateSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER, kickerState);
         RobotControlWithSRX.getInstance().getRelays().get(RelayType.TACTICAL_LIGHT).set(tacticalLightState);
@@ -505,12 +505,8 @@ public class Shooter implements Module {
           return hg.isGoalFound() ? twistAngle : this.relativeTwistAngle; 
     }
     public double getTiltAimLock(){
-        double distance = hg.getDistance();
-        double tiltAngle = distance != 0 ? 180 - Math.toDegrees(Math.asin(HIGHGOAL_MIDPOINT / distance)) : this.relativeTiltAngle;
-        int horizontalDistance = ((int)(Math.sqrt((distance * distance) - (HIGHGOAL_MIDPOINT * HIGHGOAL_MIDPOINT)))) / 12;
-//        shooterSpeed = shooterSpeedTable[ (horizontalDistance < 0 && horizontalDistance >= shooterSpeedTable.length) ? 0 : horizontalDistance];
+        double tiltAngle = 0;
 //        shooterSpeed *= BALL_FACTOR;
-        //        DriverStation.reportError("\n Distance: " + distance + "tiltAngle: " + tiltAngle + " Found: " + hg.isGoalFound(), false);
         return hg.isGoalFound() ? tiltAngle : BATTER_SHOT_ANGLE;
     }
     public boolean isGoalFound(){
