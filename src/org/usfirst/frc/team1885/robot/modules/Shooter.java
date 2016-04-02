@@ -32,7 +32,7 @@ public class Shooter implements Module {
     public static final double ANGLE_ERROR = 1;
     public static final int TICK_ERROR = 10;
     public double shooterSpeed;
-    private static double [] shooterSpeedTable = {0.80};
+    private static double [] shooterSpeedTable = {0.70};
     private static final double BALL_FACTOR = 1.0;
     private static final boolean OPEN = false;
     private long lastLaunchCheck;
@@ -40,7 +40,7 @@ public class Shooter implements Module {
     private static final double INTAKE_PROP = 0.7;
     public static final double TWIST_SPEED = .3;
     public static final double TILT_SPEED = .2;
-    public static final double STATIC_TILT_LIMIT_UPPER = 130.0;
+    public static final double STATIC_TILT_LIMIT_UPPER = 135.0;
     private double TILT_LIMIT_UPPER;
     private double TILT_LIMIT_LOWER;
     private final static double LOW_GOAL_TILT_BOUND = 30;
@@ -346,9 +346,9 @@ public class Shooter implements Module {
             autoShooterTwist = new AutoShooterTwist(getTwistAimLock());
             autoShooterTilt.execute();
             autoShooterTwist.execute();
-        } else {
-//            setToTwistValue(0);
+            DriverStation.reportError("\nAuto aiming Tilt: " + getTwistAimLock() + " " + hg.isGoalFound(), false);
         }
+        
         double currentAngle = sensorControl.getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER);
 
         this.relativeTiltAngle = this.boundTilt(this.relativeTiltAngle);
@@ -492,7 +492,7 @@ public class Shooter implements Module {
         // DriverStation.reportError("\n", false);
 //         DriverStation.reportError("\n Left Output:: " + flywheelSpeedLeft * FLYWHEEL_MIN_SPEED + " Right Output:: " + flywheelSpeedRight * FLYWHEEL_MIN_SPEED, false);
 //        DriverStation.reportError("\nFlywheel Speed:: Right: " + flywheelSpeedRight * FLYWHEEL_MAX_SPEED + " Left: " + flywheelSpeedLeft * FLYWHEEL_MAX_SPEED, false);
-//        DriverStation.reportError("\nSpeed Prop:: " + shooterSpeedTable[shooterIndex] + " Right Encoder:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).getEncVelocity() + "Left Encoder:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).getEncVelocity(),false);
+        DriverStation.reportError("\nSpeed Prop:: " + shooterSpeedTable[shooterIndex] + " Right Encoder:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).getEncVelocity() + "Left Encoder:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).getEncVelocity(),false);
         if(flywheelSpeedRight == 0 && flywheelSpeedLeft == 0){
             RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).changeControlMode(TalonControlMode.PercentVbus);
             RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).changeControlMode(TalonControlMode.PercentVbus);
@@ -514,18 +514,19 @@ public class Shooter implements Module {
     }
     
     public double getTwistAimLock(){
-        double twistAngle = hg.getAzimuth();
+        double twistAngle = hg.getAzimuthX();
           
           if(twistAngle > 180){
               twistAngle -= 360;
           }
-//          DriverStation.reportError("\n Twist:: " + twistAngle, false);
-          return hg.isGoalFound() ? twistAngle : this.relativeTwistAngle; 
+          DriverStation.reportError("\n Twist:: " + twistAngle, false);
+          return hg.isGoalFound() ? (RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition() - sensorControl.getInitialTwistPosition()) * (360.0/4096) * (3.0 / 7) - twistAngle : 0; 
     }
     public double getTiltAimLock(){
-        double tiltAngle = 0;
+        double tiltAngle = this.relativeTiltAngle;
 //        shooterSpeed *= BALL_FACTOR;
-        return hg.isGoalFound() ? tiltAngle : BATTER_SHOT_ANGLE;
+        return tiltAngle;
+//        return hg.isGoalFound() ? tiltAngle : BATTER_SHOT_ANGLE;
     }
     public boolean isGoalFound(){
         return hg.isGoalFound();
