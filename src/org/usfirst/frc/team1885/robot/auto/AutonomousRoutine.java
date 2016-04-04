@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.common.type.DefenseType;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
@@ -33,6 +34,8 @@ public class AutonomousRoutine {
     private boolean manualOverride;
     public static final double CLEAR_SPEED = 1;
 
+    public boolean configured;
+
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
         robot = r;
@@ -40,43 +43,51 @@ public class AutonomousRoutine {
         // commands.add(new AutoCalibrateWheels(1));
         DriverStation.reportError("\nGyro Calibrated", false);
 
-//         commands.add(new AutoDriveDistance(3 * 12));
-//         commands.add(new AutoAlign(360));
-//         commands.add(new AutoWait(2000));
-//         commands.add(new AutoAlign());
-         getConfiguration();
-         try{
-             getServerConfig();
-         } catch(Throwable t){
-             
-         }
-         if(!doesNothing) {
-             initAutoBreach();
-             if(isShooting) {
-//                 autoMoveToShoot();
-                 prepareHighGoal();
-//                 autoShootBallCam();
-              }
-         }
-     }
+        // commands.add(new AutoDriveDistance(3 * 12));
+        // commands.add(new AutoAlign(360));
+        // commands.add(new AutoWait(2000));
+        // commands.add(new AutoAlign());
+        configured = false;
+    }
 
     public void execute() {
         int commandNum = 0;
-        while (!commands.isEmpty() && robot.isEnabled()
-                && robot.isAutonomous()) {
-            AutoCommand currCommand = commands.peek();
-            if (currCommand.isInit()) {
-                boolean commandState = currCommand.execute();
-                currCommand.updateOutputs();
-                if (commandState) {
-                    DriverStation.reportError( "\nfinished command " + commandNum, false);
-                    commandNum++;
-                    commands.poll();
+        while (robot.isEnabled() && robot.isAutonomous()) {
+            if (!configured) {
+                getConfiguration();
+                try {
+                    getServerConfig();
+                } catch (Throwable t) {
+                    DriverStation.reportError("\nERROR:: Could not retrieve configuration from server", false);
                 }
+                if (!doesNothing) {
+                    initAutoBreach();
+                    if (isShooting) {
+//                        autoMoveToShoot();
+                        prepareHighGoal();
+//                        autoShootWithCam(); does not currently work, rely on static measurements
+                        autoShootBallCam();
+                    }
+                }
+                configured = true;
             } else {
-                currCommand.setInit(currCommand.init());
+                if(commands.isEmpty()){
+                    break;
+                }
+                AutoCommand currCommand = commands.peek();
+                if (currCommand.isInit()) {
+                    boolean commandState = currCommand.execute();
+                    currCommand.updateOutputs();
+                    if (commandState) {
+                        DriverStation.reportError("\nfinished command " + commandNum, false);
+                        commandNum++;
+                        commands.poll();
+                    }
+                } else {
+                    currCommand.setInit(currCommand.init());
+                }
+                Timer.delay(delay);
             }
-            Timer.delay(delay);
         }
     }
     // STANDARD CONFIGURATION
@@ -88,46 +99,50 @@ public class AutonomousRoutine {
     // AutoAlign - realigns the robot to move in position to shoot
 
     public void getConfiguration() {
-        if((int)(SensorInputControlSRX.getInstance().getRotaryPosition()) >= 5){ //do nothing case
+        if ((int) (SensorInputControlSRX.getInstance().getRotaryPosition(SensorType.DEFENSE_SELECTION)) >= 5) { // do nothing case
             doesNothing = true;
             isShooting = false;
             manualOverride = false;
-        } else{
+        } else {
             manualOverride = true;
             doesNothing = false;
             isShooting = true;
             goal = 0;
             type = DefenseType.MOAT;
-//            type = DefenseType.values()[(int)(SensorInputControlSRX.getInstance().getRotaryPosition())];
+            // type =
+            // DefenseType.values()[(int)(SensorInputControlSRX.getInstance().getRotaryPosition())];
             DriverStation.reportError("Running Moat with Manual Override", false);
         }
-        try{
-            if(!manualOverride){
+        try {
+            if (!manualOverride) {
                 getServerConfig();
             }
-        }catch (Throwable t){
-            DriverStation.reportError("\nFailed to retrieve config from server", false);
+        } catch (Throwable t) {
+            DriverStation.reportError("\nFailed to retrieve config from server",
+                    false);
             doesNothing = true;
         }
     }
 
-    public void getServerConfig(){
-        AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
-        if(autoC != null){
-            DriverStation.reportError("\ndefense"  + autoC.getDefense(), false);
+    public void getServerConfig() {
+        AutonomousConfig autoC = RobotAutonomousConfiguration
+                .pullConfiguration();
+        if (autoC != null) {
+            DriverStation.reportError("\ndefense" + autoC.getDefense(), false);
             type = DefenseType.values()[autoC.getDefense()];
             targetDefense = autoC.getPosition();
             delay = autoC.getDelay() / 1000.0; // time in seconds
-            isHigh = autoC.getGoalElevation(); // true = high goal, false = low goal
+            isHigh = autoC.getGoalElevation(); // true = high goal, false = low
+                                               // goal
             goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
             doesNothing = autoC.doesNothing();
             isShooting = autoC.isShooting();
 
             DriverStation.reportError(
-                "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
-                        + "\ntargetDefense:" + targetDefense + "\ndelay:"
-                        + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
-                false);
+                    "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
+                            + "\ntargetDefense:" + targetDefense + "\ndelay:"
+                            + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
+                    false);
         }
     }
 
@@ -137,16 +152,16 @@ public class AutonomousRoutine {
      */
     public void initAutoBreach() {
         ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeUp); // intake should always start up
-        if(type == DefenseType.MOAT || type == DefenseType.RAMPARTS){
+        if (type == DefenseType.MOAT || type == DefenseType.RAMPARTS) {
             commands.add(new AutoDriveStart(CLEAR_SPEED));
-        } else if(type == DefenseType.PORTCULLIS){
+        } else if (type == DefenseType.PORTCULLIS) {
             commands.add(new AutoDriveStart(-START_DRIVE_SPEED));
-        }
-        else{
+        } else {
             commands.add(new AutoDriveStart(START_DRIVE_SPEED));
         }
         commands.add(new AutoReachedDefense());
-        // DEFAULT CASE calls autoMoat which is sufficient for moat, ramparts, rough terrain, rock wall
+        // DEFAULT CASE calls autoMoat which is sufficient for moat, ramparts,
+        // rough terrain, rock wall
         switch (type) {
         case LOW_BAR:
             autoLowBar();
@@ -157,31 +172,28 @@ public class AutonomousRoutine {
         case CHEVAL_DE_FRISE:
             autoCheval();
             break;
-        case RAMPARTS: DrivetrainControl.getInstance().setLowGear();
-        case ROCK_WALL: DrivetrainControl.getInstance().setLowGear();
-        default: autoMoat();
+        case RAMPARTS:
+            DrivetrainControl.getInstance().setLowGear();
+        case ROCK_WALL:
+            DrivetrainControl.getInstance().setLowGear();
+        default:
+            autoMoat();
             break;
         }
         commands.add(new AutoCrossedDefense());
         commands.add(new AutoAlign());
     }
-    
-    public void prepareHighGoal(){
+
+    public void prepareHighGoal() {
         commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
         commands.add(new AutoWait(1000));
         commands.add(new AutoShooterTilt(Shooter.STATIC_TILT_LIMIT_UPPER));
     }
-    
-    public void autoShootWithCam(){
+
+    public void autoShootWithCam() {
         prepareHighGoal();
         commands.add(new AutoFindHighGoal());
         commands.add(new AutoLineUpHighGoal());
-        autoShootHighGoal();
-    }
-    
-    public void autoShootHighGoal(){
-        commands.add(new AutoShooterAim());
-        commands.add(new AutoShoot());
     }
 
     public void autoMoveToShoot() {
@@ -273,7 +285,7 @@ public class AutonomousRoutine {
         } else {
             DriverStation.reportError("Invalid Goal Number", false);
         }
-        if(type != DefenseType.PORTCULLIS){
+        if (type != DefenseType.PORTCULLIS) {
             firstMove = -firstMove;
             secondMove = -secondMove;
             align += 180;
@@ -297,17 +309,14 @@ public class AutonomousRoutine {
         commands.add(new AutoAlign(firstTurn));
         commands.add(new AutoDriveDistance(secondMove));
         commands.add(new AutoAimTurn(goalTurn));
+        prepareHighGoal();
         /*
-        if (!isHigh) {
-            commands.add(new AutoDriveStart(START_DRIVE_SPEED));
-            commands.add(new AutoCrossedDefense());
-            autoShootBall(Shooter.LOW_GOAL_ANGLE);
-        }
-        else {
-            autoShootBall(Shooter.HIGH_GOAL_ANGLE);
-            //commands.add(new AutoAimShooter());
-        }
-        */
+         * if (!isHigh) { commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+         * commands.add(new AutoCrossedDefense());
+         * autoShootBall(Shooter.LOW_GOAL_ANGLE); } else {
+         * autoShootBall(Shooter.HIGH_GOAL_ANGLE); //commands.add(new
+         * AutoAimShooter()); }
+         */
     }
 
     /**
@@ -345,20 +354,22 @@ public class AutonomousRoutine {
     }
 
     /**
-     * Controls processes required for locating the high and low goal and shooting
+     * Controls processes required for locating the high and low goal and
+     * shooting
      * 
-     * @param angle angle to position the shooter tilt
+     * @param angle
+     *            angle to position the shooter tilt
      */
     public void autoShootBall(double angle) {
         commands.add(new AutoShooterTilt(angle));
         commands.add(new AutoShoot());
-        
+
     }
-    
+
     /**
      * Controls processes for shooting in the high goal using camera vision
      */
-    public void autoShootBallCam(){
+    public void autoShootBallCam() {
         commands.add(new AutoShooterAim());
         commands.add(new AutoShoot());
     }

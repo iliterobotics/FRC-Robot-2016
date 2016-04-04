@@ -12,10 +12,8 @@ import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
-import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.ModuleControl;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
-import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.Joystick;
@@ -104,8 +102,11 @@ public class RobotConfiguration {
         // Sensors
         sensorInputControl.createNavX(SerialPort.Port.kMXP);
         sensorInputControl.addPressureSensor(0);
-        sensorInputControl.addRotarySwitchSensor(1);
-        sensorInputControl.addBeamSensor(2);
+        sensorInputControl.addRotarySwitchSensor(SensorType.DEFENSE_SELECTION, 1);
+//        sensorInputControl.addRotarySwitchSensor(SensorType.TYPE_2, 2);
+//        sensorInputControl.addRotarySwitchSensor(SensorType.TYPE_3, 3);
+//        sensorInputControl.addRotarySwitchSensor(SensorType.TYPE_4, 4);
+//        sensorInputControl.addBeamSensor(2);
         // Drivetrain Encoders
         robotControl.addTalonSensor(RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
         robotControl.addTalonSensor(RobotMotorType.RIGHT_DRIVE, SensorType.RIGHT_ENCODER, 2);

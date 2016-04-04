@@ -13,7 +13,7 @@ public class ShooterDataClient {
     }
     
     private ShooterDataClient(){
-        client = new DataServerWebClient(ServerInformation.LAPTOP_IP_ADDRESS);
+        client = new DataServerWebClient(ServerInformation.LAPTOP_HOSTNAME_ADDRESS);
         highGoalData = new HighGoal(client);
         client.watch(highGoalData, updateData -> updateData());
     }
