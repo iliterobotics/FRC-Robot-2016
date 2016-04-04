@@ -50,6 +50,7 @@ public class RobotConfiguration {
         driverInputControl.addJoystick(RobotJoystickType.LEFT_DRIVE, new Joystick(0));
         driverInputControl.addJoystick(RobotJoystickType.RIGHT_DRIVE, new Joystick(1));
         driverInputControl.addJoystick(RobotJoystickType.CONTROLLER, new Joystick(2));
+        driverInputControl.addJoystick(RobotJoystickType.OVERRIDE_CONTROLLER, new Joystick(3));
 
         // Add Joystick Button Mappings
         // Drivetrain Control Joystick Mappings
@@ -62,8 +63,8 @@ public class RobotConfiguration {
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_UP, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_DOWN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kY));
-        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TWIST_LEFT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
-        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TWIST_RIGHT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
+        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TWIST_LEFT, new JoystickButtonMatch(RobotJoystickType.OVERRIDE_CONTROLLER, 1));
+        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TWIST_RIGHT, new JoystickButtonMatch(RobotJoystickType.OVERRIDE_CONTROLLER, 3));
         joystickButtonMap.addControllerButton(RobotButtonType.FIRE, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
         joystickButtonMap.addControllerButton(RobotButtonType.TACTICAL_LIGHT, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 1));
         // Active Intake Joystick Mappings

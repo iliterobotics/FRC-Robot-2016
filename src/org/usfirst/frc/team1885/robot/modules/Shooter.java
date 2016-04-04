@@ -409,9 +409,9 @@ public class Shooter implements Module {
 //            if(RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getControlMode().equals(TalonControlMode.PercentVbus)){
 //                RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).changeControlMode(TalonControlMode.Position);
 //            }
-//            double userTwistDirection = driverInputControl.getShooterTwist();
+            double userTwistDirection = driverInputControl.getShooterTwist();
         
-//            this.relativeTwistAngle += userTwistDirection * TWIST_MOVEMENT_PROPORTION;
+            this.relativeTwistAngle += userTwistDirection * TWIST_MOVEMENT_PROPORTION;
 //               DriverStation.reportError("\nUpdating Twist:: " + this.relativeTwistAngle, false);
             return updateTwistPosition();
 //        }
@@ -441,7 +441,7 @@ public class Shooter implements Module {
      * @return the corrected angle to go to
      */
     public double boundTwist(double twistInputAngle) {
-        if(this.relativeTiltAngle > TWIST_LEVEL_THRESHOLD){
+        if(this.relativeTiltAngle > TWIST_LEVEL_THRESHOLD && driverInputControl.getShooterTwist() != 0){
             twistInputAngle = twistInputAngle < TWIST_BOUND_HIGH_RIGHT ? TWIST_BOUND_HIGH_RIGHT : twistInputAngle;
             twistInputAngle = twistInputAngle > TWIST_BOUND_HIGH_LEFT ? TWIST_BOUND_HIGH_LEFT : twistInputAngle;
         } else{
