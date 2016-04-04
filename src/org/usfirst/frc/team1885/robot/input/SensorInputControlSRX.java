@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
-import org.usfirst.frc.team1885.robot.common.type.RotarySwitchType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
@@ -34,7 +33,7 @@ public class SensorInputControlSRX {
     private BuiltInAccelerometer bia;
     private AHRS navx;
     private PressureSensor pressureSensor;
-    private Map<RotarySwitchType, RotarySwitchSensor> rotarySwitchSensor;
+    private Map<SensorType, RotarySwitchSensor> rotarySwitchSensors;
     private BeamSensor beamSensor;
 
     public static final double DEADZONE = 0.1;
@@ -201,11 +200,14 @@ public class SensorInputControlSRX {
     public double getPressure() {
         return pressureSensor.getPressure();
     }
-    public void addRotarySwitchSensor(RotarySwitchType type, int channel) {
-        rotarySwitchSensor.put( type, new RotarySwitchSensor(channel));
+    public void addRotarySwitchSensor(SensorType type, int channel) {
+        rotarySwitchSensors.put( type, new RotarySwitchSensor(channel));
     }
-    public double getRotaryPosition(RotarySwitchType type) {
-        return rotarySwitchSensor.get(type).getPosition();
+    public double getRotaryPosition(SensorType type) {
+        if(rotarySwitchSensors.containsKey(type)){
+            return rotarySwitchSensors.get(type).getPosition();
+        } 
+        return 0.0;
     }
     public void addBeamSensor(int channel) {
         beamSensor = new BeamSensor(channel);

@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.common.type.DefenseType;
-import org.usfirst.frc.team1885.robot.common.type.RotarySwitchType;
+import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
@@ -98,7 +98,7 @@ public class AutonomousRoutine {
     // AutoAlign - realigns the robot to move in position to shoot
 
     public void getConfiguration() {
-        if ((int) (SensorInputControlSRX.getInstance().getRotaryPosition(RotarySwitchType.DEFENSE_TYPE)) >= 5) { // do nothing case
+        if ((int) (SensorInputControlSRX.getInstance().getRotaryPosition(SensorType.DEFENSE_SELECTION)) >= 5) { // do nothing case
             doesNothing = true;
             isShooting = false;
             manualOverride = false;
