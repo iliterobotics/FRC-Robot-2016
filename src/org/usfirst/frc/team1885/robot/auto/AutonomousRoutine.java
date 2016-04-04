@@ -64,9 +64,10 @@ public class AutonomousRoutine {
                 if (!doesNothing) {
                     initAutoBreach();
                     if (isShooting) {
-                        // autoMoveToShoot();
+//                        autoMoveToShoot();
                         prepareHighGoal();
-                        // autoShootBallCam();
+//                        autoShootWithCam(); does not currently work, rely on static measurements
+                        autoShootBallCam();
                     }
                 }
                 configured = true;
@@ -97,10 +98,7 @@ public class AutonomousRoutine {
     // AutoAlign - realigns the robot to move in position to shoot
 
     public void getConfiguration() {
-        if ((int) (SensorInputControlSRX.getInstance()
-                .getRotaryPosition(RotarySwitchType.DEFENSE_TYPE)) >= 5) { // do
-                                                                           // nothing
-                                                                           // case
+        if ((int) (SensorInputControlSRX.getInstance().getRotaryPosition(RotarySwitchType.DEFENSE_TYPE)) >= 5) { // do nothing case
             doesNothing = true;
             isShooting = false;
             manualOverride = false;
@@ -112,8 +110,7 @@ public class AutonomousRoutine {
             type = DefenseType.MOAT;
             // type =
             // DefenseType.values()[(int)(SensorInputControlSRX.getInstance().getRotaryPosition())];
-            DriverStation.reportError("Running Moat with Manual Override",
-                    false);
+            DriverStation.reportError("Running Moat with Manual Override", false);
         }
         try {
             if (!manualOverride) {
@@ -153,11 +150,7 @@ public class AutonomousRoutine {
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAutoBreach() {
-        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeUp); // intake
-                                                                             // should
-                                                                             // always
-                                                                             // start
-                                                                             // up
+        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeUp); // intake should always start up
         if (type == DefenseType.MOAT || type == DefenseType.RAMPARTS) {
             commands.add(new AutoDriveStart(CLEAR_SPEED));
         } else if (type == DefenseType.PORTCULLIS) {
@@ -200,12 +193,6 @@ public class AutonomousRoutine {
         prepareHighGoal();
         commands.add(new AutoFindHighGoal());
         commands.add(new AutoLineUpHighGoal());
-        autoShootHighGoal();
-    }
-
-    public void autoShootHighGoal() {
-        commands.add(new AutoShooterAim());
-        commands.add(new AutoShoot());
     }
 
     public void autoMoveToShoot() {
@@ -321,6 +308,7 @@ public class AutonomousRoutine {
         commands.add(new AutoAlign(firstTurn));
         commands.add(new AutoDriveDistance(secondMove));
         commands.add(new AutoAimTurn(goalTurn));
+        prepareHighGoal();
         /*
          * if (!isHigh) { commands.add(new AutoDriveStart(START_DRIVE_SPEED));
          * commands.add(new AutoCrossedDefense());
