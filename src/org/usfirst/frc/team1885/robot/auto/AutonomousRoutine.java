@@ -69,6 +69,7 @@ public class AutonomousRoutine {
                         // autoShootBallCam();
                     }
                 }
+                configured = true;
             } else {
                 AutoCommand currCommand = commands.peek();
                 if (currCommand.isInit()) {
