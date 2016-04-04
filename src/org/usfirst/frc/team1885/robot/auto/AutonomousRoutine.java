@@ -125,8 +125,7 @@ public class AutonomousRoutine {
     }
 
     public void getServerConfig() {
-        AutonomousConfig autoC = RobotAutonomousConfiguration
-                .pullConfiguration();
+        AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
         if (autoC != null) {
             DriverStation.reportError("\ndefense" + autoC.getDefense(), false);
             type = DefenseType.values()[autoC.getDefense()];
@@ -151,7 +150,7 @@ public class AutonomousRoutine {
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAutoBreach() {
-        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeUp); // intake should always start up
+        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown); // intake should always start up
         if (type == DefenseType.MOAT || type == DefenseType.RAMPARTS) {
             commands.add(new AutoDriveStart(CLEAR_SPEED));
         } else if (type == DefenseType.PORTCULLIS) {
@@ -173,9 +172,10 @@ public class AutonomousRoutine {
             autoCheval();
             break;
         case RAMPARTS:
-            DrivetrainControl.getInstance().setLowGear();
         case ROCK_WALL:
             DrivetrainControl.getInstance().setLowGear();
+            commands.add(new AutoDriveDistance(0.5 * 12));
+            commands.add(new AutoAlign());
         default:
             autoMoat();
             break;
