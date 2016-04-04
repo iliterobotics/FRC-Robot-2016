@@ -347,6 +347,7 @@ public class Shooter implements Module {
             autoShooterTilt.execute();
             autoShooterTwist.execute();
 //            DriverStation.reportError("\nAuto aiming Tilt: " + getTiltAimLock() + " " + hg.isGoalFound(), false);
+            DriverStation.reportError("\nGoal Found:" + hg.isGoalFound(), false);
         }
         
         double currentAngle = sensorControl.getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER);
@@ -534,7 +535,7 @@ public class Shooter implements Module {
         double currentTilt = ((RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get() - sensorControl.getInitialTiltPosition()) * (360.0/1024));
         double goalTilt = currentTilt + tiltAngle;
         //        shooterSpeed *= BALL_FACTOR;
-        DriverStation.reportError("\n Camera Tilt Offset:: " + tiltAngle + " Current Tilt:: " + currentTilt + " Goal:: " + goalTilt, false);
+//        DriverStation.reportError("\n Camera Tilt Offset:: " + tiltAngle + " Current Tilt:: " + currentTilt + " Goal:: " + goalTilt, false);
         return hg.isGoalFound() ? goalTilt : this.relativeTiltAngle;
     }
     public boolean isGoalFound(){
