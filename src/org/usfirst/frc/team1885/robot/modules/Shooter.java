@@ -378,7 +378,7 @@ public class Shooter implements Module {
         if (realTiltAngle < TILT_LIMIT_LOWER) {
             tiltInputAngle = TILT_LIMIT_LOWER;
         }
-        if(false/*!ActiveIntake.getInstance().isDown()*/){
+        if(!ActiveIntake.getInstance().isDown()){
             if(realTiltAngle < TILT_THRESHOLD){
                 tiltInputAngle = realTiltAngle > LOWER_TILT_COLLISION ? LOWER_TILT_COLLISION : tiltInputAngle;
             }else if(realTiltAngle > TILT_THRESHOLD){
