@@ -52,8 +52,7 @@ public class AutonomousRoutine {
 
     public void execute() {
         int commandNum = 0;
-        while (!commands.isEmpty() && robot.isEnabled()
-                && robot.isAutonomous()) {
+        while (robot.isEnabled() && robot.isAutonomous()) {
             if (!configured) {
                 getConfiguration();
                 try {
@@ -72,13 +71,15 @@ public class AutonomousRoutine {
                 }
                 configured = true;
             } else {
+                if(commands.isEmpty()){
+                    break;
+                }
                 AutoCommand currCommand = commands.peek();
                 if (currCommand.isInit()) {
                     boolean commandState = currCommand.execute();
                     currCommand.updateOutputs();
                     if (commandState) {
-                        DriverStation.reportError(
-                                "\nfinished command " + commandNum, false);
+                        DriverStation.reportError("\nfinished command " + commandNum, false);
                         commandNum++;
                         commands.poll();
                     }
