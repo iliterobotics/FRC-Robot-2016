@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class RobotAutonomousConfiguration {
     public static AutonomousConfig pullConfiguration() {
-        return pullConfiguration(ServerInformation.LAPTOP_IP_ADDRESS);
+        return pullConfiguration(ServerInformation.LAPTOP_HOSTNAME_ADDRESS);
     }
 
     private static AutonomousConfig pullConfiguration(String URL){

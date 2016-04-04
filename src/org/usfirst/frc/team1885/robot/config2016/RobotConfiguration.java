@@ -105,10 +105,10 @@ public class RobotConfiguration {
         // Sensors
         sensorInputControl.createNavX(SerialPort.Port.kMXP);
         sensorInputControl.addPressureSensor(0);
-        sensorInputControl.addRotarySwitchSensor(RotarySwitchType.DEFENSE_TYPE, 1);
-        sensorInputControl.addRotarySwitchSensor(RotarySwitchType.TYPE_2, 2);
-        sensorInputControl.addRotarySwitchSensor(RotarySwitchType.TYPE_3, 3);
-        sensorInputControl.addRotarySwitchSensor(RotarySwitchType.TYPE_4, 4);
+//        sensorInputControl.addRotarySwitchSensor(RotarySwitchType.DEFENSE_TYPE, 1);
+//        sensorInputControl.addRotarySwitchSensor(RotarySwitchType.TYPE_2, 2);
+//        sensorInputControl.addRotarySwitchSensor(RotarySwitchType.TYPE_3, 3);
+//        sensorInputControl.addRotarySwitchSensor(RotarySwitchType.TYPE_4, 4);
 //        sensorInputControl.addBeamSensor(2);
         // Drivetrain Encoders
         robotControl.addTalonSensor(RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
