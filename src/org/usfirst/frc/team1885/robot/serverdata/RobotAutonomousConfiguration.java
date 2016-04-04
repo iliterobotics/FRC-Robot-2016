@@ -1,9 +1,6 @@
 package org.usfirst.frc.team1885.robot.serverdata;
 
 import java.io.BufferedWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.net.InetAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,13 +10,22 @@ import java.nio.file.StandardOpenOption;
 import org.json.JSONObject;
 import org.usfirst.frc.team1885.serverdata.ServerInformation;
 
+import dataclient.DataClient;
 import dataclient.DataServerWebClient;
+import dataclient.NetworkTablesClient;
 import dataclient.robotdata.autonomous.AutonomousConfig;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class RobotAutonomousConfiguration {
     public static AutonomousConfig pullConfiguration() {
         return pullConfiguration(ServerInformation.LAPTOP_HOSTNAME_ADDRESS);
+    }
+    
+    public static AutonomousConfig pullNetworktableConfiguration(){
+        DataClient client = new NetworkTablesClient("shooter", false);
+        AutonomousConfig config = new AutonomousConfig(client);
+        config.update(client.getDirect(config.getCollection(), config.getID()));
+        return config;
     }
 
     private static AutonomousConfig pullConfiguration(String URL){
@@ -71,26 +77,26 @@ public class RobotAutonomousConfiguration {
     }
 
     private static void debugStatement(BufferedWriter bos, String string, Throwable e2) {
-        StringBuilder output = new StringBuilder();
-        output.append(string);
-        if(e2 != null) {
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            e2.printStackTrace(pw);
-            output.append("\n");
-            output.append(sw.toString());
-        }
-
-        DriverStation.reportError(output.toString(), false);
-        if(bos != null) {
-            try {
-                bos.write(output.toString());
-                bos.newLine();
-                bos.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        StringBuilder output = new StringBuilder();
+//        output.append(string);
+//        if(e2 != null) {
+//            StringWriter sw = new StringWriter();
+//            PrintWriter pw = new PrintWriter(sw);
+//            e2.printStackTrace(pw);
+//            output.append("\n");
+//            output.append(sw.toString());
+//        }
+//
+//        DriverStation.reportError(output.toString(), false);
+//        if(bos != null) {
+//            try {
+//                bos.write(output.toString());
+//                bos.newLine();
+//                bos.flush();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
     }
 

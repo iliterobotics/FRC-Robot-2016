@@ -54,21 +54,21 @@ public class AutonomousRoutine {
         int commandNum = 0;
         while (robot.isEnabled() && robot.isAutonomous()) {
             if (!configured) {
-                getConfiguration();
+//                getConfiguration();
                 try {
                     getServerConfig();
                 } catch (Throwable t) {
                     DriverStation.reportError("\nERROR:: Could not retrieve configuration from server", false);
                 }
-                if (!doesNothing) {
-                    initAutoBreach();
-                    if (isShooting) {
-//                        autoMoveToShoot();
-                        prepareHighGoal();
-//                        autoShootWithCam(); does not currently work, rely on static measurements
-                        autoShootBallCam();
-                    }
-                }
+//                if (!doesNothing) {
+//                    initAutoBreach();
+//                    if (isShooting) {
+////                        autoMoveToShoot();
+//                        prepareHighGoal();
+////                        autoShootWithCam(); does not currently work, rely on static measurements
+//                        autoShootBallCam();
+//                    }
+//                }
                 configured = true;
             } else {
                 if(commands.isEmpty()){
