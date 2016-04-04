@@ -56,6 +56,7 @@ public class SensorInputControlSRX {
         rsrx = RobotControlWithSRX.getInstance();
         PDP = new PowerDistributionPanel();
         ticks = new HashMap<SensorType, Integer>();
+        rotarySwitchSensors = new HashMap<SensorType, RotarySwitchSensor>();
     }
     public void update() {
     }

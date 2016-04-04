@@ -65,7 +65,7 @@ public class Robot extends SampleRobot {
             Shooter.getInstance().init();
             DriverStation.reportError("\nRobot configured", false);
         } catch (Exception e) {
-            DriverStation.reportError("\nRobot - Error configuring Robot\n" + e.getMessage(), false);
+            DriverStation.reportError("\nRobot - Error configuring Robot", false);
         }
 //        Initialize Modules
         modules = ModuleControl.getInstance().getModules();
