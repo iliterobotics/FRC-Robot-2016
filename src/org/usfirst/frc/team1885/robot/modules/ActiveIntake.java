@@ -15,7 +15,6 @@ public class ActiveIntake implements Module {
     private static ActiveIntake instance;
     private double intakeSpeed;
     private DoubleSolenoid.Value isIntaking;
-    private boolean CDFState;
     private MotorState intakeState;
     private DriverInputControlSRX driverInputControl;
     private RobotControlWithSRX robotControl;
@@ -32,7 +31,6 @@ public class ActiveIntake implements Module {
         isIntaking = intakeUp;
         reset();
         previousIntakeToggle = false;
-        CDFState = false;
         DriverStation.reportError("" + isDown(), false);
     }
     public static ActiveIntake getInstance() {
@@ -73,8 +71,6 @@ public class ActiveIntake implements Module {
             isIntaking = isIntaking == intakeUp ? intakeDown : intakeUp;
         }
         
-        CDFState = driverInputControl.getButton(RobotButtonType.CDF_DROPPER);
-        
         if(Shooter.getInstance().getRelativeTilt() > Shooter.LOWER_TILT_COLLISION && Shooter.getInstance().getRelativeTilt() < Shooter.UPPER_TILT_COLLISION){
             isIntaking = intakeDown;
         }
@@ -101,8 +97,7 @@ public class ActiveIntake implements Module {
     public void updateOutputs() {
 //        DriverStation.reportError("\nIntake Motor Speed " + intakeSpeed + "\nSolenoid State" + isIntaking, false);
         robotControl.updateIntakeMotor(intakeSpeed);
-        robotControl.updateDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER, isIntaking);
-        robotControl.updateSingleSolenoid(RobotPneumaticType.CDF_DROPPER, CDFState);    
+        robotControl.updateDoubleSolenoid(RobotPneumaticType.INTAKE_SETTER, isIntaking);  
     }
     @Override
     public void update() {
