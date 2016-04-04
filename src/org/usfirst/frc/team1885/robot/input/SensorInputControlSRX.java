@@ -62,11 +62,6 @@ public class SensorInputControlSRX {
     }
     // Create initial sensor readings
     public void init() {
-        INITIAL_POT_A_POSITION = rsrx.getTalons()
-                .get(RobotMotorType.ARM_JOINT_A).getEncPosition();
-        INITIAL_POT_B_POSITION = rsrx.getTalons()
-                .get(RobotMotorType.ARM_JOINT_B).getEncPosition();
-        // INITIAL_TILT_POSITION =
         // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get();
         INITIAL_TILT_POSITION = -511;
         DriverStation.reportError("\nInit Tilt:: " + INITIAL_TILT_POSITION, false);

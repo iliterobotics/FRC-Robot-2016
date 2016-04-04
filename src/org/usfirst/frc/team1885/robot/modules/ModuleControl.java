@@ -44,6 +44,10 @@ public class ModuleControl{
         return (Shooter)modules.get(ModuleType.SHOOTER);
     }
 	
+	public UtilityArm getUtilityArm(){
+	    return (UtilityArm)modules.get(ModuleType.UTILITY_ARM);
+	}
+	
 	public void updateIntakeShooter(){
 	    Shooter.getInstance().update();
 	    ActiveIntake.getInstance().update();

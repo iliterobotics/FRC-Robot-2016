@@ -68,6 +68,7 @@ public class RobotConfiguration {
         joystickButtonMap.addControllerButton(RobotButtonType.FIRE, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
         joystickButtonMap.addControllerButton(RobotButtonType.TACTICAL_LIGHT, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 1));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_COMPLETE_OVERRIDE, new JoystickButtonMatch(RobotJoystickType.OVERRIDE_CONTROLLER, 5));
+        joystickButtonMap.addControllerButton(RobotButtonType.AIM, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 0));
         // Active Intake Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_SOLENOID, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 1));
         joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 2));
@@ -81,7 +82,7 @@ public class RobotConfiguration {
         robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
         robotControl.addTalonOutput(RobotMotorType.LEFT_DRIVE, 3);
         robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
-        robotControl.addTalonOutput(RobotMotorType.UTILITY_ARM, 5);
+//        robotControl.addTalonOutput(RobotMotorType.UTILITY_ARM, 5);
         //6 not currently used
         robotControl.addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
         robotControl.addTalonOutput(RobotMotorType.FLYWHEEL_LEFT, 8);
@@ -115,8 +116,8 @@ public class RobotConfiguration {
         robotControl.addTalonSensor(RobotMotorType.FLYWHEEL_RIGHT, SensorType.FLYWHEEL_RIGHT_ENCODER, 9);
         robotControl.addTalonSensor(RobotMotorType.SHOOTER_TILT, SensorType.SHOOTER_TILT_POTENTIOMETER, 10);
         robotControl.addTalonSensor(RobotMotorType.SHOOTER_TWIST, SensorType.SHOOTER_TWIST_ENCODER, 11);
-        // Utility Arm potentiometers
-        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.UTILITY_ARM, SensorType.ARM_CTRE_ABSOLUTE, 1);
+        // Utility Arm Encoder
+        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.UTILITY_ARM, SensorType.ARM_CTRE_ABSOLUTE, 5);
         
         // Add Module
 //        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
