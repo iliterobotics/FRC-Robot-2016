@@ -9,5 +9,6 @@ public enum RobotMotorType {
     FLYWHEEL_RIGHT,
     FLYWHEEL_LEFT,
     SHOOTER_TILT,
-    SHOOTER_TWIST
+    SHOOTER_TWIST, 
+    UTILITY_ARM
 }
