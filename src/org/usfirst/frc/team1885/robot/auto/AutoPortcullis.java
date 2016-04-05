@@ -23,6 +23,7 @@ public class AutoPortcullis extends AutoCommand {
     
     @Override
     public boolean init() {
+        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeUp);
         RobotControlWithSRX.getInstance().updateIntakeMotor(ActiveIntake.INTAKE_SPEED);        
         return false;
     }
