@@ -149,33 +149,31 @@ public class AutonomousRoutine {
      */
     public void initAutoBreach() {
         ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown); // intake should always start down
-        if (type == DefenseType.MOAT || type == DefenseType.RAMPARTS) {
-            commands.add(new AutoDriveStart(CLEAR_SPEED * direction));
-        } else if (type == DefenseType.PORTCULLIS) {
-            commands.add(new AutoDriveStart(-START_DRIVE_SPEED * direction));
-        } else {
-            commands.add(new AutoDriveStart(START_DRIVE_SPEED * direction));
-        }
         commands.add(new AutoReachedDefense());
         // DEFAULT CASE calls autoMoat which is sufficient for moat, ramparts,
         // rough terrain, rock wall
         switch (type) {
         case PORTCULLIS:
+            commands.add(new AutoDriveStart(-START_DRIVE_SPEED * direction));
             autoPortcullis();
             break;
         case CHEVAL_DE_FRISE: //currently does nothing
+            commands.add(new AutoDriveStart(START_DRIVE_SPEED * direction));
             autoCheval();
             break;
         case LOW_BAR:
             autoGearShift(DrivetrainControl.LOW_GEAR);
+            commands.add(new AutoDriveStart(START_DRIVE_SPEED * direction));
             autoLowBar();
             break;
         case RAMPARTS:
         case ROCK_WALL:
             autoGearShift(DrivetrainControl.LOW_GEAR);
+            commands.add(new AutoDriveStart(CLEAR_SPEED * direction));
             autoRamparts();
             break;
         default:
+            commands.add(new AutoDriveStart(CLEAR_SPEED * direction));
             autoMoat();
             break;
         }
