@@ -169,7 +169,7 @@ public class AutonomousRoutine {
         case ROCK_WALL:
             autoGearShift(DrivetrainControl.LOW_GEAR);
             startDrive();
-            autoRamparts();
+            autoRockWall();
             break;
         default:
             startDrive();
