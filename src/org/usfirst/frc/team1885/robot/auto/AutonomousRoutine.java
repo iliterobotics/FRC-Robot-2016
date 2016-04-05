@@ -55,7 +55,7 @@ public class AutonomousRoutine {
         int commandNum = 0;
         while (robot.isEnabled() && robot.isAutonomous()) {
             if (!configured) {
-                getConfiguration();
+                getManualConfiguration();
                 try {
                     getServerConfig();
                 } catch (Throwable t) {
@@ -98,7 +98,7 @@ public class AutonomousRoutine {
     // AutoCrossedDefense - checks if we have landed and can prepare to shoot
     // AutoAlign - realigns the robot to move in position to shoot
 
-    public void getConfiguration() {
+    public void getManualConfiguration() {
         if ((int) (SensorInputControlSRX.getInstance().getRotaryPosition(SensorType.DEFENSE_SELECTION)) >= 5) { // do nothing case
             doesNothing = true;
             isShooting = false;
@@ -147,7 +147,6 @@ public class AutonomousRoutine {
 
     /**
      * Method that initializes all commands for AutonomousRoutine to run
-     * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAutoBreach() {
         ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown); // intake should always start down
@@ -165,7 +164,7 @@ public class AutonomousRoutine {
         case PORTCULLIS:
             autoPortcullis();
             break;
-        case CHEVAL_DE_FRISE:
+        case CHEVAL_DE_FRISE: //currently does nothing
             autoCheval();
             break;
         case LOW_BAR:
@@ -327,7 +326,6 @@ public class AutonomousRoutine {
      */
     public void autoLowBar() {
         double lowBarTravelDistance = 4.5 * 12 * direction;
-        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
         commands.add(new AutoDriveDistance(lowBarTravelDistance, .2));
     }
 
