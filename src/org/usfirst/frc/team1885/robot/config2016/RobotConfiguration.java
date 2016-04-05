@@ -108,6 +108,7 @@ public class RobotConfiguration {
 //        sensorInputControl.addRotarySwitchSensor(SensorType.TYPE_3, 3);
 //        sensorInputControl.addRotarySwitchSensor(SensorType.TYPE_4, 4);
 //        sensorInputControl.addBeamSensor(2);
+        sensorInputControl.addLimitSwitch(SensorType.ARM_LIMITER, 0);
         // Drivetrain Encoders
         robotControl.addTalonSensor(RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
         robotControl.addTalonSensor(RobotMotorType.RIGHT_DRIVE, SensorType.RIGHT_ENCODER, 2);

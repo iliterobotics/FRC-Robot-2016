@@ -9,6 +9,7 @@ import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 import org.usfirst.frc.team1885.robot.sensor.BeamSensor;
 import org.usfirst.frc.team1885.robot.sensor.LidarSensor;
+import org.usfirst.frc.team1885.robot.sensor.LimitSwitch;
 import org.usfirst.frc.team1885.robot.sensor.PressureSensor;
 import org.usfirst.frc.team1885.robot.sensor.RotarySwitchSensor;
 
@@ -34,6 +35,7 @@ public class SensorInputControlSRX {
     private AHRS navx;
     private PressureSensor pressureSensor;
     private Map<SensorType, RotarySwitchSensor> rotarySwitchSensors;
+    private Map<SensorType, LimitSwitch> limitSwitches;
     private BeamSensor beamSensor;
 
     public static final double DEADZONE = 0.1;
@@ -57,6 +59,7 @@ public class SensorInputControlSRX {
         PDP = new PowerDistributionPanel();
         ticks = new HashMap<SensorType, Integer>();
         rotarySwitchSensors = new HashMap<SensorType, RotarySwitchSensor>();
+        limitSwitches = new HashMap<SensorType, LimitSwitch>();
     }
     public void update() {
     }
@@ -200,10 +203,13 @@ public class SensorInputControlSRX {
         rotarySwitchSensors.put( type, new RotarySwitchSensor(channel));
     }
     public double getRotaryPosition(SensorType type) {
-        if(rotarySwitchSensors.containsKey(type)){
-            return rotarySwitchSensors.get(type).getPosition();
-        } 
-        return 0.0;
+        return rotarySwitchSensors.containsKey(type) ? rotarySwitchSensors.get(type).getPosition(): 0.0;
+    }
+    public void addLimitSwitch(SensorType type, int channel){
+        limitSwitches.put(type, new LimitSwitch(channel));
+    }
+    public LimitSwitch getLimitSwitch(SensorType type){
+        return limitSwitches.containsKey(type) ? limitSwitches.get(type) : null;
     }
     public void addBeamSensor(int channel) {
         beamSensor = new BeamSensor(channel);

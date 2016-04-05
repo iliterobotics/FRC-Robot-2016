@@ -16,5 +16,5 @@ public enum SensorType {
     TYPE_2, 
     TYPE_3, 
     TYPE_4, 
-    ARM_CTRE_ABSOLUTE
+    ARM_CTRE_ABSOLUTE, ARM_LIMITER
 }
