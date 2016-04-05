@@ -175,6 +175,8 @@ public class AutonomousRoutine {
         case RAMPARTS:
         case ROCK_WALL:
             autoGearShift(DrivetrainControl.LOW_GEAR);
+            autoRamparts();
+            break;
         default:
             autoMoat();
             break;
