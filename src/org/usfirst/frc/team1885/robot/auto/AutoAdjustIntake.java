@@ -20,14 +20,12 @@ public class AutoAdjustIntake extends AutoCommand{
     @Override
     public boolean execute() {
         ActiveIntake.getInstance().setIntakeSolenoid(this.intakeState);
-        ActiveIntake.getInstance().updateOutputs();
-        // TODO Auto-generated method stub
         return true;
     }
 
     @Override
     public boolean updateOutputs() {
-        // TODO Auto-generated method stub
+        ActiveIntake.getInstance().updateOutputs();
         return false;
     }
 

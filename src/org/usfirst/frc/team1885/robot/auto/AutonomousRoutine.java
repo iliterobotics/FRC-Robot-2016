@@ -148,7 +148,7 @@ public class AutonomousRoutine {
      * Method that initializes all commands for AutonomousRoutine to run
      */
     public void initAutoBreach() {
-        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown); // intake should always start down
+        commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown)); // intake should always start down
         commands.add(new AutoReachedDefense());
         // DEFAULT CASE calls autoMoat which is sufficient for moat, ramparts,
         // rough terrain, rock wall
