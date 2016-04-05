@@ -374,8 +374,7 @@ public class AutonomousRoutine {
     }
     
     public void autoReCrossDefense(){
-        commands.add(new AutoAlign());
-        direction = -1.0;
+        commands.add(new AutoAlign(180));
         initAutoBreach();
     }
 
