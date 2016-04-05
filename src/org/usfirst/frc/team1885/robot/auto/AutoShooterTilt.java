@@ -15,7 +15,7 @@ public class AutoShooterTilt extends AutoCommand {
     @Override
     public boolean execute() {
         Shooter.getInstance().setToTiltValue(this.angle);
-        return false;
+        return true;
     }
     @Override
     public boolean updateOutputs() {

@@ -9,25 +9,24 @@ import dataclient.robotdata.vision.HighGoal;
 
 public class AutoShooterAim extends AutoCommand {
     
+    private long startTime;
     private AutoShooterTilt shooterTilt;
     private AutoShooterTwist shooterTwist;
-    private AutoDriveStart backup;
     
     public AutoShooterAim() {
         shooterTilt = new AutoShooterTilt(Shooter.HIGH_GOAL_CAM_TILT);
         shooterTwist = new AutoShooterTwist(0);
-        backup = new AutoDriveStart(0);
     }
     
     @Override
     public boolean init()  {
+        startTime = System.currentTimeMillis();
         return true;
     }
 
     @Override
     public boolean execute() {
         if(Shooter.getInstance().isGoalFound()){
-            backup = new AutoDriveStart(0);
             
             double tilt = Shooter.getInstance().getTiltAimLock();
             double twist = Shooter.getInstance().getTwistAimLock();
@@ -36,17 +35,14 @@ public class AutoShooterAim extends AutoCommand {
             shooterTwist = new AutoShooterTwist(twist);
         
             return shooterTilt.execute() && shooterTwist.execute();
-        } else{
-            backup = new AutoDriveStart(0.1);
         }
-        return false;
+        return System.currentTimeMillis() - startTime > TIMEOUT;
     }
 
     @Override
     public boolean updateOutputs() {
         shooterTwist.updateOutputs();
         shooterTilt.updateOutputs();
-        backup.updateOutputs();
         return false;
     }
 

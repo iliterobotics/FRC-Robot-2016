@@ -16,7 +16,7 @@ public class AutoShooterTwist extends AutoCommand {
     @Override
     public boolean execute() {
         Shooter.getInstance().setToTwistValue(this.angle);
-        return false;
+        return true;
     }
     @Override
     public boolean updateOutputs() {

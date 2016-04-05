@@ -10,9 +10,7 @@ public class AutoShoot extends AutoCommand {
 
     @Override
     public boolean execute() {
-        if(Shooter.getInstance().fire())
-            return true;
-        return false;
+        return Shooter.getInstance().fire();
     }
 
     @Override

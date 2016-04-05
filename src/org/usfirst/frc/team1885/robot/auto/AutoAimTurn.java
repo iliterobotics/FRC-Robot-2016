@@ -17,7 +17,6 @@ public class AutoAimTurn extends AutoCommand{
     
     @Override
     public boolean init() {
-        (new AutoShooterInitiate()).execute();
         (new AutoAdjustIntake(ActiveIntake.intakeDown)).execute();
         return false;
     }

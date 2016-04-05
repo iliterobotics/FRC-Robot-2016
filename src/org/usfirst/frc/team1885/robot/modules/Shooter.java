@@ -258,21 +258,17 @@ public class Shooter implements Module {
      * @return true if the container is opened
      */
     public boolean launch(){
-//        if(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER) >= (FLYWHEEL_MIN_LAUNCH_SPEED * shooterSpeed)){ //adjusts min launch speed according to what we decide launching speed is, only waits for flywheel to rev up
-        if (System.currentTimeMillis() - lastLaunchCheck > FIRE_DELAY) {
+        if(Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER)) >= (FLYWHEEL_MAX_SPEED * shooterSpeed)){ //adjusts min launch speed according to what we decide launching speed is, only waits for flywheel to rev up
             return launchManualOverride();
-            // DriverStation.reportError("\nFire", false);
         }
         return false;
     }
     public boolean launchManualOverride(){
 //        DriverStation.reportError("\n Necessary Speed:: " + (FLYWHEEL_MAX_SPEED * shooterSpeed), false);
-        if(Math.abs(sensorControl.getEncoderVelocity(SensorType.FLYWHEEL_RIGHT_ENCODER)) >= (FLYWHEEL_MAX_SPEED * shooterSpeed)){ //adjusts min launch speed according to what we decide launching speed is, only waits for flywheel to rev up
-            containerState = OPEN;
-            if(System.currentTimeMillis() - kickTime > KICK_TIME){
-                kickerState = OPEN;
-                DriverStation.reportError("\nFIRE FIRE FIRE", false);
-            }
+        containerState = OPEN;
+        if(System.currentTimeMillis() - kickTime > KICK_TIME){
+            kickerState = OPEN;
+            DriverStation.reportError("\nFIRE FIRE FIRE", false);
         }
         return kickerState;
     }

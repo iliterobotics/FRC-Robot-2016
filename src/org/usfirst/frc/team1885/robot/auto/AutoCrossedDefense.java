@@ -30,6 +30,8 @@ public class AutoCrossedDefense extends AutoCommand {
     private long startTime;
     private double leftDriveSpeed;
     private double rightDriveSpeed;
+    
+    private long timeoutStartTime;
 
     public AutoCrossedDefense() {
         sensorInputControl = SensorInputControlSRX.getInstance();
@@ -45,6 +47,8 @@ public class AutoCrossedDefense extends AutoCommand {
         startTime = System.currentTimeMillis();
         leftDriveSpeed = DrivetrainControl.getInstance().getLeftDriveSpeed();
         rightDriveSpeed = DrivetrainControl.getInstance().getRightDriveSpeed();
+        
+        timeoutStartTime = System.currentTimeMillis();
         return true;
     }
 
@@ -70,7 +74,7 @@ public class AutoCrossedDefense extends AutoCommand {
             startTime = System.currentTimeMillis();
         }
         DrivetrainControl.getInstance().update(leftDriveSpeed, rightDriveSpeed);
-        return false;
+        return System.currentTimeMillis() - timeoutStartTime > TIMEOUT;
     }
 
     @Override

@@ -5,7 +5,8 @@ package org.usfirst.frc.team1885.robot.auto;
  * @version<2/13/2016>
  */
 public abstract class AutoCommand {
-
+    
+    protected double TIMEOUT = 5000;
     protected boolean isInit = false;
 
     /**

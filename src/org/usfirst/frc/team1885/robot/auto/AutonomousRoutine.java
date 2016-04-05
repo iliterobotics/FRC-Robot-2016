@@ -33,6 +33,7 @@ public class AutonomousRoutine {
     private boolean isShooting;
     private boolean manualOverride;
     public static final double CLEAR_SPEED = 1;
+    private double direction;
 
     public boolean configured;
 
@@ -48,27 +49,27 @@ public class AutonomousRoutine {
         // commands.add(new AutoWait(2000));
         // commands.add(new AutoAlign());
         configured = false;
+        direction = 1.0;
     }
 
     public void execute() {
         int commandNum = 0;
         while (robot.isEnabled() && robot.isAutonomous()) {
             if (!configured) {
-//                getConfiguration();
+                getConfiguration();
                 try {
                     getServerConfig();
                 } catch (Throwable t) {
                     DriverStation.reportError("\nERROR:: Could not retrieve configuration from server", false);
                 }
-//                if (!doesNothing) {
-//                    initAutoBreach();
-//                    if (isShooting) {
-////                        autoMoveToShoot();
-//                        prepareHighGoal();
-////                        autoShootWithCam(); does not currently work, rely on static measurements
-//                        autoShootBallCam();
-//                    }
-//                }
+                if (!doesNothing) {
+                    initAutoBreach();
+                    if (isShooting) {
+                        autoTurnToShoot();
+//                        autoMoveToShoot();
+                        autoShootBallCam();
+                    }
+                }
                 configured = true;
             } else {
                 if(commands.isEmpty()){
@@ -150,13 +151,13 @@ public class AutonomousRoutine {
      * CURRENTLY COMMENTED OUT IN ROBOT
      */
     public void initAutoBreach() {
-        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown); // intake should always start up
+        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown); // intake should always start down
         if (type == DefenseType.MOAT || type == DefenseType.RAMPARTS) {
-            commands.add(new AutoDriveStart(CLEAR_SPEED));
+            commands.add(new AutoDriveStart(CLEAR_SPEED * direction));
         } else if (type == DefenseType.PORTCULLIS) {
-            commands.add(new AutoDriveStart(-START_DRIVE_SPEED));
+            commands.add(new AutoDriveStart(-START_DRIVE_SPEED * direction));
         } else {
-            commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+            commands.add(new AutoDriveStart(START_DRIVE_SPEED * direction));
         }
         commands.add(new AutoReachedDefense());
         // DEFAULT CASE calls autoMoat which is sufficient for moat, ramparts,
@@ -174,7 +175,7 @@ public class AutonomousRoutine {
         case RAMPARTS:
         case ROCK_WALL:
             DrivetrainControl.getInstance().setLowGear();
-            commands.add(new AutoDriveDistance(0.5 * 12));
+            commands.add(new AutoDriveDistance(0.5 * 12 * direction));
             commands.add(new AutoAlign());
         default:
             autoMoat();
@@ -183,17 +184,14 @@ public class AutonomousRoutine {
         commands.add(new AutoCrossedDefense());
         commands.add(new AutoAlign());
     }
-
-    public void prepareHighGoal() {
-        commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
-        commands.add(new AutoWait(1000));
-        commands.add(new AutoShooterTilt(Shooter.STATIC_TILT_LIMIT_UPPER));
-    }
-
-    public void autoShootWithCam() {
-        prepareHighGoal();
-        commands.add(new AutoFindHighGoal());
-        commands.add(new AutoLineUpHighGoal());
+    
+    public void autoTurnToShoot(){
+        switch(targetDefense){
+        case 1: commands.add(new AutoAimTurn(45.0)); break;
+        case 2: commands.add(new AutoAimTurn(30.0)); break;
+        case 4: commands.add(new AutoAimTurn(-30.0)); break;
+        case 5: commands.add(new AutoAimTurn(-45.0)); break;
+        }
     }
 
     public void autoMoveToShoot() {
@@ -309,7 +307,6 @@ public class AutonomousRoutine {
         commands.add(new AutoAlign(firstTurn));
         commands.add(new AutoDriveDistance(secondMove));
         commands.add(new AutoAimTurn(goalTurn));
-        prepareHighGoal();
         /*
          * if (!isHigh) { commands.add(new AutoDriveStart(START_DRIVE_SPEED));
          * commands.add(new AutoCrossedDefense());
@@ -323,7 +320,7 @@ public class AutonomousRoutine {
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
-        double lowBarTravelDistance = 4.5 * 12; // subject to change from
+        double lowBarTravelDistance = 4.5 * 12 * direction;
         ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
         DrivetrainControl.getInstance().setLowGear();
         commands.add(new AutoDriveDistance(lowBarTravelDistance, .2));
@@ -350,7 +347,7 @@ public class AutonomousRoutine {
 
     public void autoMoat() {
         commands.add(new AutoWait(1000));
-        commands.add(new AutoDriveStart(START_DRIVE_SPEED));
+        commands.add(new AutoDriveStart(START_DRIVE_SPEED * direction));
     }
 
     /**
@@ -372,6 +369,12 @@ public class AutonomousRoutine {
     public void autoShootBallCam() {
         commands.add(new AutoShooterAim());
         commands.add(new AutoShoot());
+    }
+    
+    public void autoReCrossDefense(){
+        commands.add(new AutoAlign());
+        direction = -1.0;
+        initAutoBreach();
     }
 
     public void autoWheelie() {
