@@ -39,10 +39,6 @@ public class AutonomousRoutine {
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
         robot = r;
-        SensorInputControlSRX.getInstance().calibrateGyro();
-        // commands.add(new AutoCalibrateWheels(1));
-        DriverStation.reportError("\nGyro Calibrated", false);
-
         // commands.add(new AutoDriveDistance(3 * 12));
         // commands.add(new AutoAlign(360));
         // commands.add(new AutoWait(2000));
@@ -55,6 +51,9 @@ public class AutonomousRoutine {
         int commandNum = 0;
         while (robot.isEnabled() && robot.isAutonomous()) {
             if (!configured) {
+                SensorInputControlSRX.getInstance().calibrateGyro();
+             // commands.add(new AutoCalibrateWheels(1));
+                DriverStation.reportError("\nGyro Calibrated", false);
                 getManualConfiguration();
                 try {
                     getServerConfig();
