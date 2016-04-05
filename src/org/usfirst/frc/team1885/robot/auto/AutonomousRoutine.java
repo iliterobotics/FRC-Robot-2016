@@ -7,7 +7,6 @@ import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
-import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
@@ -163,25 +162,30 @@ public class AutonomousRoutine {
         // DEFAULT CASE calls autoMoat which is sufficient for moat, ramparts,
         // rough terrain, rock wall
         switch (type) {
-        case LOW_BAR:
-            autoLowBar();
-            break;
         case PORTCULLIS:
             autoPortcullis();
             break;
         case CHEVAL_DE_FRISE:
             autoCheval();
             break;
+        case LOW_BAR:
+            autoGearShift(DrivetrainControl.LOW_GEAR);
+            autoLowBar();
+            break;
         case RAMPARTS:
         case ROCK_WALL:
-            DrivetrainControl.getInstance().setLowGear();
-            commands.add(new AutoDriveDistance(0.5 * 12 * direction));
-            commands.add(new AutoAlign());
+            autoGearShift(DrivetrainControl.LOW_GEAR);
         default:
             autoMoat();
             break;
         }
         commands.add(new AutoCrossedDefense());
+        commands.add(new AutoAlign());
+    }
+    
+    public void autoGearShift(boolean gear){
+        commands.add(new AutoGearShift(gear));
+        commands.add(new AutoDriveDistance(0.5 * 12 * direction));
         commands.add(new AutoAlign());
     }
     
@@ -322,7 +326,6 @@ public class AutonomousRoutine {
     public void autoLowBar() {
         double lowBarTravelDistance = 4.5 * 12 * direction;
         ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
-        DrivetrainControl.getInstance().setLowGear();
         commands.add(new AutoDriveDistance(lowBarTravelDistance, .2));
     }
 

@@ -5,15 +5,12 @@ import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
-import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.DriverStation;
 
 public class DrivetrainControl implements Module {
     /**
@@ -72,12 +69,10 @@ public class DrivetrainControl implements Module {
         return isTurning;
     }
     public void update() {
-        if (DriverInputControlSRX.getInstance()
-                .getButton(RobotButtonType.GEAR_SHIFT)) {
+            gear = HIGH_GEAR;
+        if (DriverInputControlSRX.getInstance().getButton(RobotButtonType.GEAR_SHIFT)) {
             maxSpeed = 15.0;
             gear = LOW_GEAR;
-        } else {
-            gear = HIGH_GEAR;
         }
     }
 
@@ -155,12 +150,8 @@ public class DrivetrainControl implements Module {
         this.leftDriveSpeed = driveSpeed;
     }
     
-    public void setHighGear(){
-        gear = HIGH_GEAR;
-    }
-    
-    public void setLowGear(){
-        gear = LOW_GEAR;
+    public void gearShift(boolean gear){
+        this.gear = gear;
     }
     
     public void setControlMode(TalonControlMode mode){
