@@ -78,7 +78,7 @@ public class DriverInputControlSRX {
                 .getInstance().getButtonMap().get(buttonType);
         double rawAxis = 0;
         try {
-            rawAxis = getJoystick(buttonMatch.getJoystickType())
+            rawAxis = this.getJoystick(buttonMatch.getJoystickType())
                     .getRawAxis(buttonMatch.getAxisType().value);
         } catch (Exception e) {
             System.err.println("EXCEPTION on buttonType= " + buttonType);
@@ -125,11 +125,11 @@ public class DriverInputControlSRX {
                 leftDriveSpeed);
     }
     public double getControllerTwist() {
-        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kThrottle);
+        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kTwist);
     }
     
     public double getControllerThrottle() {
-        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kTwist);
+        return this.getJoystick(RobotJoystickType.CONTROLLER).getAxis(AxisType.kThrottle);
     }
     
     public boolean isResetButtonDown() {

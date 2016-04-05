@@ -85,13 +85,12 @@ public class Robot extends SampleRobot {
             // driverInputControl.update();
             UtilityArm.getInstance().update();
             UtilityArm.getInstance().updateOutputs();
-            DriverStation.reportError(
-                    "\nArm Joint A Pot: "
-                            + RobotControlWithSRX.getInstance().getTalons()
-                                    .get(RobotMotorType.ARM_JOINT_A).get()
-                            + "\nArm Joint B Pot: "
-                            + RobotControlWithSRX.getInstance().getTalons()
-                                    .get(RobotMotorType.ARM_JOINT_B).get(),
+            DriverStation.reportError("\nArm Joint A Pot: "
+                    + RobotControlWithSRX.getInstance().getTalons()
+                            .get(RobotMotorType.ARM_JOINT_A).get()
+                    + "\nArm Joint B Pot: "
+                    + RobotControlWithSRX.getInstance().getTalons()
+                            .get(RobotMotorType.ARM_JOINT_B).get(),
                     false);
             // sensorInputControl.update();
             Timer.delay(.005);

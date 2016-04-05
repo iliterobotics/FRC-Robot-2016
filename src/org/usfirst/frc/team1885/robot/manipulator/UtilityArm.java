@@ -39,10 +39,10 @@ public class UtilityArm implements Module {
     private static final double FRAME_LENGTH = 5;
     private final double RESET_A_POSITION;
     private final double RESET_B_POSITION;
-    private final double BOUNDARY = 13;
-    private final double X_MAX_BACK_REACH = 9;
+    private final double BOUNDARY = 8;
+    private final double X_MAX_BACK_REACH = 7;
     private final double Y_MAX_UP_REACH = 33;
-    private final double Y_MAX_DOWN_REACH = -10;
+    private final double Y_MAX_DOWN_REACH = -6;
     private final double DEAD_ZONE_X = .2;
     private final double DEAD_ZONE_Y = .2;
     private final double INCREMENT_RATE = 1 / 10.0; // Rate at which xCoord and
@@ -139,25 +139,24 @@ public class UtilityArm implements Module {
     @Override
     public void update() {
         xCoord += xModifier;
-        yCoord -= yModifier;
+        yCoord += yModifier;
 
         xModifier = yModifier = 0;
 
-        if (Math.abs(driverInputControl
-                .getPressureButton(RobotButtonType.ARM_MOVE_X)) > DEAD_ZONE_X
-                || Math.abs(driverInputControl.getPressureButton(
-                        RobotButtonType.ARM_MOVE_Y)) > DEAD_ZONE_Y) {
+        if (Math.abs(driverInputControl.getControllerTwist()) > DEAD_ZONE_X
+                || Math.abs(driverInputControl
+                        .getControllerThrottle()) > DEAD_ZONE_Y) {
             selectedDefense = SelectedDefenseBreach.NONE;
             defenseStep = 0;
-            if (Math.abs(driverInputControl.getPressureButton(
-                    RobotButtonType.ARM_MOVE_X)) > DEAD_ZONE_X) {
-                xModifier = driverInputControl.getPressureButton(
-                        RobotButtonType.ARM_MOVE_X) * INCREMENT_RATE;
+            if (Math.abs(
+                    driverInputControl.getControllerTwist()) > DEAD_ZONE_X) {
+                xModifier = driverInputControl.getControllerTwist()
+                        * INCREMENT_RATE;
             }
-            if (Math.abs(driverInputControl.getPressureButton(
-                    RobotButtonType.ARM_MOVE_Y)) > DEAD_ZONE_Y) {
-                yModifier = driverInputControl.getPressureButton(
-                        RobotButtonType.ARM_MOVE_Y) * INCREMENT_RATE;
+            if (Math.abs(
+                    driverInputControl.getControllerThrottle()) > DEAD_ZONE_Y) {
+                yModifier = -1 * driverInputControl.getControllerThrottle()
+                        * INCREMENT_RATE;
                 // Up on joystick gives negative values
             }
             goTo(xCoord, yCoord);
