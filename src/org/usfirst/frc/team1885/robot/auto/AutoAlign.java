@@ -85,6 +85,9 @@ public class AutoAlign extends AutoCommand {
             this.reset();
             return true;
         }
+        if(timeOut()){
+            return true;
+        }
         return false;
     }
 

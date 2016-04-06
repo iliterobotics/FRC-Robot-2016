@@ -74,7 +74,10 @@ public class AutoCrossedDefense extends AutoCommand {
             startTime = System.currentTimeMillis();
         }
         DrivetrainControl.getInstance().update(leftDriveSpeed, rightDriveSpeed);
-        return System.currentTimeMillis() - timeoutStartTime > TIMEOUT;
+        if(timeOut()){
+            return true;
+        }
+        return false;
     }
 
     @Override

@@ -54,6 +54,9 @@ public class AutoRockWall extends AutoCommand {
         
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
+        if(timeOut()){
+            return true;
+        }
         return false;
     }
 

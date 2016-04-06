@@ -92,6 +92,9 @@ public class AutoDriveDistance extends AutoCommand {
             Shooter.getInstance().update();
             return true;
         }
+        if(timeOut()){
+            return true;
+        }
         return false;
     }
 

@@ -29,6 +29,9 @@ public class AutoReachedDefense extends AutoCommand {
 //            DriverStation.reportError("\nReached Defense", false);
             return true;
         }
+        if(timeOut()){
+            return true;
+        }
         return false;
     }
 
