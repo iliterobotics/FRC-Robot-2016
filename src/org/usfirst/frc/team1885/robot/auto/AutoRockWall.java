@@ -50,13 +50,8 @@ public class AutoRockWall extends AutoCommand {
             return crossedDefense.execute();
         }
 
-        if (roll > 4.5) {
-            leftDriveSpeed = 0.5 + (roll / 50) * (.5);
-            rightDriveSpeed = 0.5 + (roll / 50) * (.5);
-        } else if (roll < -4.5) {
-            leftDriveSpeed = 0.5 - (-roll / 50) * (.5);
-            rightDriveSpeed = 0.5 - (-roll / 50) * (.5);
-        }
+        leftDriveSpeed = rightDriveSpeed = 1;
+        
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
         DrivetrainControl.getInstance().setRightDriveSpeed(rightDriveSpeed);
         return false;
