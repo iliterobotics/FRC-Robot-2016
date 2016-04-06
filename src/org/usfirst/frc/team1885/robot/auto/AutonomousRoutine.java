@@ -30,6 +30,7 @@ public class AutonomousRoutine {
     private int goal;
     private boolean doesNothing;
     private boolean isShooting;
+    private boolean isReCross;
     private boolean manualOverride;
     public static final double CLEAR_SPEED = 1;
     private double direction;
@@ -67,6 +68,9 @@ public class AutonomousRoutine {
 //                        autoMoveToShoot();
                         autoShootBallCam();
                     }
+                    if(isReCross){
+                        autoReCrossDefense();
+                    }
                 }
                 configured = true;
             } else {
@@ -101,6 +105,7 @@ public class AutonomousRoutine {
         if ((int) (SensorInputControlSRX.getInstance().getRotaryPosition(SensorType.DEFENSE_SELECTION)) >= 5) { // do nothing case
             doesNothing = true;
             isShooting = false;
+            isReCross = false;
             manualOverride = false;
         } else {
             manualOverride = true;
@@ -108,6 +113,7 @@ public class AutonomousRoutine {
             isShooting = true;
             goal = 0;
             type = DefenseType.MOAT;
+            isReCross = false;
             // type =
             // DefenseType.values()[(int)(SensorInputControlSRX.getInstance().getRotaryPosition())];
             DriverStation.reportError("Running Moat with Manual Override", false);
@@ -135,6 +141,7 @@ public class AutonomousRoutine {
             goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
             doesNothing = autoC.doesNothing();
             isShooting = autoC.isShooting();
+            isReCross = false;
 
             DriverStation.reportError(
                     "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
