@@ -70,6 +70,7 @@ public class ActiveIntake implements Module {
                 && !previousIntakeToggle ) {
             isIntaking = isIntaking == intakeUp ? intakeDown : intakeUp;
         }
+        previousIntakeToggle = driverInputControl.getButton(RobotButtonType.INTAKE_SOLENOID);
         
         if(Shooter.getInstance().getRelativeTilt() > Shooter.LOWER_TILT_COLLISION && Shooter.getInstance().getRelativeTilt() < Shooter.UPPER_TILT_COLLISION){
             isIntaking = intakeDown;

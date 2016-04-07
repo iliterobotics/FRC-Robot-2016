@@ -37,7 +37,8 @@ public class RobotAutonomousConfiguration {
             boolean reachable = byAddress.isReachable(500);
             debugStatement(writer, "Is address reachable " + reachable,null); 
             debugStatement(writer, "trying url:" + URL, null);
-            DataServerWebClient client = new DataServerWebClient(URL);
+//            DataServerWebClient client = new DataServerWebClient(URL);
+            DataClient client = new NetworkTablesClient(ServerInformation.TBL_NAME, false);
             config = new AutonomousConfig(client, 0, 0, 0, 0);
             config.setDoingNothing(true);
             config.setShooting(false);

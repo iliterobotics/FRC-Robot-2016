@@ -128,8 +128,7 @@ public class DriverInputControlSRX {
                         .getAxis(AxisType.kY));
     }
     public void update(double leftJoystick, double rightJoystick) {
-        System.err
-                .println("LEFT= " + leftJoystick + ", RIGHT= " + rightJoystick);
+//        System.err.println("LEFT= " + leftJoystick + ", RIGHT= " + rightJoystick);
         this.rightDriveSpeed = deadzone(rightJoystick);
         this.leftDriveSpeed = deadzone(leftJoystick);
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);

@@ -59,8 +59,10 @@ public class AutonomousRoutine {
                 try {
                     getServerConfig();
                 } catch (Throwable t) {
-                    getManualConfiguration();
                     DriverStation.reportError("\nERROR:: Could not retrieve configuration from server", false);
+                }
+                if(doesNothing){
+                    getManualConfiguration();
                 }
                 if (!doesNothing) {
                     initAutoBreach();

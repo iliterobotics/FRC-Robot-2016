@@ -52,34 +52,40 @@ public class Robot extends SampleRobot {
     private Thread tcpThread;
 
     public Robot() {
-        tcpThread = new Thread(new Runnable(){
-            public void run(){
-                String [] args = new String[]{"/bin/bash", "-c", "tcpdump", "-w", tcpdumpFile};
-                try{
-                    new ProcessBuilder(args).start();
-                } catch(Exception e){
-                    DriverStation.reportError("\nCould not tcp dump", false);
+        try {
+            tcpThread = new Thread(new Runnable() {
+                public void run() {
+                    String[] args = new String[] { "/bin/bash", "-c", "tcpdump", "-w", tcpdumpFile };
+                    try {
+                        new ProcessBuilder(args).start();
+                    } catch (Exception e) {
+                        DriverStation.reportError("\nError: Could not start tcp dump process", false);
+                    }
                 }
-            }
-        });
-        tcpThread.start();
-        //Initialize Output Control
+            });
+            tcpThread.start();
+        } catch (Exception e) { 
+            DriverStation.reportError("\nError creating tcp dump thread",
+                    false);
+        }
+        // Initialize Output Control
         robotControl = RobotControlWithSRX.getInstance();
-        //Initialize Input Control
+        // Initialize Input Control
         driverInputControl = DriverInputControlSRX.getInstance();
         sensorInputControl = SensorInputControlSRX.getInstance();
         try {
             Timer.delay(0.5);
-            //Configure Robot
+            // Configure Robot
             RobotConfiguration.configureRobot();
-            //Initialize Sensor Values
+            // Initialize Sensor Values
             sensorInputControl.init();
             Shooter.getInstance().init();
             DriverStation.reportError("\nRobot configured", false);
         } catch (Exception e) {
-            DriverStation.reportError("\nRobot - Error configuring Robot", false);
+            DriverStation.reportError("\nRobot - Error configuring Robot",
+                    false);
         }
-//        Initialize Modules
+        // Initialize Modules
         modules = ModuleControl.getInstance().getModules();
         DriverStation.reportError("\nRobot Intialized", false);
     }
@@ -112,7 +118,7 @@ public class Robot extends SampleRobot {
         try {
             AutonomousRoutine ar = new AutonomousRoutine(this);
             ar.execute();
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             DriverStation.reportError("MY ERROR", true);
         }
     }
