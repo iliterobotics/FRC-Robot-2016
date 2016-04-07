@@ -49,14 +49,20 @@ public class Robot extends SampleRobot {
     // Module Control
     private Module[] modules;
     private String tcpdumpFile = "tcpdump_practice1";
+    private Thread tcpThread;
 
     public Robot() {
-        String [] args = new String[]{"/bin/bash", "-c", "tcpdump", "-w", tcpdumpFile};
-        try{
-            new ProcessBuilder(args).start();
-        } catch(Exception e){
-            DriverStation.reportError("\nCould not tcp dump", false);
-        }
+        tcpThread = new Thread(new Runnable(){
+            public void run(){
+                String [] args = new String[]{"/bin/bash", "-c", "tcpdump", "-w", tcpdumpFile};
+                try{
+                    new ProcessBuilder(args).start();
+                } catch(Exception e){
+                    DriverStation.reportError("\nCould not tcp dump", false);
+                }
+            }
+        });
+        tcpThread.start();
         //Initialize Output Control
         robotControl = RobotControlWithSRX.getInstance();
         //Initialize Input Control
