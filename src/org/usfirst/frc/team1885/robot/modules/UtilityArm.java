@@ -3,13 +3,14 @@ package org.usfirst.frc.team1885.robot.modules;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.common.type.UtilityArmPosition;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 
 public class UtilityArm implements Module {
 
@@ -17,6 +18,8 @@ public class UtilityArm implements Module {
      * the positions - 0 for reset only - rest for cycling
      */
 
+    private final double ERROR_MARGIN = 75.0; //encoder ticks
+    
     private double relativeAngle;
     private int currCyclePos;
     private boolean preIncUp;
@@ -101,5 +104,14 @@ public class UtilityArm implements Module {
 
     @Override
     public void init() {}
+    
+    public boolean setPosition(UtilityArmPosition position){
+        switch(position){
+            case RESET: currCyclePos = 0; break;
+            case POS_1: currCyclePos = 1; break;
+            case POS_2: currCyclePos = 2; break;
+        }
+        return ((this.relativeAngle * CONVERSION_FACTOR) - (RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).getEncPosition())) >= ERROR_MARGIN;
+    }
 
 }

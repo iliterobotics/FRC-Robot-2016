@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
+import org.usfirst.frc.team1885.robot.common.type.UtilityArmPosition;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
@@ -55,10 +56,10 @@ public class AutonomousRoutine {
                 SensorInputControlSRX.getInstance().calibrateGyro();
              // commands.add(new AutoCalibrateWheels(1));
                 DriverStation.reportError("\nGyro Calibrated", false);
-                getManualConfiguration();
                 try {
                     getServerConfig();
                 } catch (Throwable t) {
+                    getManualConfiguration();
                     DriverStation.reportError("\nERROR:: Could not retrieve configuration from server", false);
                 }
                 if (!doesNothing) {
@@ -355,7 +356,7 @@ public class AutonomousRoutine {
     }
 
     public void autoCheval() {
-
+        commands.add(new AutoMoveUtilityArm(UtilityArmPosition.POS_2));
     }
 
     public void autoRockWall() {
