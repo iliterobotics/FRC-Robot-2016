@@ -48,9 +48,15 @@ public class Robot extends SampleRobot {
     private SensorInputControlSRX sensorInputControl;
     // Module Control
     private Module[] modules;
-    private AutoTemplate activeTemplate;
+    private String tcpdumpFile = "tcpdump_practice1";
 
     public Robot() {
+        String [] args = new String[]{"/bin/bash", "-c", "tcpdump", "-w", tcpdumpFile};
+        try{
+            Process p = new ProcessBuilder(args).start();
+        } catch(Exception e){
+            DriverStation.reportError("\nCould not tcp dump", false);
+        }
         //Initialize Output Control
         robotControl = RobotControlWithSRX.getInstance();
         //Initialize Input Control
@@ -98,8 +104,8 @@ public class Robot extends SampleRobot {
     @Override
     public void autonomous() {
         try {
-        AutonomousRoutine ar = new AutonomousRoutine(this);
-        ar.execute();
+            AutonomousRoutine ar = new AutonomousRoutine(this);
+            ar.execute();
         } catch(Throwable e) {
             DriverStation.reportError("MY ERROR", true);
         }
