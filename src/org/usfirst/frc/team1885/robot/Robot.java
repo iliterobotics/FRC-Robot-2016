@@ -53,7 +53,7 @@ public class Robot extends SampleRobot {
     public Robot() {
         String [] args = new String[]{"/bin/bash", "-c", "tcpdump", "-w", tcpdumpFile};
         try{
-            Process p = new ProcessBuilder(args).start();
+            new ProcessBuilder(args).start();
         } catch(Exception e){
             DriverStation.reportError("\nCould not tcp dump", false);
         }

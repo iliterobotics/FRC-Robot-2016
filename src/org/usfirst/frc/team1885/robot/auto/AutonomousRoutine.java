@@ -141,7 +141,7 @@ public class AutonomousRoutine {
             goal = autoC.getGoalPosition(); // -1 = Left, 0 = Center, 1 = Right
             doesNothing = autoC.doesNothing();
             isShooting = autoC.isShooting();
-            isReCross = false;
+            isReCross = autoC.returns();
 
             DriverStation.reportError(
                     "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
