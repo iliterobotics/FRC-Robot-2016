@@ -82,8 +82,8 @@ public class RobotConfiguration {
         robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
         robotControl.addTalonOutput(RobotMotorType.LEFT_DRIVE, 3);
         robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
-//        robotControl.addTalonOutput(RobotMotorType.UTILITY_ARM, 5);
-        //6 not currently used
+        //5 not used
+        robotControl.addTalonOutput(RobotMotorType.UTILITY_ARM, 6);
         robotControl.addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
         robotControl.addTalonOutput(RobotMotorType.FLYWHEEL_LEFT, 8);
         robotControl.addTalonOutput(RobotMotorType.FLYWHEEL_RIGHT, 9);
@@ -95,7 +95,6 @@ public class RobotConfiguration {
         robotControl.addSingleSolenoid(RobotPneumaticType.GEAR_SHIFT, 2);
         robotControl.addSingleSolenoid(RobotPneumaticType.SHOOTER_CONTAINER, 4);
         robotControl.addSingleSolenoid(RobotPneumaticType.SHOOTER_KICKER, 3);
-        robotControl.addSingleSolenoid(RobotPneumaticType.CDF_DROPPER, 5);
 
         // Relays
         robotControl.addRelay(RelayType.TACTICAL_LIGHT, 0);
@@ -118,7 +117,7 @@ public class RobotConfiguration {
         robotControl.addTalonSensor(RobotMotorType.SHOOTER_TILT, SensorType.SHOOTER_TILT_POTENTIOMETER, 10);
         robotControl.addTalonSensor(RobotMotorType.SHOOTER_TWIST, SensorType.SHOOTER_TWIST_ENCODER, 11);
         // Utility Arm Encoder
-        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.UTILITY_ARM, SensorType.ARM_CTRE_ABSOLUTE, 5);
+        RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.UTILITY_ARM, SensorType.ARM_CTRE_ABSOLUTE, 6);
         
         // Add Module
 //        moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
