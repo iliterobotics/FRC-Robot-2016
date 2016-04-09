@@ -48,26 +48,8 @@ public class Robot extends SampleRobot {
     private SensorInputControlSRX sensorInputControl;
     // Module Control
     private Module[] modules;
-    private String tcpdumpFile = "tcpdump_practice1";
-    private Thread tcpThread;
 
     public Robot() {
-        try {
-            tcpThread = new Thread(new Runnable() {
-                public void run() {
-                    String[] args = new String[] { "/bin/bash", "-c", "tcpdump", "-w", tcpdumpFile };
-                    try {
-                        new ProcessBuilder(args).start();
-                    } catch (Exception e) {
-                        DriverStation.reportError("\nError: Could not start tcp dump process", false);
-                    }
-                }
-            });
-            tcpThread.start();
-        } catch (Exception e) { 
-            DriverStation.reportError("\nError creating tcp dump thread",
-                    false);
-        }
         // Initialize Output Control
         robotControl = RobotControlWithSRX.getInstance();
         // Initialize Input Control

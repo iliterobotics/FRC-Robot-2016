@@ -65,6 +65,8 @@ public class RobotConfiguration {
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_UP, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_DOWN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kY));
+        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_PAN_RIGHT_MANUAL, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
+        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_PAN_LEFT_MANUAL, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TWIST_LEFT, new JoystickButtonMatch(RobotJoystickType.OVERRIDE_CONTROLLER, 1));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TWIST_RIGHT, new JoystickButtonMatch(RobotJoystickType.OVERRIDE_CONTROLLER, 3));
         joystickButtonMap.addControllerButton(RobotButtonType.FIRE, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 6));
@@ -110,6 +112,7 @@ public class RobotConfiguration {
 //        sensorInputControl.addRotarySwitchSensor(SensorType.TYPE_4, 4);
 //        sensorInputControl.addBeamSensor(2);
         sensorInputControl.addLimitSwitch(SensorType.ARM_LIMITER, 0);
+        sensorInputControl.addLimitSwitch(SensorType.ARM_LIMITER_BACK, 1);
         // Drivetrain Encoders
         robotControl.addTalonSensor(RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
         robotControl.addTalonSensor(RobotMotorType.RIGHT_DRIVE, SensorType.RIGHT_ENCODER, 2);

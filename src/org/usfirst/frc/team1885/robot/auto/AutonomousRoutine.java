@@ -8,6 +8,7 @@ import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.common.type.UtilityArmPosition;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
+import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
@@ -37,6 +38,8 @@ public class AutonomousRoutine {
     private double direction;
 
     public boolean configured;
+    
+    private String tcpdumpFile = "/var/log/tcpdump_practice1";
 
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
@@ -53,6 +56,7 @@ public class AutonomousRoutine {
         int commandNum = 0;
         while (robot.isEnabled() && robot.isAutonomous()) {
             if (!configured) {
+//                tcpDump();
                 SensorInputControlSRX.getInstance().calibrateGyro();
              // commands.add(new AutoCalibrateWheels(1));
                 DriverStation.reportError("\nGyro Calibrated", false);
@@ -66,6 +70,8 @@ public class AutonomousRoutine {
                 }
                 if (!doesNothing) {
                     initAutoBreach();
+                    autoPrepHighGoal();
+                    commands.add(new AutoWait(1000));
                     if (isShooting) {
                         autoTurnToShoot();
 //                        autoMoveToShoot();
@@ -96,6 +102,22 @@ public class AutonomousRoutine {
             }
         }
     }
+    public void tcpDump(){
+        try {
+            new Thread(new Runnable() {
+                public void run() {
+                    String[] args = new String[] { "/bin/bash", "-c", "tcpdump", "-w", tcpdumpFile };
+                    try {
+                        new ProcessBuilder(args).start();
+                    } catch (Exception e) {
+                        DriverStation.reportError("\nError: Could not start tcp dump process", false);
+                    }
+                }
+            }).start();            
+        } catch (Exception e) { 
+            DriverStation.reportError("\nError creating tcp dump thread", false);
+        }
+    }
     // STANDARD CONFIGURATION
     // AutoStartDrive - begins movement
     // AutoReachedDefense - checks if we have hit the defense (not necessary in
@@ -103,7 +125,6 @@ public class AutonomousRoutine {
     // in between checks to cross the defense
     // AutoCrossedDefense - checks if we have landed and can prepare to shoot
     // AutoAlign - realigns the robot to move in position to shoot
-
     public void getManualConfiguration() {
         if ((int) (SensorInputControlSRX.getInstance().getRotaryPosition(SensorType.DEFENSE_SELECTION)) >= 5) { // do nothing case
             doesNothing = true;
@@ -133,7 +154,7 @@ public class AutonomousRoutine {
     }
 
     public void getServerConfig() {
-        AutonomousConfig autoC = RobotAutonomousConfiguration.pullConfiguration();
+        AutonomousConfig autoC = RobotAutonomousConfiguration.pullNetworktableConfiguration();
         if (autoC != null) {
             DriverStation.reportError("\ndefense" + autoC.getDefense(), false);
             type = DefenseType.values()[autoC.getDefense()];
@@ -158,7 +179,7 @@ public class AutonomousRoutine {
      * Method that initializes all commands for AutonomousRoutine to run
      */
     public void initAutoBreach() {
-        commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown)); // intake should always start down
+        commands.add(new AutoAdjustIntake(ActiveIntake.intakeUp)); // intake should always start down
         // DEFAULT CASE calls autoMoat which is sufficient for moat, ramparts,
         // rough terrain, rock wall
         switch (type) {
@@ -188,10 +209,14 @@ public class AutonomousRoutine {
         }
         commands.add(new AutoCrossedDefense());
         commands.add(new AutoAlign());
+        commands.add(new AutoDriveStart(0));
+        commands.add(new AutoDriveDistance(-2 * 12));
+        commands.add(new AutoDriveStart(0));
+        commands.add(new AutoAlign());
     }
     
     public void startDrive(){
-        if (type == DefenseType.MOAT || type == DefenseType.RAMPARTS) {
+        if (type == DefenseType.MOAT || type == DefenseType.RAMPARTS || type == DefenseType.ROCK_WALL) {
             commands.add(new AutoDriveStart(CLEAR_SPEED * direction));
         } else if (type == DefenseType.PORTCULLIS) {
             commands.add(new AutoDriveStart(-START_DRIVE_SPEED * direction));
@@ -207,12 +232,17 @@ public class AutonomousRoutine {
         commands.add(new AutoAlign());
     }
     
+    private void autoPrepHighGoal() {
+        commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
+        commands.add(new AutoWait(1000));
+        commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_CAM_TILT));
+    }
+    
     public void autoTurnToShoot(){
         switch(targetDefense){
-        case 1: commands.add(new AutoAimTurn(45.0)); break;
-        case 2: commands.add(new AutoAimTurn(30.0)); break;
-        case 4: commands.add(new AutoAimTurn(-30.0)); break;
-        case 5: commands.add(new AutoAimTurn(-45.0)); break;
+        case 1: commands.add(new AutoAlign(45.0)); break;
+        case 2: commands.add(new AutoAlign(30.0)); break;
+        case 5: commands.add(new AutoAlign(-30.0)); break;
         }
     }
 
@@ -343,7 +373,9 @@ public class AutonomousRoutine {
      */
     public void autoLowBar() {
         double lowBarTravelDistance = 4.5 * 12 * direction;
-        commands.add(new AutoDriveDistance(lowBarTravelDistance, .2));
+        commands.add(new AutoDriveDistance(lowBarTravelDistance / 2.0, .2));
+        commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
+        commands.add(new AutoDriveDistance(lowBarTravelDistance / 2.0, .2));
     }
 
     public void autoPortcullis() {
@@ -362,7 +394,10 @@ public class AutonomousRoutine {
     }
 
     public void autoRockWall() {
-        commands.add(new AutoRockWall());
+        commands.add(new AutoCrossedDefense());
+        commands.add(new AutoReachedDefense());
+        commands.add(new AutoWait(500));
+        commands.add(new AutoCrossedDefense());
     }
 
     public void autoMoat() {
@@ -379,7 +414,7 @@ public class AutonomousRoutine {
      */
     public void autoShootBall(double angle) {
         commands.add(new AutoShooterTilt(angle));
-        commands.add(new AutoShoot());
+        commands.add(new AutoShoot(true));
 
     }
 
@@ -388,7 +423,9 @@ public class AutonomousRoutine {
      */
     public void autoShootBallCam() {
         commands.add(new AutoShooterAim());
-        commands.add(new AutoShoot());
+        commands.add(new AutoShoot(true));
+        commands.add(new AutoWait(250));
+        commands.add(new AutoShoot(false));
     }
     
     public void autoReCrossDefense(){

@@ -155,22 +155,24 @@ public class DriverInputControlSRX {
         if(this.isButtonDown(RobotButtonType.SHOOTER_TILT_UP)) {
             return 1;
         }
-        else if(this.isButtonDown(RobotButtonType.SHOOTER_TILT_DOWN)){
+        if(this.isButtonDown(RobotButtonType.SHOOTER_TILT_DOWN)){
             return -1;
         }
-        else {
-            return 0;
-        }
+        return 0;
     }
     public double getShooterTwist() {
         if(this.isButtonDown(RobotButtonType.SHOOTER_TWIST_RIGHT)) {
             return Shooter.TWIST_SPEED;
         }
-        else if(this.isButtonDown(RobotButtonType.SHOOTER_TWIST_LEFT)){
+        if(this.isButtonDown(RobotButtonType.SHOOTER_TWIST_LEFT)){
             return -Shooter.TWIST_SPEED;
         }
-        else {
-            return 0;
+        if(this.isButtonDown(RobotButtonType.SHOOTER_PAN_RIGHT_MANUAL)){
+            return Shooter.TWIST_SPEED;
         }
+        if(this.isButtonDown(RobotButtonType.SHOOTER_PAN_LEFT_MANUAL)){
+            return -Shooter.TWIST_SPEED;
+        }
+        return 0;
     }
 }

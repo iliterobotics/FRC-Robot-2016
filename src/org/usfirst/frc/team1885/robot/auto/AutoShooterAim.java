@@ -1,17 +1,14 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
-import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
-import org.usfirst.frc.team1885.serverdata.ShooterDataClient;
-
-import dataclient.robotdata.vision.HighGoal;
+import org.usfirst.frc.team1885.robot.modules.UtilityArm;
 
 public class AutoShooterAim extends AutoCommand {
     
-    private long startTime;
+    private final long WAIT_TIME = 500;
     private AutoShooterTilt shooterTilt;
     private AutoShooterTwist shooterTwist;
+    private long aimDurationStart;
     
     public AutoShooterAim() {
         shooterTilt = new AutoShooterTilt(Shooter.HIGH_GOAL_CAM_TILT);
@@ -20,27 +17,33 @@ public class AutoShooterAim extends AutoCommand {
     
     @Override
     public boolean init()  {
-        startTime = System.currentTimeMillis();
+        aimDurationStart = System.currentTimeMillis();
         return true;
     }
 
     @Override
     public boolean execute() {
-        if(Shooter.getInstance().isGoalFound()){
-            
-            double tilt = Shooter.getInstance().getTiltAimLock();
-            double twist = Shooter.getInstance().getTwistAimLock();
+        double tilt = Shooter.getInstance().getTiltAimLock();
+        double twist = Shooter.getInstance().getTwistAimLock();
         
-            shooterTilt = new AutoShooterTilt(tilt);
-            shooterTwist = new AutoShooterTwist(twist);
+        shooterTilt = new AutoShooterTilt(tilt);
+        shooterTwist = new AutoShooterTwist(twist);
         
-            return shooterTilt.execute() && shooterTwist.execute();
+        shooterTilt.execute();
+        shooterTwist.execute();
+        if(Shooter.getInstance().isAimed()){
+            return true;
         }
-        return System.currentTimeMillis() - startTime > TIMEOUT;
+        if(timeOut()){
+            return true;
+        }
+        return false;
     }
 
     @Override
     public boolean updateOutputs() {
+        UtilityArm.getInstance().update();
+        UtilityArm.getInstance().updateOutputs();
         shooterTwist.updateOutputs();
         shooterTilt.updateOutputs();
         return false;

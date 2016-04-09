@@ -10,6 +10,7 @@ import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 public class DrivetrainControl implements Module {
@@ -74,6 +75,7 @@ public class DrivetrainControl implements Module {
             maxSpeed = 15.0;
             gear = LOW_GEAR;
         }
+//        DriverStation.reportError("\nGear: " + gear, false);
     }
 
     public void update(double leftJoystick, double rightJoystick) {

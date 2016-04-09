@@ -15,7 +15,7 @@ public class ShooterDataClient {
     
     private ShooterDataClient(){
 //        HTTP CODE:
-//        client = new DataServerWebClient(ServerInformation.LAPTOP_HOSTNAME_ADDRESS);
+//        client = new DataServerWebClient(ServerInformation.LAPTOP_IP_ADDRESS);
 //        NETWORK TABLES CODE:
         client = new NetworkTablesClient(ServerInformation.TBL_NAME, false);
         highGoalData = new HighGoal(client);

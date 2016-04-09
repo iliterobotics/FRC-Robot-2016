@@ -49,6 +49,6 @@ public abstract class AutoCommand {
             initTime = System.currentTimeMillis();
             timeSet = true;
         }
-        return initTime - System.currentTimeMillis() > TIMEOUT;
+        return System.currentTimeMillis() - initTime > TIMEOUT;
     }
 }

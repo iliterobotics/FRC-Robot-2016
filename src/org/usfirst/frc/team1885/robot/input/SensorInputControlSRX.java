@@ -67,7 +67,7 @@ public class SensorInputControlSRX {
     public void init() {
         // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get();
         INITIAL_TILT_POSITION = -511;
-        DriverStation.reportError("\nInit Tilt:: " + INITIAL_TILT_POSITION, false);
+        DriverStation.reportError("\nInit Tilt:: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
         INITIAL_TWIST_POSITION = 0;
         DriverStation.reportError("\nInit Twist:: " + INITIAL_TWIST_POSITION,
                 false);

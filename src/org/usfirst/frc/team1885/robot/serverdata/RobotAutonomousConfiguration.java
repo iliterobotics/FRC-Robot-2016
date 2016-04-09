@@ -23,6 +23,7 @@ public class RobotAutonomousConfiguration {
     
     public static AutonomousConfig pullNetworktableConfiguration(){
         DataClient client = new NetworkTablesClient("shooter", false);
+//        DataClient client = new DataServerWebClient(ServerInformation.LAPTOP_IP_ADDRESS);
         AutonomousConfig config = new AutonomousConfig(client);
         config.update(client.getDirect(config.getCollection(), config.getID()));
         return config;
@@ -37,8 +38,7 @@ public class RobotAutonomousConfiguration {
             boolean reachable = byAddress.isReachable(500);
             debugStatement(writer, "Is address reachable " + reachable,null); 
             debugStatement(writer, "trying url:" + URL, null);
-//            DataServerWebClient client = new DataServerWebClient(URL);
-            DataClient client = new NetworkTablesClient(ServerInformation.TBL_NAME, false);
+            DataServerWebClient client = new DataServerWebClient(URL);
             config = new AutonomousConfig(client, 0, 0, 0, 0);
             config.setDoingNothing(true);
             config.setShooting(false);

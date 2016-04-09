@@ -26,7 +26,6 @@ public class AutoRockWall extends AutoCommand {
     }
 
     public boolean execute() {
-        double roll = SensorInputControlSRX.getInstance().getRoll();
         // DriverStation.reportError("\nRight side: " + leftDriveSpeed
         // + " --- Left side: " + rightDriveSpeed, false);
         switch (stage) {
