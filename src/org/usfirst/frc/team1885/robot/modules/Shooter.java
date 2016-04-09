@@ -55,7 +55,7 @@ public class Shooter implements Module {
     public final static double LOW_GOAL_TILT = 8;
     public final static double HIGH_GOAL_INTAKE_TILT_BOUND = 80;
     public final static double HIGH_GOAL_INTAKE_TILT = 56;
-    public final static double HIGH_GOAL_CAM_TILT = 138;
+    public final static double HIGH_GOAL_CAM_TILT = STATIC_TILT_LIMIT_UPPER;
     private static final double HIGHGOAL_MIDPOINT = 97;
     private final static double TILT_THRESHOLD = 50;
     public final static double LOWER_TILT_COLLISION = LOW_GOAL_TILT;
@@ -92,17 +92,17 @@ public class Shooter implements Module {
     private AutoShooterTilt autoShooterTilt;
     private AutoShooterTwist autoShooterTwist;
 
-    private static final double TILT_P = 5;
-    private static final double TILT_I = 0.0006;
+    private static final double TILT_P = 10;
+    private static final double TILT_I = 0.0001;
     private static final double TILT_D = 0;
 
 //    private static final double TWIST_P = 0.8;
 //    private static final double TWIST_I = 0.0002;
 //    private static final double TWIST_D = 0;
 
-    private static final double TWIST_P = 0.8;
-    private static final double TWIST_I = 0.0003;
-    private static final double TWIST_D = 0;
+    private static final double TWIST_P = 3;
+    private static final double TWIST_I = 0.0001;//0.0003;
+    private static final double TWIST_D = 0.001;
 
     private static final double SPIN_UP_P = 0.8;
     private static final double SPIN_UP_I = 0.0035;
@@ -455,6 +455,14 @@ public class Shooter implements Module {
                 && (currentAngle < relativeTiltAngle + ANGLE_ERROR);
 
         updateTilt(tiltPosition);
+        
+        double realTwist = Math.abs(RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition());
+        double twistError = Math.abs(realTwist - this.twistPosition);
+        double realTilt = Math.abs(SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER) + SensorInputControlSRX.getInstance().getInitialTiltPosition()) / (1024.0 / 360.0);
+        double tiltError = Math.abs(realTilt - this.relativeTiltAngle);
+//        DriverStation.reportError("\nTwist Error: " + twistError + " Tilt Error: " + tiltError, false);
+        DriverStation.reportError("\nReal Tilt: " + realTilt + " Relative Tilt: " + relativeTiltAngle + " Real Pan: " + realTwist + " Relative Pan: " + twistPosition, false);
+        DriverStation.reportError("\nTwist Error: " + twistError + " Tilt Error: " + tiltError + " Goal Found: " + isGoalFound(), false);
 
         return isInPosition;
     }
@@ -476,7 +484,7 @@ public class Shooter implements Module {
     
     public boolean isAimed(){
         double realTwist = Math.abs(RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition());
-        double twistError = Math.abs(realTwist - this.twistPosition);
+        double twistError = Math.abs(realTwist - Math.abs(this.twistPosition));
         double realTilt = Math.abs(SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER) + SensorInputControlSRX.getInstance().getInitialTiltPosition()) / (1024.0 / 360.0);
         double tiltError = Math.abs(realTilt - this.relativeTiltAngle);
 //        DriverStation.reportError("\nTwist Error: " + twistError + " Tilt Error: " + tiltError, false);
@@ -499,7 +507,8 @@ public class Shooter implements Module {
         if (realTiltAngle < TILT_LIMIT_LOWER) {
             tiltInputAngle = TILT_LIMIT_LOWER;
         }
-        if(RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition() > PAN_ERROR && RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition() < -PAN_ERROR){
+        if(RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition() > PAN_ERROR || RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition() < -PAN_ERROR){
+            DriverStation.reportError("\nWaiting", false);
             if(realTiltAngle < UPPER_TILT_COLLISION){
                 tiltInputAngle = UPPER_TILT_COLLISION;
             }
@@ -650,19 +659,11 @@ public class Shooter implements Module {
         // + "Left Encoder:: " +
         // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).getEncVelocity(),false);
         if (flywheelSpeedRight == 0 && flywheelSpeedLeft == 0) {
-            RobotControlWithSRX.getInstance().getTalons()
-                    .get(RobotMotorType.FLYWHEEL_LEFT)
-                    .changeControlMode(TalonControlMode.PercentVbus);
-            RobotControlWithSRX.getInstance().getTalons()
-                    .get(RobotMotorType.FLYWHEEL_RIGHT)
-                    .changeControlMode(TalonControlMode.PercentVbus);
+            RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).changeControlMode(TalonControlMode.PercentVbus);
+            RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).changeControlMode(TalonControlMode.PercentVbus);
         } else {
-            RobotControlWithSRX.getInstance().getTalons()
-                    .get(RobotMotorType.FLYWHEEL_LEFT)
-                    .changeControlMode(TalonControlMode.Speed);
-            RobotControlWithSRX.getInstance().getTalons()
-                    .get(RobotMotorType.FLYWHEEL_RIGHT)
-                    .changeControlMode(TalonControlMode.Speed);
+            RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_LEFT).changeControlMode(TalonControlMode.Speed);
+            RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.FLYWHEEL_RIGHT).changeControlMode(TalonControlMode.Speed);
         }
 
         // DriverStation.reportError("\n P:" +
