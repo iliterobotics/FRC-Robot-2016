@@ -19,7 +19,6 @@ public class AutoShooterTilt extends AutoCommand {
     @Override
     public boolean execute() {
         Shooter.getInstance().setToTiltValue(this.angle);
-        DriverStation.reportError("\nAngle Goal: " + this.angle + " Current: " + Shooter.getInstance().getTilt(), false);
         return Math.abs(Shooter.getInstance().getTilt() - this.angle) > Shooter.TILT_ERROR;
     }
     @Override

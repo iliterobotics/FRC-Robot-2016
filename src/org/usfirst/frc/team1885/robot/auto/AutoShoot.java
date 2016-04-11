@@ -19,12 +19,8 @@ public class AutoShoot extends AutoCommand {
     @Override
     public boolean execute() {
         if(!shooting){
-            DriverStation.reportError("\nStopping shooter flywheels", false);
             Shooter.getInstance().setFlywheels(0);
-            if(timeOut()){
-                return true;
-            }
-            return false;
+            return true;
         }
         return Shooter.getInstance().fire();
     }
