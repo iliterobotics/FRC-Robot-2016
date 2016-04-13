@@ -437,14 +437,6 @@ public class Shooter implements Module {
 
         updateTilt(tiltPosition);
         
-        double realTwist = Math.abs(RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition());
-        double twistError = Math.abs(realTwist - this.twistPosition);
-        double realTilt = Math.abs(SensorInputControlSRX.getInstance().getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER) + SensorInputControlSRX.getInstance().getInitialTiltPosition()) / (1024.0 / 360.0);
-        double tiltError = Math.abs(realTilt - this.relativeTiltAngle);
-//        DriverStation.reportError("\nTwist Error: " + twistError + " Tilt Error: " + tiltError, false);
-        DriverStation.reportError("\nReal Tilt: " + realTilt + " Relative Tilt: " + relativeTiltAngle + " Real Pan: " + realTwist + " Relative Pan: " + twistPosition, false);
-        DriverStation.reportError("\nTwist Error: " + twistError + " Tilt Error: " + tiltError + " Goal Found: " + isGoalFound(), false);
-
         return isInPosition;
     }
     public void postLockStatus(){
