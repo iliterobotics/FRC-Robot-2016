@@ -70,6 +70,7 @@ public class AutonomousRoutine {
                 }
                 if (!doesNothing) {
                     initAutoBreach();
+                    clearArea();
                     autoPrepHighGoal();
                     if (isShooting) {
                         autoTurnToShoot();
@@ -209,6 +210,9 @@ public class AutonomousRoutine {
         commands.add(new AutoCrossedDefense());
         commands.add(new AutoAlign());
         commands.add(new AutoDriveStart(0));
+    }
+    
+    public void clearArea(){
         commands.add(new AutoDriveDistance(-2 * 12));
         commands.add(new AutoDriveStart(0));
         commands.add(new AutoAlign());
