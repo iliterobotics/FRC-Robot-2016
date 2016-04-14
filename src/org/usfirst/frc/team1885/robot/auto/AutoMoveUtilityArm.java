@@ -5,22 +5,22 @@ import org.usfirst.frc.team1885.robot.modules.UtilityArm;
 
 public class AutoMoveUtilityArm extends AutoCommand{
 
-    private UtilityArmPosition position;
+    private double power;
     
-    public AutoMoveUtilityArm(UtilityArmPosition position) {
-        this.position = position;
+    public AutoMoveUtilityArm(double power) {
+        this.power = power;
     }
     
     @Override
     public boolean init() {
-        UtilityArm.getInstance().setPosition(position);
+        UtilityArm.getInstance().setPower(this.power);
         return true;
     }
 
     @Override
     public boolean execute() {
         UtilityArm.getInstance().update();
-        return UtilityArm.getInstance().setPosition(position);
+        return true;
     }
 
     @Override

@@ -9,6 +9,7 @@ import org.usfirst.frc.team1885.robot.common.type.UtilityArmPosition;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
+import org.usfirst.frc.team1885.robot.modules.UtilityArm;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.serverdata.RobotAutonomousConfiguration;
 
@@ -209,7 +210,9 @@ public class AutonomousRoutine {
         } else {
             commands.add(new AutoDriveStart(START_DRIVE_SPEED * direction));
         }
-        commands.add(new AutoReachedDefense());
+        if(type != DefenseType.LOW_BAR){
+            commands.add(new AutoReachedDefense());
+        }
     }
     
     public void autoGearShift(boolean gear){
@@ -235,10 +238,15 @@ public class AutonomousRoutine {
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
+        commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
+        commands.add(new AutoMoveUtilityArm(UtilityArm.POWER_DOWN));
+        commands.add(new AutoAdjustShooterTooth(Shooter.OPEN));
+        commands.add(new AutoReachedDefense());
         commands.add(new AutoCrossedDefense());
         commands.add(new AutoReachedDefense());
         commands.add(new AutoWait(500));
         commands.add(new AutoCrossedDefense());
+        commands.add(new AutoAdjustShooterTooth(!Shooter.OPEN));
     }
 
     public void autoPortcullis() {
@@ -246,7 +254,6 @@ public class AutonomousRoutine {
     }
 
     public void autoCheval() {
-        commands.add(new AutoMoveUtilityArm(UtilityArmPosition.POS_2));
     }
 
     public void autoRockWall() {
