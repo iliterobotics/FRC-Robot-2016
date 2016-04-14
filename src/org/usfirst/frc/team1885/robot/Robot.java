@@ -3,7 +3,6 @@ package org.usfirst.frc.team1885.robot;
 import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
-import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
@@ -36,7 +35,6 @@ import edu.wpi.first.wpilibj.Timer;
  */
 
 public class Robot extends SampleRobot {
-    private LinkedList<AutoCommand> commands;
     private long timeTracker = 0;
     private double delayTime = 1;// Input time in seconds
     public static final double AUTO_CYCLE_TIME = 0.05;

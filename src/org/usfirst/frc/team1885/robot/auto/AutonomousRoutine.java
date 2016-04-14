@@ -74,7 +74,6 @@ public class AutonomousRoutine {
                     autoPrepHighGoal();
                     if (isShooting) {
                         autoTurnToShoot();
-//                        autoMoveToShoot();
                         autoShootBallCam();
                     }
                     if(isReCross){
@@ -100,22 +99,6 @@ public class AutonomousRoutine {
                 }
                 Timer.delay(delay);
             }
-        }
-    }
-    public void tcpDump(){
-        try {
-            new Thread(new Runnable() {
-                public void run() {
-                    String[] args = new String[] { "/bin/bash", "-c", "tcpdump", "-w", tcpdumpFile };
-                    try {
-                        new ProcessBuilder(args).start();
-                    } catch (Exception e) {
-                        DriverStation.reportError("\nError: Could not start tcp dump process", false);
-                    }
-                }
-            }).start();            
-        } catch (Exception e) { 
-            DriverStation.reportError("\nError creating tcp dump thread", false);
         }
     }
     // STANDARD CONFIGURATION
@@ -248,148 +231,18 @@ public class AutonomousRoutine {
         case 5: commands.add(new AutoAlign(-30.0)); break;
         }
     }
-
-    public void autoMoveToShoot() {
-        // Huge Switch statement that finds all the parameters for
-        // autoMoveToShoot that adds commands
-        double firstTurn = 0;
-        double firstMove = 0;
-        double secondMove = 0;
-        double align = 0;
-        if (goal == -1) { // Left Goal
-            switch (targetDefense) {
-            case 1:
-                firstTurn = 0;
-                secondMove = 6 * 12;
-                break;
-            case 2:
-                firstTurn = -25;
-                secondMove = 8.321 * 12;
-                break;
-            case 3:
-                firstTurn = -54.7;
-                secondMove = 10 * 12;
-                break;
-            case 4:
-                firstTurn = -64.35;
-                secondMove = 13.86 * 12;
-                break;
-            case 5:
-                firstTurn = -71.07;
-                secondMove = 18.5 * 12;
-                break;
-            default:
-                DriverStation.reportError("Invalid Target Defense", false);
-            }
-            align = 180 + 58 - 360;
-        } else if (goal == 0) { // Center Goal
-            switch (targetDefense) {
-            case 1:
-                firstTurn = 90;
-                secondMove = 11 * 12;
-                break;
-            case 2:
-                firstTurn = 90;
-                secondMove = 7 * 12;
-                break;
-            case 3:
-                firstTurn = 90;
-                secondMove = 3 * 12;
-                break;
-            case 4:
-                firstTurn = -90;
-                secondMove = 1 * 12;
-                break;
-            case 5:
-                firstTurn = -90;
-                secondMove = 3 * 12;
-                break;
-            default:
-                DriverStation.reportError("Invalid Target Defense", false);
-            }
-            align = -180;
-        } else if (goal == 1) { // Right Goal
-            switch (targetDefense) {
-            // DON'T DO 1!
-            case 1:
-                firstTurn = 90;
-                secondMove = 17 * 12;
-                break; // Not done yet needs more commands
-            case 2:
-                firstTurn = 57;
-                secondMove = 15.5 * 12;
-                break;
-            case 3:
-                firstTurn = 45;
-                secondMove = 12.5 * 12;
-                break;
-            case 4:
-                firstTurn = 30;
-                secondMove = 10 * 12;
-                break;
-            case 5:
-                firstTurn = 0;
-                secondMove = 9 * 12;
-                break;
-            default:
-                DriverStation.reportError("Invalid Target Defense", false);
-            }
-            align = 180 - 58;
-        } else {
-            DriverStation.reportError("Invalid Goal Number", false);
-        }
-        if (type != DefenseType.PORTCULLIS) {
-            firstMove = -firstMove;
-            secondMove = -secondMove;
-            align += 180;
-        }
-        autoMoveToShoot(firstMove, firstTurn, secondMove, align);
-    }
-
-    /**
-     * @param firstMove
-     *            distance in inches for moving after breaching
-     * @param firstTurn
-     *            yaw value to turn to to aim towards goal shooting point
-     * @param secondMove
-     *            distance in inches to move to goal shooting point
-     * @param goalTurn
-     *            yaw value to turn to to aim at goal
-     */
-    public void autoMoveToShoot(double firstMove, double firstTurn,
-            double secondMove, double goalTurn) {
-        commands.add(new AutoDriveDistance(firstMove));
-        commands.add(new AutoAlign(firstTurn));
-        commands.add(new AutoDriveDistance(secondMove));
-        commands.add(new AutoAimTurn(goalTurn));
-        /*
-         * if (!isHigh) { commands.add(new AutoDriveStart(START_DRIVE_SPEED));
-         * commands.add(new AutoCrossedDefense());
-         * autoShootBall(Shooter.LOW_GOAL_ANGLE); } else {
-         * autoShootBall(Shooter.HIGH_GOAL_ANGLE); //commands.add(new
-         * AutoAimShooter()); }
-         */
-    }
-
     /**
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
-        double lowBarTravelDistance = 4.5 * 12 * direction;
-        commands.add(new AutoDriveDistance(lowBarTravelDistance / 2.0, .2));
-        commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
-        commands.add(new AutoDriveDistance(lowBarTravelDistance / 2.0, .2));
+        commands.add(new AutoCrossedDefense());
+        commands.add(new AutoReachedDefense());
+        commands.add(new AutoWait(500));
+        commands.add(new AutoCrossedDefense());
     }
 
     public void autoPortcullis() {
         commands.add(new AutoPortcullis());
-    }
-
-    /**
-     * Controls processes for crossing the ramparts
-     */
-    public void autoRamparts() {
-        commands.add(new AutoRamparts());
     }
 
     public void autoCheval() {
@@ -435,13 +288,21 @@ public class AutonomousRoutine {
         commands.add(new AutoAlign(180));
         initAutoBreach();
     }
-
-    public void autoWheelie() {
-        commands.add(new AutoDriveStart(-1));
-        commands.add(new AutoWait(500));
-        commands.add(new AutoDriveStart(1));
-        commands.add(new AutoWait(300));
-        commands.add(new AutoDriveStart(-1));
-        commands.add(new AutoCrossedDefense());
+    
+    public void tcpDump(){
+        try {
+            new Thread(new Runnable() {
+                public void run() {
+                    String[] args = new String[] { "/bin/bash", "-c", "tcpdump", "-w", tcpdumpFile };
+                    try {
+                        new ProcessBuilder(args).start();
+                    } catch (Exception e) {
+                        DriverStation.reportError("\nError: Could not start tcp dump process", false);
+                    }
+                }
+            }).start();            
+        } catch (Exception e) { 
+            DriverStation.reportError("\nError creating tcp dump thread", false);
+        }
     }
 }
