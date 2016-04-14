@@ -30,8 +30,8 @@ public class UtilityArm implements Module {
 
     private double[] positions = { 0, 254, 875, 1429 }; // in degree// First value is reset Pos
     
-    private final double POWER = 0.3;
-    private final double POWER_UP = -0.4;
+    public static final double POWER_DOWN = 0.3;
+    public static final double POWER_UP = -0.4;
     private final double CONVERSION_FACTOR = 1024.0 / 360.0;
     private static final double SHOOTER_COLLISION_DEGREE = 100;
 
@@ -71,7 +71,7 @@ public class UtilityArm implements Module {
             if(positions.length > 1){
                 currCyclePos = currCyclePos >= positions.length - 1 ? 1 : currCyclePos + 1;
             }
-            power = POWER;
+            power = POWER_DOWN;
         }
         
         if(DriverInputControlSRX.getInstance().getPOVButton(RobotButtonType.AIM) == 180){
@@ -91,7 +91,7 @@ public class UtilityArm implements Module {
         if(Shooter.getInstance().getRelativeTilt() > SHOOTER_COLLISION_DEGREE){
             currCyclePos = positions.length - 1;
             this.position = positions[currCyclePos];
-            power = POWER;
+            power = POWER_DOWN;
         } else if(currCyclePos == 0){
             power = POWER_UP;
         }
@@ -138,6 +138,11 @@ public class UtilityArm implements Module {
             case POS_2: currCyclePos = 2; break;
         }
         return ((this.position * CONVERSION_FACTOR) - (RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).getEncPosition())) >= ERROR_MARGIN;
+    }
+    
+    public double setPower(double power){
+        this.power = power;
+        return this.power;
     }
 
 }
