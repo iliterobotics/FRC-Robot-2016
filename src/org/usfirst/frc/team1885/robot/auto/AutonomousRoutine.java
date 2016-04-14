@@ -242,10 +242,7 @@ public class AutonomousRoutine {
         commands.add(new AutoMoveUtilityArm(UtilityArm.POWER_DOWN));
         commands.add(new AutoAdjustShooterTooth(Shooter.OPEN));
         commands.add(new AutoReachedDefense());
-        commands.add(new AutoCrossedDefense());
-        commands.add(new AutoReachedDefense());
-        commands.add(new AutoWait(500));
-        commands.add(new AutoCrossedDefense());
+        flatOnDefense();
         commands.add(new AutoAdjustShooterTooth(!Shooter.OPEN));
     }
 
@@ -255,13 +252,14 @@ public class AutonomousRoutine {
 
     public void autoCheval() {
         commands.add(new AutoMoveUtilityArm(UtilityArm.POWER_DOWN));
-        commands.add(new AutoCrossedDefense());
-        commands.add(new AutoReachedDefense());
-        commands.add(new AutoWait(500));
-        commands.add(new AutoCrossedDefense());
+        flatOnDefense();
     }
 
     public void autoRockWall() {
+        flatOnDefense();
+    }
+    
+    public void flatOnDefense(){
         commands.add(new AutoCrossedDefense());
         commands.add(new AutoReachedDefense());
         commands.add(new AutoWait(500));
