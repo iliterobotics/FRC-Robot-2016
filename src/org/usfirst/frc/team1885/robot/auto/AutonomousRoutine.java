@@ -39,7 +39,7 @@ public class AutonomousRoutine {
     private double direction;
 
     public boolean configured;
-    
+
     private String tcpdumpFile = "/var/log/tcpdump_practice1";
 
     public AutonomousRoutine(Robot r) {
@@ -57,16 +57,16 @@ public class AutonomousRoutine {
         int commandNum = 0;
         while (robot.isEnabled() && robot.isAutonomous()) {
             if (!configured) {
-//                tcpDump();
+                // tcpDump();
                 SensorInputControlSRX.getInstance().calibrateGyro();
-             // commands.add(new AutoCalibrateWheels(1));
+                // commands.add(new AutoCalibrateWheels(1));
                 DriverStation.reportError("\nGyro Calibrated", false);
                 try {
                     getServerConfig();
                 } catch (Throwable t) {
                     DriverStation.reportError("\nERROR:: Could not retrieve configuration from server", false);
                 }
-                if(doesNothing){
+                if (doesNothing) {
                     getManualConfiguration();
                 }
                 if (!doesNothing) {
@@ -77,13 +77,13 @@ public class AutonomousRoutine {
                         autoTurnToShoot();
                         autoShootBallCam();
                     }
-                    if(isReCross){
+                    if (isReCross) {
                         autoReCrossDefense();
                     }
                 }
                 configured = true;
             } else {
-                if(commands.isEmpty()){
+                if (commands.isEmpty()) {
                     break;
                 }
                 AutoCommand currCommand = commands.peek();
@@ -131,8 +131,7 @@ public class AutonomousRoutine {
                 getServerConfig();
             }
         } catch (Throwable t) {
-            DriverStation.reportError("\nFailed to retrieve config from server",
-                    false);
+            DriverStation.reportError("\nFailed to retrieve config from server", false);
             doesNothing = true;
         }
     }
@@ -151,11 +150,7 @@ public class AutonomousRoutine {
             isShooting = autoC.isShooting();
             isReCross = autoC.returns();
 
-            DriverStation.reportError(
-                    "\n\ndefense#:" + autoC.getDefense() + "defense:" + type
-                            + "\ntargetDefense:" + targetDefense + "\ndelay:"
-                            + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal,
-                    false);
+            DriverStation.reportError("\n\ndefense#:" + autoC.getDefense() + "defense:" + type + "\ntargetDefense:" + targetDefense + "\ndelay:" + delay + "\nisHigh:" + isHigh + "\nGoal:" + goal, false);
         }
     }
 
@@ -171,7 +166,7 @@ public class AutonomousRoutine {
             startDrive();
             autoPortcullis();
             break;
-        case CHEVAL_DE_FRISE: //currently does nothing
+        case CHEVAL_DE_FRISE: // currently does nothing
             startDrive();
             autoCheval();
             break;
@@ -195,14 +190,14 @@ public class AutonomousRoutine {
         commands.add(new AutoAlign());
         commands.add(new AutoDriveStart(0));
     }
-    
-    public void clearArea(){
+
+    public void clearArea() {
         commands.add(new AutoDriveDistance(-2 * 12));
         commands.add(new AutoDriveStart(0));
         commands.add(new AutoAlign());
     }
-    
-    public void startDrive(){
+
+    public void startDrive() {
         if (type == DefenseType.MOAT || type == DefenseType.RAMPARTS || type == DefenseType.ROCK_WALL) {
             commands.add(new AutoDriveStart(CLEAR_SPEED * direction));
         } else if (type == DefenseType.PORTCULLIS) {
@@ -210,28 +205,34 @@ public class AutonomousRoutine {
         } else {
             commands.add(new AutoDriveStart(START_DRIVE_SPEED * direction));
         }
-        if(type != DefenseType.LOW_BAR){
+        if (type != DefenseType.LOW_BAR) {
             commands.add(new AutoReachedDefense());
         }
     }
-    
-    public void autoGearShift(boolean gear){
+
+    public void autoGearShift(boolean gear) {
         commands.add(new AutoGearShift(gear));
         commands.add(new AutoDriveDistance(0.5 * 12 * direction));
         commands.add(new AutoAlign());
     }
-    
+
     private void autoPrepHighGoal() {
         commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
         commands.add(new AutoWait(750));
         commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_CAM_TILT));
     }
-    
-    public void autoTurnToShoot(){
-        switch(targetDefense){
-        case 1: commands.add(new AutoAlign(45.0)); break;
-        case 2: commands.add(new AutoAlign(30.0)); break;
-        case 5: commands.add(new AutoAlign(-30.0)); break;
+
+    public void autoTurnToShoot() {
+        switch (targetDefense) {
+        case 1:
+            commands.add(new AutoAlign(45.0));
+            break;
+        case 2:
+            commands.add(new AutoAlign(30.0));
+            break;
+        case 5:
+            commands.add(new AutoAlign(-30.0));
+            break;
         }
     }
     /**
@@ -258,8 +259,8 @@ public class AutonomousRoutine {
     public void autoRockWall() {
         flatOnDefense();
     }
-    
-    public void flatOnDefense(){
+
+    public void flatOnDefense() {
         commands.add(new AutoCrossedDefense());
         commands.add(new AutoReachedDefense());
         commands.add(new AutoWait(500));
@@ -272,8 +273,7 @@ public class AutonomousRoutine {
     }
 
     /**
-     * Controls processes required for locating the high and low goal and
-     * shooting
+     * Controls processes required for locating the high and low goal and shooting
      * 
      * @param angle
      *            angle to position the shooter tilt
@@ -293,13 +293,13 @@ public class AutonomousRoutine {
         commands.add(new AutoWait(500));
         commands.add(new AutoShoot(false));
     }
-    
-    public void autoReCrossDefense(){
+
+    public void autoReCrossDefense() {
         commands.add(new AutoAlign(180));
         initAutoBreach();
     }
-    
-    public void tcpDump(){
+
+    public void tcpDump() {
         try {
             new Thread(new Runnable() {
                 public void run() {
@@ -310,9 +310,126 @@ public class AutonomousRoutine {
                         DriverStation.reportError("\nError: Could not start tcp dump process", false);
                     }
                 }
-            }).start();            
-        } catch (Exception e) { 
+            }).start();
+        } catch (Exception e) {
             DriverStation.reportError("\nError creating tcp dump thread", false);
         }
+    }
+
+    public void autoMoveToShoot() {
+        // Huge Switch statement that finds all the parameters for
+        // autoMoveToShoot that adds commands
+        double firstTurn = 0;
+        double firstMove = 0;
+        double secondMove = 0;
+        double align = 0;
+        if (goal == -1) { // Left Goal
+            switch (targetDefense) {
+            case 1:
+                firstTurn = 0;
+                secondMove = 6 * 12;
+                break;
+            case 2:
+                firstTurn = -25;
+                secondMove = 8.321 * 12;
+                break;
+            case 3:
+                firstTurn = -54.7;
+                secondMove = 10 * 12;
+                break;
+            case 4:
+                firstTurn = -64.35;
+                secondMove = 13.86 * 12;
+                break;
+            case 5:
+                firstTurn = -71.07;
+                secondMove = 18.5 * 12;
+                break;
+            default:
+                DriverStation.reportError("Invalid Target Defense", false);
+            }
+            align = 180 + 58 - 360;
+        } else if (goal == 0) { // Center Goal
+            switch (targetDefense) {
+            case 1:
+                firstTurn = 90;
+                secondMove = 11 * 12;
+                break;
+            case 2:
+                firstTurn = 90;
+                secondMove = 7 * 12;
+                break;
+            case 3:
+                firstTurn = 90;
+                secondMove = 3 * 12;
+                break;
+            case 4:
+                firstTurn = -90;
+                secondMove = 1 * 12;
+                break;
+            case 5:
+                firstTurn = -90;
+                secondMove = 3 * 12;
+                break;
+            default:
+                DriverStation.reportError("Invalid Target Defense", false);
+            }
+            align = -180;
+        } else if (goal == 1) { // Right Goal
+            switch (targetDefense) {
+            // DON'T DO 1!
+            case 1:
+                firstTurn = 90;
+                secondMove = 17 * 12;
+                break; // Not done yet needs more commands
+            case 2:
+                firstTurn = 57;
+                secondMove = 15.5 * 12;
+                break;
+            case 3:
+                firstTurn = 45;
+                secondMove = 12.5 * 12;
+                break;
+            case 4:
+                firstTurn = 30;
+                secondMove = 10 * 12;
+                break;
+            case 5:
+                firstTurn = 0;
+                secondMove = 9 * 12;
+                break;
+            default:
+                DriverStation.reportError("Invalid Target Defense", false);
+            }
+            align = 180 - 58;
+        } else {
+            DriverStation.reportError("Invalid Goal Number", false);
+        }
+        if (type != DefenseType.PORTCULLIS) {
+            firstMove = -firstMove;
+            secondMove = -secondMove;
+            align += 180;
+        }
+        autoMoveToShoot(firstMove, firstTurn, secondMove, align);
+    }
+
+    /**
+     * @param firstMove
+     *            distance in inches for moving after breaching
+     * @param firstTurn
+     *            yaw value to turn to to aim towards goal shooting point
+     * @param secondMove
+     *            distance in inches to move to goal shooting point
+     * @param goalTurn
+     *            yaw value to turn to to aim at goal
+     */
+    public void autoMoveToShoot(double firstMove, double firstTurn, double secondMove, double goalTurn) {
+        commands.add(new AutoDriveDistance(firstMove));
+        commands.add(new AutoAlign(firstTurn));
+        commands.add(new AutoDriveDistance(secondMove));
+        commands.add(new AutoAimTurn(goalTurn));
+        /*
+         * if (!isHigh) { commands.add(new AutoDriveStart(START_DRIVE_SPEED)); commands.add(new AutoCrossedDefense()); autoShootBall(Shooter.LOW_GOAL_ANGLE); } else { autoShootBall(Shooter.HIGH_GOAL_ANGLE); //commands.add(new AutoAimShooter()); }
+         */
     }
 }
