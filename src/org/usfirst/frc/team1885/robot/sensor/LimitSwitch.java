@@ -7,5 +7,5 @@ public class LimitSwitch extends DigitalInput{
     public LimitSwitch(int channel) {
         super(channel);
     }
-
+    
 }

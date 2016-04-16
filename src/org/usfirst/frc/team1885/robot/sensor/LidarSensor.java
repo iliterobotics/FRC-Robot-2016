@@ -31,10 +31,6 @@ public class LidarSensor implements PIDSource {
                 + Byte.toUnsignedInt(distance[1]);
     }
 
-    public double pidGet() {
-        return getDistance();
-    }
-
     // Start 10Hz polling
     public void start() {
         updater.scheduleAtFixedRate(new LIDARUpdater(), 0, 100);
@@ -76,4 +72,5 @@ public class LidarSensor implements PIDSource {
         // TODO Auto-generated method stub
         return null;
     }
+    
 }

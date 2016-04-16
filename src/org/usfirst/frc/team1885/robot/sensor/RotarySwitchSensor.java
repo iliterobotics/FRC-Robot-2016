@@ -12,5 +12,5 @@ public class RotarySwitchSensor extends AnalogInput{
     public double getPosition(){
         return ((int)((getVoltage() - FIRST_POSITION) * 2)) * 1.0;
     }
-
+    
 }
