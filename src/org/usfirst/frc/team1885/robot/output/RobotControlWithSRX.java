@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class RobotControlWithSRX {
+    
     public static RobotControlWithSRX instance;
     private List<CANTalon> leftDrive;
     private List<CANTalon> rightDrive;
@@ -38,7 +39,6 @@ public class RobotControlWithSRX {
     private RobotControlWithSRX() {
         c = new Compressor(0);
         c.start();
-        // c.stop();
         leftDrive = new ArrayList<CANTalon>();
         rightDrive = new ArrayList<CANTalon>();
         talons = new HashMap<RobotMotorType, CANTalon>();
@@ -47,7 +47,8 @@ public class RobotControlWithSRX {
         doubleSolenoids = new HashMap<RobotPneumaticType, DoubleSolenoid>();
         relays = new HashMap<RelayType, Relay>();
     }
-    // Add outputs
+    
+    //Methods that add outputs
     public void addTalonOutput(RobotMotorType type, int port) {
         CANTalon talon = new CANTalon(port);
         if (type == RobotMotorType.LEFT_DRIVE) {
@@ -96,7 +97,8 @@ public class RobotControlWithSRX {
     public void addRelay(RelayType type, int channel){
         relays.put(type, new Relay(channel));
     }
-    // Update Components
+    
+    //Functions that are used to update components
     public Map<RobotMotorType, CANTalon> getTalons() {
         return this.talons;
     }
@@ -118,11 +120,11 @@ public class RobotControlWithSRX {
     public void updateDoubleSolenoid(RobotPneumaticType type, Value state) {
         doubleSolenoids.get(type).set(state);
     }
-    // Update Modules
+    
+    //Functions that modules use to update
     public void updateDriveSpeed(double leftspeed, double rightspeed) {
         for (CANTalon leftMotor : leftDrive) {
             leftMotor.set(-leftspeed);
-            // System.out.println(leftMotor.getOutputVoltage() + "Voltage");
         }
         for (CANTalon rightMotor : rightDrive) {
             rightMotor.set(rightspeed);
@@ -152,4 +154,5 @@ public class RobotControlWithSRX {
         talons.get(RobotMotorType.ARM_JOINT_A).set(jointAPosition);
         talons.get(RobotMotorType.ARM_JOINT_B).set(jointBPosition);
     }
+    
 }
