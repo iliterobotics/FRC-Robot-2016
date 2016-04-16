@@ -255,6 +255,7 @@ public class AutonomousRoutine {
     public void autoCheval() {
         commands.add(new AutoMoveUtilityArm(UtilityArm.POWER_DOWN));
         flatOnDefense();
+        commands.add(new AutoMoveUtilityArm(0));
     }
 
     public void autoRockWall() {
