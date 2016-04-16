@@ -254,6 +254,7 @@ public class AutonomousRoutine {
 
     public void autoCheval() {
         commands.add(new AutoMoveUtilityArm(UtilityArm.POWER_DOWN));
+        commands.add(new AutoDriveDistance( 0.33 * 12 ));
         flatOnDefense();
         commands.add(new AutoMoveUtilityArm(0));
     }
