@@ -127,4 +127,7 @@ public class DriverInputControlSRX {
         }
         return 0;
     }
+    public boolean isResetButtonDown() {
+        return this.isButtonDown(RobotButtonType.RESET_AUX_ARM);
+    }
 }

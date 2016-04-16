@@ -40,8 +40,8 @@ public class SensorInputControlSRX {
 
     public static final double DEADZONE = 0.1;
 
-    private double INITIAL_POT_B_POSITION;
-    private double INITIAL_POT_A_POSITION;
+    public double INITIAL_POT_B_POSITION = 0;
+    public double INITIAL_POT_A_POSITION = 0;
     private double INITIAL_TWIST_POSITION;
     private double INITIAL_TILT_POSITION;
 
