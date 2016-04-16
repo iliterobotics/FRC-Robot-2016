@@ -29,14 +29,7 @@ import edu.wpi.first.wpilibj.SerialPort;
  *          mappings for the robot Also keeps track of ports for motors
  */
 public class RobotConfiguration {
-    public static final double WHEEL_DIAMETER = 8.914666748046875; // magic,
-                                                                   // needs to
-                                                                   // be
-                                                                   // configured
-                                                                   // every time
-    public static final int ARM_JOINT_A_PORT = 1; // 5 on real robot
-    public static final int ARM_JOINT_B_PORT = 2; // 6 on real robot
-    public static final double MAX_SPEED = .8;
+    public static final double WHEEL_DIAMETER = 8.914666748046875; // magic, needs to be configured every time
 
     /**
      * Method adds all joy stick mappings and sensor-to-talon mappings
@@ -55,9 +48,9 @@ public class RobotConfiguration {
         driverInputControl.addJoystick(RobotJoystickType.OVERRIDE_CONTROLLER, new Joystick(3));
 
         // Add Joystick Button Mappings
-        // Drivetrain Control Joystick Mappings
+          // Drivetrain Control Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.GEAR_SHIFT, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 3));
-        // Shooter Joystick Mappings
+          // Shooter Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_IN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 5));
         joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 2));
         joystickButtonMap.addControllerButton(RobotButtonType.FLYWHEEL_OUT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 7));
@@ -73,11 +66,11 @@ public class RobotConfiguration {
         joystickButtonMap.addControllerButton(RobotButtonType.TACTICAL_LIGHT, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 1));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_COMPLETE_OVERRIDE, new JoystickButtonMatch(RobotJoystickType.OVERRIDE_CONTROLLER, 5));
         joystickButtonMap.addControllerButton(RobotButtonType.AIM, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 0));
-        // Active Intake Joystick Mappings
+          // Active Intake Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_SOLENOID, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 1));
         joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_IN, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 2));
         joystickButtonMap.addControllerButton(RobotButtonType.INTAKE_OUT, new JoystickButtonMatch(RobotJoystickType.RIGHT_DRIVE, 3));
-        // Arm Joystick Mappings
+          // Arm Joystick Mappings
         joystickButtonMap.addControllerButton(RobotButtonType.UTILITY_ARM_RESET, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 4));
         joystickButtonMap.addControllerButton(RobotButtonType.UTILITY_ARM_CYCLE, new JoystickButtonMatch(RobotJoystickType.LEFT_DRIVE, 5));
 
@@ -86,7 +79,7 @@ public class RobotConfiguration {
         robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 2);
         robotControl.addTalonOutput(RobotMotorType.LEFT_DRIVE, 3);
         robotControl.addTalonOutput(RobotMotorType.RIGHT_DRIVE, 4);
-        //5 not used
+          //5 not used
         robotControl.addTalonOutput(RobotMotorType.UTILITY_ARM, 6);
         robotControl.addTalonOutput(RobotMotorType.ACTIVE_INTAKE, 7);
         robotControl.addTalonOutput(RobotMotorType.FLYWHEEL_LEFT, 8);
@@ -107,24 +100,21 @@ public class RobotConfiguration {
         sensorInputControl.createNavX(SerialPort.Port.kMXP);
         sensorInputControl.addPressureSensor(0);
         sensorInputControl.addRotarySwitchSensor(SensorType.DEFENSE_SELECTION, 1);
-//        sensorInputControl.addRotarySwitchSensor(SensorType.TYPE_2, 2);
-//        sensorInputControl.addRotarySwitchSensor(SensorType.TYPE_3, 3);
-//        sensorInputControl.addRotarySwitchSensor(SensorType.TYPE_4, 4);
 //        sensorInputControl.addBeamSensor(2);
         sensorInputControl.addLimitSwitch(SensorType.ARM_LIMITER, 0);
         sensorInputControl.addLimitSwitch(SensorType.ARM_LIMITER_BACK, 1);
-        // Drivetrain Encoders
+          // Drivetrain Encoders
         robotControl.addTalonSensor(RobotMotorType.LEFT_DRIVE, SensorType.LEFT_ENCODER, 1);
         robotControl.addTalonSensor(RobotMotorType.RIGHT_DRIVE, SensorType.RIGHT_ENCODER, 2);
-        // Shooter Encoders and Potentiometer
+          // Shooter Encoders and Potentiometer
         robotControl.addTalonSensor(RobotMotorType.FLYWHEEL_LEFT, SensorType.FLYWHEEL_LEFT_ENCODER, 8);
         robotControl.addTalonSensor(RobotMotorType.FLYWHEEL_RIGHT, SensorType.FLYWHEEL_RIGHT_ENCODER, 9);
         robotControl.addTalonSensor(RobotMotorType.SHOOTER_TILT, SensorType.SHOOTER_TILT_POTENTIOMETER, 10);
         robotControl.addTalonSensor(RobotMotorType.SHOOTER_TWIST, SensorType.SHOOTER_TWIST_ENCODER, 11);
-        // Utility Arm Encoder
+          // Utility Arm Encoder
         RobotControlWithSRX.getInstance().addTalonSensor(RobotMotorType.UTILITY_ARM, SensorType.ARM_CTRE_ABSOLUTE, 6);
         
-        // Add Module
+        // Add Modules
         moduleControl.addModule(ModuleType.DRIVE_TRAIN, DrivetrainControl.getInstance());
         moduleControl.addModule(ModuleType.ACTIVE_INTAKE, ActiveIntake.getInstance());
         moduleControl.addModule(ModuleType.UTILITY_ARM, UtilityArm.getInstance());
