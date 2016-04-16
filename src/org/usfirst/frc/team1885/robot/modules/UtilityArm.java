@@ -44,7 +44,7 @@ public class UtilityArm implements Module {
     }
 
     public UtilityArm() {
-        //Currently in percent power mode, capabl of changing to position mode if we test PID
+        //Currently in percent power mode, capable of changing to position mode if we test PID
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).changeControlMode(TalonControlMode.PercentVbus);
 //        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).changeControlMode(TalonControlMode.Position);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).setFeedbackDevice(FeedbackDevice.QuadEncoder);
