@@ -7,7 +7,6 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.CANTalon;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * Waits until the robot has traversed a certain distance. Moving forward 1 in
@@ -27,10 +26,8 @@ public class AutoDriveDistance extends AutoCommand {
     private double disLeft; // Current distance of left drive train side
     private double disRight; // Current distance of right drive train side
 
-    private boolean isLeftFinished; // If the left drive train side is finished
-                                    // traversing
-    private boolean isRightFinished; // If the right drive train side is
-                                     // finished traversing
+    private boolean isLeftFinished; // If the left drive train side is finished traversing
+    private boolean isRightFinished; // If the right drive train side is finished traversing
     private double differenceLeft, differenceRight;
     
     private final double ERROR;
@@ -53,40 +50,20 @@ public class AutoDriveDistance extends AutoCommand {
     public AutoDriveDistance(double distance, double P){
         this(distance);
         this.P = P;
-//        Shooter.getInstance().launchManualOverride();
     }
 
     @Override
     public boolean execute() {
         disLeft = (robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get() - initDisLeft) / DrivetrainControl.TICKS_IN_ROTATION * (Math.PI * RobotConfiguration.WHEEL_DIAMETER);
         disRight = (robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get() - initDisRight) / DrivetrainControl.TICKS_IN_ROTATION * (Math.PI * RobotConfiguration.WHEEL_DIAMETER);
-
-//        DriverStation.reportError("\nLeft:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get() + " Right:: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get(), false);
         
         differenceLeft = disLeft - distance;
         differenceRight = disRight + distance;
 
         isLeftFinished = Math.abs(differenceLeft) < ERROR;
-        isRightFinished = Math.abs(differenceRight) < ERROR;
-
-//        DriverStation.reportError("\n\nDistance Left:: " + disLeft
-//                + "\ndistance Right:: " + disRight + "\nDifference Left:: "
-//                + differenceLeft + "\nDifference Right:: " + differenceRight,
-//                false);
-
-//         DriverStation.reportError(
-//         "\nDisRight: " + robotControl.getTalons().get(RobotMotorType.RIGHT_DRIVE).get() + ", initDisRight: " + initDisRight,
-//         false);
-//         DriverStation.reportError(
-//         "\ndisLeft: " + robotControl.getTalons().get(RobotMotorType.LEFT_DRIVE).get() + ", initDisLeft: " + initDisLeft,
-//         false);
-        
-        
+        isRightFinished = Math.abs(differenceRight) < ERROR;      
         
         if (isRightFinished && isLeftFinished) {
-            DriverStation.reportError(
-                    "\nFinished traveling distance!", false);
-//            Shooter.getInstance().update();
             return true;
         }
         if(timeOut()){
@@ -97,7 +74,6 @@ public class AutoDriveDistance extends AutoCommand {
 
     @Override
     public boolean updateOutputs() {
-//        Shooter.getInstance().updateOutputs();
         return false;
     }
 
@@ -123,8 +99,5 @@ public class AutoDriveDistance extends AutoCommand {
     }
 
     @Override
-    public void reset() {
-        // No values to reset
-    }
-
+    public void reset() {}
 }

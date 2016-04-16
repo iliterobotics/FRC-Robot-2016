@@ -28,7 +28,6 @@ public class AutonomousRoutine {
     private LinkedList<AutoCommand> commands;
     private double delay = 0.005;
     
-    public boolean configured;
     private boolean isHigh;
     private int goal;
     private boolean doesNothing;
@@ -36,6 +35,8 @@ public class AutonomousRoutine {
     private boolean isReCross;
     private boolean manualOverride;
     private double direction;
+
+    public boolean configured;
 
     private String tcpdumpFile = "/var/log/tcpdump_practice1";
 

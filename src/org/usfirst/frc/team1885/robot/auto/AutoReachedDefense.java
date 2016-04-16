@@ -3,7 +3,6 @@ package org.usfirst.frc.team1885.robot.auto;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 /**
@@ -14,8 +13,7 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
  */
 public class AutoReachedDefense extends AutoCommand {
 
-    private SensorInputControlSRX sensorInputControl = SensorInputControlSRX
-            .getInstance();
+    private SensorInputControlSRX sensorInputControl = SensorInputControlSRX.getInstance();
 
     @Override
     public boolean init() {
@@ -26,7 +24,6 @@ public class AutoReachedDefense extends AutoCommand {
     @Override
     public boolean execute() {
         if (Math.abs(sensorInputControl.getNavX().getRoll()) >= AutonomousRoutine.PITCH_CHANGE_ON_RAMP + Math.abs(sensorInputControl.getInitRoll())) {
-//            DriverStation.reportError("\nReached Defense", false);
             return true;
         }
         if(timeOut()){
@@ -42,8 +39,6 @@ public class AutoReachedDefense extends AutoCommand {
     }
 
     @Override
-    public void reset() {
-        // no outputs changed, only a checkpoint
-    }
+    public void reset() {}
 
 }

@@ -10,13 +10,8 @@ import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.DriverStation;
 
 public class UtilityArm implements Module {
-
-    /*
-     * the positions - 0 for reset only - rest for cycling
-     */
 
     private final double ERROR_MARGIN = 75.0; //encoder ticks
     private final double FLOOR_POSITION = 148.0;
@@ -28,7 +23,7 @@ public class UtilityArm implements Module {
     private boolean preIncUp;
     private double power;
 
-    private double[] positions = { 0, 254, 875, 1429 }; // in degree// First value is reset Pos
+    private double[] positions = { 0, 254, 875, 1429 }; // in degree // First value is reset position
     
     public static final double POWER_DOWN = 0.3;
     public static final double POWER_UP = -0.4;
@@ -49,6 +44,7 @@ public class UtilityArm implements Module {
     }
 
     public UtilityArm() {
+        //Currently in percent power mode, capable of changing to position mode if we test PID
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).changeControlMode(TalonControlMode.PercentVbus);
 //        RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).changeControlMode(TalonControlMode.Position);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).setFeedbackDevice(FeedbackDevice.QuadEncoder);
@@ -82,12 +78,6 @@ public class UtilityArm implements Module {
         
         this.position = positions[currCyclePos];
 
-//        if(RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).getEncPosition() < (this.relativeAngle * CONVERSION_FACTOR)){
-//            RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).changeControlMode(TalonControlMode.PercentVbus);
-//            power = POWER;
-//        } else{
-//            RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).changeControlMode(TalonControlMode.Position);
-//        }
         if(Shooter.getInstance().getRelativeTilt() > SHOOTER_COLLISION_DEGREE){
             currCyclePos = positions.length - 1;
             this.position = positions[currCyclePos];
@@ -104,12 +94,7 @@ public class UtilityArm implements Module {
             }
             this.position = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).getEncPosition();
             power = power > 0 ? 0 : power;
-        } else{
-//            RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).changeControlMode(TalonControlMode.Position);
         }
-//        if(!SensorInputControlSRX.getInstance().getLimitSwitch(SensorType.ARM_LIMITER_BACK).get()){
-//            power = power < 0 ? 0 : power;
-//        }
     }
     
     public double boundPosition(double inputPosition){
@@ -118,9 +103,6 @@ public class UtilityArm implements Module {
 
     @Override
     public void updateOutputs() {
-//        DriverStation.reportError("\n" + SensorInputControlSRX.getInstance().getLimitSwitch(SensorType.ARM_LIMITER).get() + "  " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).getEncPosition() + "  " + this.position * CONVERSION_FACTOR , false);
-//        DriverStation.reportError("\nIntended Angle: " + this.position + "  Current Angle: " + RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).getEncPosition() / CONVERSION_FACTOR, false);
-//        DriverStation.reportError("\nPower:: " + this.power, false);
         if(RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).getControlMode().equals(TalonControlMode.Position)){
             RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).set(this.position);
         } else{
@@ -144,5 +126,4 @@ public class UtilityArm implements Module {
         this.power = power;
         return this.power;
     }
-
 }

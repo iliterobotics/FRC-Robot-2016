@@ -29,9 +29,9 @@ public class SensorInputControlSRX {
     private double INITIAL_ROLL; // Shouldn't change
     private static SensorInputControlSRX instance = null;
     private static RobotControlWithSRX rsrx;
+    
     private PowerDistributionPanel PDP;
-    private LidarSensor ls;
-    private BuiltInAccelerometer bia;
+
     private AHRS navx;
     private PressureSensor pressureSensor;
     private Map<SensorType, RotarySwitchSensor> rotarySwitchSensors;
@@ -65,7 +65,6 @@ public class SensorInputControlSRX {
     }
     // Create initial sensor readings
     public void init() {
-        // RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TILT).get();
         INITIAL_TILT_POSITION = -511;
         DriverStation.reportError("\nInit Tilt:: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
         INITIAL_TWIST_POSITION = 0;
@@ -152,10 +151,6 @@ public class SensorInputControlSRX {
     // Get zeroed value relative to the initial reading
     public double getZeroedPotentiometer(SensorType type) {
         switch (type) {
-        case JOINT_A_POTENTIOMETER:
-            return getAnalogGeneric(type) - INITIAL_POT_A_POSITION;
-        case JOINT_B_POTENTIOMETER:
-            return getAnalogGeneric(type) - INITIAL_POT_B_POSITION;
         case SHOOTER_TILT_POTENTIOMETER:
             return getAnalogGeneric(type) - INITIAL_TILT_POSITION;
         default:
@@ -174,19 +169,6 @@ public class SensorInputControlSRX {
         return rsrx.getSensor().get(type).isFwdLimitSwitchClosed();
     }
     // Add specialized sensors
-    public void addLidarSensor(Port port) {
-        ls = new LidarSensor(port);
-    }
-    public LidarSensor getLidarSensor() {
-        return this.ls;
-
-    }
-    public void createAccelerometer() {
-        bia = new BuiltInAccelerometer();
-    }
-    public BuiltInAccelerometer getAccelerometer() {
-        return bia;
-    }
     public void addPressureSensor(int channel) {
         pressureSensor = new PressureSensor(channel);
     }

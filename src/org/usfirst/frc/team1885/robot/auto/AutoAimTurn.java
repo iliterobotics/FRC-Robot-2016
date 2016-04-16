@@ -1,7 +1,5 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import java.util.List;
-
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 

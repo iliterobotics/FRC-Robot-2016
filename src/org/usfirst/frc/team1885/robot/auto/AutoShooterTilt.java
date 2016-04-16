@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoShooterTilt extends AutoCommand {
     private final double angle;
+    
     public AutoShooterTilt(double angle) {
         this.angle = angle;
     }
@@ -30,8 +31,5 @@ public class AutoShooterTilt extends AutoCommand {
         return false;
     }
     @Override
-    public void reset() {
-        // TODO Auto-generated method stub
-        
-    }
+    public void reset() {}
 }
