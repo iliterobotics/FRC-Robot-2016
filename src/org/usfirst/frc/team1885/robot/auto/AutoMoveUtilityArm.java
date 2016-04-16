@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.common.type.UtilityArmPosition;
 import org.usfirst.frc.team1885.robot.modules.UtilityArm;
 
 public class AutoMoveUtilityArm extends AutoCommand{

@@ -4,11 +4,9 @@ import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.UtilityArm;
 
 public class AutoShooterAim extends AutoCommand {
-    
-    private final long WAIT_TIME = 500;
+
     private AutoShooterTilt shooterTilt;
     private AutoShooterTwist shooterTwist;
-    private long aimDurationStart;
     
     public AutoShooterAim() {
         shooterTilt = new AutoShooterTilt(Shooter.HIGH_GOAL_CAM_TILT);
@@ -17,7 +15,6 @@ public class AutoShooterAim extends AutoCommand {
     
     @Override
     public boolean init()  {
-        aimDurationStart = System.currentTimeMillis();
         return true;
     }
 
@@ -50,9 +47,5 @@ public class AutoShooterAim extends AutoCommand {
     }
 
     @Override
-    public void reset() {
-        // TODO Auto-generated method stub
-
-    }
-
+    public void reset() {}
 }

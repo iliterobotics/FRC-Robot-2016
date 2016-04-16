@@ -46,12 +46,14 @@ public class AutoTurn extends AutoCommand {
     @Override
     public boolean init() {
         DrivetrainControl.getInstance().setControlMode(TalonControlMode.Position);
+        
         if( targetDegree == 0 ){
             targetDegree = -sensorInputControl.getYaw();
         }
         
         double currentTicksLeft = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get();
         double currentTicksRight = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get();
+        
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).set(direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft);
         RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).set(direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight);
         return true;
@@ -66,11 +68,7 @@ public class AutoTurn extends AutoCommand {
             difference = yaw;
         }
         
-        DriverStation.reportError("\n Degree to turn : " + targetDegree
-                + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
-        
         if (Math.abs(difference) < ALIGNMENT_ERROR) {
-            DriverStation.reportError("\nAligned.", false);
             this.reset();
             return true;
         }
@@ -84,6 +82,5 @@ public class AutoTurn extends AutoCommand {
     }
 
     @Override
-    public void reset() {
-    }
+    public void reset() {}
 }

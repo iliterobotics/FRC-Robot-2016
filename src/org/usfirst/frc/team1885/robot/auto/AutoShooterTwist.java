@@ -4,6 +4,7 @@ import org.usfirst.frc.team1885.robot.modules.ModuleControl;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 
 public class AutoShooterTwist extends AutoCommand {
+    
     private final double angle;
     
     public AutoShooterTwist(double angle) {
@@ -25,8 +26,5 @@ public class AutoShooterTwist extends AutoCommand {
         return false;
     }
     @Override
-    public void reset() {
-        // TODO Auto-generated method stub
-        
-    }
+    public void reset() {}
 }

@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
@@ -50,9 +49,5 @@ public class AutoPortcullis extends AutoCommand {
     }
 
     @Override
-    public void reset() {
-        // TODO Auto-generated method stub
-        
-    }
-
+    public void reset() {}
 }

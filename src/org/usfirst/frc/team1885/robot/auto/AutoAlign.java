@@ -7,7 +7,6 @@ import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
-import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * This class rotates the robot into it's initial facing - yaw - position.
@@ -51,7 +50,6 @@ public class AutoAlign extends AutoCommand {
         double initialYaw = SensorInputControlSRX.getInstance().getYaw();
         
         direction = (targetDegree - initialYaw) < 0 ? -1 : 1;
-//        DriverStation.reportError("\nPure Target:: " + targetDegree, false);
         targetDegree = Math.abs(targetDegree - initialYaw);
         if(targetDegree > 180){
             targetDegree -= 360;
@@ -59,7 +57,6 @@ public class AutoAlign extends AutoCommand {
         if(targetDegree < -180){
             targetDegree += 360;
         }
-//        DriverStation.reportError("\n Direction:: " + direction + "  targetDegree:: " + targetDegree, false);
         
         tickGoalLeft = direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksLeft;
         tickGoalRight = direction * (Math.toRadians(targetDegree) * TURN_RADIUS) /(Math.PI * RobotConfiguration.WHEEL_DIAMETER) * DrivetrainControl.TICKS_IN_ROTATION + currentTicksRight;
@@ -72,16 +69,11 @@ public class AutoAlign extends AutoCommand {
     @Override
     public boolean execute() {
         double yaw = (sensorInputControl.getYaw() + 360) % 360;
-        double difference = (yaw - absoluteTarget);
-
-//        DriverStation.reportError("\n Degree to turn : " + targetDegree
-//                + " --- Normalized yaw: " + yaw + "\n difference:: " + difference, false);
         
         double differenceLeft = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.LEFT_DRIVE).get() - tickGoalLeft;
         double differenceRight = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.RIGHT_DRIVE).get() - tickGoalRight;
         
         if (Math.abs(differenceLeft) < ALIGNMENT_ERROR && Math.abs(differenceRight) < ALIGNMENT_ERROR) {
-            DriverStation.reportError("\nAligned.", false);
             this.reset();
             return true;
         }
