@@ -2,11 +2,11 @@ package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 
-public class AutoAdjustShooterTooth extends AutoCommand{
+public class AutoShooterAdjustTooth extends AutoCommand{
 
     private boolean toothState;
     
-    public AutoAdjustShooterTooth(boolean toothState) {
+    public AutoShooterAdjustTooth(boolean toothState) {
         this.toothState = toothState;
     }
     

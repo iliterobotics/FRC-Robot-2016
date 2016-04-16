@@ -4,11 +4,11 @@ import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
-public class AutoAdjustIntake extends AutoCommand{
+public class AutoIntakeAdjust extends AutoCommand{
 
     DoubleSolenoid.Value intakeState;
     
-    public AutoAdjustIntake(DoubleSolenoid.Value intakeState){
+    public AutoIntakeAdjust(DoubleSolenoid.Value intakeState){
         this.intakeState = intakeState;
     }
     

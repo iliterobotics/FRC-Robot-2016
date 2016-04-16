@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import org.usfirst.frc.team1885.robot.Robot;
 import org.usfirst.frc.team1885.robot.common.type.DefenseType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.common.type.UtilityArmPosition;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
@@ -46,10 +45,6 @@ public class AutonomousRoutine {
     public AutonomousRoutine(Robot r) {
         commands = new LinkedList<AutoCommand>();
         robot = r;
-        // commands.add(new AutoDriveDistance(3 * 12));
-        // commands.add(new AutoAlign(360));
-        // commands.add(new AutoWait(2000));
-        // commands.add(new AutoAlign());
         configured = false;
         direction = 1.0;
         startDelay = 0;
@@ -159,7 +154,7 @@ public class AutonomousRoutine {
      * Method that initializes all commands for AutonomousRoutine to run
      */
     public void initAutoBreach() {
-        commands.add(new AutoAdjustIntake(ActiveIntake.intakeUp)); // intake should always start down
+        commands.add(new AutoIntakeAdjust(ActiveIntake.intakeUp)); // intake should always start down
         // DEFAULT CASE calls autoMoat which is sufficient for moat, ramparts,
         // rough terrain, rock wall
         switch (type) {
@@ -218,7 +213,7 @@ public class AutonomousRoutine {
     }
 
     private void autoPrepHighGoal() {
-        commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
+        commands.add(new AutoIntakeAdjust(ActiveIntake.intakeDown));
         commands.add(new AutoWait(750));
         commands.add(new AutoShooterTilt(Shooter.HIGH_GOAL_CAM_TILT));
     }
@@ -240,16 +235,21 @@ public class AutonomousRoutine {
      * Controls processes for passing the low bar
      */
     public void autoLowBar() {
-        commands.add(new AutoAdjustIntake(ActiveIntake.intakeDown));
+        commands.add(new AutoIntakeAdjust(ActiveIntake.intakeDown));
         commands.add(new AutoMoveUtilityArm(UtilityArm.POWER_DOWN));
-        commands.add(new AutoAdjustShooterTooth(Shooter.OPEN));
+        commands.add(new AutoShooterAdjustTooth(Shooter.OPEN));
         commands.add(new AutoReachedDefense());
         flatOnDefense();
-        commands.add(new AutoAdjustShooterTooth(!Shooter.OPEN));
+        commands.add(new AutoShooterAdjustTooth(!Shooter.OPEN));
     }
 
     public void autoPortcullis() {
-        commands.add(new AutoPortcullis());
+        commands.add(new AutoMoveUtilityArm(UtilityArm.POWER_DOWN));
+        commands.add(new AutoIntakeSetPower(ActiveIntake.INTAKE_SPEED));
+        commands.add(new AutoIntakeAdjust(ActiveIntake.intakeDown));
+        flatOnDefense();
+        commands.add(new AutoIntakeSetPower(0));
+        commands.add(new AutoAlign(180));
     }
 
     public void autoCheval() {
