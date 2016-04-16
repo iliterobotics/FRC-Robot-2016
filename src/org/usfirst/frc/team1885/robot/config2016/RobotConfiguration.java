@@ -57,7 +57,6 @@ public class RobotConfiguration {
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_LAUNCH, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 8));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_UP, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 4));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT_DOWN, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 2));
-        joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TILT, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, Joystick.AxisType.kY));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_PAN_RIGHT_MANUAL, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 1));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_PAN_LEFT_MANUAL, new JoystickButtonMatch(RobotJoystickType.CONTROLLER, 3));
         joystickButtonMap.addControllerButton(RobotButtonType.SHOOTER_TWIST_LEFT, new JoystickButtonMatch(RobotJoystickType.OVERRIDE_CONTROLLER, 1));
