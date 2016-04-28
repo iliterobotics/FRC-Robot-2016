@@ -167,13 +167,12 @@ public class AutonomousRoutine {
             autoCheval();
             break;
         case LOW_BAR:
-            autoGearShift(DrivetrainControl.LOW_GEAR);
+//            autoGearShift(DrivetrainControl.LOW_GEAR);
             startDrive();
             autoLowBar();
             break;
         case RAMPARTS:
         case ROCK_WALL:
-            autoGearShift(DrivetrainControl.LOW_GEAR);
             startDrive();
             autoRockWall();
             break;
