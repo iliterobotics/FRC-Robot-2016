@@ -6,7 +6,7 @@ package org.usfirst.frc.team1885.robot.auto;
  */
 public abstract class AutoCommand {
     
-    protected double TIMEOUT = 5000;
+    protected double TIMEOUT = 3000;
     protected boolean timeSet = false;
     protected boolean isInit = false;
     protected long initTime;
@@ -50,5 +50,12 @@ public abstract class AutoCommand {
             timeSet = true;
         }
         return System.currentTimeMillis() - initTime > TIMEOUT;
+    }
+    public boolean timeOut(int time){
+        if(!timeSet){
+            initTime = System.currentTimeMillis();
+            timeSet = true;
+        }
+        return System.currentTimeMillis() - initTime > time;
     }
 }
