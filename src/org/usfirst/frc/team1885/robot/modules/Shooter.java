@@ -429,10 +429,10 @@ public class Shooter implements Module {
         DriverStation.reportError("\nBounding" + tiltInputAngle, false);
         double realTiltAngle = tiltInputAngle;
         double physicalAngle = getTilt();
-        if (realTiltAngle > physicalAngle && physicalAngle > TILT_LIMIT_UPPER) {
+        if (realTiltAngle > TILT_LIMIT_UPPER) {
             tiltInputAngle = TILT_LIMIT_UPPER;
         }
-        if (realTiltAngle < physicalAngle && physicalAngle < TILT_LIMIT_LOWER) {
+        if (realTiltAngle < TILT_LIMIT_LOWER) {
             tiltInputAngle = TILT_LIMIT_LOWER;
         }
         if (RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition() > PAN_ERROR || RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.SHOOTER_TWIST).getEncPosition() < -PAN_ERROR) {
