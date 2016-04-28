@@ -56,6 +56,7 @@ public class AutoCrossedDefense extends AutoCommand {
     public boolean execute() {
         double currentRoll = sensorInputControl.getNavX().getRoll();
         double currentPitch = sensorInputControl.getNavX().getPitch();
+        
 
         boolean isAlignedRoll = currentRoll <= FLAT_ROLL + ERROR
                 && currentRoll >= FLAT_ROLL - ERROR;
@@ -74,7 +75,7 @@ public class AutoCrossedDefense extends AutoCommand {
             startTime = System.currentTimeMillis();
         }
         DrivetrainControl.getInstance().update(leftDriveSpeed, rightDriveSpeed);
-        if(timeOut()){
+        if(timeOut(2250)){
             return true;
         }
         return false;
