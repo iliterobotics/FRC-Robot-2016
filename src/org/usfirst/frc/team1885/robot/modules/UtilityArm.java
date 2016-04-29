@@ -102,7 +102,7 @@ public class UtilityArm implements Module {
 //            if(RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).getEncPosition() != this.position){
 //                RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).changeControlMode(TalonControlMode.PercentVbus);
 //            }
-            this.position = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).getEncPosition();
+//            this.position = RobotControlWithSRX.getInstance().getTalons().get(RobotMotorType.UTILITY_ARM).getEncPosition();
             power = power > 0 ? 0 : power;
         } 
     }
