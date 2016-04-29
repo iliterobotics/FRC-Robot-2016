@@ -258,9 +258,15 @@ public class Shooter implements Module {
         return flywheelSpeedLeft = flywheelSpeedRight = speed;
     }
     public boolean fire() {
+        if(containerState != OPEN){
+            resetKickTimer();
+        }
         initiateLaunch();
         lockAim();
         return launch();
+    }
+    public void resetKickTimer(){
+        kickTime = System.currentTimeMillis();
     }
     /**
      * Starts the flywheels, sets both motors to shooting speed
@@ -447,7 +453,7 @@ public class Shooter implements Module {
             } else if (physicalAngle > TILT_THRESHOLD) {
                 tiltInputAngle = realTiltAngle < UPPER_TILT_COLLISION ? UPPER_TILT_COLLISION : tiltInputAngle;
             }
-            DriverStation.reportError("\n INtake DOWN!", false);
+//            DriverStation.reportError("\n Intake NOT DOWN!", false);
         }
         return tiltInputAngle;
     }
@@ -593,8 +599,7 @@ public class Shooter implements Module {
         }
 
         // shooterSpeed *= BALL_FACTOR;
-        // DriverStation.reportError("\n Camera Tilt Offset:: " + tiltAngle + "
-        // Current Tilt:: " + currentTilt + " End Tilt:: " + goalTilt, false);
+         DriverStation.reportError("\nCamera Tilt Offset:: " + tiltAngle + " Current Tilt:: " + currentTilt + " End Tilt:: " + goalTilt, false);
         return hg.isGoalFound() ? goalTilt : this.relativeTiltAngle;
     }
     public boolean isGoalFound() {
