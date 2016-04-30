@@ -1,13 +1,11 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * Waits until the robot has crossed over a defense. This is determined by if
@@ -65,17 +63,14 @@ public class AutoCrossedDefense extends AutoCommand {
                 && currentPitch >= FLAT_PITCH - ERROR;
 
         if (isAlignedPitch && isAlignedRoll) {
-            if (System.currentTimeMillis() - startTime > WAIT_TIME * 1000) {
-                // WAIT_TIME converted to millis
-                leftDriveSpeed = rightDriveSpeed = 0;
-                DriverStation.reportError("\nFlat", false);
-                return true;
-            }
+            leftDriveSpeed = rightDriveSpeed = 0;
+            DriverStation.reportError("\nFlat", false);
+            return true;
         } else {
             startTime = System.currentTimeMillis();
         }
         DrivetrainControl.getInstance().update(leftDriveSpeed, rightDriveSpeed);
-        if(timeOut(2250)){
+        if(timeOut(3000)){
             return true;
         }
         return false;

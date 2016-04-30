@@ -61,6 +61,7 @@ public class Robot extends SampleRobot {
             sensorInputControl.init();
             Shooter.getInstance().init();
             DriverStation.reportError("\nRobot configured", false);
+            SensorInputControlSRX.getInstance().calibrateGyro();
         } catch (Exception e) {
             DriverStation.reportError("\nRobot - Error configuring Robot",
                     false);

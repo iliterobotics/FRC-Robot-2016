@@ -58,7 +58,7 @@ public class DrivetrainControl implements Module {
     }
     public static synchronized DrivetrainControl getInstance() {
         if (instance == null) {
-            instance = new DrivetrainControl(RobotConfiguration.WHEEL_DIAMETER, 10.7/*ft/s*/);
+            instance = new DrivetrainControl(RobotConfiguration.WHEEL_DIAMETER, 11/*ft/s*/);
         }
         return instance;
     }

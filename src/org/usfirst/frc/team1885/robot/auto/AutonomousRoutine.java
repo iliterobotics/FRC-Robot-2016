@@ -17,7 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 
 public class AutonomousRoutine {
-    public static final double PITCH_CHANGE_ON_RAMP = 2; // NavX is sideways
+    public static final double PITCH_CHANGE_ON_RAMP = 4.5; // NavX is sideways
     public static final double RAMPART_SPEED_MAX = 0.6;
     public static final double RAMPART_SPEED_MIN = 0.5;
     public static final double START_DRIVE_SPEED = 0.5;
@@ -55,7 +55,6 @@ public class AutonomousRoutine {
         while (robot.isEnabled() && robot.isAutonomous()) {
             if (!configured) {
                 // tcpDump();
-                SensorInputControlSRX.getInstance().calibrateGyro();
                 // commands.add(new AutoCalibrateWheels(1));
                 DriverStation.reportError("\nGyro Calibrated", false);
                 try {
@@ -174,10 +173,12 @@ public class AutonomousRoutine {
         case RAMPARTS:
         case ROCK_WALL:
             startDrive();
-            autoRockWall();
+            commands.add(new AutoWait(1000));
+//            autoRockWall();
             break;
         default:
             startDrive();
+            commands.add(new AutoWait(1000));
             autoMoat();
             break;
         }
@@ -270,7 +271,6 @@ public class AutonomousRoutine {
     }
 
     public void autoMoat() {
-        commands.add(new AutoWait(1000));
         commands.add(new AutoDriveStart(START_DRIVE_SPEED * direction));
     }
 

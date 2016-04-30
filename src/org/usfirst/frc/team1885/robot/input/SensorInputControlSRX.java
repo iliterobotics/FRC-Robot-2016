@@ -62,6 +62,7 @@ public class SensorInputControlSRX {
         limitSwitches = new HashMap<SensorType, LimitSwitch>();
     }
     public void update() {
+//        DriverStation.reportError("\n Roll: " + (getNavX().getRoll() - INITIAL_ROLL) + " Pitch: " + (getNavX().getPitch() - INITIAL_PITCH), false);
     }
     // Create initial sensor readings
     public void init() {
@@ -69,8 +70,7 @@ public class SensorInputControlSRX {
         INITIAL_TILT_POSITION = -511;
         DriverStation.reportError("\nInit Tilt:: " + getAnalogGeneric(SensorType.SHOOTER_TILT_POTENTIOMETER), false);
         INITIAL_TWIST_POSITION = 0;
-        DriverStation.reportError("\nInit Twist:: " + INITIAL_TWIST_POSITION,
-                false);
+        DriverStation.reportError("\nInit Twist:: " + INITIAL_TWIST_POSITION, false);
     }
     public double getInitPitch() {
         return INITIAL_PITCH;
@@ -105,6 +105,7 @@ public class SensorInputControlSRX {
         INITIAL_PITCH = navx.getPitch();
         INITIAL_ROLL = navx.getRoll();
         DriverStation.reportError("\nGyro Calibrated at: " + getYaw(), false);
+        DriverStation.reportError("\nInit Roll:: " + INITIAL_ROLL + " Init Pitch:: " + INITIAL_PITCH, false);
     }
     // Get gyro values
     public double getPitch() {

@@ -22,6 +22,7 @@ public class AutoShoot extends AutoCommand {
             Shooter.getInstance().setFlywheels(0);
             return true;
         }
+        
         return Shooter.getInstance().fire();
     }
 
