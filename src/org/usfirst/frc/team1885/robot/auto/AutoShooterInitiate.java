@@ -10,12 +10,12 @@ public class AutoShooterInitiate extends AutoCommand{
     
     @Override
     public boolean init() {
-        Shooter.getInstance().initiateLaunch();
         return true;
     }
 
     @Override
     public boolean execute() {
+        Shooter.getInstance().initiateLaunch();
         Shooter.getInstance().updateOutputs();
         return true;
     }

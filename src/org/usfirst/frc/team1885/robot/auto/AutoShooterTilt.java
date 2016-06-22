@@ -1,38 +1,30 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.modules.ModuleControl;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
+import org.usfirst.frc.team1885.robot.modules.UtilityArm;
+import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class AutoShooterTilt extends AutoCommand {
-    private static final double ERROR = 0.5;
     private final double angle;
-    private double currentAngle;    
     public AutoShooterTilt(double angle) {
         this.angle = angle;
     }
     @Override
     public boolean init() {
-        currentAngle = Shooter.getInstance().getRelativeTilt();
         return true;
     }
     @Override
     public boolean execute() {
-        currentAngle = Shooter.getInstance().getRelativeTilt();
-        if(Math.abs(currentAngle - angle) <= ERROR){
-            return true;
-        }
-        if(currentAngle < angle)
-            currentAngle += Shooter.TILT_MOVEMENT_PROPORTION;
-        else
-           currentAngle -= Shooter.TILT_MOVEMENT_PROPORTION;
-        Shooter.getInstance().setToTiltValue(currentAngle);
-        return false;
+        Shooter.getInstance().setToTiltValue(this.angle);
+        return Math.abs(Shooter.getInstance().getTilt() - this.angle) < Shooter.TILT_ERROR;
     }
     @Override
     public boolean updateOutputs() {
+        UtilityArm.getInstance().update();
+        UtilityArm.getInstance().updateOutputs();
         ModuleControl.getInstance().updateIntakeShooter();
         ModuleControl.getInstance().updateIntakeShooterOutputs();
         return false;

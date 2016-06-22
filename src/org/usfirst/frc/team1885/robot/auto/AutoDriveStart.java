@@ -51,6 +51,10 @@ public class AutoDriveStart extends AutoCommand {
     }
 
     public boolean execute() {
+        drivetrainControl.setControlMode(TalonControlMode.Speed);
+        reset();
+        drivetrainControl.setLeftDriveSpeed(leftDriveOutput);
+        drivetrainControl.setRightDriveSpeed(rightDriveOutput);
         if (time != 0) {
             Timer.delay(time);
             reset();
@@ -68,10 +72,6 @@ public class AutoDriveStart extends AutoCommand {
     }
 
     public boolean init() {
-        drivetrainControl.setControlMode(TalonControlMode.Speed);
-        reset();
-        drivetrainControl.setLeftDriveSpeed(leftDriveOutput);
-        drivetrainControl.setRightDriveSpeed(rightDriveOutput);
         return true;
     }
 

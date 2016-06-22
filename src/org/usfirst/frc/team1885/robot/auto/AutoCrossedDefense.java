@@ -1,13 +1,11 @@
 package org.usfirst.frc.team1885.robot.auto;
 
-import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
+import edu.wpi.first.wpilibj.DriverStation;
 
 /**
  * Waits until the robot has crossed over a defense. This is determined by if
@@ -18,11 +16,11 @@ import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
  */
 public class AutoCrossedDefense extends AutoCommand {
 
-    private final double ERROR; // Margin of error for Pitch and Roll
+    private final static double ERROR = 2.5; // Margin of error for Pitch and Roll
     private final double FLAT_PITCH;// Initial Pitch of robot on creation of
                                     // class
     private final double FLAT_ROLL;// Initial Roll of robot on creation of class
-    private final double WAIT_TIME;// Time (in seconds) the robot must be
+    private final static double WAIT_TIME = 0.250;// Time (in seconds) the robot must be
                                    // 'flat' to be considered on flat ground
 
     private SensorInputControlSRX sensorInputControl;
@@ -30,12 +28,12 @@ public class AutoCrossedDefense extends AutoCommand {
     private long startTime;
     private double leftDriveSpeed;
     private double rightDriveSpeed;
+    
+    private long timeoutStartTime;
 
     public AutoCrossedDefense() {
         sensorInputControl = SensorInputControlSRX.getInstance();
         robotControl = RobotControlWithSRX.getInstance();
-        ERROR = 2.5;
-        WAIT_TIME = 0.18;
         FLAT_ROLL = sensorInputControl.getInitRoll();
         FLAT_PITCH = sensorInputControl.getInitPitch();
     }
@@ -47,6 +45,8 @@ public class AutoCrossedDefense extends AutoCommand {
         startTime = System.currentTimeMillis();
         leftDriveSpeed = DrivetrainControl.getInstance().getLeftDriveSpeed();
         rightDriveSpeed = DrivetrainControl.getInstance().getRightDriveSpeed();
+        
+        timeoutStartTime = System.currentTimeMillis();
         return true;
     }
 
@@ -54,6 +54,7 @@ public class AutoCrossedDefense extends AutoCommand {
     public boolean execute() {
         double currentRoll = sensorInputControl.getNavX().getRoll();
         double currentPitch = sensorInputControl.getNavX().getPitch();
+        
 
         boolean isAlignedRoll = currentRoll <= FLAT_ROLL + ERROR
                 && currentRoll >= FLAT_ROLL - ERROR;
@@ -62,21 +63,21 @@ public class AutoCrossedDefense extends AutoCommand {
                 && currentPitch >= FLAT_PITCH - ERROR;
 
         if (isAlignedPitch && isAlignedRoll) {
-            if (System.currentTimeMillis() - startTime > WAIT_TIME * 1000) {
-                // WAIT_TIME converted to millis
-                leftDriveSpeed = rightDriveSpeed = 0;
-                DriverStation.reportError("\nFlat", false);
-                return true;
-            }
+            leftDriveSpeed = rightDriveSpeed = 0;
+            DriverStation.reportError("\nFlat", false);
+            return true;
         } else {
             startTime = System.currentTimeMillis();
+        }
+        DrivetrainControl.getInstance().update(leftDriveSpeed, rightDriveSpeed);
+        if(timeOut(3000)){
+            return true;
         }
         return false;
     }
 
     @Override
     public boolean updateOutputs() {
-        DrivetrainControl.getInstance().update(leftDriveSpeed, rightDriveSpeed);
         DrivetrainControl.getInstance().updateOutputs();
         return false;
     }

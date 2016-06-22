@@ -2,21 +2,34 @@ package org.usfirst.frc.team1885.robot.auto;
 
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 
+import edu.wpi.first.wpilibj.DriverStation;
+
 public class AutoShoot extends AutoCommand {
    
+    private boolean shooting;
+    
+    public AutoShoot(boolean shooting){
+        this.shooting = shooting;
+    }
+    
     public boolean init() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean execute() {
-        if(Shooter.getInstance().fire())
+        if(!shooting){
+            Shooter.getInstance().setFlywheels(0);
             return true;
-        return false;
+        }
+        
+        return Shooter.getInstance().fire();
     }
 
     @Override
     public boolean updateOutputs() {
+        Shooter.getInstance().updateTilt();
+        Shooter.getInstance().updateTwist();
         Shooter.getInstance().updateOutputs();
         return false;
     }

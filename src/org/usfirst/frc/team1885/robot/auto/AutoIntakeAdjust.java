@@ -4,25 +4,28 @@ import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 
-public class AutoAdjustIntake extends AutoCommand{
+public class AutoIntakeAdjust extends AutoCommand{
 
+    DoubleSolenoid.Value intakeState;
+    
+    public AutoIntakeAdjust(DoubleSolenoid.Value intakeState){
+        this.intakeState = intakeState;
+    }
+    
     @Override
     public boolean init() {
-        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
         return true;
     }
 
     @Override
     public boolean execute() {
-        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
-        ActiveIntake.getInstance().updateOutputs();
-        // TODO Auto-generated method stub
+        ActiveIntake.getInstance().setIntakeSolenoid(this.intakeState);
         return true;
     }
 
     @Override
     public boolean updateOutputs() {
-        // TODO Auto-generated method stub
+        ActiveIntake.getInstance().updateOutputs();
         return false;
     }
 

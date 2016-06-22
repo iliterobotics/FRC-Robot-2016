@@ -5,18 +5,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.usfirst.frc.team1885.robot.common.type.RelayType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
 import org.usfirst.frc.team1885.robot.common.type.SensorType;
-import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 
 import edu.wpi.first.wpilibj.CANTalon;
-import edu.wpi.first.wpilibj.CANTalon.FeedbackDevice;
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.Solenoid;
 
 public class RobotControlWithSRX {
@@ -27,6 +26,7 @@ public class RobotControlWithSRX {
     private Map<SensorType, CANTalon> sensors;
     private Map<RobotPneumaticType, Solenoid> singleSolenoids;
     private Map<RobotPneumaticType, DoubleSolenoid> doubleSolenoids;
+    private Map<RelayType, Relay> relays;
     private Compressor c;
 
     public static synchronized RobotControlWithSRX getInstance() {
@@ -45,6 +45,7 @@ public class RobotControlWithSRX {
         sensors = new HashMap<SensorType, CANTalon>();
         singleSolenoids = new HashMap<RobotPneumaticType, Solenoid>();
         doubleSolenoids = new HashMap<RobotPneumaticType, DoubleSolenoid>();
+        relays = new HashMap<RelayType, Relay>();
     }
     // Add outputs
     public void addTalonOutput(RobotMotorType type, int port) {
@@ -92,12 +93,18 @@ public class RobotControlWithSRX {
     public Compressor getCompressor() {
         return c;
     }
+    public void addRelay(RelayType type, int channel){
+        relays.put(type, new Relay(channel));
+    }
     // Update Components
     public Map<RobotMotorType, CANTalon> getTalons() {
         return this.talons;
     }
     public Map<SensorType, CANTalon> getSensor() {
         return this.sensors;
+    }
+    public Map<RelayType, Relay> getRelays(){
+        return this.relays;
     }
     public List<CANTalon> getLeftDrive() {
         return leftDrive;

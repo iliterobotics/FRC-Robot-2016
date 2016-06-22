@@ -5,15 +5,13 @@ import org.usfirst.frc.team1885.robot.common.type.GearState;
 import org.usfirst.frc.team1885.robot.common.type.RobotButtonType;
 import org.usfirst.frc.team1885.robot.common.type.RobotMotorType;
 import org.usfirst.frc.team1885.robot.common.type.RobotPneumaticType;
-import org.usfirst.frc.team1885.robot.common.type.SensorType;
 import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
-import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
-import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 
 public class DrivetrainControl implements Module {
     /**
@@ -60,8 +58,7 @@ public class DrivetrainControl implements Module {
     }
     public static synchronized DrivetrainControl getInstance() {
         if (instance == null) {
-            instance = new DrivetrainControl(RobotConfiguration.WHEEL_DIAMETER,
-                    9.0);
+            instance = new DrivetrainControl(RobotConfiguration.WHEEL_DIAMETER, 11/*ft/s*/);
         }
         return instance;
     }
@@ -72,47 +69,12 @@ public class DrivetrainControl implements Module {
         return isTurning;
     }
     public void update() {
-        // FIXME: add slow straight drive state + button
-        // if ((DriverInputControlSRX.getInstance()
-        // .getButton(RobotButtonType.LEFT_DRIFT)
-        // || DriverInputControlSRX.getInstance()
-        // .getButton(RobotButtonType.RIGHT_DRIFT))
-        // && !isTurning) {
-        //
-        // if (!isTurning) {
-        //
-        // double angle = (DriverInputControlSRX.getInstance()
-        // .getButton(RobotButtonType.LEFT_DRIFT) ? 90 : -90);
-        //
-        // turn = new AutoTurn(angle, 5);
-        // turn.init();
-        // }
-        //
-        // isTurning = turn.execute();
-        //
-        // } else if (DriverInputControlSRX.getInstance()
-        // .getPOVButton(RobotButtonType.NUDGE) == 90) {
-        // update(-NUDGE_POWER_TURN, NUDGE_POWER_TURN);
-        // } else if (DriverInputControlSRX.getInstance()
-        // .getPOVButton(RobotButtonType.NUDGE) == 270) {
-        // update(NUDGE_POWER_TURN, -NUDGE_POWER_TURN);
-        // } else if (DriverInputControlSRX.getInstance()
-        // .getPOVButton(RobotButtonType.NUDGE) == 0) {
-        // update(-NUDGE_POWER, -NUDGE_POWER);
-        // } else if (DriverInputControlSRX.getInstance()
-        // .getPOVButton(RobotButtonType.NUDGE) == 180) {
-        // update(NUDGE_POWER, NUDGE_POWER);
-        // } else {
-        // update(driverInput.getLeftDrive(), driverInput.getRightDrive());
-        // }
-
-        if (DriverInputControlSRX.getInstance()
-                .getButton(RobotButtonType.GEAR_SHIFT)) {
+            gear = HIGH_GEAR;
+        if (DriverInputControlSRX.getInstance().getButton(RobotButtonType.GEAR_SHIFT)) {
             maxSpeed = 15.0;
             gear = LOW_GEAR;
-        } else {
-            gear = HIGH_GEAR;
         }
+//        DriverStation.reportError("\nGear: " + gear, false);
     }
 
     public void update(double leftJoystick, double rightJoystick) {
@@ -187,6 +149,10 @@ public class DrivetrainControl implements Module {
     public void straightDrive(double driveSpeed) {
         this.rightDriveSpeed = driveSpeed;
         this.leftDriveSpeed = driveSpeed;
+    }
+    
+    public void gearShift(boolean gear){
+        this.gear = gear;
     }
     
     public void setControlMode(TalonControlMode mode){

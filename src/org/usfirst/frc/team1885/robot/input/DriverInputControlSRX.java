@@ -128,8 +128,7 @@ public class DriverInputControlSRX {
                         .getAxis(AxisType.kY));
     }
     public void update(double leftJoystick, double rightJoystick) {
-        System.err
-                .println("LEFT= " + leftJoystick + ", RIGHT= " + rightJoystick);
+//        System.err.println("LEFT= " + leftJoystick + ", RIGHT= " + rightJoystick);
         this.rightDriveSpeed = deadzone(rightJoystick);
         this.leftDriveSpeed = deadzone(leftJoystick);
         DrivetrainControl.getInstance().setLeftDriveSpeed(leftDriveSpeed);
@@ -137,12 +136,12 @@ public class DriverInputControlSRX {
     }
     public double getControllerTwist() {
         return this.getJoystick(RobotJoystickType.CONTROLLER)
-                .getAxis(AxisType.kThrottle);
+                .getAxis(AxisType.kTwist);
     }
 
     public double getControllerThrottle() {
         return this.getJoystick(RobotJoystickType.CONTROLLER)
-                .getAxis(AxisType.kTwist);
+                .getAxis(AxisType.kThrottle);
     }
 
     public boolean isResetButtonDown() {
@@ -156,22 +155,24 @@ public class DriverInputControlSRX {
         if(this.isButtonDown(RobotButtonType.SHOOTER_TILT_UP)) {
             return 1;
         }
-        else if(this.isButtonDown(RobotButtonType.SHOOTER_TILT_DOWN)){
+        if(this.isButtonDown(RobotButtonType.SHOOTER_TILT_DOWN)){
             return -1;
         }
-        else {
-            return 0;
-        }
+        return 0;
     }
     public double getShooterTwist() {
         if(this.isButtonDown(RobotButtonType.SHOOTER_TWIST_RIGHT)) {
             return Shooter.TWIST_SPEED;
         }
-        else if(this.isButtonDown(RobotButtonType.SHOOTER_TWIST_LEFT)){
+        if(this.isButtonDown(RobotButtonType.SHOOTER_TWIST_LEFT)){
             return -Shooter.TWIST_SPEED;
         }
-        else {
-            return 0;
+        if(this.isButtonDown(RobotButtonType.SHOOTER_PAN_RIGHT_MANUAL)){
+            return Shooter.TWIST_SPEED;
         }
+        if(this.isButtonDown(RobotButtonType.SHOOTER_PAN_LEFT_MANUAL)){
+            return -Shooter.TWIST_SPEED;
+        }
+        return 0;
     }
 }

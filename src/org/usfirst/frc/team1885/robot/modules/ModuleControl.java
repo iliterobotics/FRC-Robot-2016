@@ -3,7 +3,6 @@ package org.usfirst.frc.team1885.robot.modules;
 import java.util.HashMap;
 
 import org.usfirst.frc.team1885.robot.common.type.ModuleType;
-import org.usfirst.frc.team1885.robot.manipulator.UtilityArm;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 
 public class ModuleControl{
@@ -45,7 +44,7 @@ public class ModuleControl{
         return (Shooter)modules.get(ModuleType.SHOOTER);
     }
 	
-	public UtilityArm getUtilitArm(){
+	public UtilityArm getUtilityArm(){
 	    return (UtilityArm)modules.get(ModuleType.UTILITY_ARM);
 	}
 	

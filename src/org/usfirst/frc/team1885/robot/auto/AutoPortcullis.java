@@ -5,35 +5,47 @@ import org.usfirst.frc.team1885.robot.modules.ActiveIntake;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
 
 public class AutoPortcullis extends AutoCommand {
-    SensorInputControlSRX sensorControl;
-    AutoDriveDistance halfWay; 
-    AutoDriveDistance secondHalf;
-    public static final double HALF_DISTANCE = -4.2 * 12 / 2;
 
+    private enum Stage{
+        FIRST/*Initial defense reach*/, SECOND/*Move until flat on defense*/, THIRD/*move until flat on ground*/, FINISHED
+    }
+    private Stage stage;
+    private AutoDriveStart drive;
+    private AutoCrossedDefense flat;
+    private AutoReachedDefense tiltDown;
+    
+    public AutoPortcullis(){
+        drive = new AutoDriveStart(0.3);
+        flat = new AutoCrossedDefense();
+        tiltDown = new AutoReachedDefense();
+        stage = Stage.FIRST;
+    }
+    
     @Override
     public boolean init() {
-        halfWay = new AutoDriveDistance(HALF_DISTANCE, .1);
-        secondHalf = new AutoDriveDistance(HALF_DISTANCE, .1);
-        RobotControlWithSRX.getInstance().updateIntakeMotor(ActiveIntake.INTAKE_SPEED);
         ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeUp);
-        
-        
+        RobotControlWithSRX.getInstance().updateIntakeMotor(ActiveIntake.INTAKE_SPEED);        
         return false;
     }
 
     @Override
     public boolean execute() {
-        if( halfWay.execute()){
-           RobotControlWithSRX.getInstance().updateIntakeMotor(0);
-           ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
-           secondHalf.execute();
-           return true;
+        ActiveIntake.getInstance().setIntakeSolenoid(ActiveIntake.intakeDown);
+        drive.execute();
+        switch(stage){
+            case FIRST: if(flat.execute()){stage = Stage.SECOND;}break;
+            case SECOND: if(tiltDown.execute()){stage = Stage.THIRD; flat.init();}break;
+            case THIRD: if(flat.execute()){stage = Stage.FINISHED;}break;
+            default: return true;
         }
         return false;
     }
 
     @Override
     public boolean updateOutputs() {
+        ActiveIntake.getInstance().update();
+        ActiveIntake.getInstance().updateOutputs();
+        drive.updateOutputs();
         return false;
     }
 

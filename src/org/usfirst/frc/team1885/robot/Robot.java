@@ -3,8 +3,8 @@ package org.usfirst.frc.team1885.robot;
 import java.util.LinkedList;
 
 import org.usfirst.frc.team1885.robot.auto.AutoCommand;
-import org.usfirst.frc.team1885.robot.auto.AutoTemplate;
 import org.usfirst.frc.team1885.robot.auto.AutonomousRoutine;
+import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 import org.usfirst.frc.team1885.robot.input.DriverInputControlSRX;
 import org.usfirst.frc.team1885.robot.input.SensorInputControlSRX;
 import org.usfirst.frc.team1885.robot.modules.Module;
@@ -12,7 +12,6 @@ import org.usfirst.frc.team1885.robot.modules.ModuleControl;
 import org.usfirst.frc.team1885.robot.modules.Shooter;
 import org.usfirst.frc.team1885.robot.modules.drivetrain.DrivetrainControl;
 import org.usfirst.frc.team1885.robot.output.RobotControlWithSRX;
-import org.usfirst.frc.team1885.robot.config2016.RobotConfiguration;
 
 import edu.wpi.first.wpilibj.CANTalon.TalonControlMode;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -36,7 +35,6 @@ import edu.wpi.first.wpilibj.Timer;
  */
 
 public class Robot extends SampleRobot {
-    private LinkedList<AutoCommand> commands;
     private long timeTracker = 0;
     private double delayTime = 1;// Input time in seconds
     public static final double AUTO_CYCLE_TIME = 0.05;
@@ -48,26 +46,27 @@ public class Robot extends SampleRobot {
     private SensorInputControlSRX sensorInputControl;
     // Module Control
     private Module[] modules;
-    private AutoTemplate activeTemplate;
 
     public Robot() {
-        //Initialize Output Control
+        // Initialize Output Control
         robotControl = RobotControlWithSRX.getInstance();
-        //Initialize Input Control
+        // Initialize Input Control
         driverInputControl = DriverInputControlSRX.getInstance();
         sensorInputControl = SensorInputControlSRX.getInstance();
         try {
             Timer.delay(0.5);
-            //Configure Robot
+            // Configure Robot
             RobotConfiguration.configureRobot();
-            //Initialize Sensor Values
+            // Initialize Sensor Values
             sensorInputControl.init();
             Shooter.getInstance().init();
             DriverStation.reportError("\nRobot configured", false);
+            SensorInputControlSRX.getInstance().calibrateGyro();
         } catch (Exception e) {
-            DriverStation.reportError("\nRobot - Error configuring Robot", false);
+            DriverStation.reportError("\nRobot - Error configuring Robot",
+                    false);
         }
-//        Initialize Modules
+        // Initialize Modules
         modules = ModuleControl.getInstance().getModules();
         DriverStation.reportError("\nRobot Intialized", false);
     }
@@ -97,7 +96,11 @@ public class Robot extends SampleRobot {
 
     @Override
     public void autonomous() {
-        AutonomousRoutine ar = new AutonomousRoutine(this);
-        ar.execute();
+        try {
+            AutonomousRoutine ar = new AutonomousRoutine(this);
+            ar.execute();
+        } catch (Throwable e) {
+            DriverStation.reportError("MY ERROR", true);
+        }
     }
 }
