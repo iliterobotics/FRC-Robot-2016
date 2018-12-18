@@ -1,0 +1,45 @@
+plugins {
+    id "java"
+    id "eclipse"
+    id "idea"
+    id "jaci.openrio.gradle.GradleRIO" version "2017.1.5"
+}
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+frc {
+   team = "1885"
+   robotClass = "org.usfirst.frc.team1885.robot.Robot"
+}
+
+wpi {
+	opencvVersion = "3.1.0"
+}
+repositories {
+  jcenter()
+}
+dependencies {
+   compile wpilib()
+   // compile talonSrx()
+   compile files('res/navx_frc.jar')
+   compile files('res/ctrlib/CTRLib.jar')
+   nativeLib files('res/ctrlib/libCTRLibDriver.so')
+   compile group: 'com.google.guava', name: 'guava', version: '19.0'
+//       compile group: 'org.json', name: 'json', version: '20090211'
+
+   testCompile( 'junit:junit:4.12', 'org.codehaus.groovy:groovy-all:2.4.4', 'org.spockframework:spock-core:1.0-groovy-2.4')
+}
+
+def robotManifest = {
+ attributes 'Main-Class': 'edu.wpi.first.wpilibj.RobotBase'
+ attributes 'Robot-Class': frc.robotClass
+}
+
+jar {
+   from configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+   manifest robotManifest
+}
+
+task wrapper(type: Wrapper) {
+   gradleVersion = '3.2.1'
+}
